@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MARK RYDEN 9100 详情页</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-section: #f8f9fa;
+    --bg-card: #ffffff;
+    --text-primary: #1a1a1a;
+    --text-secondary: #555555;
+    --text-muted: #888888;
+    --accent: #2c2c2c;
+    --border: #eaeaea;
+    --tag-bg: #f0f0f0;
+    --shadow: 0 1px 3px rgba(0,0,0,0.04);
+    --radius: 8px;
+    --max-width: 720px;
+    --font-title: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    --font-body: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--font-body);
+    color: var(--text-primary);
+    background: var(--bg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+  .header {
+    text-align: center;
+    padding: 48px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+  .header .brand { font-size: 13px; letter-spacing: 3px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; }
+  .header .model { font-size: 28px; font-weight: 600; color: var(--text-primary); letter-spacing: 1px; }
+  .header .series { display: inline-block; margin-top: 8px; padding: 3px 14px; font-size: 12px; color: var(--text-secondary); background: var(--tag-bg); border-radius: 100px; letter-spacing: 1px; }
+  .section { margin-bottom: 56px; }
+  .section-title { font-size: 11px; letter-spacing: 4px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 24px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+  @media (max-width: 600px) { .feature-grid { grid-template-columns: 1fr; } }
+  .feature-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); }
+  .feature-card .card-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; letter-spacing: 0.5px; }
+  .feature-card .card-stat { font-size: 13px; color: var(--text-secondary); }
+  .feature-card .card-stats { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+  .feature-card .card-stats span { font-size: 13px; color: var(--text-secondary); position: relative; padding-right: 10px; }
+  .feature-card .card-stats span:not(:last-child)::after { content: ''; position: absolute; right: 0; top: 6px; width: 3px; height: 3px; border-radius: 50%; background: var(--border); }
+  .capacity-section { margin-bottom: 24px; }
+  .capacity-hero { background: var(--bg-section); border-radius: var(--radius); padding: 28px 24px; text-align: center; margin-bottom: 16px; }
+  .capacity-hero .hero-title { font-size: 18px; font-weight: 600; color: var(--text-primary); margin-bottom: 10px; letter-spacing: 0.5px; }
+  .capacity-hero .hero-stats { display: flex; justify-content: center; gap: 32px; }
+  .capacity-hero .hero-stats span { font-size: 14px; color: var(--accent); font-weight: 500; }
+  .pocket-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 600px) { .pocket-list { grid-template-columns: 1fr; } }
+  .pocket-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+  .pocket-item .pocket-name { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+  .pocket-item .pocket-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+  .detail-list { display: grid; grid-template-columns: 1fr; gap: 10px; }
+  .detail-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; display: flex; align-items: center; gap: 14px; }
+  .detail-item .detail-icon { width: 40px; height: 40px; border-radius: 8px; background: var(--bg-section); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .detail-item .detail-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
+  .detail-item .detail-desc { font-size: 13px; color: var(--text-secondary); }
+  .info-table { width: 100%; border-collapse: collapse; }
+  .info-table tr { border-bottom: 1px solid var(--border); }
+  .info-table tr:last-child { border-bottom: none; }
+  .info-table td { padding: 10px 0; font-size: 14px; }
+  .info-table td:first-child { color: var(--text-muted); width: 140px; font-size: 13px; }
+  .info-table td:last-child { color: var(--text-primary); }
+  .notes-text { font-size: 13px; color: var(--text-muted); line-height: 1.8; }
+  .main-image-list { display: grid; gap: 12px; }
+  .main-image-item { background: var(--bg-section); border-radius: var(--radius); padding: 20px 24px; display: flex; align-items: center; gap: 16px; }
+  .main-image-item .img-number { width: 36px; height: 36px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+  .main-image-item .img-copy { font-size: 16px; font-weight: 500; color: var(--text-primary); letter-spacing: 0.5px; }
+  .footer { text-align: center; padding: 40px 0 0; border-top: 1px solid var(--border); margin-top: 48px; }
+  .footer .brand-name { font-size: 13px; letter-spacing: 3px; color: var(--text-muted); margin-bottom: 6px; }
+  .footer .tagline { font-size: 13px; color: var(--text-secondary); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="brand">MARK RYDEN</div>
+    <div class="model">9100</div>
+    <div class="series">F 未来系列 · 双肩背包</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">重要功能</div>
+    <div class="feature-grid">
+      <div class="feature-card"><div class="card-title">防泼水高密度面料</div><div class="card-stat">5 级防泼水</div></div>
+      <div class="feature-card"><div class="card-title">高强度防水拉链</div><div class="card-stat">5 万次开合寿命</div></div>
+      <div class="feature-card"><div class="card-title">TSA 海关密码锁</div><div class="card-stat">3 秒快速解锁</div></div>
+      <div class="feature-card"><div class="card-title">外置充电接口</div><div class="card-stat">99% 品牌兼容率</div></div>
+      <div class="feature-card"><div class="card-title">蓝牙防丢器</div><div class="card-stat">0.1 秒断连报警</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">容量展示</div>
+    <div class="capacity-section">
+      <div class="capacity-hero">
+        <div class="hero-title">三段式科学分区 · 31L 从容装载</div>
+        <div class="hero-stats"><span>31L 总容量</span><span>3 层大口袋</span></div>
+      </div>
+      <div class="pocket-list">
+        <div class="pocket-item"><div class="pocket-name">主口袋</div><div class="pocket-desc">多隔层分区 / 弹力网格袋 x2 / 拉链隐私内袋 / 笔袋 x2</div></div>
+        <div class="pocket-item"><div class="pocket-name">副口袋</div><div class="pocket-desc">内置拉链网袋 / 弹力钥匙扣</div></div>
+        <div class="pocket-item"><div class="pocket-name">数码仓</div><div class="pocket-desc">7.9" iPad 保护袋 / 16" 电脑保护袋 / 配件弹力固定带 x4</div></div>
+        <div class="pocket-item"><div class="pocket-name">顶部收纳袋</div><div class="pocket-desc">随手可取，常用小物一触即达</div></div>
+        <div class="pocket-item"><div class="pocket-name">防盗背袋</div><div class="pocket-desc">贴身隐藏，贵重物品安放于身后</div></div>
+        <div class="pocket-item"><div class="pocket-name">右侧口袋</div><div class="pocket-desc">随手放置水杯或折叠伞</div></div>
+        <div class="pocket-item"><div class="pocket-name">左侧口袋</div><div class="pocket-desc">快速存取通勤小件</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">功能详解</div>
+    <div class="feature-grid">
+      <div class="feature-card"><div class="card-title">防泼水高密度面料</div><div class="card-stats"><span>5 级防泼水</span><span>900D 高密度纱线</span><span>4 级抗污</span></div></div>
+      <div class="feature-card"><div class="card-title">高强度防水拉链</div><div class="card-stats"><span>5 万次开合寿命</span><span>350N 咬合力</span><span>-20&deg;C 依然顺滑</span></div></div>
+      <div class="feature-card"><div class="card-title">TSA 海关密码锁</div><div class="card-stats"><span>国际 TSA 认证</span><span>3 秒快速解锁</span><span>999 种密码组合</span></div></div>
+      <div class="feature-card"><div class="card-title">外置充电接口</div><div class="card-stats"><span>2.0 充电协议</span><span>99% 品牌兼容率</span></div></div>
+      <div class="feature-card"><div class="card-title">蓝牙防丢器</div><div class="card-stats"><span>0.1 秒断连报警</span><span>12 种语言 UI</span></div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">产品细节</div>
+    <div class="detail-list">
+      <div class="detail-item"><div class="detail-icon">&diams;</div><div><div class="detail-title">超纤提手</div><div class="detail-desc">触感温润，久提不勒手</div></div></div>
+      <div class="detail-item"><div class="detail-icon">&diams;</div><div><div class="detail-title">肩部 RFID 防盗口袋</div><div class="detail-desc">物理屏蔽刷卡盗刷，随身信息安全无忧</div></div></div>
+      <div class="detail-item"><div class="detail-icon">&diams;</div><div><div class="detail-title">背部拉杆带</div><div class="detail-desc">轻松挂靠行李箱拉杆，差旅出行一步到位</div></div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">产品信息</div>
+    <table class="info-table">
+      <tr><td>品牌</td><td>MARK RYDEN</td></tr>
+      <tr><td>型号</td><td>MR-F9100</td></tr>
+      <tr><td>面料</td><td>涤纶 + 聚氨酯</td></tr>
+      <tr><td>重量</td><td>1.6 kg</td></tr>
+      <tr><td>尺寸</td><td>47 &times; 30 &times; 22 cm</td></tr>
+      <tr><td>颜色</td><td>商务黑 / 精英灰 / 都会蓝 / 城际绿</td></tr>
+      <tr><td>数码仓</td><td>可容纳 16 英寸电脑</td></tr>
+      <tr><td>肩带</td><td>40 ~ 95 cm</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">备注</div>
+    <div class="notes-text">以上数据来源于 MARK RYDEN 产品实验室实测结果，实际使用可能因环境差异略有不同。</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">电商主图文案</div>
+    <div class="main-image-list">
+      <div class="main-image-item"><div class="img-number">1</div><div class="img-copy">31L 科学收纳，三段分区一目了然</div></div>
+      <div class="main-image-item"><div class="img-number">2</div><div class="img-copy">5 级防泼水 + 4 级抗污，从容应对多变天气</div></div>
+      <div class="main-image-item"><div class="img-number">3</div><div class="img-copy">TSA 海关锁，3 秒开合，出行安全有底气</div></div>
+      <div class="main-image-item"><div class="img-number">4</div><div class="img-copy">外置充电 + 蓝牙防丢，科技出行不掉线</div></div>
+      <div class="main-image-item"><div class="img-number">5</div><div class="img-copy">900D 高密度面料，轻量坚韧，都市穿梭无负担</div></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="brand-name">MARK RYDEN</div>
+    <div class="tagline">都市 · 秩序 · 科技</div>
+  </div>
+
+</div>
+</body>
+</html>
