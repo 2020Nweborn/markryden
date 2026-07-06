@@ -21,9 +21,7 @@
     --font-title: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
     --font-body: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   body {
     font-family: var(--font-body);
     color: var(--text-primary);
@@ -31,311 +29,84 @@
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
   }
-
-  .container {
-    max-width: var(--max-width);
-    margin: 0 auto;
-    padding: 40px 24px 80px;
-  }
-
-  /* Header */
-  .header {
-    text-align: center;
-    padding: 48px 0 40px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 48px;
-  }
-  .header .brand {
-    font-size: 13px;
-    letter-spacing: 3px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    margin-bottom: 12px;
-  }
-  .header .model {
-    font-size: 28px;
-    font-weight: 600;
-    color: var(--text-primary);
-    letter-spacing: 1px;
-  }
-  .header .series {
-    display: inline-block;
-    margin-top: 8px;
-    padding: 3px 14px;
-    font-size: 12px;
-    color: var(--text-secondary);
-    background: var(--tag-bg);
-    border-radius: 100px;
-    letter-spacing: 1px;
-  }
-
-  /* Section */
-  .section {
-    margin-bottom: 56px;
-  }
-  .section-title {
-    font-size: 11px;
-    letter-spacing: 4px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    margin-bottom: 24px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  /* Panel 1 & 3: Feature Cards */
-  .feature-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 24px;
-  }
-  @media (max-width: 600px) {
-    .feature-grid { grid-template-columns: 1fr; }
-  }
-  .feature-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-    box-shadow: var(--shadow);
-  }
-  .feature-card .card-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 6px;
-    letter-spacing: 0.5px;
-  }
-  .feature-card .card-stat {
-    font-size: 13px;
-    color: var(--text-secondary);
-  }
-  .feature-card .card-stats {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 4px;
-  }
-  .feature-card .card-stats span {
-    font-size: 13px;
-    color: var(--text-secondary);
-    position: relative;
-    padding-right: 10px;
-  }
-  .feature-card .card-stats span:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 6px;
-    width: 3px;
-    height: 3px;
-    border-radius: 50%;
-    background: var(--border);
-  }
-
-  /* Panel 2: Capacity */
-  .capacity-section {
-    margin-bottom: 24px;
-  }
-  .capacity-hero {
-    background: var(--bg-section);
-    border-radius: var(--radius);
-    padding: 28px 24px;
-    text-align: center;
-    margin-bottom: 16px;
-  }
-  .capacity-hero .hero-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 10px;
-    letter-spacing: 0.5px;
-  }
-  .capacity-hero .hero-stats {
-    display: flex;
-    justify-content: center;
-    gap: 32px;
-  }
-  .capacity-hero .hero-stats span {
-    font-size: 14px;
-    color: var(--accent);
-    font-weight: 500;
-  }
-
-  .pocket-list {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-  @media (max-width: 600px) {
-    .pocket-list { grid-template-columns: 1fr; }
-  }
-  .pocket-item {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px;
-  }
-  .pocket-item .pocket-name {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 4px;
-  }
-  .pocket-item .pocket-desc {
-    font-size: 13px;
-    color: var(--text-secondary);
-    line-height: 1.5;
-  }
-
-  /* Panel 4: Details */
-  .detail-list {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-  .detail-item {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px 20px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-  .detail-item .detail-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    background: var(--bg-section);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
-  }
-  .detail-item .detail-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 2px;
-  }
-  .detail-item .detail-desc {
-    font-size: 13px;
-    color: var(--text-secondary);
-  }
-
-  /* Panel 5 & 6: Info & Notes */
-  .info-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  .info-table tr {
-    border-bottom: 1px solid var(--border);
-  }
-  .info-table tr:last-child {
-    border-bottom: none;
-  }
-  .info-table td {
-    padding: 10px 0;
-    font-size: 14px;
-  }
-  .info-table td:first-child {
-    color: var(--text-muted);
-    width: 140px;
-    font-size: 13px;
-  }
-  .info-table td:last-child {
-    color: var(--text-primary);
-  }
-  .notes-text {
-    font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1.8;
-  }
-
-  /* Panel 7: Main Images */
-  .main-image-list {
-    display: grid;
-    gap: 12px;
-  }
-  .main-image-item {
-    background: var(--bg-section);
-    border-radius: var(--radius);
-    padding: 20px 24px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  .main-image-item .img-number {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: var(--accent);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    font-weight: 600;
-    flex-shrink: 0;
-  }
-  .main-image-item .img-copy {
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--text-primary);
-    letter-spacing: 0.5px;
-  }
-
-  /* Footer */
-  .footer {
-    text-align: center;
-    padding: 40px 0 0;
-    border-top: 1px solid var(--border);
-    margin-top: 48px;
-  }
-  .footer .brand-name {
-    font-size: 13px;
-    letter-spacing: 3px;
-    color: var(--text-muted);
-    margin-bottom: 6px;
-  }
-  .footer .tagline {
-    font-size: 13px;
-    color: var(--text-secondary);
-  }
+  .container { max-width: var(--max-width); margin: 0 auto; padding: 40px 24px 80px; }
+  .header { text-align: center; padding: 48px 0 40px; border-bottom: 1px solid var(--border); margin-bottom: 48px; }
+  .header .brand { font-size: 13px; letter-spacing: 3px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; }
+  .header .model { font-size: 28px; font-weight: 600; color: var(--text-primary); letter-spacing: 1px; }
+  .header .series { display: inline-block; margin-top: 8px; padding: 3px 14px; font-size: 12px; color: var(--text-secondary); background: var(--tag-bg); border-radius: 100px; letter-spacing: 1px; }
+  .section { margin-bottom: 56px; }
+  .section-title { font-size: 11px; letter-spacing: 4px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 24px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 600px) { .feature-grid { grid-template-columns: 1fr; } }
+  .feature-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); }
+  .feature-card .card-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; letter-spacing: 0.5px; }
+  .feature-card .card-stat { font-size: 13px; color: var(--text-secondary); }
+  .feature-card .card-stats { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+  .feature-card .card-stats span { font-size: 13px; color: var(--text-secondary); position: relative; padding-right: 10px; }
+  .feature-card .card-stats span:not(:last-child)::after { content: ''; position: absolute; right: 0; top: 6px; width: 3px; height: 3px; border-radius: 50%; background: var(--border); }
+  .capacity-section { margin-bottom: 24px; }
+  .capacity-hero { background: var(--bg-section); border-radius: var(--radius); padding: 28px 24px; text-align: center; margin-bottom: 16px; }
+  .capacity-hero .hero-title { font-size: 18px; font-weight: 600; color: var(--text-primary); margin-bottom: 10px; letter-spacing: 0.5px; }
+  .capacity-hero .hero-stats { display: flex; justify-content: center; gap: 32px; }
+  .capacity-hero .hero-stats span { font-size: 14px; color: var(--accent); font-weight: 500; }
+  .pocket-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 600px) { .pocket-list { grid-template-columns: 1fr; } }
+  .pocket-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+  .pocket-item .pocket-name { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+  .pocket-item .pocket-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+  .detail-list { display: grid; grid-template-columns: 1fr; gap: 10px; }
+  .detail-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; display: flex; align-items: center; gap: 14px; }
+  .detail-item .detail-icon { width: 40px; height: 40px; border-radius: 8px; background: var(--bg-section); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .detail-item .detail-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
+  .detail-item .detail-desc { font-size: 13px; color: var(--text-secondary); }
+  .info-table { width: 100%; border-collapse: collapse; }
+  .info-table tr { border-bottom: 1px solid var(--border); }
+  .info-table tr:last-child { border-bottom: none; }
+  .info-table td { padding: 10px 0; font-size: 14px; }
+  .info-table td:first-child { color: var(--text-muted); width: 140px; font-size: 13px; }
+  .info-table td:last-child { color: var(--text-primary); }
+  .notes-text { font-size: 13px; color: var(--text-muted); line-height: 1.8; }
+  .main-image-list { display: grid; gap: 12px; }
+  .main-image-item { background: var(--bg-section); border-radius: var(--radius); padding: 20px 24px; display: flex; align-items: center; gap: 16px; }
+  .main-image-item .img-number { width: 36px; height: 36px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+  .main-image-item .img-copy { font-size: 16px; font-weight: 500; color: var(--text-primary); letter-spacing: 0.5px; }
+  .footer { text-align: center; padding: 40px 0 0; border-top: 1px solid var(--border); margin-top: 48px; }
+  .footer .brand-name { font-size: 13px; letter-spacing: 3px; color: var(--text-muted); margin-bottom: 6px; }
+  .footer .tagline { font-size: 13px; color: var(--text-secondary); }
 </style>
 </head>
 <body>
 <div class="container">
 
-  <!-- Header -->
   <div class="header">
     <div class="brand">MARK RYDEN</div>
     <div class="model">8859</div>
     <div class="series">T 差旅系列 · 双肩背包</div>
   </div>
 
-  <!-- 板块 1：重要功能 -->
+  <!-- 板块 1：重要功能（主标题 + 1 个数据卖点） -->
   <div class="section">
     <div class="section-title">重要功能</div>
     <div class="feature-grid">
       <div class="feature-card">
-        <div class="card-title">子母双包，出门灵活切换</div>
-        <div class="card-stat">3.15L独立小包，可拆卸使用</div>
-      </div>
-      <div class="feature-card">
-        <div class="card-title">防泼水面料，雨天更从容</div>
-        <div class="card-stat">5级防泼水，900D高密度纱线</div>
+        <div class="card-title">子母包可拆卸，一包两用</div>
+        <div class="card-stat">1L独立收纳空间</div>
       </div>
       <div class="feature-card">
         <div class="card-title">外置充电口，边走边充</div>
-        <div class="card-stat">2.0快充协议，99%品牌兼容</div>
+        <div class="card-stat">99%品牌设备兼容</div>
       </div>
       <div class="feature-card">
-        <div class="card-title">透气背辐，差旅不闷热</div>
-        <div class="card-stat">90%透气面积，3D蜂窝结构</div>
+        <div class="card-title">防泼水面料，雨天从容</div>
+        <div class="card-stat">5级防泼水</div>
+      </div>
+      <div class="feature-card">
+        <div class="card-title">YKK拉链，顺滑耐用</div>
+        <div class="card-stat">5万次开合寿命</div>
+      </div>
+      <div class="feature-card">
+        <div class="card-title">蜂窝透气背辐，久背不闷</div>
+        <div class="card-stat">90%透气面积</div>
       </div>
     </div>
   </div>
@@ -345,97 +116,94 @@
     <div class="section-title">容量展示</div>
     <div class="capacity-section">
       <div class="capacity-hero">
-        <div class="hero-title">37L扩容收纳，一周出差一包搞定</div>
+        <div class="hero-title">37L扩容差旅，一包装下四季</div>
         <div class="hero-stats">
-          <span>37L 总容量</span>
-          <span>3层大口袋</span>
-          <span>扩容后 49.5L</span>
+          <span>37L总容量</span>
+          <span>扩容至49.5L</span>
         </div>
       </div>
       <div class="pocket-list">
         <div class="pocket-item">
-          <div class="pocket-name">主仓层</div>
-          <div class="pocket-desc">大隔层收纳，干湿分离拉链袋，X型行李固定扣，一拉即可扩容</div>
+          <div class="pocket-name">干湿分离主仓</div>
+          <div class="pocket-desc">X型行李固定扣锁定衣物，可扩容应对行程变化</div>
         </div>
         <div class="pocket-item">
-          <div class="pocket-name">前幅收纳层</div>
-          <div class="pocket-desc">物件隔层×2，笔袋×1，常用物品随手可取</div>
+          <div class="pocket-name">前仓快取隔层</div>
+          <div class="pocket-desc">2个隔层 + 笔袋分区，常用物品随手拿取</div>
         </div>
         <div class="pocket-item">
-          <div class="pocket-name">独立数码仓</div>
-          <div class="pocket-desc">17.3寸电脑保护隔层，iPad隔层，物件隔层×8，拉链隐私内袋</div>
+          <div class="pocket-name">17.3寸独立电脑仓</div>
+          <div class="pocket-desc">缓冲隔层 + 8个分区 + iPad保护层，设备井然有序</div>
         </div>
         <div class="pocket-item">
-          <div class="pocket-name">前置隐形拉链袋</div>
-          <div class="pocket-desc">侧边隐形收纳，证件快取，外观利落不显杂乱</div>
+          <div class="pocket-name">侧边隐形拉链袋</div>
+          <div class="pocket-desc">前置设计，随手存取证件不显眼</div>
         </div>
         <div class="pocket-item">
-          <div class="pocket-name">侧边弹力水壶袋</div>
-          <div class="pocket-desc">左侧弹力口袋，雨伞水杯随手存取，出行途中不弯腰</div>
+          <div class="pocket-name">弹力水壶袋</div>
+          <div class="pocket-desc">侧边拉链开口，保温杯随手取用</div>
         </div>
         <div class="pocket-item">
-          <div class="pocket-name">肩部防盗口袋</div>
-          <div class="pocket-desc">RFID防盗刷保护，地铁通勤刷手机，无信息泄露之忧</div>
+          <div class="pocket-name">RFID肩部口袋</div>
+          <div class="pocket-desc">阻断无线读取，银行卡信息差旅更安全</div>
         </div>
         <div class="pocket-item">
-          <div class="pocket-name">后背隐藏大隔层</div>
-          <div class="pocket-desc">大容量贴身收纳，贵重物品随时取用，防盗更安心</div>
-        </div>
-        <div class="pocket-item">
-          <div class="pocket-name">可拆卸子母包</div>
-          <div class="pocket-desc">3.15L独立容量，5级防泼水面料，6.7寸手机收纳，短暂出门拎着就走</div>
+          <div class="pocket-name">后背隐藏隔层</div>
+          <div class="pocket-desc">护照现金贴身存放，安全隐于背</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 板块 3：功能详解 -->
+  <!-- 板块 3：功能详解（主标题 + 多个数据卖点，覆盖全部非空功能） -->
   <div class="section">
     <div class="section-title">功能详解</div>
     <div class="feature-grid">
       <div class="feature-card">
-        <div class="card-title">子母双包，一包多用</div>
+        <div class="card-title">37L大容量，一周出差一包搞定</div>
         <div class="card-stats">
-          <span>3.15L独立收纳空间</span>
+          <span>37L总容量</span>
+          <span>扩容至49.5L</span>
+          <span>3层大口袋分区</span>
+          <span>可容纳17.3英寸电脑</span>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="card-title">可拆卸子母包，一包两用</div>
+        <div class="card-stats">
+          <span>1L独立储存容量</span>
           <span>5级防泼水面料</span>
-          <span>适配6.7寸手机</span>
-          <span>可拆卸独立使用</span>
+          <span>6.7寸手机收纳层</span>
         </div>
       </div>
       <div class="feature-card">
-        <div class="card-title">5级防泼水，旅途从容应对</div>
+        <div class="card-title">外置充电口，通勤不断电</div>
         <div class="card-stats">
-          <span>防泼水5级</span>
+          <span>2.0充电协议</span>
+          <span>99%品牌兼容</span>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="card-title">防泼水面料，差旅不惧天气</div>
+        <div class="card-stats">
+          <span>5级防泼水</span>
           <span>900D高密度纱线</span>
-          <span>抗污4级</span>
-          <span>耐磨耐用</span>
+          <span>4级抗污</span>
         </div>
       </div>
       <div class="feature-card">
-        <div class="card-title">外置充电口，差旅不断电</div>
+        <div class="card-title">蜂窝背辐，差旅久背不闷</div>
         <div class="card-stats">
-          <span>USB 2.0快充协议</span>
-          <span>99%品牌兼容率</span>
-          <span>内部走线整洁</span>
-          <span>边走边充不掉线</span>
-        </div>
-      </div>
-      <div class="feature-card">
-        <div class="card-title">蜂窝透气背辐，长途更舒适</div>
-        <div class="card-stats">
-          <span>3D透气孔设计</span>
+          <span>3D透气孔结构</span>
           <span>90%透气面积</span>
-          <span>15mm支撑海绵</span>
-          <span>散热快不闷热</span>
+          <span>15MM支撑海绵</span>
         </div>
       </div>
       <div class="feature-card">
-        <div class="card-title">YKK拉链，5万次顺滑开合</div>
+        <div class="card-title">YKK拉链，开合顺滑如一</div>
         <div class="card-stats">
-          <span>日本YKK原厂拉链</span>
           <span>5万次开合寿命</span>
-          <span>＞2.0N顺滑阻力</span>
-          <span>经久耐用不卡顿</span>
+          <span>＞2.0N 顺滑阻力</span>
         </div>
       </div>
     </div>
@@ -446,24 +214,24 @@
     <div class="section-title">产品细节</div>
     <div class="detail-list">
       <div class="detail-item">
-        <div class="detail-icon">&#10022;</div>
+        <div class="detail-icon">✦</div>
         <div>
-          <div class="detail-title">减负腰带，长途更轻松</div>
-          <div class="detail-desc">可调节设计，均匀分散肩部压力，长时间背负不累</div>
+          <div class="detail-title">减负腰带，负重更轻松</div>
+          <div class="detail-desc">可调节设计，腰部分摊背包压力，长途差旅肩不酸</div>
         </div>
       </div>
       <div class="detail-item">
-        <div class="detail-icon">&#10022;</div>
+        <div class="detail-icon">✦</div>
         <div>
-          <div class="detail-title">海绵提手，久提不勒手</div>
-          <div class="detail-desc">高支撑海绵填充，握感柔软有弹性，手提通勤更舒适</div>
+          <div class="detail-title">海绵提手，久握不勒</div>
+          <div class="detail-desc">高支撑海绵填充，提握柔软舒适</div>
         </div>
       </div>
       <div class="detail-item">
-        <div class="detail-icon">&#10022;</div>
+        <div class="detail-icon">✦</div>
         <div>
-          <div class="detail-title">背部拉杆带，差旅无缝衔接</div>
-          <div class="detail-desc">套入行李箱拉杆即可固定，机场中转不再手忙脚乱</div>
+          <div class="detail-title">背部拉杆带，一步到位</div>
+          <div class="detail-desc">套入行李箱拉杆，机场换乘不手忙脚乱</div>
         </div>
       </div>
     </div>
@@ -473,51 +241,24 @@
   <div class="section">
     <div class="section-title">产品信息</div>
     <table class="info-table">
-      <tr>
-        <td>品牌</td>
-        <td>MARK RYDEN</td>
-      </tr>
-      <tr>
-        <td>面料</td>
-        <td>尼龙</td>
-      </tr>
-      <tr>
-        <td>型号</td>
-        <td>MR-T8859</td>
-      </tr>
-      <tr>
-        <td>重量</td>
-        <td>1.8kg</td>
-      </tr>
-      <tr>
-        <td>尺寸</td>
-        <td>50 × 34 × 28cm</td>
-      </tr>
-      <tr>
-        <td>颜色</td>
-        <td>商务黑</td>
-      </tr>
-      <tr>
-        <td>数码仓</td>
-        <td>可容纳17.3英寸电脑</td>
-      </tr>
-      <tr>
-        <td>肩带范围</td>
-        <td>40 ~ 95cm</td>
-      </tr>
+      <tr><td>品牌</td><td>MARK RYDEN</td></tr>
+      <tr><td>面料</td><td>尼龙</td></tr>
+      <tr><td>型号</td><td>MR-T8859</td></tr>
+      <tr><td>重量</td><td>1.8kg</td></tr>
+      <tr><td>尺寸</td><td>50×34×28cm</td></tr>
+      <tr><td>颜色</td><td>商务黑</td></tr>
+      <tr><td>数码仓尺寸</td><td>可容纳17.3英寸电脑</td></tr>
+      <tr><td>肩带</td><td>40~95cm</td></tr>
     </table>
   </div>
 
-  <!-- 板块 6：备注 -->
+  <!-- 板块 6：备注信息 -->
   <div class="section">
     <div class="section-title">备注</div>
-    <div class="notes-text">
-      产品详情页所标注数据均源自 MARK RYDEN 实验室。<br>
-      数码仓容纳17.3寸电脑均以主流外星人游戏本及苹果轻薄本作为标准参照。
-    </div>
+    <div class="notes-text">产品详情页所标注数据均源自 MARK RYDEN 实验室。<br>数码仓容纳17.3寸电脑均以主流外星人游戏本及苹果轻薄本作为标准参照。</div>
   </div>
 
-  <!-- 板块 7：电商主图文案 -->
+  <!-- 板块 7：电商主图文案（5张） -->
   <div class="section">
     <div class="section-title">电商主图文案</div>
     <div class="main-image-list">
@@ -527,24 +268,23 @@
       </div>
       <div class="main-image-item">
         <div class="img-number">2</div>
-        <div class="img-copy">子母双包，3.15L独立隔层灵活切换</div>
+        <div class="img-copy">可拆卸子母包，一包两用更灵活</div>
       </div>
       <div class="main-image-item">
         <div class="img-number">3</div>
-        <div class="img-copy">5级防泼水，差旅从容不惧雨天</div>
+        <div class="img-copy">5级防泼水，雨天从容通勤</div>
       </div>
       <div class="main-image-item">
         <div class="img-number">4</div>
-        <div class="img-copy">全域透气背辐，长途背负不闷热</div>
+        <div class="img-copy">17.3寸电脑仓，全尺寸设备安全随行</div>
       </div>
       <div class="main-image-item">
         <div class="img-number">5</div>
-        <div class="img-copy">17.3寸数码仓，商务设备安全随行</div>
+        <div class="img-copy">蜂窝透气背辐，差旅久背不闷热</div>
       </div>
     </div>
   </div>
 
-  <!-- Footer -->
   <div class="footer">
     <div class="brand-name">MARK RYDEN</div>
     <div class="tagline">都市 · 秩序 · 科技</div>
