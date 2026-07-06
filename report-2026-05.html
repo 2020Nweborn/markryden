@@ -1,0 +1,1248 @@
+<!--
+  ============================================================
+  DESIGN SYSTEM 对齐规则
+  此模板的 :root 变量、body/container 布局、卡片风格、间距、
+  字体、阴影等，必须与主模板保持一致：
+  ~/.workbuddy/skills/brand-product-copywriter/assets/detail-page-template.html
+  修改主模板 CSS 变量后，必须同步更新此文件。
+  ============================================================
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>设计人效报表 — 2026年5月</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-section: #f8f9fa;
+    --bg-card: #ffffff;
+    --text-primary: #1a1a1a;
+    --text-secondary: #555555;
+    --text-muted: #888888;
+    --accent: #2c2c2c;
+    --border: #eaeaea;
+    --tag-bg: #f0f0f0;
+    --shadow: 0 1px 3px rgba(0,0,0,0.04);
+    --radius: 8px;
+    --max-width: 900px;
+    --font-title: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    --font-body: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--text-primary);
+    background: var(--bg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 48px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .header .sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+  }
+  .header .date-range {
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 4px;
+  }
+  .header .metric-note {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 4px 14px;
+    font-size: 12px;
+    color: #e65100;
+    background: #fff8e1;
+    border: 1px solid #ffc107;
+    border-radius: 100px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Section */
+  .section {
+    margin-bottom: 56px;
+  }
+  .section-title {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-subtitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin: 24px 0 12px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Summary cards */
+  .summary-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 0;
+    flex-wrap: wrap;
+  }
+  .summary-card {
+    flex: 1;
+    min-width: 160px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+  }
+  .summary-card .label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+  }
+  .summary-card .value {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .summary-card .unit {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-muted);
+    margin-left: 2px;
+  }
+
+  /* Person card */
+  .person-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .person-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: var(--bg-section);
+    border-bottom: 1px solid var(--border);
+  }
+  .person-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 0.5px;
+  }
+  .person-hours {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .person-hours .unit {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+  .person-body {
+    padding: 16px 20px;
+  }
+
+  .sub-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .sub-table th {
+    text-align: left;
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .sub-table td {
+    font-size: 13px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f7f7f7;
+  }
+  .sub-table .bar-cell {
+    position: relative;
+  }
+  .bar-bg {
+    position: absolute;
+    left: 0;
+    top: 4px;
+    bottom: 4px;
+    background: #eef2ff;
+    border-radius: 3px;
+    z-index: 0;
+  }
+  .bar-text {
+    position: relative;
+    z-index: 1;
+    padding-left: 6px;
+    font-weight: 500;
+  }
+  .sub-table .cat-cell {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .cat-cell .cat-num {
+    display: inline-block;
+    min-width: 24px;
+    padding: 1px 6px;
+    border-radius: 100px;
+    font-weight: 600;
+  }
+  .cat-num.innovation { background: #e8f5e9; color: #2e7d32; }
+  .cat-num.optimize   { background: #e3f2fd; color: #1565c0; }
+  .cat-num.modify     { background: #fff3e0; color: #e65100; }
+  .cat-num.zero       { color: #ccc; background: transparent; }
+
+  /* Platform card */
+  .platform-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .platform-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: var(--bg-section);
+    border-bottom: 1px solid var(--border);
+  }
+  .platform-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 0.5px;
+  }
+  .platform-hours {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .platform-hours .unit {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+  .platform-body {
+    padding: 16px 20px;
+  }
+
+  /* Category tags */
+  .tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .tag {
+    font-size: 12px;
+    padding: 2px 10px;
+    border-radius: 100px;
+    background: var(--tag-bg);
+    color: var(--text-muted);
+  }
+  .tag.innovation {
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+  .tag.optimize {
+    background: #e3f2fd;
+    color: #1565c0;
+  }
+  .tag.modify {
+    background: #fff3e0;
+    color: #e65100;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 40px 0 0;
+    border-top: 1px solid var(--border);
+    margin-top: 48px;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+  }
+
+  /* No data */
+  .empty {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ===== HEADER ===== -->
+  <div class="header">
+    <h1>设计人效月度报表</h1>
+    <div class="sub">视觉部下单表 · 数据统计</div>
+    <div class="date-range">2026-05-01 ~ 2026-05-31</div>
+    <div class="metric-note">📌 统计口径：实际交付日期</div>
+  </div>
+
+  <!-- ===== 全局汇总 ===== -->
+  <div class="section">
+    <div class="section-title">全局概览</div>
+    <div class="summary-row">
+            <div class="summary-card">
+        <div class="label">总工时</div>
+        <div class="value">1011.4<span class="unit">h</span></div>
+      </div>
+      <div class="summary-card">
+        <div class="label">任务数</div>
+        <div class="value">137<span class="unit">条</span></div>
+      </div>
+      <div class="summary-card">
+        <div class="label">人数</div>
+        <div class="value">6<span class="unit">人</span></div>
+      </div>
+      <div class="summary-card">
+        <div class="label">平台数</div>
+        <div class="value">9<span class="unit">个</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 维度一：按负责人 ===== -->
+  <div class="section">
+    <div class="section-title">按负责人</div>
+      <div class="person-card">
+    <div class="person-header">
+      <span class="person-name">梁琳涛</span>
+      <span class="person-hours">191.0<span class="unit">h</span></span>
+    </div>
+    <div class="person-body">
+      <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+      <table class="sub-table">
+        <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:88%"></div>
+            <span class="bar-text">新品/老品（主图&详情页）</span>
+          </td>
+          <td style="text-align:right">168.0h</td>
+          <td style="text-align:right">88%</td>
+          <td class="cat-cell"><span class="cat-num innovation">5</span></td>
+          <td class="cat-cell"><span class="cat-num optimize">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:4%"></div>
+            <span class="bar-text">海报图</span>
+          </td>
+          <td style="text-align:right">8.0h</td>
+          <td style="text-align:right">4%</td>
+          <td class="cat-cell"><span class="cat-num innovation">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:4%"></div>
+            <span class="bar-text">卖点图/主图</span>
+          </td>
+          <td style="text-align:right">7.0h</td>
+          <td style="text-align:right">4%</td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num modify">5</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:2%"></div>
+            <span class="bar-text">详情页</span>
+          </td>
+          <td style="text-align:right">4.4h</td>
+          <td style="text-align:right">2%</td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num modify">3</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:2%"></div>
+            <span class="bar-text">简易定制</span>
+          </td>
+          <td style="text-align:right">3.6h</td>
+          <td style="text-align:right">2%</td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num optimize">6</span></td>
+          <td class="cat-cell"><span class="cat-num modify">1</span></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="person-card">
+    <div class="person-header">
+      <span class="person-name">罗绚</span>
+      <span class="person-hours">229.4<span class="unit">h</span></span>
+    </div>
+    <div class="person-body">
+      <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+      <table class="sub-table">
+        <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:52%"></div>
+            <span class="bar-text">新品/老品（主图&详情页）</span>
+          </td>
+          <td style="text-align:right">120.0h</td>
+          <td style="text-align:right">52%</td>
+          <td class="cat-cell"><span class="cat-num innovation">5</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:48%"></div>
+            <span class="bar-text">卖点图/主图</span>
+          </td>
+          <td style="text-align:right">109.4h</td>
+          <td style="text-align:right">48%</td>
+          <td class="cat-cell"><span class="cat-num innovation">3</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num modify">4</span></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="person-card">
+    <div class="person-header">
+      <span class="person-name">谭宇</span>
+      <span class="person-hours">76.0<span class="unit">h</span></span>
+    </div>
+    <div class="person-body">
+      <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+      <table class="sub-table">
+        <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:55%"></div>
+            <span class="bar-text">展台视频拍摄</span>
+          </td>
+          <td style="text-align:right">42.0h</td>
+          <td style="text-align:right">55%</td>
+          <td class="cat-cell"><span class="cat-num innovation">7</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:24%"></div>
+            <span class="bar-text">信息流视频剪辑</span>
+          </td>
+          <td style="text-align:right">18.0h</td>
+          <td style="text-align:right">24%</td>
+          <td class="cat-cell"><span class="cat-num innovation">16</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:21%"></div>
+            <span class="bar-text">产品视频剪辑</span>
+          </td>
+          <td style="text-align:right">16.0h</td>
+          <td style="text-align:right">21%</td>
+          <td class="cat-cell"><span class="cat-num innovation">4</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="person-card">
+    <div class="person-header">
+      <span class="person-name">谢学文</span>
+      <span class="person-hours">197.0<span class="unit">h</span></span>
+    </div>
+    <div class="person-body">
+      <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+      <table class="sub-table">
+        <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:41%"></div>
+            <span class="bar-text">产品白底图</span>
+          </td>
+          <td style="text-align:right">81.0h</td>
+          <td style="text-align:right">41%</td>
+          <td class="cat-cell"><span class="cat-num innovation">9</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:37%"></div>
+            <span class="bar-text">新/老品展台图 - 大型包</span>
+          </td>
+          <td style="text-align:right">72.0h</td>
+          <td style="text-align:right">37%</td>
+          <td class="cat-cell"><span class="cat-num innovation">3</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:18%"></div>
+            <span class="bar-text">新/老品展台图 - 中型包</span>
+          </td>
+          <td style="text-align:right">36.0h</td>
+          <td style="text-align:right">18%</td>
+          <td class="cat-cell"><span class="cat-num innovation">3</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:4%"></div>
+            <span class="bar-text">新/老品展台图 - 小型包</span>
+          </td>
+          <td style="text-align:right">8.0h</td>
+          <td style="text-align:right">4%</td>
+          <td class="cat-cell"><span class="cat-num innovation">2</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="person-card">
+    <div class="person-header">
+      <span class="person-name">周柏屹</span>
+      <span class="person-hours">89.4<span class="unit">h</span></span>
+    </div>
+    <div class="person-body">
+      <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+      <table class="sub-table">
+        <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:72%"></div>
+            <span class="bar-text">小红书&ins</span>
+          </td>
+          <td style="text-align:right">64.0h</td>
+          <td style="text-align:right">72%</td>
+          <td class="cat-cell"><span class="cat-num innovation">4</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:19%"></div>
+            <span class="bar-text">简易定制</span>
+          </td>
+          <td style="text-align:right">16.9h</td>
+          <td style="text-align:right">19%</td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num optimize">21</span></td>
+          <td class="cat-cell"><span class="cat-num modify">17</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:7%"></div>
+            <span class="bar-text">卖点图/主图</span>
+          </td>
+          <td style="text-align:right">6.2h</td>
+          <td style="text-align:right">7%</td>
+          <td class="cat-cell"><span class="cat-num innovation">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num modify">1</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:3%"></div>
+            <span class="bar-text">测量尺寸&重量</span>
+          </td>
+          <td style="text-align:right">2.3h</td>
+          <td style="text-align:right">3%</td>
+          <td class="cat-cell"><span class="cat-num innovation">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="person-card">
+    <div class="person-header">
+      <span class="person-name">张勇</span>
+      <span class="person-hours">228.6<span class="unit">h</span></span>
+    </div>
+    <div class="person-body">
+      <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+      <table class="sub-table">
+        <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:42%"></div>
+            <span class="bar-text">新品/老品（主图&详情页）</span>
+          </td>
+          <td style="text-align:right">96.0h</td>
+          <td style="text-align:right">42%</td>
+          <td class="cat-cell"><span class="cat-num innovation">4</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:30%"></div>
+            <span class="bar-text">推广图</span>
+          </td>
+          <td style="text-align:right">68.0h</td>
+          <td style="text-align:right">30%</td>
+          <td class="cat-cell"><span class="cat-num innovation">3</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:16%"></div>
+            <span class="bar-text">海报图</span>
+          </td>
+          <td style="text-align:right">36.0h</td>
+          <td style="text-align:right">16%</td>
+          <td class="cat-cell"><span class="cat-num innovation">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:8%"></div>
+            <span class="bar-text">iCON</span>
+          </td>
+          <td style="text-align:right">18.0h</td>
+          <td style="text-align:right">8%</td>
+          <td class="cat-cell"><span class="cat-num innovation">3</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:5%"></div>
+            <span class="bar-text">卖点图/主图</span>
+          </td>
+          <td style="text-align:right">10.6h</td>
+          <td style="text-align:right">5%</td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num modify">3</span></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  </div>
+
+  <!-- ===== 维度二：按平台 ===== -->
+  <div class="section">
+    <div class="section-title">按平台</div>
+      <div class="person-card">
+    <div class="person-header">
+      <span class="person-name">自建站</span>
+      <span class="person-hours">95.4<span class="unit">h</span></span>
+    </div>
+    <div class="person-body">
+      <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+      <table class="sub-table">
+        <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:55%"></div>
+            <span class="bar-text">产品白底图</span>
+          </td>
+          <td style="text-align:right">52.0h</td>
+          <td style="text-align:right">55%</td>
+          <td class="cat-cell"><span class="cat-num innovation">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:16%"></div>
+            <span class="bar-text">卖点图/主图</span>
+          </td>
+          <td style="text-align:right">15.4h</td>
+          <td style="text-align:right">16%</td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num modify">4</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:13%"></div>
+            <span class="bar-text">展台视频拍摄</span>
+          </td>
+          <td style="text-align:right">12.0h</td>
+          <td style="text-align:right">13%</td>
+          <td class="cat-cell"><span class="cat-num innovation">2</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:8%"></div>
+            <span class="bar-text">产品视频剪辑</span>
+          </td>
+          <td style="text-align:right">8.0h</td>
+          <td style="text-align:right">8%</td>
+          <td class="cat-cell"><span class="cat-num innovation">2</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:8%"></div>
+            <span class="bar-text">海报图</span>
+          </td>
+          <td style="text-align:right">8.0h</td>
+          <td style="text-align:right">8%</td>
+          <td class="cat-cell"><span class="cat-num innovation">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="person-card">
+    <div class="person-header">
+      <span class="person-name">亚马逊</span>
+      <span class="person-hours">312.0<span class="unit">h</span></span>
+    </div>
+    <div class="person-body">
+      <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+      <table class="sub-table">
+        <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:62%"></div>
+            <span class="bar-text">新品/老品（主图&详情页）</span>
+          </td>
+          <td style="text-align:right">192.0h</td>
+          <td style="text-align:right">62%</td>
+          <td class="cat-cell"><span class="cat-num innovation">6</span></td>
+          <td class="cat-cell"><span class="cat-num optimize">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:35%"></div>
+            <span class="bar-text">卖点图/主图</span>
+          </td>
+          <td style="text-align:right">109.4h</td>
+          <td style="text-align:right">35%</td>
+          <td class="cat-cell"><span class="cat-num innovation">3</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num modify">4</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:3%"></div>
+            <span class="bar-text">产品白底图</span>
+          </td>
+          <td style="text-align:right">9.0h</td>
+          <td style="text-align:right">3%</td>
+          <td class="cat-cell"><span class="cat-num innovation">4</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:1%"></div>
+            <span class="bar-text">详情页</span>
+          </td>
+          <td style="text-align:right">1.6h</td>
+          <td style="text-align:right">1%</td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num modify">1</span></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="person-card">
+    <div class="person-header">
+      <span class="person-name">社媒</span>
+      <span class="person-hours">121.6<span class="unit">h</span></span>
+    </div>
+    <div class="person-body">
+      <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+      <table class="sub-table">
+        <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:53%"></div>
+            <span class="bar-text">小红书&ins</span>
+          </td>
+          <td style="text-align:right">64.0h</td>
+          <td style="text-align:right">53%</td>
+          <td class="cat-cell"><span class="cat-num innovation">4</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:20%"></div>
+            <span class="bar-text">展台视频拍摄</span>
+          </td>
+          <td style="text-align:right">24.0h</td>
+          <td style="text-align:right">20%</td>
+          <td class="cat-cell"><span class="cat-num innovation">4</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:15%"></div>
+            <span class="bar-text">信息流视频剪辑</span>
+          </td>
+          <td style="text-align:right">18.0h</td>
+          <td style="text-align:right">15%</td>
+          <td class="cat-cell"><span class="cat-num innovation">16</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:7%"></div>
+            <span class="bar-text">产品视频剪辑</span>
+          </td>
+          <td style="text-align:right">8.0h</td>
+          <td style="text-align:right">7%</td>
+          <td class="cat-cell"><span class="cat-num innovation">2</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:3%"></div>
+            <span class="bar-text">推广图</span>
+          </td>
+          <td style="text-align:right">4.0h</td>
+          <td style="text-align:right">3%</td>
+          <td class="cat-cell"><span class="cat-num innovation">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:1%"></div>
+            <span class="bar-text">卖点图/主图</span>
+          </td>
+          <td style="text-align:right">1.4h</td>
+          <td style="text-align:right">1%</td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num modify">3</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:1%"></div>
+            <span class="bar-text">详情页</span>
+          </td>
+          <td style="text-align:right">1.2h</td>
+          <td style="text-align:right">1%</td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num modify">1</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:1%"></div>
+            <span class="bar-text">简易定制</span>
+          </td>
+          <td style="text-align:right">1.0h</td>
+          <td style="text-align:right">1%</td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num optimize">2</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="person-card">
+    <div class="person-header">
+      <span class="person-name">通用</span>
+      <span class="person-hours">352.3<span class="unit">h</span></span>
+    </div>
+    <div class="person-body">
+      <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+      <table class="sub-table">
+        <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:54%"></div>
+            <span class="bar-text">新品/老品（主图&详情页）</span>
+          </td>
+          <td style="text-align:right">192.0h</td>
+          <td style="text-align:right">54%</td>
+          <td class="cat-cell"><span class="cat-num innovation">8</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:20%"></div>
+            <span class="bar-text">新/老品展台图 - 大型包</span>
+          </td>
+          <td style="text-align:right">72.0h</td>
+          <td style="text-align:right">20%</td>
+          <td class="cat-cell"><span class="cat-num innovation">3</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:10%"></div>
+            <span class="bar-text">新/老品展台图 - 中型包</span>
+          </td>
+          <td style="text-align:right">36.0h</td>
+          <td style="text-align:right">10%</td>
+          <td class="cat-cell"><span class="cat-num innovation">3</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:5%"></div>
+            <span class="bar-text">产品白底图</span>
+          </td>
+          <td style="text-align:right">19.0h</td>
+          <td style="text-align:right">5%</td>
+          <td class="cat-cell"><span class="cat-num innovation">3</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:5%"></div>
+            <span class="bar-text">iCON</span>
+          </td>
+          <td style="text-align:right">17.0h</td>
+          <td style="text-align:right">5%</td>
+          <td class="cat-cell"><span class="cat-num innovation">2</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:2%"></div>
+            <span class="bar-text">新/老品展台图 - 小型包</span>
+          </td>
+          <td style="text-align:right">8.0h</td>
+          <td style="text-align:right">2%</td>
+          <td class="cat-cell"><span class="cat-num innovation">2</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:2%"></div>
+            <span class="bar-text">展台视频拍摄</span>
+          </td>
+          <td style="text-align:right">6.0h</td>
+          <td style="text-align:right">2%</td>
+          <td class="cat-cell"><span class="cat-num innovation">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:1%"></div>
+            <span class="bar-text">测量尺寸&重量</span>
+          </td>
+          <td style="text-align:right">2.3h</td>
+          <td style="text-align:right">1%</td>
+          <td class="cat-cell"><span class="cat-num innovation">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="person-card">
+    <div class="person-header">
+      <span class="person-name">阿里国际</span>
+      <span class="person-hours">86.6<span class="unit">h</span></span>
+    </div>
+    <div class="person-body">
+      <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+      <table class="sub-table">
+        <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:42%"></div>
+            <span class="bar-text">海报图</span>
+          </td>
+          <td style="text-align:right">36.0h</td>
+          <td style="text-align:right">42%</td>
+          <td class="cat-cell"><span class="cat-num innovation">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:42%"></div>
+            <span class="bar-text">推广图</span>
+          </td>
+          <td style="text-align:right">36.0h</td>
+          <td style="text-align:right">42%</td>
+          <td class="cat-cell"><span class="cat-num innovation">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:15%"></div>
+            <span class="bar-text">简易定制</span>
+          </td>
+          <td style="text-align:right">13.4h</td>
+          <td style="text-align:right">15%</td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num optimize">17</span></td>
+          <td class="cat-cell"><span class="cat-num modify">13</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:1%"></div>
+            <span class="bar-text">产品白底图</span>
+          </td>
+          <td style="text-align:right">1.0h</td>
+          <td style="text-align:right">1%</td>
+          <td class="cat-cell"><span class="cat-num innovation">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:0%"></div>
+            <span class="bar-text">卖点图/主图</span>
+          </td>
+          <td style="text-align:right">0.2h</td>
+          <td style="text-align:right">0%</td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num modify">1</span></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="person-card">
+    <div class="person-header">
+      <span class="person-name">内贸</span>
+      <span class="person-hours">6.8<span class="unit">h</span></span>
+    </div>
+    <div class="person-body">
+      <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+      <table class="sub-table">
+        <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:65%"></div>
+            <span class="bar-text">简易定制</span>
+          </td>
+          <td style="text-align:right">4.4h</td>
+          <td style="text-align:right">65%</td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num optimize">7</span></td>
+          <td class="cat-cell"><span class="cat-num modify">4</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:24%"></div>
+            <span class="bar-text">详情页</span>
+          </td>
+          <td style="text-align:right">1.6h</td>
+          <td style="text-align:right">24%</td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num modify">1</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:12%"></div>
+            <span class="bar-text">卖点图/主图</span>
+          </td>
+          <td style="text-align:right">0.8h</td>
+          <td style="text-align:right">12%</td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num modify">1</span></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="person-card">
+    <div class="person-header">
+      <span class="person-name">公司内部需求</span>
+      <span class="person-hours">29.0<span class="unit">h</span></span>
+    </div>
+    <div class="person-body">
+      <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+      <table class="sub-table">
+        <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:97%"></div>
+            <span class="bar-text">推广图</span>
+          </td>
+          <td style="text-align:right">28.0h</td>
+          <td style="text-align:right">97%</td>
+          <td class="cat-cell"><span class="cat-num innovation">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:3%"></div>
+            <span class="bar-text">iCON</span>
+          </td>
+          <td style="text-align:right">1.0h</td>
+          <td style="text-align:right">3%</td>
+          <td class="cat-cell"><span class="cat-num innovation">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="person-card">
+    <div class="person-header">
+      <span class="person-name">1688</span>
+      <span class="person-hours">1.7<span class="unit">h</span></span>
+    </div>
+    <div class="person-body">
+      <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+      <table class="sub-table">
+        <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:100%"></div>
+            <span class="bar-text">简易定制</span>
+          </td>
+          <td style="text-align:right">1.7h</td>
+          <td style="text-align:right">100%</td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num optimize">1</span></td>
+          <td class="cat-cell"><span class="cat-num modify">1</span></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="person-card">
+    <div class="person-header">
+      <span class="person-name">虾皮</span>
+      <span class="person-hours">6.0<span class="unit">h</span></span>
+    </div>
+    <div class="person-body">
+      <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+      <table class="sub-table">
+        <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="bar-cell">
+            <div class="bar-bg" style="width:100%"></div>
+            <span class="bar-text">卖点图/主图</span>
+          </td>
+          <td style="text-align:right">6.0h</td>
+          <td style="text-align:right">100%</td>
+          <td class="cat-cell"><span class="cat-num innovation">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  </div>
+
+  <div class="footer">数据来源：视觉部下单表 · 生成时间：2026-07-02 18:30</div>
+</div>
+</body>
+</html>
