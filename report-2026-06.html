@@ -137,6 +137,35 @@
     color: var(--text-muted);
     margin-left: 2px;
   }
+  .summary-card-wide {
+    min-width: 260px;
+  }
+  .summary-breakdown {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .summary-breakdown-title {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .summary-breakdown-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 4px 0;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+  .summary-breakdown-item strong {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+  }
 
   /* Person card */
   .person-card {
@@ -327,10 +356,40 @@
     <div class="section-title">全局概览</div>
     <div class="summary-row">
       
-      <div class="summary-card"><div class="label">总工时</div><div class="value">779.9<span class="unit">h</span></div></div>
-      <div class="summary-card"><div class="label">任务数</div><div class="value">132<span class="unit">条</span></div></div>
-      <div class="summary-card"><div class="label">参与人数</div><div class="value">7<span class="unit">人</span></div></div>
-      <div class="summary-card"><div class="label">涉及平台</div><div class="value">10<span class="unit">个</span></div></div>
+      <div class="summary-card summary-card-wide">
+        <div class="label">总工时</div>
+        <div class="value">760.9<span class="unit">h</span></div>
+        <div class="summary-breakdown">
+          <div class="summary-breakdown-title">按平台</div>
+          <div class="summary-breakdown-item"><span>通用</span><strong>472.5h</strong></div>
+<div class="summary-breakdown-item"><span>社媒</span><strong>145h</strong></div>
+<div class="summary-breakdown-item"><span>自建站</span><strong>41.1h</strong></div>
+<div class="summary-breakdown-item"><span>亚马逊</span><strong>27.6h</strong></div>
+<div class="summary-breakdown-item"><span>阿里国际</span><strong>23.4h</strong></div>
+<div class="summary-breakdown-item"><span>虾皮</span><strong>22h</strong></div>
+<div class="summary-breakdown-item"><span>Lazada</span><strong>21h</strong></div>
+<div class="summary-breakdown-item"><span>公司内部需求</span><strong>4h</strong></div>
+<div class="summary-breakdown-item"><span>内贸</span><strong>2.7h</strong></div>
+<div class="summary-breakdown-item"><span>1688</span><strong>1.6h</strong></div>
+        </div>
+      </div>
+      <div class="summary-card summary-card-wide">
+        <div class="label">总数量</div>
+        <div class="value">327<span class="unit">项</span></div>
+        <div class="summary-breakdown">
+          <div class="summary-breakdown-title">按平台</div>
+          <div class="summary-breakdown-item"><span>亚马逊</span><strong>99</strong></div>
+<div class="summary-breakdown-item"><span>通用</span><strong>66</strong></div>
+<div class="summary-breakdown-item"><span>自建站</span><strong>49</strong></div>
+<div class="summary-breakdown-item"><span>阿里国际</span><strong>39</strong></div>
+<div class="summary-breakdown-item"><span>社媒</span><strong>32</strong></div>
+<div class="summary-breakdown-item"><span>虾皮</span><strong>20</strong></div>
+<div class="summary-breakdown-item"><span>Lazada</span><strong>10</strong></div>
+<div class="summary-breakdown-item"><span>内贸</span><strong>7</strong></div>
+<div class="summary-breakdown-item"><span>1688</span><strong>4</strong></div>
+<div class="summary-breakdown-item"><span>公司内部需求</span><strong>1</strong></div>
+        </div>
+      </div>
 
     </div>
   </div>
@@ -338,31 +397,513 @@
   <!-- ===== 维度一：按负责人 ===== -->
   <div class="section">
     <div class="section-title">按负责人</div>
-    <div class="person-card"><div class="person-header"><span class="person-name">谢学文</span><span class="person-hours">168.0<span class="unit">h</span></span></div><div class="person-body"><div class="section-subtitle">项目类型 · 工时与分类明细</div><table class="sub-table"><thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead><tbody><tr><td class="bar-cell"><div class="bar-bg" style="width:98%"></div><span class="bar-text">新/老品展台图 - 大型包</span></td><td style="text-align:right">120.0h</td><td style="text-align:right">71%</td><td class="cat-cell"><span class="cat-num innovation">5</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:38%"></div><span class="bar-text">产品白底图</span></td><td style="text-align:right">32.0h</td><td style="text-align:right">19%</td><td class="cat-cell"><span class="cat-num innovation">11</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:14%"></div><span class="bar-text">新/老品展台图 - 中型包</span></td><td style="text-align:right">12.0h</td><td style="text-align:right">7%</td><td class="cat-cell"><span class="cat-num innovation">1</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:4%"></div><span class="bar-text">新/老品展台图 - 小型包</span></td><td style="text-align:right">4.0h</td><td style="text-align:right">2%</td><td class="cat-cell"><span class="cat-num innovation">1</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr></tbody></table></div></div>
-<div class="person-card"><div class="person-header"><span class="person-name">罗绚</span><span class="person-hours">159.2<span class="unit">h</span></span></div><div class="person-body"><div class="section-subtitle">项目类型 · 工时与分类明细</div><table class="sub-table"><thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead><tbody><tr><td class="bar-cell"><div class="bar-bg" style="width:90%"></div><span class="bar-text">新品/老品（主图&详情页）</span></td><td style="text-align:right">72.0h</td><td style="text-align:right">45%</td><td class="cat-cell"><span class="cat-num innovation">3</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:78%"></div><span class="bar-text">卖点图/主图</span></td><td style="text-align:right">62.2h</td><td style="text-align:right">39%</td><td class="cat-cell"><span class="cat-num innovation">2</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num modify">4</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:32%"></div><span class="bar-text">海报图</span></td><td style="text-align:right">25.0h</td><td style="text-align:right">16%</td><td class="cat-cell"><span class="cat-num innovation">2</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num modify">1</span></td></tr></tbody></table></div></div>
-<div class="person-card"><div class="person-header"><span class="person-name">谭宇</span><span class="person-hours">141.5<span class="unit">h</span></span></div><div class="person-body"><div class="section-subtitle">项目类型 · 工时与分类明细</div><table class="sub-table"><thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead><tbody><tr><td class="bar-cell"><div class="bar-bg" style="width:84%"></div><span class="bar-text">展台视频拍摄</span></td><td style="text-align:right">60.0h</td><td style="text-align:right">42%</td><td class="cat-cell"><span class="cat-num innovation">10</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:74%"></div><span class="bar-text">产品视频剪辑</span></td><td style="text-align:right">52.0h</td><td style="text-align:right">37%</td><td class="cat-cell"><span class="cat-num innovation">13</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:40%"></div><span class="bar-text">信息流视频剪辑</span></td><td style="text-align:right">28.0h</td><td style="text-align:right">20%</td><td class="cat-cell"><span class="cat-num innovation">19</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:2%"></div><span class="bar-text">产品白底图</span></td><td style="text-align:right">1.5h</td><td style="text-align:right">1%</td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num optimize">1</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr></tbody></table></div></div>
-<div class="person-card"><div class="person-header"><span class="person-name">张勇</span><span class="person-hours">127.7<span class="unit">h</span></span></div><div class="person-body"><div class="section-subtitle">项目类型 · 工时与分类明细</div><table class="sub-table"><thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead><tbody><tr><td class="bar-cell"><div class="bar-bg" style="width:98%"></div><span class="bar-text">小红书&ins</span></td><td style="text-align:right">112.0h</td><td style="text-align:right">88%</td><td class="cat-cell"><span class="cat-num innovation">8</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:24%"></div><span class="bar-text">简易定制</span></td><td style="text-align:right">15.7h</td><td style="text-align:right">12%</td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num optimize">20</span></td><td class="cat-cell"><span class="cat-num modify">12</span></td></tr></tbody></table></div></div>
-<div class="person-card"><div class="person-header"><span class="person-name">梁琳涛</span><span class="person-hours">90.9<span class="unit">h</span></span></div><div class="person-body"><div class="section-subtitle">项目类型 · 工时与分类明细</div><table class="sub-table"><thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead><tbody><tr><td class="bar-cell"><div class="bar-bg" style="width:98%"></div><span class="bar-text">新品/老品（主图&详情页）</span></td><td style="text-align:right">72.0h</td><td style="text-align:right">79%</td><td class="cat-cell"><span class="cat-num innovation">3</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:22%"></div><span class="bar-text">卖点图/主图</span></td><td style="text-align:right">9.8h</td><td style="text-align:right">11%</td><td class="cat-cell"><span class="cat-num innovation">1</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num modify">5</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:18%"></div><span class="bar-text">海报图</span></td><td style="text-align:right">8.6h</td><td style="text-align:right">9%</td><td class="cat-cell"><span class="cat-num innovation">2</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num modify">1</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:2%"></div><span class="bar-text">简易定制</span></td><td style="text-align:right">0.5h</td><td style="text-align:right">1%</td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num optimize">1</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr></tbody></table></div></div>
-<div class="person-card"><div class="person-header"><span class="person-name">周柏屹</span><span class="person-hours">78.6<span class="unit">h</span></span></div><div class="person-body"><div class="section-subtitle">项目类型 · 工时与分类明细</div><table class="sub-table"><thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead><tbody><tr><td class="bar-cell"><div class="bar-bg" style="width:98%"></div><span class="bar-text">新品/老品（主图&详情页）</span></td><td style="text-align:right">72.0h</td><td style="text-align:right">92%</td><td class="cat-cell"><span class="cat-num innovation">3</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:10%"></div><span class="bar-text">海报图</span></td><td style="text-align:right">4.0h</td><td style="text-align:right">5%</td><td class="cat-cell"><span class="cat-num innovation">1</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:6%"></div><span class="bar-text">卖点图/主图</span></td><td style="text-align:right">2.6h</td><td style="text-align:right">3%</td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num modify">1</span></td></tr></tbody></table></div></div>
-<div class="person-card"><div class="person-header"><span class="person-name">谢江民</span><span class="person-hours">14.0<span class="unit">h</span></span></div><div class="person-body"><div class="section-subtitle">项目类型 · 工时与分类明细</div><table class="sub-table"><thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead><tbody><tr><td class="bar-cell"><div class="bar-bg" style="width:98%"></div><span class="bar-text">小红书&ins</span></td><td style="text-align:right">14.0h</td><td style="text-align:right">100%</td><td class="cat-cell"><span class="cat-num innovation">1</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr></tbody></table></div></div>
+    <div class="person-card">
+      <div class="person-header"><span class="person-name">谢学文</span><span class="person-hours">168<span class="unit">h</span></span></div>
+      <div class="person-body">
+        <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+        <table class="sub-table">
+          <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+          <tbody><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:98%"></div><span class="bar-text">新/老品展台图 - 大型包</span></td>
+          <td style="text-align:right">120h</td>
+          <td style="text-align:right">71%</td>
+          <td class="cat-cell"><span class="cat-num innovation">5</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:38%"></div><span class="bar-text">产品白底图</span></td>
+          <td style="text-align:right">32h</td>
+          <td style="text-align:right">19%</td>
+          <td class="cat-cell"><span class="cat-num innovation">32</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:14%"></div><span class="bar-text">新/老品展台图 - 中型包</span></td>
+          <td style="text-align:right">12h</td>
+          <td style="text-align:right">7%</td>
+          <td class="cat-cell"><span class="cat-num innovation">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:4%"></div><span class="bar-text">新/老品展台图 - 小型包</span></td>
+          <td style="text-align:right">4h</td>
+          <td style="text-align:right">2%</td>
+          <td class="cat-cell"><span class="cat-num innovation">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr></tbody>
+        </table>
+      </div>
+    </div>
+<div class="person-card">
+      <div class="person-header"><span class="person-name">谭宇</span><span class="person-hours">142.5<span class="unit">h</span></span></div>
+      <div class="person-body">
+        <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+        <table class="sub-table">
+          <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+          <tbody><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:84%"></div><span class="bar-text">展台视频拍摄</span></td>
+          <td style="text-align:right">60h</td>
+          <td style="text-align:right">42%</td>
+          <td class="cat-cell"><span class="cat-num innovation">10</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:72%"></div><span class="bar-text">产品视频剪辑</span></td>
+          <td style="text-align:right">52h</td>
+          <td style="text-align:right">36%</td>
+          <td class="cat-cell"><span class="cat-num innovation">13</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:40%"></div><span class="bar-text">信息流视频剪辑</span></td>
+          <td style="text-align:right">29h</td>
+          <td style="text-align:right">20%</td>
+          <td class="cat-cell"><span class="cat-num innovation">29</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:2%"></div><span class="bar-text">产品白底图</span></td>
+          <td style="text-align:right">1.5h</td>
+          <td style="text-align:right">1%</td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num optimize">3</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr></tbody>
+        </table>
+      </div>
+    </div>
+<div class="person-card">
+      <div class="person-header"><span class="person-name">罗绚</span><span class="person-hours">139.2<span class="unit">h</span></span></div>
+      <div class="person-body">
+        <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+        <table class="sub-table">
+          <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+          <tbody><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:98%"></div><span class="bar-text">新品/老品（主图&amp;详情页）</span></td>
+          <td style="text-align:right">72h</td>
+          <td style="text-align:right">52%</td>
+          <td class="cat-cell"><span class="cat-num innovation">3</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:60%"></div><span class="bar-text">卖点图/主图</span></td>
+          <td style="text-align:right">42.2h</td>
+          <td style="text-align:right">30%</td>
+          <td class="cat-cell"><span class="cat-num innovation">12</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num modify">91</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:36%"></div><span class="bar-text">海报图</span></td>
+          <td style="text-align:right">25h</td>
+          <td style="text-align:right">18%</td>
+          <td class="cat-cell"><span class="cat-num innovation">6</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num modify">5</span></td>
+        </tr></tbody>
+        </table>
+      </div>
+    </div>
+<div class="person-card">
+      <div class="person-header"><span class="person-name">张勇</span><span class="person-hours">127.7<span class="unit">h</span></span></div>
+      <div class="person-body">
+        <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+        <table class="sub-table">
+          <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+          <tbody><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:98%"></div><span class="bar-text">小红书&amp;ins</span></td>
+          <td style="text-align:right">112h</td>
+          <td style="text-align:right">88%</td>
+          <td class="cat-cell"><span class="cat-num innovation">8</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:24%"></div><span class="bar-text">简易定制</span></td>
+          <td style="text-align:right">15.7h</td>
+          <td style="text-align:right">12%</td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num optimize">29</span></td>
+          <td class="cat-cell"><span class="cat-num modify">12</span></td>
+        </tr></tbody>
+        </table>
+      </div>
+    </div>
+<div class="person-card">
+      <div class="person-header"><span class="person-name">梁琳涛</span><span class="person-hours">90.9<span class="unit">h</span></span></div>
+      <div class="person-body">
+        <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+        <table class="sub-table">
+          <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+          <tbody><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:98%"></div><span class="bar-text">新品/老品（主图&amp;详情页）</span></td>
+          <td style="text-align:right">72h</td>
+          <td style="text-align:right">79%</td>
+          <td class="cat-cell"><span class="cat-num innovation">3</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:22%"></div><span class="bar-text">卖点图/主图</span></td>
+          <td style="text-align:right">9.8h</td>
+          <td style="text-align:right">11%</td>
+          <td class="cat-cell"><span class="cat-num innovation">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num modify">39</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:18%"></div><span class="bar-text">海报图</span></td>
+          <td style="text-align:right">8.6h</td>
+          <td style="text-align:right">9%</td>
+          <td class="cat-cell"><span class="cat-num innovation">2</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num modify">3</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:2%"></div><span class="bar-text">简易定制</span></td>
+          <td style="text-align:right">0.5h</td>
+          <td style="text-align:right">1%</td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num optimize">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr></tbody>
+        </table>
+      </div>
+    </div>
+<div class="person-card">
+      <div class="person-header"><span class="person-name">周柏屹</span><span class="person-hours">78.6<span class="unit">h</span></span></div>
+      <div class="person-body">
+        <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+        <table class="sub-table">
+          <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+          <tbody><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:98%"></div><span class="bar-text">新品/老品（主图&amp;详情页）</span></td>
+          <td style="text-align:right">72h</td>
+          <td style="text-align:right">92%</td>
+          <td class="cat-cell"><span class="cat-num innovation">3</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:10%"></div><span class="bar-text">海报图</span></td>
+          <td style="text-align:right">4h</td>
+          <td style="text-align:right">5%</td>
+          <td class="cat-cell"><span class="cat-num innovation">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:6%"></div><span class="bar-text">卖点图/主图</span></td>
+          <td style="text-align:right">2.6h</td>
+          <td style="text-align:right">3%</td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num modify">13</span></td>
+        </tr></tbody>
+        </table>
+      </div>
+    </div>
+<div class="person-card">
+      <div class="person-header"><span class="person-name">谢江民</span><span class="person-hours">14<span class="unit">h</span></span></div>
+      <div class="person-body">
+        <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+        <table class="sub-table">
+          <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+          <tbody><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:98%"></div><span class="bar-text">小红书&amp;ins</span></td>
+          <td style="text-align:right">14h</td>
+          <td style="text-align:right">100%</td>
+          <td class="cat-cell"><span class="cat-num innovation">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr></tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
   <!-- ===== 维度二：按平台 ===== -->
   <div class="section">
     <div class="section-title">按平台</div>
-    <div class="platform-card"><div class="platform-header"><span class="platform-name">通用</span><span class="platform-hours">472.5<span class="unit">h</span></span></div><div class="platform-body"><div class="section-subtitle">项目类型 · 工时与分类明细</div><table class="sub-table"><thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead><tbody><tr><td class="bar-cell"><div class="bar-bg" style="width:92%"></div><span class="bar-text">新品/老品（主图&详情页）</span></td><td style="text-align:right">216.0h</td><td style="text-align:right">46%</td><td class="cat-cell"><span class="cat-num innovation">9</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:50%"></div><span class="bar-text">新/老品展台图 - 大型包</span></td><td style="text-align:right">120.0h</td><td style="text-align:right">25%</td><td class="cat-cell"><span class="cat-num innovation">5</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:22%"></div><span class="bar-text">展台视频拍摄</span></td><td style="text-align:right">54.0h</td><td style="text-align:right">11%</td><td class="cat-cell"><span class="cat-num innovation">9</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:16%"></div><span class="bar-text">产品视频剪辑</span></td><td style="text-align:right">36.0h</td><td style="text-align:right">8%</td><td class="cat-cell"><span class="cat-num innovation">9</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:12%"></div><span class="bar-text">产品白底图</span></td><td style="text-align:right">30.5h</td><td style="text-align:right">6%</td><td class="cat-cell"><span class="cat-num innovation">9</span></td><td class="cat-cell"><span class="cat-num optimize">1</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:6%"></div><span class="bar-text">新/老品展台图 - 中型包</span></td><td style="text-align:right">12.0h</td><td style="text-align:right">3%</td><td class="cat-cell"><span class="cat-num innovation">1</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:2%"></div><span class="bar-text">新/老品展台图 - 小型包</span></td><td style="text-align:right">4.0h</td><td style="text-align:right">1%</td><td class="cat-cell"><span class="cat-num innovation">1</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr></tbody></table></div></div>
-<div class="platform-card"><div class="platform-header"><span class="platform-name">社媒</span><span class="platform-hours">144.0<span class="unit">h</span></span></div><div class="platform-body"><div class="section-subtitle">项目类型 · 工时与分类明细</div><table class="sub-table"><thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead><tbody><tr><td class="bar-cell"><div class="bar-bg" style="width:98%"></div><span class="bar-text">小红书&ins</span></td><td style="text-align:right">112.0h</td><td style="text-align:right">78%</td><td class="cat-cell"><span class="cat-num innovation">8</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:28%"></div><span class="bar-text">信息流视频剪辑</span></td><td style="text-align:right">20.0h</td><td style="text-align:right">14%</td><td class="cat-cell"><span class="cat-num innovation">18</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:16%"></div><span class="bar-text">产品视频剪辑</span></td><td style="text-align:right">12.0h</td><td style="text-align:right">8%</td><td class="cat-cell"><span class="cat-num innovation">3</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr></tbody></table></div></div>
-<div class="platform-card"><div class="platform-header"><span class="platform-name">虾皮</span><span class="platform-hours">42.0<span class="unit">h</span></span></div><div class="platform-body"><div class="section-subtitle">项目类型 · 工时与分类明细</div><table class="sub-table"><thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead><tbody><tr><td class="bar-cell"><div class="bar-bg" style="width:98%"></div><span class="bar-text">卖点图/主图</span></td><td style="text-align:right">42.0h</td><td style="text-align:right">100%</td><td class="cat-cell"><span class="cat-num innovation">1</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num modify">2</span></td></tr></tbody></table></div></div>
-<div class="platform-card"><div class="platform-header"><span class="platform-name">自建站</span><span class="platform-hours">41.1<span class="unit">h</span></span></div><div class="platform-body"><div class="section-subtitle">项目类型 · 工时与分类明细</div><table class="sub-table"><thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead><tbody><tr><td class="bar-cell"><div class="bar-bg" style="width:68%"></div><span class="bar-text">小红书&ins</span></td><td style="text-align:right">14.0h</td><td style="text-align:right">34%</td><td class="cat-cell"><span class="cat-num innovation">1</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:42%"></div><span class="bar-text">海报图</span></td><td style="text-align:right">8.6h</td><td style="text-align:right">21%</td><td class="cat-cell"><span class="cat-num innovation">2</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num modify">1</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:38%"></div><span class="bar-text">卖点图/主图</span></td><td style="text-align:right">8.0h</td><td style="text-align:right">19%</td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num modify">4</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:30%"></div><span class="bar-text">展台视频拍摄</span></td><td style="text-align:right">6.0h</td><td style="text-align:right">15%</td><td class="cat-cell"><span class="cat-num innovation">1</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:20%"></div><span class="bar-text">产品视频剪辑</span></td><td style="text-align:right">4.0h</td><td style="text-align:right">10%</td><td class="cat-cell"><span class="cat-num innovation">1</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:2%"></div><span class="bar-text">简易定制</span></td><td style="text-align:right">0.5h</td><td style="text-align:right">1%</td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num optimize">1</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr></tbody></table></div></div>
-<div class="platform-card"><div class="platform-header"><span class="platform-name">亚马逊</span><span class="platform-hours">27.6<span class="unit">h</span></span></div><div class="platform-body"><div class="section-subtitle">项目类型 · 工时与分类明细</div><table class="sub-table"><thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead><tbody><tr><td class="bar-cell"><div class="bar-bg" style="width:98%"></div><span class="bar-text">卖点图/主图</span></td><td style="text-align:right">24.6h</td><td style="text-align:right">89%</td><td class="cat-cell"><span class="cat-num innovation">2</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num modify">4</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:22%"></div><span class="bar-text">产品白底图</span></td><td style="text-align:right">3.0h</td><td style="text-align:right">11%</td><td class="cat-cell"><span class="cat-num innovation">2</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr></tbody></table></div></div>
-<div class="platform-card"><div class="platform-header"><span class="platform-name">阿里国际</span><span class="platform-hours">23.4<span class="unit">h</span></span></div><div class="platform-body"><div class="section-subtitle">项目类型 · 工时与分类明细</div><table class="sub-table"><thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead><tbody><tr><td class="bar-cell"><div class="bar-bg" style="width:98%"></div><span class="bar-text">简易定制</span></td><td style="text-align:right">11.4h</td><td style="text-align:right">49%</td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num optimize">13</span></td><td class="cat-cell"><span class="cat-num modify">9</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:68%"></div><span class="bar-text">信息流视频剪辑</span></td><td style="text-align:right">8.0h</td><td style="text-align:right">34%</td><td class="cat-cell"><span class="cat-num innovation">1</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr><tr><td class="bar-cell"><div class="bar-bg" style="width:34%"></div><span class="bar-text">海报图</span></td><td style="text-align:right">4.0h</td><td style="text-align:right">17%</td><td class="cat-cell"><span class="cat-num innovation">1</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr></tbody></table></div></div>
-<div class="platform-card"><div class="platform-header"><span class="platform-name">Lazada</span><span class="platform-hours">21.0<span class="unit">h</span></span></div><div class="platform-body"><div class="section-subtitle">项目类型 · 工时与分类明细</div><table class="sub-table"><thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead><tbody><tr><td class="bar-cell"><div class="bar-bg" style="width:98%"></div><span class="bar-text">海报图</span></td><td style="text-align:right">21.0h</td><td style="text-align:right">100%</td><td class="cat-cell"><span class="cat-num innovation">1</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num modify">1</span></td></tr></tbody></table></div></div>
-<div class="platform-card"><div class="platform-header"><span class="platform-name">公司内部需求</span><span class="platform-hours">4.0<span class="unit">h</span></span></div><div class="platform-body"><div class="section-subtitle">项目类型 · 工时与分类明细</div><table class="sub-table"><thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead><tbody><tr><td class="bar-cell"><div class="bar-bg" style="width:98%"></div><span class="bar-text">海报图</span></td><td style="text-align:right">4.0h</td><td style="text-align:right">100%</td><td class="cat-cell"><span class="cat-num innovation">1</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num zero">0</span></td></tr></tbody></table></div></div>
-<div class="platform-card"><div class="platform-header"><span class="platform-name">内贸</span><span class="platform-hours">2.7<span class="unit">h</span></span></div><div class="platform-body"><div class="section-subtitle">项目类型 · 工时与分类明细</div><table class="sub-table"><thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead><tbody><tr><td class="bar-cell"><div class="bar-bg" style="width:98%"></div><span class="bar-text">简易定制</span></td><td style="text-align:right">2.7h</td><td style="text-align:right">100%</td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num optimize">5</span></td><td class="cat-cell"><span class="cat-num modify">2</span></td></tr></tbody></table></div></div>
-<div class="platform-card"><div class="platform-header"><span class="platform-name">1688</span><span class="platform-hours">1.6<span class="unit">h</span></span></div><div class="platform-body"><div class="section-subtitle">项目类型 · 工时与分类明细</div><table class="sub-table"><thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead><tbody><tr><td class="bar-cell"><div class="bar-bg" style="width:98%"></div><span class="bar-text">简易定制</span></td><td style="text-align:right">1.6h</td><td style="text-align:right">100%</td><td class="cat-cell"><span class="cat-num zero">0</span></td><td class="cat-cell"><span class="cat-num optimize">2</span></td><td class="cat-cell"><span class="cat-num modify">1</span></td></tr></tbody></table></div></div>
+    <div class="platform-card">
+      <div class="platform-header"><span class="platform-name">通用</span><span class="platform-hours">472.5<span class="unit">h</span></span></div>
+      <div class="platform-body">
+        <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+        <table class="sub-table">
+          <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+          <tbody><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:92%"></div><span class="bar-text">新品/老品（主图&amp;详情页）</span></td>
+          <td style="text-align:right">216h</td>
+          <td style="text-align:right">46%</td>
+          <td class="cat-cell"><span class="cat-num innovation">9</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:50%"></div><span class="bar-text">新/老品展台图 - 大型包</span></td>
+          <td style="text-align:right">120h</td>
+          <td style="text-align:right">25%</td>
+          <td class="cat-cell"><span class="cat-num innovation">5</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:22%"></div><span class="bar-text">展台视频拍摄</span></td>
+          <td style="text-align:right">54h</td>
+          <td style="text-align:right">11%</td>
+          <td class="cat-cell"><span class="cat-num innovation">9</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:16%"></div><span class="bar-text">产品视频剪辑</span></td>
+          <td style="text-align:right">36h</td>
+          <td style="text-align:right">8%</td>
+          <td class="cat-cell"><span class="cat-num innovation">9</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:12%"></div><span class="bar-text">产品白底图</span></td>
+          <td style="text-align:right">30.5h</td>
+          <td style="text-align:right">6%</td>
+          <td class="cat-cell"><span class="cat-num innovation">29</span></td>
+          <td class="cat-cell"><span class="cat-num optimize">3</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:6%"></div><span class="bar-text">新/老品展台图 - 中型包</span></td>
+          <td style="text-align:right">12h</td>
+          <td style="text-align:right">3%</td>
+          <td class="cat-cell"><span class="cat-num innovation">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:2%"></div><span class="bar-text">新/老品展台图 - 小型包</span></td>
+          <td style="text-align:right">4h</td>
+          <td style="text-align:right">1%</td>
+          <td class="cat-cell"><span class="cat-num innovation">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr></tbody>
+        </table>
+      </div>
+    </div>
+<div class="platform-card">
+      <div class="platform-header"><span class="platform-name">社媒</span><span class="platform-hours">145<span class="unit">h</span></span></div>
+      <div class="platform-body">
+        <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+        <table class="sub-table">
+          <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+          <tbody><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:98%"></div><span class="bar-text">小红书&amp;ins</span></td>
+          <td style="text-align:right">112h</td>
+          <td style="text-align:right">77%</td>
+          <td class="cat-cell"><span class="cat-num innovation">8</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:28%"></div><span class="bar-text">信息流视频剪辑</span></td>
+          <td style="text-align:right">21h</td>
+          <td style="text-align:right">14%</td>
+          <td class="cat-cell"><span class="cat-num innovation">21</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:16%"></div><span class="bar-text">产品视频剪辑</span></td>
+          <td style="text-align:right">12h</td>
+          <td style="text-align:right">8%</td>
+          <td class="cat-cell"><span class="cat-num innovation">3</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr></tbody>
+        </table>
+      </div>
+    </div>
+<div class="platform-card">
+      <div class="platform-header"><span class="platform-name">自建站</span><span class="platform-hours">41.1<span class="unit">h</span></span></div>
+      <div class="platform-body">
+        <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+        <table class="sub-table">
+          <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+          <tbody><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:68%"></div><span class="bar-text">小红书&amp;ins</span></td>
+          <td style="text-align:right">14h</td>
+          <td style="text-align:right">34%</td>
+          <td class="cat-cell"><span class="cat-num innovation">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:42%"></div><span class="bar-text">海报图</span></td>
+          <td style="text-align:right">8.6h</td>
+          <td style="text-align:right">21%</td>
+          <td class="cat-cell"><span class="cat-num innovation">2</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num modify">3</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:38%"></div><span class="bar-text">卖点图/主图</span></td>
+          <td style="text-align:right">8h</td>
+          <td style="text-align:right">19%</td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num modify">40</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:30%"></div><span class="bar-text">展台视频拍摄</span></td>
+          <td style="text-align:right">6h</td>
+          <td style="text-align:right">15%</td>
+          <td class="cat-cell"><span class="cat-num innovation">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:20%"></div><span class="bar-text">产品视频剪辑</span></td>
+          <td style="text-align:right">4h</td>
+          <td style="text-align:right">10%</td>
+          <td class="cat-cell"><span class="cat-num innovation">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:2%"></div><span class="bar-text">简易定制</span></td>
+          <td style="text-align:right">0.5h</td>
+          <td style="text-align:right">1%</td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num optimize">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr></tbody>
+        </table>
+      </div>
+    </div>
+<div class="platform-card">
+      <div class="platform-header"><span class="platform-name">亚马逊</span><span class="platform-hours">27.6<span class="unit">h</span></span></div>
+      <div class="platform-body">
+        <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+        <table class="sub-table">
+          <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+          <tbody><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:98%"></div><span class="bar-text">卖点图/主图</span></td>
+          <td style="text-align:right">24.6h</td>
+          <td style="text-align:right">89%</td>
+          <td class="cat-cell"><span class="cat-num innovation">3</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num modify">93</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:22%"></div><span class="bar-text">产品白底图</span></td>
+          <td style="text-align:right">3h</td>
+          <td style="text-align:right">11%</td>
+          <td class="cat-cell"><span class="cat-num innovation">3</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr></tbody>
+        </table>
+      </div>
+    </div>
+<div class="platform-card">
+      <div class="platform-header"><span class="platform-name">阿里国际</span><span class="platform-hours">23.4<span class="unit">h</span></span></div>
+      <div class="platform-body">
+        <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+        <table class="sub-table">
+          <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+          <tbody><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:98%"></div><span class="bar-text">简易定制</span></td>
+          <td style="text-align:right">11.4h</td>
+          <td style="text-align:right">49%</td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num optimize">21</span></td>
+          <td class="cat-cell"><span class="cat-num modify">9</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:68%"></div><span class="bar-text">信息流视频剪辑</span></td>
+          <td style="text-align:right">8h</td>
+          <td style="text-align:right">34%</td>
+          <td class="cat-cell"><span class="cat-num innovation">8</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:34%"></div><span class="bar-text">海报图</span></td>
+          <td style="text-align:right">4h</td>
+          <td style="text-align:right">17%</td>
+          <td class="cat-cell"><span class="cat-num innovation">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr></tbody>
+        </table>
+      </div>
+    </div>
+<div class="platform-card">
+      <div class="platform-header"><span class="platform-name">虾皮</span><span class="platform-hours">22<span class="unit">h</span></span></div>
+      <div class="platform-body">
+        <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+        <table class="sub-table">
+          <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+          <tbody><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:98%"></div><span class="bar-text">卖点图/主图</span></td>
+          <td style="text-align:right">22h</td>
+          <td style="text-align:right">100%</td>
+          <td class="cat-cell"><span class="cat-num innovation">10</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num modify">10</span></td>
+        </tr></tbody>
+        </table>
+      </div>
+    </div>
+<div class="platform-card">
+      <div class="platform-header"><span class="platform-name">Lazada</span><span class="platform-hours">21<span class="unit">h</span></span></div>
+      <div class="platform-body">
+        <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+        <table class="sub-table">
+          <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+          <tbody><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:98%"></div><span class="bar-text">海报图</span></td>
+          <td style="text-align:right">21h</td>
+          <td style="text-align:right">100%</td>
+          <td class="cat-cell"><span class="cat-num innovation">5</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num modify">5</span></td>
+        </tr></tbody>
+        </table>
+      </div>
+    </div>
+<div class="platform-card">
+      <div class="platform-header"><span class="platform-name">公司内部需求</span><span class="platform-hours">4<span class="unit">h</span></span></div>
+      <div class="platform-body">
+        <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+        <table class="sub-table">
+          <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+          <tbody><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:98%"></div><span class="bar-text">海报图</span></td>
+          <td style="text-align:right">4h</td>
+          <td style="text-align:right">100%</td>
+          <td class="cat-cell"><span class="cat-num innovation">1</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+        </tr></tbody>
+        </table>
+      </div>
+    </div>
+<div class="platform-card">
+      <div class="platform-header"><span class="platform-name">内贸</span><span class="platform-hours">2.7<span class="unit">h</span></span></div>
+      <div class="platform-body">
+        <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+        <table class="sub-table">
+          <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+          <tbody><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:98%"></div><span class="bar-text">简易定制</span></td>
+          <td style="text-align:right">2.7h</td>
+          <td style="text-align:right">100%</td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num optimize">5</span></td>
+          <td class="cat-cell"><span class="cat-num modify">2</span></td>
+        </tr></tbody>
+        </table>
+      </div>
+    </div>
+<div class="platform-card">
+      <div class="platform-header"><span class="platform-name">1688</span><span class="platform-hours">1.6<span class="unit">h</span></span></div>
+      <div class="platform-body">
+        <div class="section-subtitle">项目类型 · 工时与分类明细</div>
+        <table class="sub-table">
+          <thead><tr><th>项目类型</th><th style="width:55px;text-align:right">工时</th><th style="width:48px;text-align:right">占比</th><th style="width:44px;text-align:center">创新</th><th style="width:44px;text-align:center">优化</th><th style="width:44px;text-align:center">修改</th></tr></thead>
+          <tbody><tr>
+          <td class="bar-cell"><div class="bar-bg" style="width:98%"></div><span class="bar-text">简易定制</span></td>
+          <td style="text-align:right">1.6h</td>
+          <td style="text-align:right">100%</td>
+          <td class="cat-cell"><span class="cat-num zero">0</span></td>
+          <td class="cat-cell"><span class="cat-num optimize">3</span></td>
+          <td class="cat-cell"><span class="cat-num modify">1</span></td>
+        </tr></tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
-  <div class="footer">数据来源：视觉部下单表 · 生成时间：2026-07-06 14:22:05</div>
+  <div class="footer">数据来源：视觉部下单表 · 生成时间：2026-07-09 15:18:53</div>
 </div>
 </body>
 </html>
