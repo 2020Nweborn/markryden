@@ -82,6 +82,38 @@
     border-radius: 100px;
     letter-spacing: 0.5px;
   }
+  .header-actions {
+    margin-top: 18px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .download-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 0 18px;
+    border-radius: 6px;
+    background: var(--accent);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    border: 1px solid var(--accent);
+    box-shadow: var(--shadow);
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .download-btn:hover {
+    background: #000000;
+    transform: translateY(-1px);
+  }
+  .download-btn:focus-visible {
+    outline: 2px solid #999999;
+    outline-offset: 3px;
+  }
 
   /* Section */
   .section {
@@ -348,7 +380,10 @@
     <h1>设计人效月度报表</h1>
     <div class="sub">视觉部下单表 · 数据统计</div>
     <div class="date-range">2026-06-01 ~ 2026-06-30</div>
-    <div class="metric-note">📌 统计口径：实际交付日期</div>
+    <div class="metric-note">统计口径：实际交付日期</div>
+    <div class="header-actions">
+      <a class="download-btn" href="./designer-efficiency-2026-06.xlsx" download>导出 Excel</a>
+    </div>
   </div>
 
   <!-- ===== 全局汇总 ===== -->
@@ -375,17 +410,17 @@
       </div>
       <div class="summary-card summary-card-wide">
         <div class="label">总数量</div>
-        <div class="value">327<span class="unit">项</span></div>
+        <div class="value">336<span class="unit">项</span></div>
         <div class="summary-breakdown">
           <div class="summary-breakdown-title">按平台</div>
           <div class="summary-breakdown-item"><span>亚马逊</span><strong>99</strong></div>
 <div class="summary-breakdown-item"><span>通用</span><strong>66</strong></div>
 <div class="summary-breakdown-item"><span>自建站</span><strong>49</strong></div>
-<div class="summary-breakdown-item"><span>阿里国际</span><strong>39</strong></div>
+<div class="summary-breakdown-item"><span>阿里国际</span><strong>44</strong></div>
 <div class="summary-breakdown-item"><span>社媒</span><strong>32</strong></div>
 <div class="summary-breakdown-item"><span>虾皮</span><strong>20</strong></div>
+<div class="summary-breakdown-item"><span>内贸</span><strong>11</strong></div>
 <div class="summary-breakdown-item"><span>Lazada</span><strong>10</strong></div>
-<div class="summary-breakdown-item"><span>内贸</span><strong>7</strong></div>
 <div class="summary-breakdown-item"><span>1688</span><strong>4</strong></div>
 <div class="summary-breakdown-item"><span>公司内部需求</span><strong>1</strong></div>
         </div>
@@ -522,8 +557,8 @@
           <td style="text-align:right">15.7h</td>
           <td style="text-align:right">12%</td>
           <td class="cat-cell"><span class="cat-num zero">0</span></td>
-          <td class="cat-cell"><span class="cat-num optimize">29</span></td>
-          <td class="cat-cell"><span class="cat-num modify">12</span></td>
+          <td class="cat-cell"><span class="cat-num optimize">36</span></td>
+          <td class="cat-cell"><span class="cat-num modify">14</span></td>
         </tr></tbody>
         </table>
       </div>
@@ -796,7 +831,7 @@
           <td style="text-align:right">11.4h</td>
           <td style="text-align:right">49%</td>
           <td class="cat-cell"><span class="cat-num zero">0</span></td>
-          <td class="cat-cell"><span class="cat-num optimize">21</span></td>
+          <td class="cat-cell"><span class="cat-num optimize">26</span></td>
           <td class="cat-cell"><span class="cat-num modify">9</span></td>
         </tr><tr>
           <td class="bar-cell"><div class="bar-bg" style="width:68%"></div><span class="bar-text">信息流视频剪辑</span></td>
@@ -878,8 +913,8 @@
           <td style="text-align:right">2.7h</td>
           <td style="text-align:right">100%</td>
           <td class="cat-cell"><span class="cat-num zero">0</span></td>
-          <td class="cat-cell"><span class="cat-num optimize">5</span></td>
-          <td class="cat-cell"><span class="cat-num modify">2</span></td>
+          <td class="cat-cell"><span class="cat-num optimize">7</span></td>
+          <td class="cat-cell"><span class="cat-num modify">4</span></td>
         </tr></tbody>
         </table>
       </div>
@@ -903,7 +938,7 @@
     </div>
   </div>
 
-  <div class="footer">数据来源：视觉部下单表 · 生成时间：2026-07-09 15:18:53</div>
+  <div class="footer">数据来源：视觉部下单表 · 生成时间：2026-07-09 17:36:37</div>
 </div>
 </body>
 </html>
