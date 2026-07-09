@@ -20,10 +20,12 @@
   .series-group summary:hover { background: #fafafa; }
   .series-name { font-size: 16px; font-weight: 600; }
   .series-meta { font-size: 12px; color: #888; margin-top: 2px; }
-  .series-toggle { font-size: 12px; color: #555; white-space: nowrap; }
-  .series-toggle::after { content: "展开"; }
-  .series-group[open] .series-toggle::after { content: "收起"; }
+  .series-toggle { min-width: 64px; height: 30px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid #2c2c2c; border-radius: 999px; font-size: 12px; font-weight: 600; color: #1a1a1a; background: #fff; white-space: nowrap; transition: all 0.2s ease; }
+  .series-toggle::after { content: "+ 展开"; }
+  .series-group[open] .series-toggle { color: #fff; background: #1a1a1a; }
+  .series-group[open] .series-toggle::after { content: "- 收起"; }
   .series-list { padding: 0 12px 12px; }
+  .series-empty { border: 1px dashed #d8d8d8; border-radius: 8px; padding: 18px 20px; color: #888; font-size: 13px; background: #fafafa; }
   .link-card { display: block; background: #fff; border: 1px solid #eaeaea; border-radius: 8px; padding: 20px 24px; margin-bottom: 12px; text-decoration: none; color: #1a1a1a; transition: all 0.2s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
   .link-card:hover { border-color: #2c2c2c; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
   .link-card .card-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
@@ -80,6 +82,15 @@
         <a class="link-card" href="./298.html"><div class="card-title">298 · L 轻型系列单肩包</div><div class="card-desc">L_MR298 · 3.7L · 5级防泼水 · 0.4kg轻量</div></a>
         <a class="link-card" href="./6602.html"><div class="card-title">6602 · L 轻型系列双肩背包</div><div class="card-desc">L_MR6602 · 20L · 5级防泼水 · 海绵缓冲背带</div></a>
         <a class="link-card" href="./781.html"><div class="card-title">781 · L 轻型系列单肩包</div><div class="card-desc">L_MR781 · 2.4L · 5级防泼水 · 0.25kg轻量</div></a>
+      </div>
+    </details>
+    <details class="series-group">
+      <summary>
+        <div><div class="series-name">C 数码系列</div><div class="series-meta">0 个详情页 · 数码收纳</div></div>
+        <span class="series-toggle" aria-hidden="true"></span>
+      </summary>
+      <div class="series-list">
+        <div class="series-empty">暂无详情页，后续 C 系列产品会归入这里。</div>
       </div>
     </details>
   </div>
