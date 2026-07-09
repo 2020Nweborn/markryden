@@ -1,0 +1,515 @@
+<!--
+  ============================================================
+  MASTER DESIGN SYSTEM — 所有网页输出的统一样式基准
+  ============================================================
+  其他 skill 的 HTML 模板（如 designer-efficiency）均以此为
+  设计主模板，共享 :root 变量、配色、间距、字体、卡片风格。
+  修改此文件中的 CSS 变量即同步影响所有输出页面。
+  ============================================================
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MARK RYDEN 298 详情页</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-section: #f8f9fa;
+    --bg-card: #ffffff;
+    --text-primary: #1a1a1a;
+    --text-secondary: #555555;
+    --text-muted: #888888;
+    --accent: #2c2c2c;
+    --border: #eaeaea;
+    --tag-bg: #f0f0f0;
+    --shadow: 0 1px 3px rgba(0,0,0,0.04);
+    --radius: 8px;
+    --max-width: 720px;
+    --font-title: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    --font-body: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--text-primary);
+    background: var(--bg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 48px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+  .header .brand {
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .header .model {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 1px;
+  }
+  .header .series {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 3px 14px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    background: var(--tag-bg);
+    border-radius: 100px;
+    letter-spacing: 1px;
+  }
+
+  /* Section */
+  .section {
+    margin-bottom: 56px;
+  }
+  .section-title {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Panel 1 & 3: Feature Cards */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 600px) {
+    .feature-grid { grid-template-columns: 1fr; }
+  }
+  .feature-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+  }
+  .feature-card .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+  }
+  .feature-card .card-stat {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .feature-card .card-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .feature-card .card-stats span {
+    font-size: 13px;
+    color: var(--text-secondary);
+    position: relative;
+    padding-right: 10px;
+  }
+  .feature-card .card-stats span:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 6px;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--border);
+  }
+
+  /* Panel 2: Capacity */
+  .capacity-section {
+    margin-bottom: 24px;
+  }
+  .capacity-hero {
+    background: var(--bg-section);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .capacity-hero .hero-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+  }
+  .capacity-hero .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+  }
+  .capacity-hero .hero-stats span {
+    font-size: 14px;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .pocket-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (max-width: 600px) {
+    .pocket-list { grid-template-columns: 1fr; }
+  }
+  .pocket-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+  .pocket-item .pocket-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+  .pocket-item .pocket-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* Panel 4: Details */
+  .detail-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .detail-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .detail-item .detail-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: var(--bg-section);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .detail-item .detail-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+  }
+  .detail-item .detail-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  /* Panel 5 & 6: Info & Notes */
+  .info-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .info-table tr {
+    border-bottom: 1px solid var(--border);
+  }
+  .info-table tr:last-child {
+    border-bottom: none;
+  }
+  .info-table td {
+    padding: 10px 0;
+    font-size: 14px;
+  }
+  .info-table td:first-child {
+    color: var(--text-muted);
+    width: 140px;
+    font-size: 13px;
+  }
+  .info-table td:last-child {
+    color: var(--text-primary);
+  }
+  .notes-text {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+
+  /* Panel 7: Main Images */
+  .main-image-list {
+    display: grid;
+    gap: 12px;
+  }
+  .main-image-item {
+    background: var(--bg-section);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .main-image-item .img-number {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .main-image-item .img-copy {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-primary);
+    letter-spacing: 0.5px;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 40px 0 0;
+    border-top: 1px solid var(--border);
+    margin-top: 48px;
+  }
+  .footer .brand-name {
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .footer .tagline {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="brand">MARK RYDEN</div>
+    <div class="model">298</div>
+    <div class="series">L 轻型系列 · 单肩包</div>
+  </div>
+
+  <!-- 板块 1：重要功能 -->
+  <div class="section">
+    <div class="section-title">重要功能</div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="card-title">YKK拉链顺滑耐用</div>
+        <div class="card-stat">5万次开合寿命</div>
+      </div>
+      <div class="feature-card">
+        <div class="card-title">防泼水面料雨天从容</div>
+        <div class="card-stat">5级防泼水</div>
+      </div>
+      <div class="feature-card">
+        <div class="card-title">耐磨里布日常耐用</div>
+        <div class="card-stat">210D方形里布</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 板块 2：容量展示 -->
+  <div class="section">
+    <div class="section-title">容量展示</div>
+    <div class="capacity-section">
+      <div class="capacity-hero">
+        <div class="hero-title">3.7L随身容量，小物有序装</div>
+        <div class="hero-stats">
+          <span>3.7L总容量</span>
+          <span>多隔层收纳</span>
+        </div>
+      </div>
+      <div class="pocket-list">
+        <div class="pocket-item">
+          <div class="pocket-name">主仓分区</div>
+          <div class="pocket-desc">主仓支持多隔层收纳，搭配拉链隐私内袋，钥匙、钱包、耳机等随身物各归其位。</div>
+        </div>
+        <div class="pocket-item">
+          <div class="pocket-name">背部隐藏袋</div>
+          <div class="pocket-desc">贴近身体一侧放置证件、卡片或手机，出行取放更安心。</div>
+        </div>
+        <div class="pocket-item">
+          <div class="pocket-name">顶部收纳袋</div>
+          <div class="pocket-desc">适合放置耳机、公交卡等高频小物，伸手就能快速拿取。</div>
+        </div>
+        <div class="pocket-item">
+          <div class="pocket-name">前置杂物袋</div>
+          <div class="pocket-desc">两个前置杂物袋分开收纳零碎物品，日常通勤更好整理。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 板块 3：重要功能（展开） -->
+  <div class="section">
+    <div class="section-title">功能详解</div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="card-title">拉链开合稳定顺滑</div>
+        <div class="card-stats">
+          <span>YKK拉链</span>
+          <span>5万次开合寿命</span>
+          <span>＞2.0N顺滑阻力</span>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="card-title">面料守住雨天出行</div>
+        <div class="card-stats">
+          <span>5级防泼水</span>
+          <span>900D皮膜面料</span>
+          <span>4级抗污表现</span>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="card-title">里布保护日常收纳</div>
+        <div class="card-stats">
+          <span>210D方形里布</span>
+          <span>100%涤纶面料</span>
+          <span>包内物品更稳妥</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 板块 4：产品细节 -->
+  <div class="section">
+    <div class="section-title">产品细节</div>
+    <div class="detail-list">
+      <div class="detail-item">
+        <div class="detail-icon">✦</div>
+        <div>
+          <div class="detail-title">转扣背带更灵活</div>
+          <div class="detail-desc">背带转扣让包身贴合不同背法，通勤、出街切换更顺手。</div>
+        </div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-icon">✦</div>
+        <div>
+          <div class="detail-title">隐藏拉链更利落</div>
+          <div class="detail-desc">盖头隐藏式拉链减少外露杂感，整体观感更简洁。</div>
+        </div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-icon">✦</div>
+        <div>
+          <div class="detail-title">翻盖锁扣更安心</div>
+          <div class="detail-desc">前置翻盖锁扣稳住外侧收纳区，小物放置更有秩序。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 板块 5：产品信息 -->
+  <div class="section">
+    <div class="section-title">产品信息</div>
+    <table class="info-table">
+      <tr>
+        <td>品牌</td>
+        <td>MARKR RYDEN</td>
+      </tr>
+      <tr>
+        <td>面料</td>
+        <td>40%涤纶+60%聚氨酯</td>
+      </tr>
+      <tr>
+        <td>型号</td>
+        <td>L_MR298</td>
+      </tr>
+      <tr>
+        <td>重量</td>
+        <td>0.4kg</td>
+      </tr>
+      <tr>
+        <td>尺寸</td>
+        <td>16×29×8cm</td>
+      </tr>
+      <tr>
+        <td>颜色</td>
+        <td>商务黑</td>
+      </tr>
+      <tr>
+        <td>肩带</td>
+        <td>84~146cm</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- 板块 6：备注信息 -->
+  <div class="section">
+    <div class="section-title">备注</div>
+    <div class="notes-text">产品详情页所标注数据均源自 MARKR RYDEN 实验室</div>
+  </div>
+
+  <!-- 板块 7：电商主图文案 -->
+  <div class="section">
+    <div class="section-title">电商主图文案</div>
+    <div class="main-image-list">
+      <div class="main-image-item">
+        <div class="img-number">1</div>
+        <div class="img-copy">3.7L随身容量，小物有序装</div>
+      </div>
+      <div class="main-image-item">
+        <div class="img-number">2</div>
+        <div class="img-copy">YKK顺滑拉链，日常开合稳定</div>
+      </div>
+      <div class="main-image-item">
+        <div class="img-number">3</div>
+        <div class="img-copy">5级防泼水，雨天出行从容</div>
+      </div>
+      <div class="main-image-item">
+        <div class="img-number">4</div>
+        <div class="img-copy">背部隐藏袋，贴身收纳更安心</div>
+      </div>
+      <div class="main-image-item">
+        <div class="img-number">5</div>
+        <div class="img-copy">多口袋分区，零碎小物好整理</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="brand-name">MARK RYDEN</div>
+    <div class="tagline">都市 · 秩序 · 科技</div>
+  </div>
+
+</div>
+</body>
+</html>
