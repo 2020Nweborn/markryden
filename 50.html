@@ -1,0 +1,488 @@
+<!--
+  ============================================================
+  MASTER DESIGN SYSTEM — 所有网页输出的统一样式基准
+  ============================================================
+  其他 skill 的 HTML 模板（如 designer-efficiency）均以此为
+  设计主模板，共享 :root 变量、配色、间距、字体、卡片风格。
+  修改此文件中的 CSS 变量即同步影响所有输出页面。
+  ============================================================
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MARK RYDEN 50 详情页</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-section: #f8f9fa;
+    --bg-card: #ffffff;
+    --text-primary: #1a1a1a;
+    --text-secondary: #555555;
+    --text-muted: #888888;
+    --accent: #2c2c2c;
+    --border: #eaeaea;
+    --tag-bg: #f0f0f0;
+    --shadow: 0 1px 3px rgba(0,0,0,0.04);
+    --radius: 8px;
+    --max-width: 720px;
+    --font-title: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    --font-body: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--text-primary);
+    background: var(--bg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 48px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+  .header .brand {
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .header .model {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 1px;
+  }
+  .header .series {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 3px 14px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    background: var(--tag-bg);
+    border-radius: 100px;
+    letter-spacing: 1px;
+  }
+
+  /* Section */
+  .section {
+    margin-bottom: 56px;
+  }
+  .section-title {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Panel 1 & 3: Feature Cards */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 600px) {
+    .feature-grid { grid-template-columns: 1fr; }
+  }
+  .feature-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+  }
+  .feature-card .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+  }
+  .feature-card .card-stat {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .feature-card .card-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .feature-card .card-stats span {
+    font-size: 13px;
+    color: var(--text-secondary);
+    position: relative;
+    padding-right: 10px;
+  }
+  .feature-card .card-stats span:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 6px;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--border);
+  }
+
+  /* Panel 2: Capacity */
+  .capacity-section {
+    margin-bottom: 24px;
+  }
+  .capacity-hero {
+    background: var(--bg-section);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .capacity-hero .hero-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+  }
+  .capacity-hero .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+  }
+  .capacity-hero .hero-stats span {
+    font-size: 14px;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .pocket-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (max-width: 600px) {
+    .pocket-list { grid-template-columns: 1fr; }
+  }
+  .pocket-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+  .pocket-item .pocket-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+  .pocket-item .pocket-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* Panel 4: Details */
+  .detail-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .detail-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .detail-item .detail-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: var(--bg-section);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .detail-item .detail-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+  }
+  .detail-item .detail-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  /* Panel 5 & 6: Info & Notes */
+  .info-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .info-table tr {
+    border-bottom: 1px solid var(--border);
+  }
+  .info-table tr:last-child {
+    border-bottom: none;
+  }
+  .info-table td {
+    padding: 10px 0;
+    font-size: 14px;
+  }
+  .info-table td:first-child {
+    color: var(--text-muted);
+    width: 140px;
+    font-size: 13px;
+  }
+  .info-table td:last-child {
+    color: var(--text-primary);
+  }
+  .notes-text {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+
+  /* Panel 7: Main Images */
+  .main-image-list {
+    display: grid;
+    gap: 12px;
+  }
+  .main-image-item {
+    background: var(--bg-section);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .main-image-item .img-number {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .main-image-item .img-copy {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-primary);
+    letter-spacing: 0.5px;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 40px 0 0;
+    border-top: 1px solid var(--border);
+    margin-top: 48px;
+  }
+  .footer .brand-name {
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .footer .tagline {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="brand">MARK RYDEN</div>
+    <div class="model">50</div>
+    <div class="series">C · 收纳整理包</div>
+  </div>
+
+  <!-- 板块 1：重要功能 -->
+  <div class="section">
+    <div class="section-title">重要功能</div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="card-title">考杜拉尼龙耐磨出行</div>
+        <div class="card-stat">耐磨可达4万次，抗撕裂、抗穿刺，移动收纳更安心</div>
+      </div>
+      <div class="feature-card">
+        <div class="card-title">YKK拉链顺手开合</div>
+        <div class="card-stat">5万次开合寿命 / ＞2.0N顺滑阻力，日常取放更利落</div>
+      </div>
+      <div class="feature-card">
+        <div class="card-title">RFID防盗刷安心收纳</div>
+        <div class="card-stat">RFID防盗刷，通勤携带卡片与证件更安心</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 板块 2：容量展示 -->
+  <div class="section">
+    <div class="section-title">容量展示</div>
+    <div class="capacity-section">
+      <div class="capacity-hero">
+        <div class="hero-title">1L精巧收纳空间</div>
+        <div class="hero-stats">
+          <span>1L总容量</span>
+          <span>弹力网格袋1个</span>
+        </div>
+      </div>
+
+      <div class="pocket-list">
+        <div class="pocket-item">
+          <div class="pocket-name">主口袋</div>
+          <div class="pocket-desc">多隔层收纳 / 弹力网格袋1个</div>
+        </div>
+        <div class="pocket-item">
+          <div class="pocket-name">其他口袋1</div>
+          <div class="pocket-desc">前隐形袋</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 板块 3：重要功能（展开） -->
+  <div class="section">
+    <div class="section-title">功能详解</div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="card-title">考杜拉面料耐磨防护</div>
+        <div class="card-stats">
+          <span>1000D考杜拉尼龙</span>
+          <span>耐磨可达4万次</span>
+          <span>抗撕裂 / 抗穿刺</span>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="card-title">YKK拉链顺滑取放</div>
+        <div class="card-stats">
+          <span>5万次开合寿命</span>
+          <span>＞2.0N顺滑阻力</span>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="card-title">RFID防护守住卡片信息</div>
+        <div class="card-stats">
+          <span>RFID防盗刷</span>
+          <span>RFID防盗刷标识</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 板块 4：产品细节 -->
+  <div class="section">
+    <div class="section-title">产品细节</div>
+    <div class="detail-list">
+      <div class="detail-item">
+        <div class="detail-icon">✦</div>
+        <div>
+          <div class="detail-title">锌合金凸起LOGO</div>
+          <div class="detail-desc">锌合金凸起 LOGO，简洁呈现品牌识别。</div>
+        </div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-icon">✦</div>
+        <div>
+          <div class="detail-title">RFID防盗刷标识</div>
+          <div class="detail-desc">RFID防盗刷标识，快速识别防护配置。</div>
+        </div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-icon">✦</div>
+        <div>
+          <div class="detail-title">考杜拉面料标识</div>
+          <div class="detail-desc">考杜拉面料标识，清晰呈现面料配置。</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 板块 5：产品信息 -->
+  <div class="section">
+    <div class="section-title">产品信息</div>
+    <table class="info-table">
+      <tr>
+        <td>产品信息</td>
+        <td>品牌：MARKR RYDEN / 面料:涤纶/ 型号：C_MR50/重量：0.2kg / 尺寸：14×23×3cm / 颜色：商务黑 /绿色</td>
+      </tr>
+
+    </table>
+  </div>
+
+  <!-- 板块 6：备注信息 -->
+  <div class="section">
+    <div class="section-title">备注</div>
+    <div class="notes-text">产品详情页所标注数据均源自 MARKR RYDEN 实验室</div>
+  </div>
+
+  <!-- 板块 7：电商主图文案 -->
+  <div class="section">
+    <div class="section-title">电商主图文案</div>
+    <div class="main-image-list">
+      <div class="main-image-item">
+        <div class="img-number">1</div>
+        <div class="img-copy">考杜拉尼龙耐磨收纳更从容</div>
+      </div>
+      <div class="main-image-item">
+        <div class="img-number">2</div>
+        <div class="img-copy">RFID防盗刷随身更安心</div>
+      </div>
+      <div class="main-image-item">
+        <div class="img-number">3</div>
+        <div class="img-copy">1L分区整理通勤更有序</div>
+      </div>
+      <div class="main-image-item">
+        <div class="img-number">4</div>
+        <div class="img-copy">YKK拉链顺手开合更利落</div>
+      </div>
+      <div class="main-image-item">
+        <div class="img-number">5</div>
+        <div class="img-copy">前隐形袋取物更从容</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="brand-name">MARK RYDEN</div>
+    <div class="tagline">都市 · 秩序 · 科技</div>
+  </div>
+
+</div>
+</body>
+</html>
