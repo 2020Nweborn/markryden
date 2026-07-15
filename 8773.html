@@ -1,9 +1,18 @@
+<!--
+  ============================================================
+  MASTER DESIGN SYSTEM — 所有网页输出的统一样式基准
+  ============================================================
+  其他 skill 的 HTML 模板（如 designer-efficiency）均以此为
+  设计主模板，共享 :root 变量、配色、间距、字体、卡片风格。
+  修改此文件中的 CSS 变量即同步影响所有输出页面。
+  ============================================================
+-->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MARK RYDEN 6602 详情页</title>
+<title>MARK RYDEN 8773 详情页</title>
 <style>
   :root {
     --bg: #ffffff;
@@ -313,8 +322,8 @@
   <!-- Header -->
   <div class="header">
     <div class="brand">MARK RYDEN</div>
-    <div class="model">6602</div>
-    <div class="series">L 轻型系列 · 双肩背包</div>
+    <div class="model">8773</div>
+    <div class="series">C 数码系列 · 相机包</div>
   </div>
 
   <!-- 板块 1：重要功能 -->
@@ -322,16 +331,16 @@
     <div class="section-title">重要功能</div>
     <div class="feature-grid">
       <div class="feature-card">
-        <div class="card-title">YKK拉链，万次顺滑</div>
+        <div class="card-title">防水拉链顺滑耐用</div>
         <div class="card-stat">5万次开合寿命</div>
       </div>
       <div class="feature-card">
-        <div class="card-title">防泼水面料，雨天不慌</div>
-        <div class="card-stat">5级防泼水</div>
+        <div class="card-title">蜂窝背辐久背透气</div>
+        <div class="card-stat">78%透气面积</div>
       </div>
       <div class="feature-card">
-        <div class="card-title">方形里布，耐磨随行</div>
-        <div class="card-stat">210D涤纶面料</div>
+        <div class="card-title">防泼水面料雨天从容</div>
+        <div class="card-stat">5级防泼水</div>
       </div>
     </div>
   </div>
@@ -341,36 +350,36 @@
     <div class="section-title">容量展示</div>
     <div class="capacity-section">
       <div class="capacity-hero">
-        <div class="hero-title">多隔层收纳，日常通勤利器</div>
+        <div class="hero-title">27L专业容量，设备有序装</div>
         <div class="hero-stats">
-          <span>20L总容量</span>
-          <span>多隔层收纳</span>
+          <span>27L总容量</span>
+          <span>17.3英寸电脑仓</span>
         </div>
       </div>
       <div class="pocket-list">
         <div class="pocket-item">
-          <div class="pocket-name">主口袋</div>
-          <div class="pocket-desc">多隔层收纳，分区明确，通勤小物各归其位</div>
+          <div class="pocket-name">主仓模组收纳</div>
+          <div class="pocket-desc">可调节魔术贴隔层模组，相机、镜头与随身设备分区放置。</div>
         </div>
         <div class="pocket-item">
-          <div class="pocket-name">副口袋</div>
-          <div class="pocket-desc">物件隔层3个 / 网格拉链袋1个，零碎物件有序存放</div>
+          <div class="pocket-name">相机仓</div>
+          <div class="pocket-desc">独立相机仓搭配弹力网格袋，配件随手归位。</div>
         </div>
         <div class="pocket-item">
-          <div class="pocket-name">数码袋</div>
-          <div class="pocket-desc">独立电脑仓，14寸电脑安全随行</div>
+          <div class="pocket-name">背部隐藏袋</div>
+          <div class="pocket-desc">贴身收纳证件、钱包等贵重小物。</div>
         </div>
         <div class="pocket-item">
-          <div class="pocket-name">右侧雨伞袋</div>
-          <div class="pocket-desc">雨伞随手取放，不弄湿包内物品</div>
+          <div class="pocket-name">左侧弹力水壶袋</div>
+          <div class="pocket-desc">水杯随行放置，外出拍摄补水更顺手。</div>
         </div>
         <div class="pocket-item">
-          <div class="pocket-name">左侧水壶袋</div>
-          <div class="pocket-desc">水壶稳固安放，通勤途中随时补水</div>
+          <div class="pocket-name">侧边防水拉链插袋</div>
+          <div class="pocket-desc">小件快取更方便，短时雨水不易侵入。</div>
         </div>
         <div class="pocket-item">
-          <div class="pocket-name">前零件袋</div>
-          <div class="pocket-desc">随取随用不翻包，交通卡钥匙快取快放</div>
+          <div class="pocket-name">前置防水拉链袋</div>
+          <div class="pocket-desc">常用配件独立收纳，取放清晰有序。</div>
         </div>
       </div>
     </div>
@@ -381,25 +390,27 @@
     <div class="section-title">功能详解</div>
     <div class="feature-grid">
       <div class="feature-card">
-        <div class="card-title">YKK拉链持久顺滑随行</div>
+        <div class="card-title">防水拉链守住设备</div>
         <div class="card-stats">
           <span>5万次开合寿命</span>
-          <span>＞2.0N顺滑阻力</span>
+          <span>小于3.0N顺滑阻力</span>
+          <span>短时雨水不易渗入</span>
         </div>
       </div>
       <div class="feature-card">
-        <div class="card-title">防泼水面料守护雨天通勤</div>
+        <div class="card-title">蜂窝背辐减轻闷热</div>
+        <div class="card-stats">
+          <span>3D透气孔</span>
+          <span>78%透气面积</span>
+          <span>15MM支撑海绵</span>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="card-title">防泼水面料应对天气</div>
         <div class="card-stats">
           <span>5级防泼水</span>
-          <span>900D皮膜面料</span>
           <span>4级抗污</span>
-        </div>
-      </div>
-      <div class="feature-card">
-        <div class="card-title">方形里布耐磨经久耐用</div>
-        <div class="card-stats">
-          <span>210D方形里布</span>
-          <span>100%涤纶面料</span>
+          <span>400D加捻纱线织造</span>
         </div>
       </div>
     </div>
@@ -412,22 +423,29 @@
       <div class="detail-item">
         <div class="detail-icon">✦</div>
         <div>
-          <div class="detail-title">磁吸快拆扣，单手开合</div>
-          <div class="detail-desc">盖头可快拆磁吸扣，取物不用反复拉拉链</div>
+          <div class="detail-title">拉杆带稳固出行</div>
+          <div class="detail-desc">可固定于行李箱拉杆，差旅拍摄移动更省力。</div>
         </div>
       </div>
       <div class="detail-item">
         <div class="detail-icon">✦</div>
         <div>
-          <div class="detail-title">压印LOGO，质感低调</div>
-          <div class="detail-desc">品牌压印工艺，不喧哗自有声</div>
+          <div class="detail-title">胸前扣稳定背负</div>
+          <div class="detail-desc">行走与拍摄途中减轻晃动，背负更贴合。</div>
         </div>
       </div>
       <div class="detail-item">
         <div class="detail-icon">✦</div>
         <div>
-          <div class="detail-title">海绵背带，久背不勒肩</div>
-          <div class="detail-desc">缓冲海绵肩带，通勤路上更轻松</div>
+          <div class="detail-title">隐藏拉链更安心</div>
+          <div class="detail-desc">背部隐藏式拉链，贴身区域收纳更低调。</div>
+        </div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-icon">✦</div>
+        <div>
+          <div class="detail-title">底部挂绳扩展携带</div>
+          <div class="detail-desc">三脚架、挂件等外置装备可灵活固定。</div>
         </div>
       </div>
     </div>
@@ -437,20 +455,45 @@
   <div class="section">
     <div class="section-title">产品信息</div>
     <table class="info-table">
-      <tr><td>品牌</td><td>MARK RYDEN</td></tr>
-      <tr><td>面料</td><td>95%涤纶 + 5%聚氨酯</td></tr>
-      <tr><td>型号</td><td>L_MR6602</td></tr>
-      <tr><td>重量</td><td>0.97kg</td></tr>
-      <tr><td>尺寸</td><td>41×30×16cm</td></tr>
-      <tr><td>颜色</td><td>石墨灰 / 蓝色 / 绿色</td></tr>
-      <tr><td>肩带</td><td>45~95cm</td></tr>
+      <tr>
+        <td>品牌</td>
+        <td>MARKR RYDEN</td>
+      </tr>
+      <tr>
+        <td>面料</td>
+        <td>涤纶</td>
+      </tr>
+      <tr>
+        <td>型号</td>
+        <td>C_MR8773</td>
+      </tr>
+      <tr>
+        <td>重量</td>
+        <td>2.97kg</td>
+      </tr>
+      <tr>
+        <td>尺寸</td>
+        <td>42×32×20cm</td>
+      </tr>
+      <tr>
+        <td>颜色</td>
+        <td>商务黑</td>
+      </tr>
+      <tr>
+        <td>数码仓尺寸</td>
+        <td>可容纳17.3英寸电脑</td>
+      </tr>
+      <tr>
+        <td>肩带</td>
+        <td>40~90cm</td>
+      </tr>
     </table>
   </div>
 
   <!-- 板块 6：备注信息 -->
   <div class="section">
     <div class="section-title">备注</div>
-    <div class="notes-text">产品详情页所标注数据均源自 MARK RYDEN 实验室 / 数码仓容纳14寸电脑均以主流外星人游戏本及苹果轻薄本作为标准参照</div>
+    <div class="notes-text">产品详情页所标注数据均源自 MARKR RYDEN 实验室 / 数码仓容纳17.3寸电脑均以主流外星人游戏本及苹果轻薄本作为标准参照</div>
   </div>
 
   <!-- 板块 7：电商主图文案 -->
@@ -459,23 +502,23 @@
     <div class="main-image-list">
       <div class="main-image-item">
         <div class="img-number">1</div>
-        <div class="img-copy">20L多隔层收纳，通勤一包搞定</div>
+        <div class="img-copy">27L相机包，设备分区有序装</div>
       </div>
       <div class="main-image-item">
         <div class="img-number">2</div>
-        <div class="img-copy">5级防泼水，雨天通勤更从容</div>
+        <div class="img-copy">可调隔层模组，相机镜头稳妥放</div>
       </div>
       <div class="main-image-item">
         <div class="img-number">3</div>
-        <div class="img-copy">YKK拉链，5万次开合依然顺滑</div>
+        <div class="img-copy">17.3英寸电脑仓，创作设备随行</div>
       </div>
       <div class="main-image-item">
         <div class="img-number">4</div>
-        <div class="img-copy">磁吸快拆扣，单手开合取物快</div>
+        <div class="img-copy">5级防泼水，户外拍摄更从容</div>
       </div>
       <div class="main-image-item">
         <div class="img-number">5</div>
-        <div class="img-copy">仅0.97kg，轻装上阵不累肩</div>
+        <div class="img-copy">蜂窝透气背辐，长时间背负不闷</div>
       </div>
     </div>
   </div>
