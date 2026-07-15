@@ -25,6 +25,7 @@
   .series-group[open] .series-toggle { color: #fff; background: #1a1a1a; }
   .series-group[open] .series-toggle::after { content: "- 收起"; }
   .series-list { padding: 0 12px 12px; }
+  .series-empty { border: 1px dashed #d8d8d8; border-radius: 8px; padding: 18px 20px; color: #888; font-size: 13px; background: #fafafa; }
   .link-card { display: block; background: #fff; border: 1px solid #eaeaea; border-radius: 8px; padding: 20px 24px; margin-bottom: 12px; text-decoration: none; color: #1a1a1a; transition: all 0.2s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
   .link-card:hover { border-color: #2c2c2c; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
   .link-card .card-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
@@ -45,25 +46,40 @@
   <div class="section">
     <div class="section-title">产品详情页</div>
     <details class="series-group">
-      <summary><div><div class="series-name">F 未来系列</div><div class="series-meta">1 个详情页 · 双肩背包</div></div><span class="series-toggle" aria-hidden="true"></span></summary>
-      <div class="series-list"><a class="link-card" href="./9100.html"><div class="card-title">9100 · F 未来系列双肩背包</div><div class="card-desc">MR-F9100 · 31L · 5级防泼水 · TSA海关锁</div></a></div>
+      <summary>
+        <div><div class="series-name">F 未来系列</div><div class="series-meta">1 个详情页 · 双肩背包</div></div>
+        <span class="series-toggle" aria-hidden="true"></span>
+      </summary>
+      <div class="series-list">
+        <a class="link-card" href="./9100.html"><div class="card-title">9100 · F 未来系列双肩背包</div><div class="card-desc">MR-F9100 · 31L · 5级防泼水 · TSA海关锁</div></a>
+      </div>
     </details>
     <details class="series-group">
-      <summary><div><div class="series-name">T 差旅系列</div><div class="series-meta">1 个详情页 · 双肩背包</div></div><span class="series-toggle" aria-hidden="true"></span></summary>
-      <div class="series-list"><a class="link-card" href="./8859.html"><div class="card-title">8859 · T 差旅系列双肩背包</div><div class="card-desc">MR-T8859 · 37L(扩容49.5L) · 5级防泼水 · 蜂窝透气背辐</div></a></div>
-    </details>
-    <details class="series-group" open>
-      <summary><div><div class="series-name">G 通勤系列</div><div class="series-meta">5 个详情页 · 双肩背包 / 单肩包</div></div><span class="series-toggle" aria-hidden="true"></span></summary>
+      <summary>
+        <div><div class="series-name">T 差旅系列</div><div class="series-meta">1 个详情页 · 双肩背包</div></div>
+        <span class="series-toggle" aria-hidden="true"></span>
+      </summary>
       <div class="series-list">
-        <a class="link-card" href="./2046.html"><div class="card-title">2046 · G 通勤系列双肩背包</div><div class="card-desc">G_MR2046 · 19L · 17.3英寸电脑仓 · 0.85kg</div></a>
-        <a class="link-card" href="./2007.html"><div class="card-title">2007 · G 通勤系列双肩背包</div><div class="card-desc">G_MR2007 · 20L · 17.3英寸电脑仓 · 外置充电口</div></a>
-        <a class="link-card" href="./199.html"><div class="card-title">199 · G 通勤系列单肩包</div><div class="card-desc">G_MR199 · 2.4L · 5级防泼水 · 0.63kg</div></a>
-        <a class="link-card" href="./2022.html"><div class="card-title">2022 · G 通勤系列双肩背包</div><div class="card-desc">18.5L · 15.6英寸电脑仓 · 910cm²缓冲覆盖 · 外置充电接口</div></a>
-        <a class="link-card" href="./2038.html"><div class="card-title">2038 · G 通勤系列双肩背包</div><div class="card-desc">18.5L · 4个网格袋 · 15.6英寸电脑仓 · 外置充电接口</div></a>
+        <a class="link-card" href="./8859.html"><div class="card-title">8859 · T 差旅系列双肩背包</div><div class="card-desc">MR-T8859 · 37L(扩容49.5L) · 5级防泼水 · 蜂窝透气背辐</div></a>
       </div>
     </details>
     <details class="series-group" open>
-      <summary><div><div class="series-name">L 轻型系列</div><div class="series-meta">3 个详情页 · 单肩包 / 双肩背包</div></div><span class="series-toggle" aria-hidden="true"></span></summary>
+      <summary>
+        <div><div class="series-name">G 通勤系列</div><div class="series-meta">4 个详情页 · 双肩背包</div></div>
+        <span class="series-toggle" aria-hidden="true"></span>
+      </summary>
+      <div class="series-list">
+        <a class="link-card" href="./2046.html"><div class="card-title">2046 · G 通勤系列双肩背包</div><div class="card-desc">G_MR2046 · 19L · 17.3英寸电脑仓 · 0.85kg</div></a>
+        <a class="link-card" href="./2007.html"><div class="card-title">2007 · G 通勤系列双肩背包</div><div class="card-desc">G_MR2007 · 20L · 17.3英寸电脑仓 · 外置充电口</div></a>
+        <a class="link-card" href="./2022.html"><div class="card-title">2022 · G 通勤系列双肩背包</div><div class="card-desc">G_MR2022 · 18.5L · 15.6英寸电脑仓 · EVA缓冲支撑</div></a>
+        <a class="link-card" href="./2038.html"><div class="card-title">2038 · G 通勤系列双肩背包</div><div class="card-desc">G_MR2038 · 18.5L · 15.6英寸电脑仓 · EVA缓冲支撑</div></a>
+      </div>
+    </details>
+    <details class="series-group" open>
+      <summary>
+        <div><div class="series-name">L 轻型系列</div><div class="series-meta">3 个详情页 · 单肩包 / 双肩背包</div></div>
+        <span class="series-toggle" aria-hidden="true"></span>
+      </summary>
       <div class="series-list">
         <a class="link-card" href="./298.html"><div class="card-title">298 · L 轻型系列单肩包</div><div class="card-desc">L_MR298 · 3.7L · 5级防泼水 · 0.4kg轻量</div></a>
         <a class="link-card" href="./6602.html"><div class="card-title">6602 · L 轻型系列双肩背包</div><div class="card-desc">L_MR6602 · 20L · 5级防泼水 · 海绵缓冲背带</div></a>
@@ -71,11 +87,13 @@
       </div>
     </details>
     <details class="series-group">
-      <summary><div><div class="series-name">C 数码系列</div><div class="series-meta">3 个详情页 · 相机包 / 收纳整理包</div></div><span class="series-toggle" aria-hidden="true"></span></summary>
+      <summary>
+        <div><div class="series-name">C 数码系列</div><div class="series-meta">2 个详情页 · 数码收纳</div></div>
+        <span class="series-toggle" aria-hidden="true"></span>
+      </summary>
       <div class="series-list">
-        <a class="link-card" href="./8773.html"><div class="card-title">8773 · C 数码系列相机包</div><div class="card-desc">C_MR8773 · 27L · 相机仓 · 17.3英寸电脑仓</div></a>
-        <a class="link-card" href="./50.html"><div class="card-title">50 · C 数码系列收纳整理包</div><div class="card-desc">1L · 1000D考杜拉尼龙 · YKK拉链 · RFID防盗刷</div></a>
-        <a class="link-card" href="./145.html"><div class="card-title">145 · C 数码系列收纳整理包</div><div class="card-desc">4L · 5级防泼水 · YKK防水拉链 · 骑兵斜纹PU底布</div></a>
+        <a class="link-card" href="./50.html"><div class="card-title">50 · C 数码系列收纳整理包</div><div class="card-desc">C_MR50 · 1L · 多隔层收纳 · RFID防盗刷</div></a>
+        <a class="link-card" href="./145.html"><div class="card-title">145 · C 数码系列收纳整理包</div><div class="card-desc">C_MR145 · 4L · 防泼水面料 · 防水拉链</div></a>
       </div>
     </details>
   </div>
@@ -85,7 +103,10 @@
     <a class="link-card" href="./report-2026-05.html"><div class="card-title">2026年5月 设计人效月度报表</div><div class="card-desc">视觉部下单表 · 实际交付日期统计</div></a>
     <a class="link-card" href="./report-2026-06.html"><div class="card-title">2026年6月 设计人效月度报表</div><div class="card-desc">视觉部下单表 · 实际交付日期统计 · 760.9h / 336项</div></a>
   </div>
-  <div class="footer"><div class="brand-name">MARK RYDEN</div><div class="tagline">都市 · 秩序 · 科技</div></div>
+  <div class="footer">
+    <div class="brand-name">MARK RYDEN</div>
+    <div class="tagline">都市 · 秩序 · 科技</div>
+  </div>
 </div>
 </body>
 </html>
