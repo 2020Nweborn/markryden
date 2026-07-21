@@ -5,13 +5,19 @@
       "username": "admin",
       "password": "2046",
       "role": "super"
-    },
-    {
-      "username": "editor",
-      "password": "2046",
-      "role": "editor"
     }
   ],
   "pages": {},
-  "history": []
+  "history": [
+    {
+      "account": "admin",
+      "time": "2026-07-21T09:14:59.740Z",
+      "page": "2046.html",
+      "moduleIndex": null,
+      "moduleTitle": "账号管理",
+      "action": "删除账号",
+      "before": "普通账号 editor",
+      "after": "已删除"
+    }
+  ]
 }
