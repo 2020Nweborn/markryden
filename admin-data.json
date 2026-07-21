@@ -3,7 +3,7 @@
   "accounts": [
     {
       "username": "admin",
-      "password": "2046",
+      "password": "2020newborn",
       "role": "super"
     },
     {
@@ -33,6 +33,16 @@
       "action": "创建账号",
       "before": "无",
       "after": "创建普通账号 周柏屹"
+    },
+    {
+      "account": "admin",
+      "time": "2026-07-21T09:17:01.530Z",
+      "page": "2046.html",
+      "moduleIndex": null,
+      "moduleTitle": "账号管理",
+      "action": "修改账号密码",
+      "before": "admin 的原密码",
+      "after": "admin 的新密码"
     }
   ]
 }
