@@ -5,6 +5,11 @@
       "username": "admin",
       "password": "2046",
       "role": "super"
+    },
+    {
+      "username": "周柏屹",
+      "password": "2026",
+      "role": "editor"
     }
   ],
   "pages": {},
@@ -18,6 +23,16 @@
       "action": "删除账号",
       "before": "普通账号 editor",
       "after": "已删除"
+    },
+    {
+      "account": "admin",
+      "time": "2026-07-21T09:15:48.138Z",
+      "page": "2046.html",
+      "moduleIndex": null,
+      "moduleTitle": "账号管理",
+      "action": "创建账号",
+      "before": "无",
+      "after": "创建普通账号 周柏屹"
     }
   ]
 }
