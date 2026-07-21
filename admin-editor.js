@@ -2,8 +2,6 @@
   'use strict';
 
   const EDITABLE_SELECTOR = '.section-title, .card-title, .card-stat, .card-stats span, .hero-title, .hero-stats span, .pocket-name, .pocket-desc, .detail-title, .detail-desc, .info-table td, .notes-text, .img-copy';
-  const TOKEN_KEY = 'markryden-github-token';
-  const SESSION_KEY = 'markryden-admin-user';
   const API_URL = 'https://api.github.com/repos/2020Nweborn/markryden/contents/admin-data.json';
   const DANGEROUS_NAMES = new Set(['__proto__', 'prototype', 'constructor']);
   const DEFAULT_DATA = {
@@ -20,6 +18,7 @@
   const sections = Array.from(document.querySelectorAll('.section'));
   const originalModules = sections.map(readModule);
   let data = clone(DEFAULT_DATA);
+  let adminDataValid = false;
   let currentUser = null;
   let activeEdit = null;
   let memoryToken = '';
@@ -30,7 +29,6 @@
   async function init() {
     data = await loadData();
     applyPageOverride(data.pages[pageName]);
-    restoreSession();
     renderControls();
   }
 
@@ -38,28 +36,45 @@
     try {
       const response = await fetch(`./admin-data.json?ts=${Date.now()}`, { cache: 'no-store' });
       if (!response.ok) throw new Error('load');
-      return normalizeData(await response.json());
+      const loaded = normalizeData(await response.json());
+      adminDataValid = true;
+      return loaded;
     } catch (_) {
-      return clone(DEFAULT_DATA);
+      adminDataValid = false;
+      return { version: 1, accounts: [], pages: {}, history: [] };
     }
   }
 
   function normalizeData(value) {
-    const source = value && typeof value === 'object' ? value : {};
-    return {
+    const source = value && typeof value === 'object' && !Array.isArray(value) ? value : null;
+    const normalized = source ? {
       version: Number.isFinite(source.version) ? source.version : 1,
       accounts: Array.isArray(source.accounts) ? source.accounts.filter(validStoredAccount).map(account => ({
         username: String(account.username),
         password: String(account.password),
-        role: account.username === 'admin' ? 'super' : 'editor'
-      })) : clone(DEFAULT_DATA.accounts),
+        role: String(account.role)
+      })) : [],
       pages: source.pages && typeof source.pages === 'object' && !Array.isArray(source.pages) ? source.pages : {},
       history: Array.isArray(source.history) ? source.history.slice(-500) : []
-    };
+    } : null;
+    if (!validateAdminData(normalized)) throw new Error('管理数据无效。');
+    return normalized;
+  }
+
+  function validateAdminData(value) {
+    if (!value || typeof value !== 'object' || !Array.isArray(value.accounts) || !value.accounts.length) return false;
+    if (!value.pages || typeof value.pages !== 'object' || Array.isArray(value.pages) || !Array.isArray(value.history)) return false;
+    const usernames = new Set();
+    for (const account of value.accounts) {
+      if (!validStoredAccount(account) || (account.role !== 'super' && account.role !== 'editor') || usernames.has(account.username)) return false;
+      usernames.add(account.username);
+    }
+    const admin = value.accounts.find(account => account.username === 'admin');
+    return Boolean(admin && admin.role === 'super');
   }
 
   function validStoredAccount(account) {
-    return account && typeof account === 'object' && typeof account.username === 'string' && account.username && typeof account.password === 'string' && account.password;
+    return account && typeof account === 'object' && typeof account.username === 'string' && account.username && !DANGEROUS_NAMES.has(account.username) && typeof account.password === 'string' && account.password;
   }
 
   function clone(value) {
@@ -89,13 +104,6 @@
     });
   }
 
-  function restoreSession() {
-    let username = '';
-    try { username = sessionStorage.getItem(SESSION_KEY) || ''; } catch (_) {}
-    const account = data.accounts.find(item => item.username === username);
-    if (account) currentUser = { username: account.username, role: account.role };
-  }
-
   function renderControls() {
     document.getElementById('ae-login-pill')?.remove();
     document.getElementById('ae-admin-bar')?.remove();
@@ -103,9 +111,12 @@
     sections.forEach(section => section.classList.remove('ae-managed'));
 
     if (!currentUser) {
-      const login = make('button', { id: 'ae-login-pill', type: 'button', text: '登录' });
-      login.addEventListener('click', openLogin);
+      const login = make('button', { id: 'ae-login-pill', type: 'button', text: adminDataValid ? '登录' : '管理数据加载失败' });
+      login.disabled = !adminDataValid;
+      login.title = adminDataValid ? '' : '管理数据加载失败，请刷新后重试';
+      if (adminDataValid) login.addEventListener('click', openLogin);
       document.body.appendChild(login);
+      if (!adminDataValid) toast('管理数据加载失败，请刷新后重试', true);
       return;
     }
 
@@ -135,6 +146,7 @@
   }
 
   async function openLogin() {
+    if (!adminDataValid) return toast('管理数据加载失败，请刷新后重试', true);
     const dialog = createDialog('管理员登录');
     const username = field('账号', 'text', '请输入账号');
     const password = field('密码', 'password', '请输入密码');
@@ -150,7 +162,6 @@
         return;
       }
       currentUser = { username: account.username, role: account.role };
-      try { sessionStorage.setItem(SESSION_KEY, account.username); } catch (_) {}
       closeDialog(dialog);
       renderControls();
     });
@@ -176,7 +187,8 @@
   function startEdit(index) {
     const section = sections[index];
     const nodes = moduleNodes(section);
-    activeEdit = { index, before: readModule(section) };
+    const before = readModule(section);
+    activeEdit = { index, before, remoteBaseline: clone(before) };
     nodes.forEach(node => {
       node.classList.add('ae-editable');
       node.setAttribute('contenteditable', 'true');
@@ -221,12 +233,22 @@
   }
 
   function moduleChanged(index, before) {
-    return JSON.stringify(readModule(sections[index])) !== JSON.stringify(before);
+    return !sameModule(readModule(sections[index]), before);
+  }
+
+  function sameModule(left, right) {
+    return JSON.stringify(left) === JSON.stringify(right);
+  }
+
+  function getEffectiveModule(source, index) {
+    const override = source.pages?.[pageName]?.modules?.[index];
+    return override && Array.isArray(override.nodes) ? clone(override) : clone(originalModules[index]);
   }
 
   async function publishModule(index) {
     if (!activeEdit || activeEdit.index !== index) return;
     const before = activeEdit.before;
+    const remoteBaseline = activeEdit.remoteBaseline;
     const after = readModule(sections[index]);
     if (JSON.stringify(before) === JSON.stringify(after)) {
       stopEdit();
@@ -244,6 +266,10 @@
     try {
       const merged = await publishChange(
         remote => {
+          const latestModule = getEffectiveModule(remote, index);
+          if (!sameModule(latestModule, remoteBaseline)) {
+            throw new Error('发布冲突：该模块已被其他人更新，当前编辑内容已保留，请刷新页面核对后重试。');
+          }
           if (!remote.pages[pageName] || typeof remote.pages[pageName] !== 'object') remote.pages[pageName] = { modules: [] };
           if (!Array.isArray(remote.pages[pageName].modules)) remote.pages[pageName].modules = [];
           remote.pages[pageName].modules[index] = after;
@@ -299,7 +325,7 @@
     }
     cancelActiveEdit();
     currentUser = null;
-    try { sessionStorage.removeItem(SESSION_KEY); } catch (_) {}
+    memoryToken = '';
     renderControls();
   }
 
@@ -493,6 +519,7 @@
       const remoteFile = await getRemoteFile(token);
       const remote = normalizeData(remoteFile.data);
       mutator(remote);
+      if (!validateAdminData(remote)) throw new Error('管理数据无效：必须保留 role 为 super 的 admin 主管理员，已阻止发布。');
       const response = await fetch(API_URL, {
         method: 'PUT',
         headers: githubHeaders(token),
@@ -503,7 +530,7 @@
           branch: 'main'
         })
       });
-      if (!response.ok) throw githubError(response.status);
+      if (!response.ok) throw await githubError(response);
       return remote;
     } catch (error) {
       if (error.authFailure) clearToken();
@@ -517,7 +544,7 @@
       headers: githubHeaders(token),
       cache: 'no-store'
     });
-    if (!response.ok) throw githubError(response.status);
+    if (!response.ok) throw await githubError(response);
     const payload = await response.json();
     return { sha: payload.sha, data: JSON.parse(decodeBase64(payload.content.replace(/\s/g, ''))) };
   }
@@ -530,12 +557,24 @@
     };
   }
 
-  function githubError(status) {
-    let message = `发布失败（HTTP ${status}），请稍后重试。`;
-    const error = new Error(message);
-    if (status === 401 || status === 403) {
+  async function githubError(response) {
+    const status = response.status;
+    let apiMessage = '';
+    try {
+      const payload = await response.json();
+      apiMessage = typeof payload.message === 'string' ? payload.message : '';
+    } catch (_) {}
+    const normalizedMessage = apiMessage.toLowerCase();
+    const credentialFailure = (status === 401 || status === 403) && /(bad credentials|requires authentication|resource not accessible|permission|forbidden|insufficient)/i.test(apiMessage);
+    const rateLimited = (status === 403 || status === 429) && /(rate limit|api rate limit|secondary rate)/i.test(normalizedMessage);
+    const error = new Error(`发布失败（HTTP ${status}）${apiMessage ? `：${apiMessage}` : ''}，请稍后重试。`);
+    if (rateLimited) {
+      error.message = '发布失败：GitHub API 频率限制，请稍后重试。';
+    } else if (credentialFailure) {
       error.message = '发布失败：密钥无效或 Contents 权限不足。请重新输入 Fine-grained PAT。';
       error.authFailure = true;
+    } else if (status === 401 || status === 403) {
+      error.message = `发布失败：GitHub 拒绝请求${apiMessage ? `（${apiMessage}）` : ''}，请稍后重试。`;
     } else if (status === 409) error.message = '发布冲突，请刷新页面后重试。';
     else if (status === 404) error.message = '发布失败：未找到 admin-data.json 或无权访问仓库。';
     else if (status === 422) error.message = '发布失败：远程文件状态已变化，请刷新后重试。';
@@ -544,25 +583,14 @@
 
   async function getPublishToken() {
     if (memoryToken) return memoryToken;
-    try {
-      const saved = localStorage.getItem(TOKEN_KEY);
-      if (saved) {
-        memoryToken = saved;
-        return saved;
-      }
-    } catch (_) {}
     const token = await tokenDialog();
     if (!token) throw new Error('已取消发布授权，修改内容仍保留，可再次确认重试。');
-    memoryToken = token.value;
-    if (token.remember) {
-      try { localStorage.setItem(TOKEN_KEY, token.value); } catch (_) {}
-    }
-    return token.value;
+    memoryToken = token;
+    return token;
   }
 
   function clearToken() {
     memoryToken = '';
-    try { localStorage.removeItem(TOKEN_KEY); } catch (_) {}
   }
 
   function tokenDialog() {
@@ -571,9 +599,6 @@
       dialog.element.querySelector('.ae-dialog-close').remove();
       dialog.shell.appendChild(make('p', { className: 'ae-dialog-text', text: '请输入对 2020Nweborn/markryden 具有 Contents 读写权限的 GitHub Fine-grained PAT。密钥不会写入页面、数据文件或修改记录。' }));
       const token = field('GitHub Fine-grained PAT', 'password', 'github_pat_…');
-      const rememberLabel = make('label', { className: 'ae-check' });
-      const remember = make('input', { type: 'checkbox' });
-      rememberLabel.append(remember, document.createTextNode('记住到此浏览器'));
       const error = make('div', { className: 'ae-error' });
       const cancel = make('button', { type: 'button', text: '取消' });
       const confirm = make('button', { className: 'ae-primary', type: 'button', text: '授权并发布' });
@@ -591,10 +616,10 @@
           error.textContent = '请输入 GitHub Fine-grained PAT。';
           return;
         }
-        finish({ value, remember: remember.checked });
+        finish(value);
       });
       dialog.element.addEventListener('cancel', event => { event.preventDefault(); finish(null); });
-      dialog.shell.append(token.wrap, rememberLabel, error, actions(cancel, confirm));
+      dialog.shell.append(token.wrap, error, actions(cancel, confirm));
       showDialog(dialog.element);
       token.input.focus();
     });
