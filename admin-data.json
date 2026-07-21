@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "accounts": [
+    {
+      "username": "admin",
+      "password": "2046",
+      "role": "super"
+    },
+    {
+      "username": "editor",
+      "password": "2046",
+      "role": "editor"
+    }
+  ],
+  "pages": {},
+  "history": []
+}
