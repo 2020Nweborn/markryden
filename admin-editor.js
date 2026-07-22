@@ -55,7 +55,7 @@
         role: String(account.role)
       })) : [],
       pages: source.pages && typeof source.pages === 'object' && !Array.isArray(source.pages) ? source.pages : {},
-      history: Array.isArray(source.history) ? source.history.slice(-500) : []
+      history: Array.isArray(source.history) ? source.history.filter(record => record && typeof record === 'object' && !Array.isArray(record)).slice(-500) : []
     } : null;
     if (!validateAdminData(normalized)) throw new Error('管理数据无效。');
     return normalized;
