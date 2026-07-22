@@ -374,27 +374,94 @@
   function openHistory() {
     if (!isSuper()) return;
     const dialog = createDialog('修改记录', true);
+    const pageSize = 10;
+    let currentPage = 1;
+    let keyword = '';
+    const allRecords = data.history.slice().reverse();
+    const searchWrap = make('label', { className: 'ae-history-search' });
+    const searchInput = make('input', { type: 'search', placeholder: '搜索账号、页面、模块、时间或修改内容', autocomplete: 'off' });
+    const resultInfo = make('div', { className: 'ae-history-result' });
     const list = make('div', { className: 'ae-history-list' });
-    const records = data.history.slice().reverse();
-    if (!records.length) list.appendChild(make('p', { className: 'ae-dialog-text', text: '暂无修改记录。' }));
-    records.forEach(record => {
-      const item = make('div', { className: 'ae-history-item' });
-      const head = make('div', { className: 'ae-history-head' });
-      head.append(
-        make('span', { text: `${record.account || '未知账号'} · ${record.page || '未知页面'}` }),
-        make('span', { text: formatTime(record.time) })
-      );
-      const moduleText = record.moduleIndex ? `模块 ${record.moduleIndex} / ${record.moduleTitle || '未命名'}` : (record.moduleTitle || '整页');
-      item.append(
-        head,
-        make('div', { className: 'ae-history-main', text: `${record.action || '修改'} · ${moduleText}` }),
-        make('div', { className: 'ae-history-summary', text: `修改前：${record.before || '无'}` }),
-        make('div', { className: 'ae-history-summary', text: `修改后：${record.after || '无'}` })
-      );
-      list.appendChild(item);
+    const pager = make('div', { className: 'ae-history-pager' });
+    searchWrap.append(make('span', { text: '搜索修改记录' }), searchInput);
+
+    function searchableText(record) {
+      return [
+        record.account,
+        record.time,
+        formatTime(record.time),
+        record.page,
+        record.moduleIndex,
+        record.moduleTitle,
+        record.action,
+        record.before,
+        record.after
+      ].map(value => String(value ?? '')).join(' ').toLocaleLowerCase('zh-CN');
+    }
+
+    function renderHistoryPage() {
+      const normalizedKeyword = keyword.trim().toLocaleLowerCase('zh-CN');
+      const filtered = normalizedKeyword
+        ? allRecords.filter(record => searchableText(record).includes(normalizedKeyword))
+        : allRecords;
+      const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+      currentPage = Math.min(Math.max(1, currentPage), pageCount);
+      const start = (currentPage - 1) * pageSize;
+      const pageRecords = filtered.slice(start, start + pageSize);
+      list.replaceChildren();
+      pager.replaceChildren();
+      resultInfo.textContent = normalizedKeyword
+        ? `找到 ${filtered.length} 条记录，共 ${allRecords.length} 条`
+        : `共 ${allRecords.length} 条记录`;
+
+      if (!pageRecords.length) {
+        list.appendChild(make('p', { className: 'ae-history-empty', text: allRecords.length ? '没有找到匹配的修改记录。' : '暂无修改记录。' }));
+      }
+
+      pageRecords.forEach(record => {
+        const item = make('div', { className: 'ae-history-item' });
+        const head = make('div', { className: 'ae-history-head' });
+        head.append(
+          make('span', { text: `${record.account || '未知账号'} · ${record.page || '未知页面'}` }),
+          make('span', { text: formatTime(record.time) })
+        );
+        const moduleText = record.moduleIndex ? `模块 ${record.moduleIndex} / ${record.moduleTitle || '未命名'}` : (record.moduleTitle || '整页');
+        item.append(
+          head,
+          make('div', { className: 'ae-history-main', text: `${record.action || '修改'} · ${moduleText}` }),
+          make('div', { className: 'ae-history-summary', text: `修改前：${record.before || '无'}` }),
+          make('div', { className: 'ae-history-summary', text: `修改后：${record.after || '无'}` })
+        );
+        list.appendChild(item);
+      });
+
+      const previous = make('button', { type: 'button', text: '上一页' });
+      const next = make('button', { type: 'button', text: '下一页' });
+      previous.disabled = currentPage <= 1 || !filtered.length;
+      next.disabled = currentPage >= pageCount || !filtered.length;
+      previous.addEventListener('click', () => {
+        currentPage -= 1;
+        renderHistoryPage();
+        list.scrollIntoView({ block: 'nearest' });
+      });
+      next.addEventListener('click', () => {
+        currentPage += 1;
+        renderHistoryPage();
+        list.scrollIntoView({ block: 'nearest' });
+      });
+      const rangeText = filtered.length ? `${start + 1}–${Math.min(start + pageSize, filtered.length)} / ${filtered.length}` : '0 / 0';
+      pager.append(previous, make('span', { text: `第 ${currentPage} / ${pageCount} 页 · ${rangeText}` }), next);
+    }
+
+    searchInput.addEventListener('input', () => {
+      keyword = searchInput.value;
+      currentPage = 1;
+      renderHistoryPage();
     });
-    dialog.shell.append(list, actions(cancelButton(dialog, '关闭')));
+    dialog.shell.append(searchWrap, resultInfo, list, pager, actions(cancelButton(dialog, '关闭')));
+    renderHistoryPage();
     showDialog(dialog.element);
+    searchInput.focus();
   }
 
   function openAccounts() {
