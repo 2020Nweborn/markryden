@@ -3,7 +3,7 @@
   "accounts": [
     {
       "username": "admin",
-      "password": "2020newborn",
+      "password": "2026",
       "role": "super"
     },
     {
@@ -108,6 +108,16 @@
       "action": "编辑模块",
       "before": "产品信息 ｜ 品牌 ｜ MARK RYDEN ｜ 面料 ｜ 涤纶 ｜ 型号 ｜ G_MR2046 ｜ 重量 ｜ 0.85kg ｜ 尺寸 ｜ 43 × 30 × 14cm ｜ 颜色 ｜ 商务黑 / 月光白 / 精英灰 ｜ 数码仓尺寸 ｜ 可容纳 116 英寸电脑 ｜ 肩带 ｜ 45~95cm",
       "after": "产品信息 ｜ 品牌 ｜ MARK RYDEN ｜ 面料 ｜ 涤纶 ｜ 型号 ｜ G_MR2046 ｜ 重量 ｜ 0.85kg ｜ 尺寸 ｜ 43 × 30 × 14cm ｜ 颜色 ｜ 商务黑 / 月光白 / 精英灰 ｜ 数码仓尺寸 ｜ 可容纳 16.2 英寸电脑 ｜ 肩带 ｜ 45~95cm"
+    },
+    {
+      "account": "admin",
+      "time": "2026-07-23T06:52:30.067Z",
+      "page": "8859.html",
+      "moduleIndex": null,
+      "moduleTitle": "账号管理",
+      "action": "修改账号密码",
+      "before": "admin 的原密码",
+      "after": "admin 的新密码"
     }
   ]
 }
