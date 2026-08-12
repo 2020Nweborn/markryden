@@ -2,15 +2,18 @@
   ============================================================
   MASTER DESIGN SYSTEM — 所有网页输出的统一样式基准
   ============================================================
+  其他 skill 的 HTML 模板（如 designer-efficiency）均以此为
+  设计主模板，共享 :root 变量、配色、间距、字体、卡片风格。
+  修改此文件中的 CSS 变量即同步影响所有输出页面。
+  ============================================================
 -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MARK RYDEN 2911 详情页</title>
 <link rel="stylesheet" href="./admin-editor.css">
-<script src="./admin-editor.js" defer></script>
+<title>MARK RYDEN 2911 详情页</title>
 <style>
   :root {
     --bg: #ffffff;
@@ -45,6 +48,7 @@
     padding: 40px 24px 80px;
   }
 
+  /* Header */
   .header {
     text-align: center;
     padding: 48px 0 40px;
@@ -75,6 +79,7 @@
     letter-spacing: 1px;
   }
 
+  /* Section */
   .section {
     margin-bottom: 56px;
   }
@@ -88,6 +93,7 @@
     border-bottom: 1px solid var(--border);
   }
 
+  /* Panel 1 & 3: Feature Cards */
   .feature-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -138,6 +144,7 @@
     background: var(--border);
   }
 
+  /* Panel 2: Capacity */
   .capacity-section {
     margin-bottom: 24px;
   }
@@ -192,6 +199,7 @@
     line-height: 1.5;
   }
 
+  /* Panel 4: Details */
   .detail-list {
     display: grid;
     grid-template-columns: 1fr;
@@ -228,6 +236,7 @@
     color: var(--text-secondary);
   }
 
+  /* Panel 5 & 6: Info & Notes */
   .info-table {
     width: 100%;
     border-collapse: collapse;
@@ -256,6 +265,7 @@
     line-height: 1.8;
   }
 
+  /* Panel 7: Main Images */
   .main-image-list {
     display: grid;
     gap: 12px;
@@ -288,6 +298,7 @@
     letter-spacing: 0.5px;
   }
 
+  /* Footer */
   .footer {
     text-align: center;
     padding: 40px 0 0;
@@ -309,10 +320,11 @@
 <body data-editor-page="2911.html">
 <div class="container">
 
+  <!-- Header -->
   <div class="header">
     <div class="brand">MARK RYDEN</div>
     <div class="model">2911</div>
-    <div class="series">G系列 · 双肩背包</div>
+    <div class="series">G 通勤系列 · 双肩背包</div>
   </div>
 
   <!-- 板块 1：重要功能 -->
@@ -320,16 +332,16 @@
     <div class="section-title">重要功能</div>
     <div class="feature-grid">
       <div class="feature-card">
-        <div class="card-title">防水拉链，顺滑耐用</div>
-        <div class="card-stat">5万次开合寿命，阻力<3.0N</div>
+        <div class="card-title">YKK防水拉链顺滑耐用</div>
+        <div class="card-stat">5万次开合寿命</div>
       </div>
       <div class="feature-card">
-        <div class="card-title">透气背辐，久背不闷</div>
-        <div class="card-stat">3D蜂窝孔覆盖78%背辐面积</div>
+        <div class="card-title">蜂窝透气背幅久背少闷</div>
+        <div class="card-stat">78%透气面积</div>
       </div>
       <div class="feature-card">
-        <div class="card-title">防泼抗污，通勤从容</div>
-        <div class="card-stat">5级防泼水配合4级抗污</div>
+        <div class="card-title">防泼抗污面料从容通勤</div>
+        <div class="card-stat">防泼水性能（5级 ）</div>
       </div>
     </div>
   </div>
@@ -339,32 +351,32 @@
     <div class="section-title">容量展示</div>
     <div class="capacity-section">
       <div class="capacity-hero">
-        <div class="hero-title">紧凑分仓，通勤刚好</div>
+        <div class="hero-title">12L通勤容量有序收纳</div>
         <div class="hero-stats">
           <span>12L总容量</span>
-          <span>多层分区收纳</span>
+          <span>大隔层搭配多处分区</span>
         </div>
       </div>
       <div class="pocket-list">
         <div class="pocket-item">
-          <div class="pocket-name">主仓隔层</div>
-          <div class="pocket-desc">大隔层收纳，15.6寸电脑独立保护，魔术贴固定带防晃</div>
+          <div class="pocket-name">主口袋</div>
+          <div class="pocket-desc">大隔层内设15.6英寸电脑保护隔层和魔术贴固定带，电脑与日常物品分区放置。</div>
         </div>
         <div class="pocket-item">
-          <div class="pocket-name">物件隔层与笔袋</div>
-          <div class="pocket-desc">双隔层卡片收纳，两支笔位，文具随手取用</div>
+          <div class="pocket-name">副口袋</div>
+          <div class="pocket-desc">2个物件隔层搭配2个笔袋，小件办公用品分类收纳，打开包内更快找到。</div>
         </div>
         <div class="pocket-item">
           <div class="pocket-name">前置侧边拉链袋</div>
-          <div class="pocket-desc">侧边快开设计，耳机钥匙一拉即取</div>
+          <div class="pocket-desc">常用物品放在包身前侧，通勤途中取放更顺手。</div>
         </div>
         <div class="pocket-item">
           <div class="pocket-name">前置隐藏拉链袋</div>
-          <div class="pocket-desc">贴身前侧隐藏收纳，重要物品多一层安心</div>
+          <div class="pocket-desc">隐藏式袋口收纳随身小物，保持包身外观简洁利落。</div>
         </div>
         <div class="pocket-item">
           <div class="pocket-name">右侧水壶袋</div>
-          <div class="pocket-desc">弹性收口，通勤路上随手补水</div>
+          <div class="pocket-desc">水壶独立放置，日常补水方便，也减少与电子设备混放。</div>
         </div>
       </div>
     </div>
@@ -375,28 +387,28 @@
     <div class="section-title">功能详解</div>
     <div class="feature-grid">
       <div class="feature-card">
-        <div class="card-title">顺滑拉链无惧风雨</div>
+        <div class="card-title">防水拉链应对高频开合</div>
         <div class="card-stats">
           <span>YKK防水拉链</span>
           <span>5万次开合寿命</span>
-          <span>阻力<3.0N单指轻拉</span>
+          <span>&lt;3.0N 顺滑阻力</span>
         </div>
       </div>
       <div class="feature-card">
-        <div class="card-title">透气背板告别闷热</div>
+        <div class="card-title">蜂窝背幅保持透气支撑</div>
         <div class="card-stats">
-          <span>多段式蜂窝3D透气孔</span>
-          <span>背辐透气面积78%</span>
-          <span>15mm支撑海绵软弹不塌</span>
-          <span>久背保持背部干爽</span>
+          <span>多段式蜂窝透气背辐</span>
+          <span>3D透气孔</span>
+          <span>78%透气面积</span>
+          <span>15MM支撑海绵</span>
         </div>
       </div>
       <div class="feature-card">
-        <div class="card-title">防泼抗污轻松出行</div>
+        <div class="card-title">防泼抗污面料易于打理</div>
         <div class="card-stats">
-          <span>5级防泼水处理</span>
-          <span>900D皮膜复合面料</span>
-          <span>4级抗污表面易清洁</span>
+          <span>防泼水性能（5级 ）</span>
+          <span>皮膜面料：900D皮膜复合</span>
+          <span>抗污性（4级）</span>
         </div>
       </div>
     </div>
@@ -409,22 +421,22 @@
       <div class="detail-item">
         <div class="detail-icon">✦</div>
         <div>
-          <div class="detail-title">压印Logo，低调有辨识</div>
-          <div class="detail-desc">品牌标识压印工艺，不张扬但质感在线</div>
+          <div class="detail-title">压印LOGO简洁有型</div>
+          <div class="detail-desc">压印工艺融入包身，品牌识别克制利落，适合日常通勤搭配。</div>
         </div>
       </div>
       <div class="detail-item">
         <div class="detail-icon">✦</div>
         <div>
-          <div class="detail-title">透气提手，久提不闷汗</div>
-          <div class="detail-desc">顶部透气设计，短途通勤拎起就走</div>
+          <div class="detail-title">透气提手提拿舒适</div>
+          <div class="detail-desc">顶部透气提手方便短距离提拿，日常进出办公室更顺手。</div>
         </div>
       </div>
       <div class="detail-item">
         <div class="detail-icon">✦</div>
         <div>
-          <div class="detail-title">行李箱带，差旅更利落</div>
-          <div class="detail-desc">背部固定带套入拉杆，出行一推就走</div>
+          <div class="detail-title">固定带衔接差旅行程</div>
+          <div class="detail-desc">背部行李箱固定带可套在拉杆上，差旅转场时移动更省力。</div>
         </div>
       </div>
     </div>
@@ -436,7 +448,7 @@
     <table class="info-table">
       <tr>
         <td>品牌</td>
-        <td>MARK RYDEN</td>
+        <td>MARKR RYDEN</td>
       </tr>
       <tr>
         <td>面料</td>
@@ -464,10 +476,7 @@
   <!-- 板块 6：备注信息 -->
   <div class="section">
     <div class="section-title">备注</div>
-    <div class="notes-text">
-      产品详情页所标注数据均源自 MARK RYDEN 实验室。<br>
-      电脑保护隔层容纳15.6寸电脑均以主流外星人游戏本及苹果轻薄本作为标准参照。
-    </div>
+    <div class="notes-text">产品详情页所标注数据均源自 MARKR RYDEN 实验室。<br>电脑保护隔层容纳15.6英寸电脑，均以主流外星人游戏本及苹果轻薄本作为标准参照。</div>
   </div>
 
   <!-- 板块 7：电商主图文案 -->
@@ -476,32 +485,34 @@
     <div class="main-image-list">
       <div class="main-image-item">
         <div class="img-number">1</div>
-        <div class="img-copy">12L紧凑容量，通勤轻装上阵</div>
+        <div class="img-copy">12L通勤容量，日常装备有序装</div>
       </div>
       <div class="main-image-item">
         <div class="img-number">2</div>
-        <div class="img-copy">5级防泼水，雨天出行不慌</div>
+        <div class="img-copy">防泼抗污面料，日常通勤易打理</div>
       </div>
       <div class="main-image-item">
         <div class="img-number">3</div>
-        <div class="img-copy">蜂窝透气背辐，久背不闷热</div>
+        <div class="img-copy">蜂窝透气背幅，久背通勤少闷热</div>
       </div>
       <div class="main-image-item">
         <div class="img-number">4</div>
-        <div class="img-copy">15.6寸电脑仓，数码随行稳妥</div>
+        <div class="img-copy">电脑保护隔层，设备随行更稳妥</div>
       </div>
       <div class="main-image-item">
         <div class="img-number">5</div>
-        <div class="img-copy">YKK顺滑拉链，每次开合都利落</div>
+        <div class="img-copy">YKK防水拉链，高频开合更顺手</div>
       </div>
     </div>
   </div>
 
+  <!-- Footer -->
   <div class="footer">
     <div class="brand-name">MARK RYDEN</div>
     <div class="tagline">都市 · 秩序 · 科技</div>
   </div>
 
 </div>
+<script src="./admin-editor.js" defer></script>
 </body>
 </html>
