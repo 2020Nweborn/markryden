@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="AhRn1p5AA8IjAWgzJGkj4z">
+<head data-page-node-id="RrHHwKVa6pXLMr4fS7L4dS">
+<meta charset="UTF-8" data-page-node-id="jo3pmD21HUXDmJDmoLbdAg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="90YumJ2zsCgDdBdm0Hgr5i">
+<title>MARK RYDEN · LOGO 定制预览</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+<style>
+  :root{
+    --page:#f7f7f7;
+    --ink:#151515;
+    --muted:#a8a8a8;
+    --line:#dedede;
+    --dark:#303030;
+    --blue:#2868ee;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",Arial,sans-serif;color:var(--ink)}
+  body{background:var(--page)}
+  header{height:95px;background:#fff;border-bottom:1px solid #f2f2f2}
+  .header-inner{width:950px;height:100%;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+  .brand-img{display:block;width:166px;height:auto}
+  .lang-wrap{position:relative}
+  .lang{height:31px;min-width:74px;padding:0 13px;border:1px solid #dedede;border-radius:18px;background:#fff;display:flex;align-items:center;justify-content:center;gap:7px;font-size:13px;color:#202020;cursor:pointer}
+  .lang:hover,.lang[aria-expanded="true"]{border-color:#bcbcbc}
+  .chev{width:7px;height:7px;border-right:1.5px solid #333;border-bottom:1.5px solid #333;transform:rotate(45deg) translateY(-2px);transition:transform .16s ease}
+  .lang[aria-expanded="true"] .chev{transform:rotate(225deg) translate(-1px,-1px)}
+  .lang-menu{position:absolute;z-index:20;top:39px;right:0;width:118px;padding:6px;background:#fff;border:1px solid #e5e5e5;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.12);opacity:0;visibility:hidden;transform:translateY(-5px);transition:.16s ease}
+  .lang-wrap.is-open .lang-menu{opacity:1;visibility:visible;transform:translateY(0)}
+  .lang-option{display:block;width:100%;height:34px;padding:0 10px;border:0;border-radius:8px;background:#fff;color:#222;text-align:left;font-size:13px;cursor:pointer}
+  .lang-option:hover,.lang-option.is-active{background:#f3f3f3;font-weight:600}
+
+  main{width:950px;margin:70px auto 0;display:grid;grid-template-columns:532px 404px;gap:14px;align-items:start}
+  .stage{position:relative;width:532px;height:532px;background-color:#fff;border:1px solid #e3e3e3;border-radius:14px;overflow:hidden;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Cpath d='M44 0V44M0 44H44' fill='none' stroke='%23d8dce0' stroke-width='1' stroke-dasharray='3 4'/%3E%3C/svg%3E");
+    background-size:44px 44px}
+  .canvas-container{position:absolute!important;inset:0;border-radius:13px;overflow:hidden}
+  .stage-tip{position:absolute;z-index:4;left:50%;bottom:30px;transform:translateX(-50%);height:26px;padding:0 11px;border-radius:2px;background:#303030;color:#fff;font-size:11px;white-space:nowrap;display:flex;align-items:center;pointer-events:none}
+  .size-warning{position:absolute;z-index:8;top:18px;right:18px;width:32px;height:32px}
+  .warning-trigger{width:32px;height:32px;padding:0;border:0;background:transparent;display:block;cursor:help}
+  .warning-trigger img{display:block;width:32px;height:32px}
+  .warning-popover{position:absolute;top:43px;right:0;width:300px;min-height:58px;padding:17px 18px;border-radius:14px;background:#fff;color:#111;box-shadow:0 8px 28px rgba(0,0,0,.14);font-size:15px;font-weight:700;line-height:24px;text-align:center;white-space:normal;opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .18s ease,transform .18s ease,visibility .18s ease;pointer-events:none}
+  .warning-popover:before{content:"";position:absolute;right:10px;top:-8px;width:16px;height:16px;background:#fff;transform:rotate(45deg);border-radius:2px 0 0 0}
+  .size-warning:hover .warning-popover,.size-warning:focus-within .warning-popover,.size-warning.is-open .warning-popover{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto}
+
+  .panel{width:404px;height:532px;padding:27px 30px 20px;background:#fff;border-radius:14px}
+  .top-grid,.middle-grid,.adjust-grid{display:grid;grid-template-columns:148px 148px;column-gap:37px}
+  .field-title{font-size:15px;line-height:20px;font-weight:700;margin:0 0 9px}
+  select{display:block;width:148px;height:34px;border:1px solid #dcdcdc;border-radius:2px;color:#222;font-size:14px;padding:0 36px 0 12px;outline:none;appearance:none;-webkit-appearance:none;background-color:#fff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.25 6 6.25 11 1.25' fill='none' stroke='%23222' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:10px 7px}
+  .middle-grid{margin-top:31px}
+  .upload{width:148px;height:95px;border:1px solid #dedede;border-radius:2px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;text-align:center;overflow:hidden}
+  .upload:hover{border-color:#bcbcbc}
+  .up-plus{width:20px;height:20px;border:1px solid #d2d2d2;color:#aaa;font-size:17px;line-height:17px;font-weight:300;margin-bottom:17px}
+  .up-text{font-size:8px;line-height:1.5;color:#aaa;transform:scale(.92);width:154px}
+  .up-thumb{max-width:88px;max-height:55px;object-fit:contain;margin-bottom:5px}
+  .process-options{display:flex;gap:9px;margin-bottom:18px}
+  .check-chip{height:34px;padding:0 8px;border:1px solid #e2e2e2;border-radius:2px;display:flex;align-items:center;gap:6px;font-size:10px;white-space:nowrap;cursor:pointer}
+  .check-chip input{appearance:none;width:13px;height:13px;margin:0;border-radius:2px;border:1px solid #222;background:#fff;position:relative}
+  .check-chip input:checked{background:#171717}
+  .check-chip input:checked:after{content:"";position:absolute;left:3px;top:1px;width:4px;height:7px;border:solid #fff;border-width:0 1.5px 1.5px 0;transform:rotate(45deg)}
+  .range-title{font-size:11px;font-weight:600;margin-bottom:8px}
+  input[type=range]{--value:50%;-webkit-appearance:none;appearance:none;width:148px;height:5px;margin:0;display:block;border-radius:8px;background:linear-gradient(to right,var(--blue) 0,var(--blue) var(--value),#eeeeee var(--value),#eeeeee 100%);outline:none}
+  input[type=range].dark{background:linear-gradient(to right,#111 0,#111 var(--value),#eeeeee var(--value),#eeeeee 100%)}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:9px;height:9px;border-radius:50%;background:#111;cursor:pointer}
+  input[type=range].blue::-webkit-slider-thumb{background:var(--blue)}
+  .range-hint{font-size:8px;line-height:1.45;color:#aaa;white-space:nowrap;margin-top:9px;transform-origin:left top}
+  .adjust-grid{margin-top:22px}
+  .adjust-grid .field-title{margin-bottom:15px}
+  .actions{margin-top:58px}
+  .btn{display:block;width:334px;height:47px;border:0;border-radius:2px;background:var(--dark);color:#fff;font-size:15px;font-weight:400;cursor:pointer}
+  .btn:hover{background:#232323}
+  .btn+.btn{margin-top:12px}
+  .note{text-align:center;margin-top:17px;color:#aaa;font-size:11px}
+
+  @media(min-width:1200px){
+    header{height:118px}
+    .header-inner{width:1174px}
+    .brand-img{width:205px}
+    .lang{height:38px;min-width:88px;padding:0 17px;font-size:15px;border-radius:21px}
+    .lang-menu{top:47px;width:136px;padding:7px;border-radius:14px}
+    .lang-option{height:40px;padding:0 12px;font-size:15px}
+    main{width:1174px;margin-top:74px;grid-template-columns:650px 500px;gap:24px}
+    .stage{width:650px;height:650px;border-radius:18px;background-size:54px 54px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='54' height='54' viewBox='0 0 54 54'%3E%3Cpath d='M54 0V54M0 54H54' fill='none' stroke='%23d8dce0' stroke-width='1' stroke-dasharray='4 5'/%3E%3C/svg%3E")}
+    .canvas-container{border-radius:17px}
+    .canvas-container{transform:scale(1.223);transform-origin:left top}
+    .stage-tip{bottom:36px;height:32px;padding:0 14px;font-size:13px}
+    .size-warning{top:22px;right:22px;width:40px;height:40px}
+    .warning-trigger,.warning-trigger img{width:40px;height:40px}
+    .warning-popover{top:54px;width:338px;min-height:72px;padding:21px 22px;border-radius:18px;font-size:18px;line-height:28px}
+    .warning-popover:before{right:12px;top:-9px;width:18px;height:18px}
+    .panel{width:500px;height:650px;padding:34px 38px 25px;border-radius:18px}
+    .top-grid,.middle-grid,.adjust-grid{grid-template-columns:188px 188px;column-gap:48px}
+    .field-title{font-size:18px;line-height:24px;margin-bottom:11px}
+    select{width:188px;height:42px;font-size:16px;padding-left:14px;padding-right:42px;background-position:right 15px center;background-size:11px 8px}
+    .middle-grid{margin-top:38px}
+    .upload{width:188px;height:118px}
+    .up-plus{width:26px;height:26px;font-size:20px;line-height:23px;margin-bottom:16px}
+    .up-text{font-size:11px;line-height:1.55;transform:none;width:170px}
+    .up-thumb{max-width:104px;max-height:68px}
+    .process-options{gap:10px;margin-bottom:20px}
+    .check-chip{height:42px;padding:0 10px;gap:7px;font-size:12px}
+    .check-chip input{width:15px;height:15px}
+    .check-chip input:checked:after{left:4px;top:1px;width:4px;height:8px}
+    .range-title{font-size:13px;margin-bottom:10px}
+    input[type=range]{width:188px;height:6px}
+    input[type=range]::-webkit-slider-thumb{width:12px;height:12px}
+    .range-hint{font-size:11px;line-height:1.5;margin-top:10px;white-space:normal;width:205px}
+    .adjust-grid{margin-top:29px}
+    .adjust-grid .field-title{margin-bottom:18px}
+    .actions{margin-top:72px}
+    .btn{width:424px;height:57px;font-size:18px}
+    .btn+.btn{margin-top:14px}
+    .note{margin-top:19px;font-size:13px}
+  }
+  html[lang="ru"] .check-chip{font-size:9px;padding:0 6px;gap:4px}
+  html[lang="ru"] .process-options{gap:5px}
+  @media(min-width:1200px){html[lang="ru"] .check-chip{font-size:11px;padding:0 8px;gap:5px}}
+  @media(max-width:1000px){
+    .header-inner,main{width:calc(100% - 32px)}
+    main{grid-template-columns:1fr;margin-top:32px}
+    .stage{width:min(532px,100%);height:auto;aspect-ratio:1}
+    .panel{width:min(404px,100%)}
+    .header-inner{padding:0}
+  }
+</style>
+</head>
+<body data-page-node-id="IPopAk2MU4y4SzLbrQdj7C">
+<header data-page-node-id="U872brYtajZACf2F2osm0r">
+  <div class="header-inner" data-page-node-id="L1JFyBafuKGhyO3Smi2Kww">
+    <img class="brand-img" src="logo.svg" alt="MARK RYDEN" data-page-node-id="Y8szS8FfaGNv2b6q7HvWIg">
+    <div class="lang-wrap" id="langWrap">
+      <button class="lang" id="langButton" type="button" aria-haspopup="true" aria-expanded="false"><span id="langCurrent">中文</span><span class="chev"></span></button>
+      <div class="lang-menu" id="langMenu" role="menu">
+        <button class="lang-option is-active" type="button" role="menuitem" data-lang="zh">中文</button>
+        <button class="lang-option" type="button" role="menuitem" data-lang="en">English</button>
+        <button class="lang-option" type="button" role="menuitem" data-lang="ru">Русский</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main data-page-node-id="5n6yB8ZvVHHwXjRzBGB2xP">
+  <section class="stage" id="stageSection" aria-label="背包 LOGO 预览画布">
+    <canvas id="c" width="530" height="530" data-page-node-id="F2oEoKDVQG3Xr8dxfM1DR3"></canvas>
+    <div class="size-warning" id="sizeWarning">
+      <button class="warning-trigger" id="warningTrigger" type="button" aria-label="查看 LOGO 尺寸提醒" aria-describedby="warningPopover">
+        <img src="warning.svg" alt="">
+      </button>
+      <div class="warning-popover" id="warningPopover" role="tooltip">请注意，LOGO超过12cm，无法定制！</div>
+    </div>
+  </section>
+
+  <section class="panel" id="settingsPanel" aria-label="LOGO 定制设置">
+    <div class="top-grid" data-page-node-id="So4Dtxl1a4hWa5d4IMA85c">
+      <div data-page-node-id="3gNYqaMTFljlZvRaIvetAN">
+        <div class="field-title" id="labelModel">产品型号</div>
+        <select id="model" data-page-node-id="hMpMcuCAHjI68KZRfubiqG"><option data-page-node-id="P3irB5DsGYwxOwNH7scJsq">MR_9100</option></select>
+      </div>
+      <div data-page-node-id="jN1HEVxsUVuiorhIy04EUv">
+        <div class="field-title" id="labelColor">颜色选择</div>
+        <select id="color"><option id="colorBlack">商务黑</option></select>
+      </div>
+    </div>
+
+    <div class="middle-grid" data-page-node-id="4nuAkTG4csP2ivRgKqwFOQ">
+      <div data-page-node-id="kXXVODqG1667iLtK6qzp7F">
+        <div class="field-title" id="labelUpload">上传LOGO</div>
+        <div class="upload" id="uploadBox" data-page-node-id="IyK6IyRH8mSooRXcbPrtvk">
+          <div class="up-plus" id="upPlus" data-page-node-id="sEHvaoEJ3L72kiYR7Uxr6F">+</div>
+          <img class="up-thumb" id="upThumb" alt="" hidden data-page-node-id="WhK5jPOFuBB5WFL54id99h">
+          <div class="up-text" id="upText" data-page-node-id="gvEFBN6xpIoS5zdQ0AKBve">上传透明 PNG 最佳，直接可用；<br data-page-node-id="TCh1hjayu4oAiGlbOqnkzT">带有背景颜色的 JPG 将自动去除背景</div>
+        </div>
+        <input type="file" id="file" hidden accept="image/png,image/jpeg,image/svg+xml" data-page-node-id="qN2i7EWeKDr5H6aq1C9y1v">
+      </div>
+      <div data-page-node-id="xMO7I8rG5vK6xACwkqycX7">
+        <div class="field-title" data-page-node-id="9R3ajVahoB6iJbVmqaXMgi">LOGO处理</div>
+        <div class="process-options" data-page-node-id="n7fEMbUBLmY50CVa36bIkU">
+          <label class="check-chip"><span id="labelRemoveBg">去除背景</span><input type="checkbox" id="rmwhite" checked></label>
+          <label class="check-chip"><span id="labelInvert">颜色反向</span><input type="checkbox" id="invert"></label>
+        </div>
+        <div class="range-title" id="labelTolerance">LOGO边缘擦除</div>
+        <input type="range" id="tol" class="blue" min="0" max="100" value="0" data-page-node-id="71fsyLkpg6qijTDnv3K5eC">
+        <div class="range-hint" id="toleranceHint">拖动滑块，边缘清除越彻底</div>
+      </div>
+    </div>
+
+    <div class="adjust-grid" data-page-node-id="vup42jCWuHodmpu40yMaO9">
+      <div data-page-node-id="Fi61Xqai6HOcO76TIFTxZ5">
+        <div class="field-title" id="labelOpacity">透明度调节</div>
+        <input type="range" id="opa" class="dark" min="0" max="100" value="100" data-page-node-id="txVYSN0ByvqEFkaVp8zIq6">
+      </div>
+      <div data-page-node-id="5PXHQQeJ4JqEEz2XS5sA1h">
+        <div class="field-title" id="labelRotation">360°旋转调节</div>
+        <input type="range" id="rot" class="dark" min="-180" max="180" step="5" value="0" data-page-node-id="sNyPbC8C6NAX1FNshuNZpI">
+      </div>
+    </div>
+
+    <div class="actions" data-page-node-id="KF8E2tUeEqQOnfv9UX5E65">
+      <button class="btn" id="reset" type="button">初始化（清除已上传LOGO）</button>
+      <button class="btn" id="export" type="button">导出JPG图片</button>
+      <div class="note" id="supportNote">注：遇到问题请联系与您对接的销售或者客服人员</div>
+    </div>
+  </section>
+</main>
+
+<script>
+const I18N = {
+  zh:{name:'中文',htmlLang:'zh-CN',title:'MARK RYDEN · LOGO 定制预览',stageAria:'背包 LOGO 预览画布',settingsAria:'LOGO 定制设置',warningAria:'查看 LOGO 尺寸提醒',warning:'LOGO长宽不要超过12×12cm，超过后可能会导致无法定制！',stageTip:'拉动 LOGO 画布四角可缩放大小',model:'产品型号',color:'颜色选择',black:'商务黑',upload:'上传LOGO',uploadHint:'上传透明 PNG 最佳，直接可用；<br>带有背景颜色的 JPG 将自动去除背景',replace:'点击更换 LOGO',process:'LOGO处理',removeBg:'去除背景',invert:'颜色反向',tolerance:'LOGO边缘擦除',toleranceHint:'拖动滑块，边缘清除越彻底',opacity:'透明度调节',rotation:'360°旋转调节',reset:'初始化（清除已上传LOGO）',export:'导出JPG图片',note:'注：遇到问题请联系与您对接的销售或者客服人员'},
+  en:{name:'English',htmlLang:'en',title:'MARK RYDEN · Custom Logo Preview',stageAria:'Backpack logo preview canvas',settingsAria:'Logo customization settings',warningAria:'View logo size notice',warning:'The logo must not exceed 12 × 12 cm in width or height. Larger logos may not be customizable.',stageTip:'Drag the corner handles to resize the logo',model:'Product Model',color:'Color',black:'Business Black',upload:'Upload Logo',uploadHint:'Transparent PNG is recommended and ready to use;<br>backgrounds in JPG files will be removed automatically',replace:'Click to replace logo',process:'Logo Processing',removeBg:'Remove BG',invert:'Invert Color',tolerance:'Logo Edge Cleanup',toleranceHint:'Drag the slider to remove more of the background edge',opacity:'Opacity',rotation:'360° Rotation',reset:'Reset (remove uploaded logo)',export:'Export JPG',note:'Note: If you encounter any issues, please contact your sales representative or customer service.'},
+  ru:{name:'Русский',htmlLang:'ru',title:'MARK RYDEN · Предпросмотр логотипа',stageAria:'Область предпросмотра логотипа на рюкзаке',settingsAria:'Настройки логотипа',warningAria:'Показать ограничение размера логотипа',warning:'Ширина и высота логотипа не должны превышать 12 × 12 см. Превышение размера может сделать нанесение невозможным.',stageTip:'Потяните за углы рамки, чтобы изменить размер логотипа',model:'Модель товара',color:'Цвет',black:'Деловой чёрный',upload:'Загрузить логотип',uploadHint:'Рекомендуется прозрачный PNG;<br>фон изображения JPG удаляется автоматически',replace:'Нажмите, чтобы заменить логотип',process:'Обработка логотипа',removeBg:'Удалить фон',invert:'Инверсия',tolerance:'Очистка краёв логотипа',toleranceHint:'Перемещайте ползунок для более тщательной очистки краёв',opacity:'Прозрачность',rotation:'Поворот 360°',reset:'Сбросить (удалить логотип)',export:'Экспорт JPG',note:'Примечание: при возникновении вопросов обратитесь к вашему менеджеру или в службу поддержки.'}
+};
+let currentLang='zh';
+const langWrap=document.getElementById('langWrap'),langButton=document.getElementById('langButton'),langCurrent=document.getElementById('langCurrent');
+function setLanguage(code){
+  const t=I18N[code]||I18N.zh;currentLang=code;
+  document.documentElement.lang=t.htmlLang;document.title=t.title;langCurrent.textContent=t.name;
+  document.getElementById('stageSection').setAttribute('aria-label',t.stageAria);
+  document.getElementById('settingsPanel').setAttribute('aria-label',t.settingsAria);
+  document.getElementById('warningTrigger').setAttribute('aria-label',t.warningAria);
+  document.getElementById('warningPopover').textContent=t.warning;
+  document.getElementById('labelModel').textContent=t.model;document.getElementById('labelColor').textContent=t.color;
+  document.getElementById('colorBlack').textContent=t.black;document.getElementById('labelUpload').textContent=t.upload;
+  document.querySelector('.middle-grid > div:nth-child(2) > .field-title').textContent=t.process;document.getElementById('labelRemoveBg').textContent=t.removeBg;
+  document.getElementById('labelInvert').textContent=t.invert;document.getElementById('labelTolerance').textContent=t.tolerance;
+  document.getElementById('toleranceHint').textContent=t.toleranceHint;document.getElementById('labelOpacity').textContent=t.opacity;
+  document.getElementById('labelRotation').textContent=t.rotation;document.getElementById('reset').textContent=t.reset;
+  document.getElementById('export').textContent=t.export;document.getElementById('supportNote').textContent=t.note;
+  document.getElementById('upText').innerHTML=currentOriginal?t.replace:t.uploadHint;
+  document.querySelectorAll('.lang-option').forEach(btn=>btn.classList.toggle('is-active',btn.dataset.lang===code));
+  try{localStorage.setItem('markryden-logo-lang',code)}catch(e){}
+}
+function closeLanguageMenu(){langWrap.classList.remove('is-open');langButton.setAttribute('aria-expanded','false')}
+langButton.addEventListener('click',e=>{e.stopPropagation();const open=!langWrap.classList.contains('is-open');langWrap.classList.toggle('is-open',open);langButton.setAttribute('aria-expanded',String(open))});
+document.querySelectorAll('.lang-option').forEach(btn=>btn.addEventListener('click',()=>{setLanguage(btn.dataset.lang);closeLanguageMenu()}));
+document.addEventListener('click',e=>{if(!langWrap.contains(e.target))closeLanguageMenu()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLanguageMenu()});
+
+const CANVAS_SIZE = 530;
+const MODEL = {
+  id:'MR_9100',
+  image:'bag_mr9100.jpg',
+  logoSpot:{cx:265,cy:236,maxW:125,maxH:70}
+};
+const canvas = new fabric.Canvas('c',{preserveObjectStacking:true,selection:false,uniformScaling:true,uniScaleTransform:true});
+canvas.setDimensions({width:CANVAS_SIZE,height:CANVAS_SIZE});
+let bagImg=null,logoImg=null,currentOriginal=null,processVersion=0;
+
+function setRangeFill(el){
+  const pct=(Number(el.value)-Number(el.min))/(Number(el.max)-Number(el.min))*100;
+  el.style.setProperty('--value',pct+'%');
+}
+document.querySelectorAll('input[type=range]').forEach(el=>{setRangeFill(el);el.addEventListener('input',()=>setRangeFill(el));});
+
+function loadBag(){
+  fabric.Image.fromURL(MODEL.image,img=>{
+    img.set({left:0,top:0,originX:'left',originY:'top',scaleX:CANVAS_SIZE/img.width,scaleY:CANVAS_SIZE/img.height,selectable:false,evented:false});
+    bagImg=img;canvas.add(img);canvas.sendToBack(img);canvas.renderAll();
+  });
+}
+
+function detectEdgeBackground(px,w,h){
+  const bins=new Map(),samples=[];
+  const take=(x,y)=>{const i=(y*w+x)*4;if(px[i+3]<16)return;const r=px[i],g=px[i+1],b=px[i+2];samples.push([r,g,b]);const key=`${r>>4},${g>>4},${b>>4}`;bins.set(key,(bins.get(key)||0)+1);};
+  const step=Math.max(1,Math.floor(Math.min(w,h)/80));
+  for(let x=0;x<w;x+=step){take(x,0);take(x,h-1)}
+  for(let y=step;y<h-1;y+=step){take(0,y);take(w-1,y)}
+  let winner='',count=-1;
+  bins.forEach((n,k)=>{if(n>count){winner=k;count=n}});
+  if(!winner)return null;
+  const [br,bg,bb]=winner.split(',').map(Number);let r=0,g=0,b=0,n=0;
+  samples.forEach(c=>{if((c[0]>>4)===br&&(c[1]>>4)===bg&&(c[2]>>4)===bb){r+=c[0];g+=c[1];b+=c[2];n++}});
+  return [r/n,g/n,b/n];
+}
+function processLogo(imgEl,tolerance,removeBackground,invert){
+  const oc=document.createElement('canvas');
+  oc.width=imgEl.naturalWidth||imgEl.width;oc.height=imgEl.naturalHeight||imgEl.height;
+  const ctx=oc.getContext('2d',{willReadFrequently:true});ctx.drawImage(imgEl,0,0,oc.width,oc.height);
+  const data=ctx.getImageData(0,0,oc.width,oc.height),px=data.data,w=oc.width,h=oc.height;
+  if(removeBackground){
+    const bg=detectEdgeBackground(px,w,h);
+    if(bg){
+      const hard=4+Number(tolerance)*1.45;
+      const soft=hard+18+Number(tolerance)*0.35;
+      for(let i=0;i<px.length;i+=4){
+        if(px[i+3]===0)continue;
+        const dr=px[i]-bg[0],dg=px[i+1]-bg[1],db=px[i+2]-bg[2];
+        const distance=Math.sqrt(dr*dr+dg*dg+db*db);
+        if(distance<=hard){
+          px[i+3]=0;
+        }else if(distance<soft){
+          const ratio=(distance-hard)/(soft-hard);
+          px[i+3]=Math.round(px[i+3]*ratio);
+        }
+      }
+    }
+  }
+  if(invert){for(let i=0;i<px.length;i+=4){if(px[i+3]){px[i]=255-px[i];px[i+1]=255-px[i+1];px[i+2]=255-px[i+2]}}}
+  ctx.putImageData(data,0,0);return oc;
+}
+function processedCurrent(){return processLogo(currentOriginal,Number(tol.value),rmwhite.checked,invert.checked)}
+function addLogo(srcCanvas){
+  if(logoImg)canvas.remove(logoImg);
+  fabric.Image.fromURL(srcCanvas.toDataURL(),img=>{
+    const z=MODEL.logoSpot,scale=Math.min(z.maxW/img.width,z.maxH/img.height,1);
+    img.set({left:z.cx,top:z.cy,originX:'center',originY:'center',scaleX:scale,scaleY:scale,lockUniScaling:true,lockScalingFlip:true,transparentCorners:false,cornerColor:'#fff',cornerStrokeColor:'#222',borderColor:'#222',cornerSize:9,padding:2,opacity:Number(opa.value)/100,angle:Number(rot.value)});
+    img.setControlsVisibility({mt:false,mb:false,ml:false,mr:false});
+    logoImg=img;canvas.add(img);canvas.setActiveObject(img);canvas.renderAll();
+  });
+}
+function reprocess(){
+  if(!logoImg||!currentOriginal)return;
+  const version=++processVersion;
+  const geo={left:logoImg.left,top:logoImg.top,scaleX:logoImg.scaleX,scaleY:logoImg.scaleY,angle:logoImg.angle,opacity:logoImg.opacity};
+  const nextSrc=processedCurrent().toDataURL();
+  logoImg.setSrc(nextSrc,()=>{if(version!==processVersion)return;logoImg.set(geo);canvas.renderAll();});
+}
+
+const uploadBox=document.getElementById('uploadBox');
+const fileInput=document.getElementById('file');
+const tol=document.getElementById('tol'),rmwhite=document.getElementById('rmwhite'),invert=document.getElementById('invert');
+const opa=document.getElementById('opa'),rot=document.getElementById('rot');
+const sizeWarning=document.getElementById('sizeWarning');
+let warningTimer=null;
+function showSizeWarning(){
+  clearTimeout(warningTimer);
+  sizeWarning.classList.add('is-open');
+  warningTimer=setTimeout(()=>sizeWarning.classList.remove('is-open'),4200);
+}
+sizeWarning.addEventListener('mouseenter',()=>clearTimeout(warningTimer));
+sizeWarning.addEventListener('mouseleave',()=>{if(sizeWarning.classList.contains('is-open'))warningTimer=setTimeout(()=>sizeWarning.classList.remove('is-open'),900)});
+uploadBox.addEventListener('click',()=>{fileInput.value='';fileInput.click();});
+fileInput.addEventListener('change',e=>{
+  const f=e.target.files[0];if(!f)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{currentOriginal=img;rmwhite.checked=true;opa.value=100;tol.value=0;setRangeFill(opa);setRangeFill(tol);addLogo(processedCurrent());upThumb.src=ev.target.result;upThumb.hidden=false;upPlus.style.display='none';upText.textContent='点击更换 LOGO';showSizeWarning();};
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(f);
+});
+rmwhite.addEventListener('change',reprocess);invert.addEventListener('change',reprocess);tol.addEventListener('input',reprocess);
+opa.addEventListener('input',()=>{if(logoImg){logoImg.set('opacity',Number(opa.value)/100);canvas.renderAll();}});
+rot.addEventListener('input',()=>{if(logoImg){logoImg.set('angle',Number(rot.value));canvas.renderAll();}});
+canvas.on('object:scaling',e=>{if(e.target===logoImg){const s=(logoImg.scaleX+logoImg.scaleY)/2;logoImg.set({scaleX:s,scaleY:s});}});
+canvas.on('object:rotating',e=>{if(e.target===logoImg){const snapped=Math.round(logoImg.angle/5)*5;logoImg.set('angle',snapped);rot.value=Math.max(-180,Math.min(180,snapped));setRangeFill(rot);}});
+canvas.on('object:modified',e=>{if(e.target===logoImg){const s=(logoImg.scaleX+logoImg.scaleY)/2;logoImg.set({scaleX:s,scaleY:s});let a=Math.round(logoImg.angle/5)*5%360;if(a>180)a-=360;if(a<-180)a+=360;logoImg.set('angle',a);rot.value=a;setRangeFill(rot);canvas.renderAll();}});
+
+document.getElementById('reset').addEventListener('click',()=>{
+  if(logoImg){canvas.remove(logoImg);logoImg=null;}currentOriginal=null;fileInput.value='';upThumb.hidden=true;upPlus.style.display='';upText.innerHTML=I18N[currentLang].uploadHint;opa.value=100;rot.value=0;rmwhite.checked=true;[opa,rot].forEach(setRangeFill);canvas.renderAll();
+});
+document.getElementById('export').addEventListener('click',()=>{
+  const active=canvas.getActiveObject();
+  canvas.discardActiveObject();
+  const previousBg=canvas.backgroundColor;
+  canvas.setBackgroundColor('#ffffff',()=>{
+    canvas.renderAll();
+    const url=canvas.toDataURL({format:'jpeg',quality:.94,multiplier:2});
+    const a=document.createElement('a');a.href=url;a.download=MODEL.id+'_LOGO预览.jpg';a.click();
+    canvas.setBackgroundColor(previousBg||'',()=>{if(active)canvas.setActiveObject(active);canvas.renderAll();});
+  });
+});
+let savedLang='zh';try{savedLang=localStorage.getItem('markryden-logo-lang')||'zh'}catch(e){}setLanguage(I18N[savedLang]?savedLang:'zh');
+loadBag();
+</script>
+</body>
+</html>
