@@ -49,6 +49,8 @@
   .stage-tip{position:absolute;z-index:4;left:50%;bottom:30px;transform:translateX(-50%);height:26px;padding:0 11px;border-radius:2px;background:#303030;color:#fff;font-size:11px;white-space:nowrap;display:flex;align-items:center;pointer-events:none}
   .size-warning{position:absolute;z-index:8;top:18px;right:18px;width:32px;height:32px}
   .size-hud{position:absolute;z-index:7;left:50%;bottom:10px;transform:translateX(-50%);display:flex;align-items:baseline;gap:6px;white-space:nowrap;font-size:10px;color:#9a9a9a;pointer-events:none;background:rgba(255,255,255,.84);padding:4px 11px;border-radius:9px}
+  .stage-notice{position:absolute;z-index:9;left:50%;top:50%;transform:translate(-50%,-50%);max-width:80%;text-align:center;font-size:12px;line-height:1.6;color:#8a4a42;background:rgba(255,255,255,.94);border:1px solid #f0d7d3;padding:10px 16px;border-radius:8px}
+  .stage-notice[hidden]{display:none}
   .size-hud b{font-weight:400;color:#8a8a8a;font-size:11px}
   .size-hud b.is-over{color:#c0392b;font-weight:900}
   .warning-trigger{width:32px;height:32px;padding:0;border:0;background:transparent;display:block;cursor:help}
@@ -243,6 +245,7 @@
         <div class="warning-popover" id="warningPopover" role="tooltip">请注意，LOGO超过12cm，无法定制！</div>
       </div>
       <div class="size-hud" id="sizeHud"><span id="labelSize">LOGO 参考尺寸</span><b id="logoSizeValue">—</b></div>
+      <div class="stage-notice" id="stageNotice" hidden><span></span></div>
     </div>
     <div class="zoom-bar">
       <button class="zoom-fit" id="zoomFit" type="button">适合大小</button>
@@ -260,7 +263,7 @@
     <div class="top-grid" data-page-node-id="So4Dtxl1a4hWa5d4IMA85c">
       <div data-page-node-id="3gNYqaMTFljlZvRaIvetAN">
         <div class="field-title" id="labelModel">产品型号</div>
-        <select id="model" data-page-node-id="hMpMcuCAHjI68KZRfubiqG"><option value="MR_9100" data-page-node-id="P3irB5DsGYwxOwNH7scJsq">MR_9100</option><option value="WALLET_82">82钱包</option></select>
+        <select id="model" data-page-node-id="hMpMcuCAHjI68KZRfubiqG"><option value="MR_9100" data-page-node-id="P3irB5DsGYwxOwNH7scJsq">MR_9100</option><option value="MR_82">MR_82</option></select>
       </div>
       <div data-page-node-id="jN1HEVxsUVuiorhIy04EUv">
         <div class="field-title" id="labelColor">颜色选择</div>
@@ -333,9 +336,9 @@
 
 <script>
 const I18N = {
-  zh:{name:'中文',htmlLang:'zh-CN',title:'MARK RYDEN · LOGO 定制预览',stageAria:'背包 LOGO 预览画布',settingsAria:'LOGO 定制设置',warningAria:'查看 LOGO 尺寸提醒',warning:'LOGO长宽不要超过12×12cm，超过后可能会导致无法定制！',stageTip:'拉动 LOGO 画布四角可缩放大小',model:'产品型号',color:'颜色选择',black:'商务黑',upload:'上传LOGO',uploadHint:'上传透明 PNG 最佳，直接可用；<br>带有背景颜色的 JPG 将自动去除背景',replace:'点击更换 LOGO',process:'LOGO处理',removeBg:'去除背景',invert:'颜色反向',tolerance:'LOGO边缘擦除',toleranceHint:'拖动滑块，边缘清除越彻底',opacity:'透明度调节',rotation:'360°旋转调节',reset:'初始化（清除已上传LOGO）',export:'导出JPG图片',exportOk:'图片已导出，请查看下载文件',exportFail:'导出失败，请重试',note:'注：遇到问题请联系与您对接的销售或者客服人员',sizeTitle:'LOGO 参考尺寸',fit:'适合大小',guide:'查看教程',guideUI:{step:'步骤',back:'上一步',next:'下一步',done:'我知道了',skip:'跳过'}},
-  en:{name:'English',htmlLang:'en',title:'MARK RYDEN · Custom Logo Preview',stageAria:'Backpack logo preview canvas',settingsAria:'Logo customization settings',warningAria:'View logo size notice',warning:'The logo must not exceed 12 × 12 cm in width or height. Larger logos may not be customizable.',stageTip:'Drag the corner handles to resize the logo',model:'Product Model',color:'Color',black:'Business Black',upload:'Upload Logo',uploadHint:'Transparent PNG is recommended and ready to use;<br>backgrounds in JPG files will be removed automatically',replace:'Click to replace logo',process:'Logo Processing',removeBg:'Remove BG',invert:'Invert Color',tolerance:'Logo Edge Cleanup',toleranceHint:'Drag the slider to remove more of the background edge',opacity:'Opacity',rotation:'360° Rotation',reset:'Reset (remove uploaded logo)',export:'Export JPG',exportOk:'Image exported, please check your downloads',exportFail:'Export failed, please try again',note:'Note: If you encounter any issues, please contact your sales representative or customer service.',sizeTitle:'Reference logo size',fit:'Fit to Size',guide:'View Guide',guideUI:{step:'Step',back:'Back',next:'Next',done:'Got it',skip:'Skip'}},
-  ru:{name:'Русский',htmlLang:'ru',title:'MARK RYDEN · Предпросмотр логотипа',stageAria:'Область предпросмотра логотипа на рюкзаке',settingsAria:'Настройки логотипа',warningAria:'Показать ограничение размера логотипа',warning:'Ширина и высота логотипа не должны превышать 12 × 12 см. Превышение размера может сделать нанесение невозможным.',stageTip:'Потяните за углы рамки, чтобы изменить размер логотипа',model:'Модель товара',color:'Цвет',black:'Деловой чёрный',upload:'Загрузить логотип',uploadHint:'Рекомендуется прозрачный PNG;<br>фон изображения JPG удаляется автоматически',replace:'Нажмите, чтобы заменить логотип',process:'Обработка логотипа',removeBg:'Удалить фон',invert:'Инверсия',tolerance:'Очистка краёв логотипа',toleranceHint:'Перемещайте ползунок для более тщательной очистки краёв',opacity:'Прозрачность',rotation:'Поворот 360°',reset:'Сбросить (удалить логотип)',export:'Экспорт JPG',exportOk:'Изображение экспортировано, проверьте загрузки',exportFail:'Не удалось экспортировать, попробуйте ещё раз',note:'Примечание: при возникновении вопросов обратитесь к вашему менеджеру или в службу поддержки.',sizeTitle:'Ориентировочный размер логотипа',fit:'По размеру',guide:'Инструкция',guideUI:{step:'Шаг',back:'Назад',next:'Далее',done:'Понятно',skip:'Пропустить'}}
+  zh:{name:'中文',htmlLang:'zh-CN',title:'MARK RYDEN · LOGO 定制预览',stageAria:'背包 LOGO 预览画布',settingsAria:'LOGO 定制设置',warningAria:'查看 LOGO 尺寸提醒',warning:'LOGO长宽不要超过12×12cm，超过后可能会导致无法定制！',stageTip:'拉动 LOGO 画布四角可缩放大小',model:'产品型号',color:'颜色选择',black:'商务黑',upload:'上传LOGO',uploadHint:'上传透明 PNG 最佳，直接可用；<br>带有背景颜色的 JPG 将自动去除背景',replace:'点击更换 LOGO',process:'LOGO处理',removeBg:'去除背景',invert:'颜色反向',tolerance:'LOGO边缘擦除',toleranceHint:'拖动滑块，边缘清除越彻底',opacity:'透明度调节',rotation:'360°旋转调节',reset:'初始化（清除已上传LOGO）',export:'导出JPG图片',exportOk:'图片已导出，请查看下载文件',exportFail:'导出失败，请重试',imageFail:'产品图加载失败，请检查网络后刷新重试',note:'注：遇到问题请联系与您对接的销售或者客服人员',sizeTitle:'LOGO 参考尺寸',fit:'适合大小',guide:'查看教程',guideUI:{step:'步骤',back:'上一步',next:'下一步',done:'我知道了',skip:'跳过'}},
+  en:{name:'English',htmlLang:'en',title:'MARK RYDEN · Custom Logo Preview',stageAria:'Backpack logo preview canvas',settingsAria:'Logo customization settings',warningAria:'View logo size notice',warning:'The logo must not exceed 12 × 12 cm in width or height. Larger logos may not be customizable.',stageTip:'Drag the corner handles to resize the logo',model:'Product Model',color:'Color',black:'Business Black',upload:'Upload Logo',uploadHint:'Transparent PNG is recommended and ready to use;<br>backgrounds in JPG files will be removed automatically',replace:'Click to replace logo',process:'Logo Processing',removeBg:'Remove BG',invert:'Invert Color',tolerance:'Logo Edge Cleanup',toleranceHint:'Drag the slider to remove more of the background edge',opacity:'Opacity',rotation:'360° Rotation',reset:'Reset (remove uploaded logo)',export:'Export JPG',exportOk:'Image exported, please check your downloads',exportFail:'Export failed, please try again',imageFail:'The product image failed to load. Please check your connection and refresh.',note:'Note: If you encounter any issues, please contact your sales representative or customer service.',sizeTitle:'Reference logo size',fit:'Fit to Size',guide:'View Guide',guideUI:{step:'Step',back:'Back',next:'Next',done:'Got it',skip:'Skip'}},
+  ru:{name:'Русский',htmlLang:'ru',title:'MARK RYDEN · Предпросмотр логотипа',stageAria:'Область предпросмотра логотипа на рюкзаке',settingsAria:'Настройки логотипа',warningAria:'Показать ограничение размера логотипа',warning:'Ширина и высота логотипа не должны превышать 12 × 12 см. Превышение размера может сделать нанесение невозможным.',stageTip:'Потяните за углы рамки, чтобы изменить размер логотипа',model:'Модель товара',color:'Цвет',black:'Деловой чёрный',upload:'Загрузить логотип',uploadHint:'Рекомендуется прозрачный PNG;<br>фон изображения JPG удаляется автоматически',replace:'Нажмите, чтобы заменить логотип',process:'Обработка логотипа',removeBg:'Удалить фон',invert:'Инверсия',tolerance:'Очистка краёв логотипа',toleranceHint:'Перемещайте ползунок для более тщательной очистки краёв',opacity:'Прозрачность',rotation:'Поворот 360°',reset:'Сбросить (удалить логотип)',export:'Экспорт JPG',exportOk:'Изображение экспортировано, проверьте загрузки',exportFail:'Не удалось экспортировать, попробуйте ещё раз',imageFail:'Не удалось загрузить изображение товара. Проверьте соединение и обновите страницу.',note:'Примечание: при возникновении вопросов обратитесь к вашему менеджеру или в службу поддержки.',sizeTitle:'Ориентировочный размер логотипа',fit:'По размеру',guide:'Инструкция',guideUI:{step:'Шаг',back:'Назад',next:'Далее',done:'Понятно',skip:'Пропустить'}}
 };
 let currentLang='zh';
 /* 语言自动判定：只有中国大陆显示中文，其他地区一律英文 */
@@ -379,6 +382,8 @@ function setLanguage(code,remember){
   updateSizeReadout();
   if(tourOpen)renderTourStep();
   document.getElementById('upText').innerHTML=currentOriginal?t.replace:t.uploadHint;
+  const noticeEl=document.getElementById('stageNotice');
+  if(noticeEl&&!noticeEl.hidden)noticeEl.querySelector('span').textContent=t.imageFail||'';
   document.querySelectorAll('.lang-option').forEach(btn=>btn.classList.toggle('is-active',btn.dataset.lang===code));
   try{if(remember)localStorage.setItem('markryden-logo-lang',code);}catch(e){}
 }
@@ -390,9 +395,12 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLanguageMenu()}
 
 const DEFAULT_VIEW_ZOOM = 0.7;
 const MODELS = {
-  MR_9100:{id:'MR_9100',image:'bag_9100_trim.png',pxPerMm:1,canvasMm:532,logoSpot:{cxMm:266,cyMm:340,maxWMm:120,maxHMm:80}},
-  WALLET_82:{id:'WALLET_82',image:'wallet_82_trim.png',pxPerMm:5,canvasMm:121.6,logoSpot:{cxMm:60.8,cyMm:60.8,maxWMm:60,maxHMm:60}}
+  MR_9100:{id:'MR_9100',image:'bag_9100_trim.png',webp:'bag_9100_trim.webp',pxPerMm:1,canvasMm:532,logoSpot:{cxMm:266,cyMm:340,maxWMm:120,maxHMm:80}},
+  MR_82:{id:'MR_82',image:'wallet_82_trim.png',webp:'wallet_82_trim.webp',pxPerMm:5,canvasMm:121.6,logoSpot:{cxMm:60.8,cyMm:60.8,maxWMm:60,maxHMm:60}}
 };
+/* WebP 体积只有 PNG 的四分之一左右，能明显缩短产品图加载时间；浏览器不支持时自动回退 PNG */
+const CAN_WEBP=(()=>{try{const c=document.createElement('canvas');c.width=c.height=1;return c.toDataURL('image/webp').indexOf('data:image/webp')===0;}catch(e){return false;}})();
+function modelSrc(m,forcePng){return (!forcePng&&CAN_WEBP&&m.webp)?m.webp:m.image;}
 let MODEL = MODELS.MR_9100;
 let viewZoom = DEFAULT_VIEW_ZOOM;
 
@@ -420,13 +428,48 @@ function setRangeFill(el){
 }
 document.querySelectorAll('input[type=range]').forEach(el=>{setRangeFill(el);el.addEventListener('input',()=>setRangeFill(el));});
 
-function loadBag(){
+let bagToken=0;
+function loadBag(attempt){
+  attempt=attempt||0;
+  const token=++bagToken;
+  const m=MODEL;
   if(bagImg){canvas.remove(bagImg);bagImg=null;}
-  fabric.Image.fromURL(MODEL.image,img=>{
-    const s=1/MODEL.pxPerMm;
-    img.set({left:MODEL.canvasMm/2,top:MODEL.canvasMm/2,originX:'center',originY:'center',scaleX:s,scaleY:s,selectable:false,evented:false});
+  const usePng=attempt>=2;
+  const src=modelSrc(m,usePng);
+  fabric.Image.fromURL(src,(img,isError)=>{
+    /* 期间用户又切了型号 → 丢弃这次结果，避免旧图覆盖新图 */
+    if(token!==bagToken)return;
+    if(isError||!img||!img._element){
+      /* 加载失败：先重试两次（换回 PNG 再试），仍失败才提示，绝不留白画布 */
+      if(attempt<3){setTimeout(()=>{if(token===bagToken)loadBag(attempt+1);},500+attempt*600);}
+      else{showStageNotice((I18N[currentLang]||I18N.zh).imageFail);}
+      return;
+    }
+    clearStageNotice();
+    const s=1/m.pxPerMm;
+    img.set({left:m.canvasMm/2,top:m.canvasMm/2,originX:'center',originY:'center',scaleX:s,scaleY:s,selectable:false,evented:false});
     bagImg=img;canvas.add(img);canvas.sendToBack(img);canvas.renderAll();
   });
+}
+/* 预加载另一型号的产品图，切换时命中缓存、不再空白等待 */
+let preloaded=false;
+function preloadOtherModel(){
+  if(preloaded)return;preloaded=true;
+  Object.keys(MODELS).forEach(k=>{
+    const m=MODELS[k];
+    if(m===MODEL)return;
+    try{const i=new Image();i.src=modelSrc(m);}catch(e){}
+  });
+}
+function showStageNotice(msg){
+  const el=document.getElementById('stageNotice');
+  if(!el)return;
+  el.querySelector('span').textContent=msg||'';
+  el.hidden=false;
+}
+function clearStageNotice(){
+  const el=document.getElementById('stageNotice');
+  if(el)el.hidden=true;
 }
 
 function trimToContent(srcCanvas,pad){
@@ -974,6 +1017,7 @@ document.getElementById('model').addEventListener('change',e=>{
   currentOriginal=null;fileInput.value='';upThumb.hidden=true;upPlus.style.display='';upText.innerHTML=I18N[currentLang].uploadHint;
   opa.value=100;rot.value=0;rmwhite.checked=true;[opa,rot].forEach(setRangeFill);
   setViewZoom(DEFAULT_VIEW_ZOOM);
+  clearStageNotice();
   loadBag();applyView();updateSizeReadout();
 });
 const HUD_FONT='"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif';
@@ -1075,6 +1119,8 @@ document.getElementById('export').addEventListener('click',()=>{
 let savedLang='';try{savedLang=localStorage.getItem('markryden-logo-lang')||''}catch(e){}
 setLanguage(I18N[savedLang]?savedLang:detectLang());
 loadBag();
+/* 首屏图片就位后再预热另一个型号，切换时直接命中缓存（不抢首屏带宽） */
+setTimeout(preloadOtherModel,2500);
 /* 预热教程演示图：等切到「上传 LOGO」那步时直接命中缓存，不再等待下载 */
 setTimeout(()=>{try{const w=new Image();w.src=DEMO_LOGO;}catch(e){}},900);
 let seenTour=false;try{seenTour=!!localStorage.getItem(TOUR_KEY)}catch(e){}
