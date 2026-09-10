@@ -48,7 +48,9 @@
   .zoom-guide svg{display:block;width:15px;height:15px;flex:0 0 15px}
   .stage-tip{position:absolute;z-index:4;left:50%;bottom:30px;transform:translateX(-50%);height:26px;padding:0 11px;border-radius:2px;background:#303030;color:#fff;font-size:11px;white-space:nowrap;display:flex;align-items:center;pointer-events:none}
   .size-warning{position:absolute;z-index:8;top:18px;right:18px;width:32px;height:32px}
-  .size-hud{position:absolute;z-index:7;left:50%;bottom:10px;transform:translateX(-50%);display:flex;align-items:baseline;gap:6px;white-space:nowrap;font-size:10px;color:#9a9a9a;pointer-events:none;background:rgba(255,255,255,.84);padding:4px 11px;border-radius:9px}
+  .size-hud{position:absolute;z-index:7;left:50%;bottom:10px;transform:translateX(-50%);display:flex;align-items:flex-start;gap:7px;white-space:nowrap;font-size:10px;color:#9a9a9a;pointer-events:none;background:rgba(255,255,255,.84);padding:5px 11px;border-radius:9px}
+  .size-hud #labelSize{padding-top:1px}
+  .size-list{display:flex;flex-direction:column;line-height:1.45}
   .stage-notice{position:absolute;z-index:9;left:50%;top:50%;transform:translate(-50%,-50%);max-width:80%;text-align:center;font-size:12px;line-height:1.6;color:#8a4a42;background:rgba(255,255,255,.94);border:1px solid #f0d7d3;padding:10px 16px;border-radius:8px}
   .stage-notice[hidden]{display:none}
   .size-hud b{font-weight:400;color:#8a8a8a;font-size:11px}
@@ -244,7 +246,7 @@
         </button>
         <div class="warning-popover" id="warningPopover" role="tooltip">请注意，LOGO超过12cm，无法定制！</div>
       </div>
-      <div class="size-hud" id="sizeHud"><span id="labelSize">LOGO 参考尺寸</span><b id="logoSizeValue">—</b></div>
+      <div class="size-hud" id="sizeHud"><span id="labelSize">LOGO 参考尺寸</span><span class="size-list" id="logoSizeList"><b id="logoSizeValue">—</b></span></div>
       <div class="stage-notice" id="stageNotice" hidden><span></span></div>
     </div>
     <div class="zoom-bar">
@@ -263,11 +265,11 @@
     <div class="top-grid" data-page-node-id="So4Dtxl1a4hWa5d4IMA85c">
       <div data-page-node-id="3gNYqaMTFljlZvRaIvetAN">
         <div class="field-title" id="labelModel">产品型号</div>
-        <select id="model" data-page-node-id="hMpMcuCAHjI68KZRfubiqG"><option value="MR_9100" data-page-node-id="P3irB5DsGYwxOwNH7scJsq">MR_9100</option><option value="MR_82">MR_82</option></select>
+        <select id="model" data-page-node-id="hMpMcuCAHjI68KZRfubiqG"><option value="MR_9100" data-page-node-id="P3irB5DsGYwxOwNH7scJsq">MR_9100</option><option value="MR_82">MR_82</option><option value="MR_21">MR_21</option><option value="MR_35">MR_35</option></select>
       </div>
       <div data-page-node-id="jN1HEVxsUVuiorhIy04EUv">
         <div class="field-title" id="labelColor">颜色选择</div>
-        <select id="color"><option id="colorBlack">商务黑</option></select>
+        <select id="color"></select>
       </div>
     </div>
 
@@ -336,9 +338,9 @@
 
 <script>
 const I18N = {
-  zh:{name:'中文',htmlLang:'zh-CN',title:'MARK RYDEN · LOGO 定制预览',stageAria:'背包 LOGO 预览画布',settingsAria:'LOGO 定制设置',warningAria:'查看 LOGO 尺寸提醒',warning:'LOGO长宽不要超过12×12cm，超过后可能会导致无法定制！',stageTip:'拉动 LOGO 画布四角可缩放大小',model:'产品型号',color:'颜色选择',black:'商务黑',upload:'上传LOGO',uploadHint:'上传透明 PNG 最佳，直接可用；<br>带有背景颜色的 JPG 将自动去除背景',replace:'点击更换 LOGO',process:'LOGO处理',removeBg:'去除背景',invert:'颜色反向',tolerance:'LOGO边缘擦除',toleranceHint:'拖动滑块，边缘清除越彻底',opacity:'透明度调节',rotation:'360°旋转调节',reset:'初始化（清除已上传LOGO）',export:'导出JPG图片',exportOk:'图片已导出，请查看下载文件',exportFail:'导出失败，请重试',imageFail:'产品图加载失败，请检查网络后刷新重试',note:'注：遇到问题请联系与您对接的销售或者客服人员',sizeTitle:'LOGO 参考尺寸',fit:'适合大小',guide:'查看教程',guideUI:{step:'步骤',back:'上一步',next:'下一步',done:'我知道了',skip:'跳过'}},
-  en:{name:'English',htmlLang:'en',title:'MARK RYDEN · Custom Logo Preview',stageAria:'Backpack logo preview canvas',settingsAria:'Logo customization settings',warningAria:'View logo size notice',warning:'The logo must not exceed 12 × 12 cm in width or height. Larger logos may not be customizable.',stageTip:'Drag the corner handles to resize the logo',model:'Product Model',color:'Color',black:'Business Black',upload:'Upload Logo',uploadHint:'Transparent PNG is recommended and ready to use;<br>backgrounds in JPG files will be removed automatically',replace:'Click to replace logo',process:'Logo Processing',removeBg:'Remove BG',invert:'Invert Color',tolerance:'Logo Edge Cleanup',toleranceHint:'Drag the slider to remove more of the background edge',opacity:'Opacity',rotation:'360° Rotation',reset:'Reset (remove uploaded logo)',export:'Export JPG',exportOk:'Image exported, please check your downloads',exportFail:'Export failed, please try again',imageFail:'The product image failed to load. Please check your connection and refresh.',note:'Note: If you encounter any issues, please contact your sales representative or customer service.',sizeTitle:'Reference logo size',fit:'Fit to Size',guide:'View Guide',guideUI:{step:'Step',back:'Back',next:'Next',done:'Got it',skip:'Skip'}},
-  ru:{name:'Русский',htmlLang:'ru',title:'MARK RYDEN · Предпросмотр логотипа',stageAria:'Область предпросмотра логотипа на рюкзаке',settingsAria:'Настройки логотипа',warningAria:'Показать ограничение размера логотипа',warning:'Ширина и высота логотипа не должны превышать 12 × 12 см. Превышение размера может сделать нанесение невозможным.',stageTip:'Потяните за углы рамки, чтобы изменить размер логотипа',model:'Модель товара',color:'Цвет',black:'Деловой чёрный',upload:'Загрузить логотип',uploadHint:'Рекомендуется прозрачный PNG;<br>фон изображения JPG удаляется автоматически',replace:'Нажмите, чтобы заменить логотип',process:'Обработка логотипа',removeBg:'Удалить фон',invert:'Инверсия',tolerance:'Очистка краёв логотипа',toleranceHint:'Перемещайте ползунок для более тщательной очистки краёв',opacity:'Прозрачность',rotation:'Поворот 360°',reset:'Сбросить (удалить логотип)',export:'Экспорт JPG',exportOk:'Изображение экспортировано, проверьте загрузки',exportFail:'Не удалось экспортировать, попробуйте ещё раз',imageFail:'Не удалось загрузить изображение товара. Проверьте соединение и обновите страницу.',note:'Примечание: при возникновении вопросов обратитесь к вашему менеджеру или в службу поддержки.',sizeTitle:'Ориентировочный размер логотипа',fit:'По размеру',guide:'Инструкция',guideUI:{step:'Шаг',back:'Назад',next:'Далее',done:'Понятно',skip:'Пропустить'}}
+  zh:{name:'中文',htmlLang:'zh-CN',title:'MARK RYDEN · LOGO 定制预览',stageAria:'背包 LOGO 预览画布',settingsAria:'LOGO 定制设置',warningAria:'查看 LOGO 尺寸提醒',warning:'LOGO长宽不要超过12×12cm，超过后可能会导致无法定制！',stageTip:'拉动 LOGO 画布四角可缩放大小',model:'产品型号',color:'颜色选择',black:'商务黑',upload:'上传LOGO',uploadHint:'上传透明 PNG 最佳，直接可用；<br>带有背景颜色的 JPG 将自动去除背景',addMore:'继续添加 LOGO',slotsFull:'已达 3 个上限，再添加会替换最早的 LOGO',process:'LOGO处理',removeBg:'去除背景',invert:'颜色反向',tolerance:'LOGO边缘擦除',toleranceHint:'拖动滑块，边缘清除越彻底',opacity:'透明度调节',rotation:'360°旋转调节',reset:'初始化（清除已上传LOGO）',export:'导出JPG图片',exportOk:'图片已导出，请查看下载文件',exportFail:'导出失败，请重试',imageFail:'产品图加载失败，请检查网络后刷新重试',note:'注：遇到问题请联系与您对接的销售或者客服人员',sizeTitle:'LOGO 参考尺寸',fit:'适合大小',guide:'查看教程',guideUI:{step:'步骤',back:'上一步',next:'下一步',done:'我知道了',skip:'跳过'}},
+  en:{name:'English',htmlLang:'en',title:'MARK RYDEN · Custom Logo Preview',stageAria:'Backpack logo preview canvas',settingsAria:'Logo customization settings',warningAria:'View logo size notice',warning:'The logo must not exceed 12 × 12 cm in width or height. Larger logos may not be customizable.',stageTip:'Drag the corner handles to resize the logo',model:'Product Model',color:'Color',black:'Business Black',upload:'Upload Logo',uploadHint:'Transparent PNG is recommended and ready to use;<br>backgrounds in JPG files will be removed automatically',addMore:'Add another logo',slotsFull:'Limit of 3 reached — adding more replaces the earliest logo',process:'Logo Processing',removeBg:'Remove BG',invert:'Invert Color',tolerance:'Logo Edge Cleanup',toleranceHint:'Drag the slider to remove more of the background edge',opacity:'Opacity',rotation:'360° Rotation',reset:'Reset (remove uploaded logo)',export:'Export JPG',exportOk:'Image exported, please check your downloads',exportFail:'Export failed, please try again',imageFail:'The product image failed to load. Please check your connection and refresh.',note:'Note: If you encounter any issues, please contact your sales representative or customer service.',sizeTitle:'Reference logo size',fit:'Fit to Size',guide:'View Guide',guideUI:{step:'Step',back:'Back',next:'Next',done:'Got it',skip:'Skip'}},
+  ru:{name:'Русский',htmlLang:'ru',title:'MARK RYDEN · Предпросмотр логотипа',stageAria:'Область предпросмотра логотипа на рюкзаке',settingsAria:'Настройки логотипа',warningAria:'Показать ограничение размера логотипа',warning:'Ширина и высота логотипа не должны превышать 12 × 12 см. Превышение размера может сделать нанесение невозможным.',stageTip:'Потяните за углы рамки, чтобы изменить размер логотипа',model:'Модель товара',color:'Цвет',black:'Деловой чёрный',upload:'Загрузить логотип',uploadHint:'Рекомендуется прозрачный PNG;<br>фон изображения JPG удаляется автоматически',addMore:'Добавить ещё логотип',slotsFull:'Достигнут лимит 3 — новое заменит самое раннее',process:'Обработка логотипа',removeBg:'Удалить фон',invert:'Инверсия',tolerance:'Очистка краёв логотипа',toleranceHint:'Перемещайте ползунок для более тщательной очистки краёв',opacity:'Прозрачность',rotation:'Поворот 360°',reset:'Сбросить (удалить логотип)',export:'Экспорт JPG',exportOk:'Изображение экспортировано, проверьте загрузки',exportFail:'Не удалось экспортировать, попробуйте ещё раз',imageFail:'Не удалось загрузить изображение товара. Проверьте соединение и обновите страницу.',note:'Примечание: при возникновении вопросов обратитесь к вашему менеджеру или в службу поддержки.',sizeTitle:'Ориентировочный размер логотипа',fit:'По размеру',guide:'Инструкция',guideUI:{step:'Шаг',back:'Назад',next:'Далее',done:'Понятно',skip:'Пропустить'}}
 };
 let currentLang='zh';
 /* 语言自动判定：只有中国大陆显示中文，其他地区一律英文 */
@@ -370,7 +372,7 @@ function setLanguage(code,remember){
   document.getElementById('warningTrigger').setAttribute('aria-label',t.warningAria);
   document.getElementById('warningPopover').textContent=t.warning;
   document.getElementById('labelModel').textContent=t.model;document.getElementById('labelColor').textContent=t.color;
-  document.getElementById('colorBlack').textContent=t.black;document.getElementById('labelUpload').textContent=t.upload;
+  renderColorSelect();document.getElementById('labelUpload').textContent=t.upload;
   document.getElementById('labelProcess').textContent=t.process;document.getElementById('labelRemoveBg').textContent=t.removeBg;
   document.getElementById('labelInvert').textContent=t.invert;document.getElementById('labelTolerance').textContent=t.tolerance;
   document.getElementById('toleranceHint').textContent=t.toleranceHint;document.getElementById('labelOpacity').textContent=t.opacity;
@@ -381,7 +383,7 @@ function setLanguage(code,remember){
   document.getElementById('zoomGuideText').textContent=t.guide;
   updateSizeReadout();
   if(tourOpen)renderTourStep();
-  document.getElementById('upText').innerHTML=currentOriginal?t.replace:t.uploadHint;
+  refreshUploadBox();
   const noticeEl=document.getElementById('stageNotice');
   if(noticeEl&&!noticeEl.hidden)noticeEl.querySelector('span').textContent=t.imageFail||'';
   document.querySelectorAll('.lang-option').forEach(btn=>btn.classList.toggle('is-active',btn.dataset.lang===code));
@@ -394,13 +396,78 @@ document.addEventListener('click',e=>{if(!langWrap.contains(e.target))closeLangu
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLanguageMenu()});
 
 const DEFAULT_VIEW_ZOOM = 0.7;
-const MODELS = {
-  MR_9100:{id:'MR_9100',image:'bag_9100_trim.png',webp:'bag_9100_trim.webp',pxPerMm:1,canvasMm:532,logoSpot:{cxMm:266,cyMm:340,maxWMm:120,maxHMm:80}},
-  MR_82:{id:'MR_82',image:'wallet_82_trim.png',webp:'wallet_82_trim.webp',pxPerMm:5,canvasMm:121.6,logoSpot:{cxMm:60.8,cyMm:60.8,maxWMm:60,maxHMm:60}}
+/* 颜色名多语言表。MODELS 里 color.label 用中文色名（与素材文件名一致），显示时按当前语言查这张表；
+   查不到就原样显示中文，新增颜色只要在这里补一行即可（不补也能跑）。 */
+const COLOR_I18N={
+  '商务黑':{zh:'商务黑',en:'Business Black',ru:'Деловой чёрный'},
+  '黑':{zh:'黑',en:'Black',ru:'Чёрный'},
+  '灰':{zh:'灰',en:'Gray',ru:'Серый'},
+  '紫':{zh:'紫',en:'Purple',ru:'Фиолетовый'},
+  '绿':{zh:'绿',en:'Green',ru:'Зелёный'},
+  '蓝':{zh:'蓝',en:'Blue',ru:'Синий'},
+  '橙':{zh:'橙',en:'Orange',ru:'Оранжевый'}
 };
+function colorName(label){
+  const d=COLOR_I18N[label];
+  return (d&&(d[currentLang]||d.zh))||label;
+}
+/* 每个型号：pxPerMm / canvasMm / logoMax 为型号级（同型号所有配色几何一致）；
+   配色列表在 colors 里，每项一张图（png 兜底 + webp 主用）。
+   换算约定：素材宽度 px / 1000 = pxPerMm（1000px = 100cm）；canvasMm = 裁切边长px / pxPerMm。
+   LOGO 上传后固定落在画布正中心（canvasMm/2, canvasMm/2），代码里算，不在这里配。
+   logoMax = 上传后 LOGO 的初始最大尺寸（mm），不得超过页面 120mm 红线。
+   新增型号见 skill「logo-customizer-add-product」。 */
+const MODELS = {
+  MR_9100:{id:'MR_9100',pxPerMm:1,canvasMm:532,logoMax:{wMm:120,hMm:80},
+    colors:[{key:'bizblack',label:'商务黑',image:'bag_9100_trim.png',webp:'bag_9100_trim.webp'}]},
+  MR_82:{id:'MR_82',pxPerMm:5,canvasMm:121.6,logoMax:{wMm:60,hMm:60},
+    colors:[{key:'bizblack',label:'商务黑',image:'wallet_82_trim.png',webp:'wallet_82_trim.webp'}]},
+  /* MR_21 竖版卡套 66.0 × 100.8 mm；素材 5000px -> pxPerMm 5 */
+  MR_21:{id:'MR_21',pxPerMm:5,canvasMm:113.6,logoMax:{wMm:40,hMm:40},
+    colors:[
+      {key:'orange',label:'橙',image:'mr_21_orange_trim.png',webp:'mr_21_orange_trim.webp'},
+      {key:'gray',label:'灰',image:'mr_21_gray_trim.png',webp:'mr_21_gray_trim.webp'},
+      {key:'purple',label:'紫',image:'mr_21_purple_trim.png',webp:'mr_21_purple_trim.webp'},
+      {key:'green',label:'绿',image:'mr_21_green_trim.png',webp:'mr_21_green_trim.webp'},
+      {key:'blue',label:'蓝',image:'mr_21_blue_trim.png',webp:'mr_21_blue_trim.webp'},
+      {key:'black',label:'黑',image:'mr_21_black_trim.png',webp:'mr_21_black_trim.webp'}
+    ]},
+  /* MR_35 横版收纳袋 袋身 245.5 × 118.5 mm（右侧挂环另占约 35mm）；素材 2000px -> pxPerMm 2 */
+  MR_35:{id:'MR_35',pxPerMm:2,canvasMm:307,logoMax:{wMm:110,hMm:60},
+    colors:[{key:'bizblack',label:'商务黑',image:'mr_35_bizblack_trim.png',webp:'mr_35_bizblack_trim.webp'}]}
+};
+/* 每个型号各自记住选中的配色 */
+const colorPick={};
+function currentColor(){
+  const list=MODEL.colors||[];
+  if(!list.length)return null;
+  const c=list[colorPick[MODEL.id]];
+  return c||list[0];
+}
+const colorSelect=document.getElementById('color');
+/* 按当前型号的配色列表重建下拉；颜色名走 COLOR_I18N（切换语言时会重新渲染） */
+function renderColorSelect(){
+  const list=MODEL.colors||[];
+  const cur=currentColor();
+  colorSelect.innerHTML='';
+  list.forEach(c=>{
+    const o=document.createElement('option');
+    o.value=c.key;o.textContent=colorName(c.label);
+    colorSelect.appendChild(o);
+  });
+  if(cur)colorSelect.value=cur.key;
+}
+colorSelect.addEventListener('change',e=>{
+  const list=MODEL.colors||[];
+  const i=list.findIndex(c=>c.key===e.target.value);
+  if(i<0)return;
+  colorPick[MODEL.id]=i;
+  clearStageNotice();
+  loadBag();
+});
 /* WebP 体积只有 PNG 的四分之一左右，能明显缩短产品图加载时间；浏览器不支持时自动回退 PNG */
 const CAN_WEBP=(()=>{try{const c=document.createElement('canvas');c.width=c.height=1;return c.toDataURL('image/webp').indexOf('data:image/webp')===0;}catch(e){return false;}})();
-function modelSrc(m,forcePng){return (!forcePng&&CAN_WEBP&&m.webp)?m.webp:m.image;}
+function modelSrc(c,forcePng){return (!forcePng&&CAN_WEBP&&c&&c.webp)?c.webp:(c?c.image:'');}
 let MODEL = MODELS.MR_9100;
 let viewZoom = DEFAULT_VIEW_ZOOM;
 
@@ -415,11 +482,26 @@ function applyView(){
   const z=disp/MODEL.canvasMm*viewZoom;
   const t=disp/2-z*MODEL.canvasMm/2;
   canvas.setViewportTransform([z,0,0,z,t,t]);
-  if(logoImg){logoImg.set({cornerSize:Math.max(5,9/z),padding:2/z});}
+  logoImgs.forEach(o=>o.set({cornerSize:Math.max(5,9/z),padding:2/z}));
   canvas.renderAll();
 }
 window.addEventListener('resize',applyView);
-let bagImg=null,logoImg=null,currentOriginal=null,processVersion=0;
+/* ===== 多 LOGO（最多 3 个） =====
+   logoImgs 按上传顺序保存每张 LOGO 的 fabric 对象；每个对象挂 __meta，
+   记录它自己的原图与处理参数（去背景 / 反向 / 擦边 / 透明度 / 旋转）。
+   滑杆永远作用于「当前选中的 LOGO」，换选另一个时滑杆自动跟随。 */
+const MAX_LOGO=3;
+let bagImg=null,logoImgs=[],demoLogo=null,processVersion=0;
+function curLogo(){
+  const a=canvas.getActiveObject();
+  if(a&&a.__meta)return a;
+  return logoImgs.length?logoImgs[logoImgs.length-1]:null;
+}
+function demoOrCur(){return demoLogo||curLogo();}
+function logoMmOf(o){
+  if(!o||o.visible===false)return null;
+  return {w:o.width*o.scaleX,h:o.height*o.scaleY};
+}
 requestAnimationFrame(applyView);
 
 function setRangeFill(el){
@@ -432,12 +514,13 @@ let bagToken=0;
 function loadBag(attempt){
   attempt=attempt||0;
   const token=++bagToken;
-  const m=MODEL;
+  const m=MODEL,c=currentColor();
+  if(!c)return;
   if(bagImg){canvas.remove(bagImg);bagImg=null;}
   const usePng=attempt>=2;
-  const src=modelSrc(m,usePng);
+  const src=modelSrc(c,usePng);
   fabric.Image.fromURL(src,(img,isError)=>{
-    /* 期间用户又切了型号 → 丢弃这次结果，避免旧图覆盖新图 */
+    /* 期间用户又切了型号或配色 → 丢弃这次结果，避免旧图覆盖新图 */
     if(token!==bagToken)return;
     if(isError||!img||!img._element){
       /* 加载失败：先重试两次（换回 PNG 再试），仍失败才提示，绝不留白画布 */
@@ -449,17 +532,28 @@ function loadBag(attempt){
     const s=1/m.pxPerMm;
     img.set({left:m.canvasMm/2,top:m.canvasMm/2,originX:'center',originY:'center',scaleX:s,scaleY:s,selectable:false,evented:false});
     bagImg=img;canvas.add(img);canvas.sendToBack(img);canvas.renderAll();
+    /* 首图就位后，空闲时把同型号其余配色 + 其它型号首图预热，切色/切型号即刻命中缓存 */
+    preloadImages();
   });
 }
-/* 预加载另一型号的产品图，切换时命中缓存、不再空白等待 */
-let preloaded=false;
-function preloadOtherModel(){
-  if(preloaded)return;preloaded=true;
-  Object.keys(MODELS).forEach(k=>{
-    const m=MODELS[k];
-    if(m===MODEL)return;
-    try{const i=new Image();i.src=modelSrc(m);}catch(e){}
-  });
+/* 预热：同型号其余配色优先，其次其它型号的首个配色 */
+let preloadedModels=false,preloadTimer=null;
+function preloadImages(){
+  if(preloadTimer)clearTimeout(preloadTimer);
+  preloadTimer=setTimeout(()=>{
+    const list=MODEL.colors||[];
+    const cur=currentColor();
+    list.forEach(c=>{if(c!==cur){try{const i=new Image();i.src=modelSrc(c);}catch(e){}}});
+    if(!preloadedModels){
+      preloadedModels=true;
+      Object.keys(MODELS).forEach(k=>{
+        const m=MODELS[k];
+        if(m===MODEL)return;
+        const c=(m.colors||[])[0];
+        if(c){try{const i=new Image();i.src=modelSrc(c);}catch(e){}}
+      });
+    }
+  },2500);
 }
 function showStageNotice(msg){
   const el=document.getElementById('stageNotice');
@@ -499,18 +593,31 @@ function trimToContent(srcCanvas,pad){
   return out;
 }
 
-function logoMm(){
-  if(!logoImg||logoImg.visible===false)return null;
-  return {w:logoImg.width*logoImg.scaleX,h:logoImg.height*logoImg.scaleY};
+function logoMm(o){return logoMmOf(o||curLogo());}
+/* 一个 LOGO 一行：1 · 60 × 5 mm (6.0 × 0.5 cm)；超过 12cm 的那一行标红 */
+function sizeRowText(i,s){
+  const w=Math.round(s.w),h=Math.round(s.h);
+  return (i+1)+' · '+w+' × '+h+' mm  ('+(w/10).toFixed(1)+' × '+(h/10).toFixed(1)+' cm)';
+}
+function sizeRows(){
+  return logoImgs.map(o=>({o,s:logoMmOf(o)})).filter(x=>x.s);
 }
 function updateSizeReadout(){
-  const el=document.getElementById('logoSizeValue');
-  if(!el)return;
-  const s=logoMm();
-  if(!s){el.textContent=(I18N[currentLang]&&I18N[currentLang].sizeEmpty)||'—';el.classList.remove('is-over');return;}
-  const w=Math.round(s.w),h=Math.round(s.h);
-  el.textContent=w+' × '+h+' mm  ('+(w/10).toFixed(1)+' × '+(h/10).toFixed(1)+' cm)';
-  el.classList.toggle('is-over',Math.max(s.w,s.h)>120);
+  const list=document.getElementById('logoSizeList');
+  if(!list)return;
+  list.innerHTML='';
+  const rows=sizeRows();
+  if(!rows.length){
+    const b=document.createElement('b');b.id='logoSizeValue';b.textContent='—';list.appendChild(b);
+    return;
+  }
+  rows.forEach((r,i)=>{
+    const b=document.createElement('b');
+    if(i===0)b.id='logoSizeValue';
+    b.textContent=sizeRowText(i,r.s);
+    if(Math.max(r.s.w,r.s.h)>120)b.classList.add('is-over');
+    list.appendChild(b);
+  });
 }
 
 function detectEdgeBackground(px,w,h){
@@ -552,34 +659,92 @@ function processLogo(imgEl,tolerance,removeBackground,invert){
   if(invert){for(let i=0;i<px.length;i+=4){if(px[i+3]){px[i]=255-px[i];px[i+1]=255-px[i+1];px[i+2]=255-px[i+2]}}}
   ctx.putImageData(data,0,0);return oc;
 }
-function processedCurrent(){return processLogo(currentOriginal,Number(tol.value),rmwhite.checked,invert.checked)}
-function displayCanvas(){
-  const processed=processedCurrent();
+function processedFrom(original,tolVal,rmBg,inv){
+  if(!original)return null;
+  const processed=processLogo(original,tolVal,rmBg,inv);
   return trimToContent(processed,2)||processed;
 }
-function addLogo(srcCanvas,keepWidthMm,done){
-  if(logoImg)canvas.remove(logoImg);
+function displayCanvasFor(o){
+  const m=o&&o.__meta;
+  return m&&m.original?processedFrom(m.original,m.tol,m.rmwhite,m.invert):null;
+}
+function displayCanvas(){return displayCanvasFor(curLogo());}
+/* 追加一张 LOGO；满 3 个后自动顶掉最早上传的那张 */
+function addLogo(srcCanvas,keepWidthMm,opts){
+  opts=opts||{};
   fabric.Image.fromURL(srcCanvas.toDataURL(),img=>{
-    const z=MODEL.logoSpot;
+    const z=MODEL.logoMax||{wMm:60,hMm:60};
+    /* LOGO 上传后固定落在画布正中心（规则写死，勿加偏移字段） */
+    const cxMm=MODEL.canvasMm/2, cyMm=MODEL.canvasMm/2;
     let scale;
     if(keepWidthMm&&keepWidthMm>0){scale=keepWidthMm/img.width;}
-    else{scale=Math.min(z.maxWMm/img.width,z.maxHMm/img.height);}
-    img.set({left:z.cxMm,top:z.cyMm,originX:'center',originY:'center',scaleX:scale,scaleY:scale,lockUniScaling:true,lockScalingFlip:true,transparentCorners:false,cornerColor:'#fff',cornerStrokeColor:'#222',borderColor:'#222',cornerSize:9,padding:2,opacity:Number(opa.value)/100,angle:Number(rot.value)});
+    else{scale=Math.min(z.wMm/img.width,z.hMm/img.height);}
+    img.__meta={original:opts.original||null,demo:!!opts.demo,ver:0,
+                rmwhite:rmwhite.checked,invert:invert.checked,
+                tol:Number(tol.value),opa:Number(opa.value),rot:Number(rot.value)};
+    img.set({left:cxMm,top:cyMm,originX:'center',originY:'center',scaleX:scale,scaleY:scale,lockUniScaling:true,lockScalingFlip:true,transparentCorners:false,cornerColor:'#fff',cornerStrokeColor:'#222',borderColor:'#222',cornerSize:9,padding:2,opacity:img.__meta.opa/100,angle:img.__meta.rot});
     img.setControlsVisibility({mt:false,mb:false,ml:false,mr:false});
-    logoImg=img;canvas.add(img);canvas.setActiveObject(img);canvas.renderAll();updateSizeReadout();
-    if(typeof done==='function')done(img);
+    while(logoImgs.length>=MAX_LOGO)removeLogo(logoImgs[0],true);
+    logoImgs.push(img);canvas.add(img);canvas.setActiveObject(img);canvas.renderAll();
+    updateSizeReadout();refreshUploadBox();
+    if(typeof opts.done==='function')opts.done(img);
   });
 }
+/* 删除一张 LOGO：Delete 键、超上限顶替、关闭教程清演示图都走这里 */
+function removeLogo(o,silent){
+  const i=logoImgs.indexOf(o);
+  if(i>=0)logoImgs.splice(i,1);
+  if(o===demoLogo)demoLogo=null;
+  canvas.remove(o);
+  if(canvas.getActiveObject()===o)canvas.discardActiveObject();
+  if(!silent&&logoImgs.length){
+    const next=logoImgs[Math.min(i,logoImgs.length-1)];
+    canvas.setActiveObject(next);syncSlidersFromLogo(next);
+  }
+  canvas.renderAll();updateSizeReadout();refreshUploadBox();
+}
+/* 上传框：有 LOGO 时显示「最近上传的缩略图 + 继续添加 LOGO (n/3)」；
+   满 3 个提示会替换最早的；全删完后恢复「+」和首次提示。
+   按钮本身始终可点，所以能连着上传第 2、第 3 个 */
+function refreshUploadBox(){
+  const t=I18N[currentLang]||I18N.zh;
+  const thumb=document.getElementById('upThumb'),plus=document.getElementById('upPlus'),txt=document.getElementById('upText');
+  /* 教程临时插入的演示 LOGO 不算用户的，不计入数量、不显示缩略图 */
+  const mine=logoImgs.filter(o=>o!==demoLogo);
+  if(mine.length){
+    const last=mine[mine.length-1];
+    const src=(last.__meta&&last.__meta.original&&last.__meta.original.src)||'';
+    if(src&&thumb)thumb.src=src;
+    if(thumb)thumb.hidden=false;
+    if(plus)plus.style.display='none';
+    if(txt)txt.textContent=(mine.length>=MAX_LOGO)
+      ?t.slotsFull
+      :t.addMore+' ('+mine.length+'/'+MAX_LOGO+')';
+  }else{
+    if(thumb)thumb.hidden=true;
+    if(plus)plus.style.display='';
+    if(txt)txt.innerHTML=t.uploadHint;
+  }
+}
+/* 滑杆跟随当前选中的 LOGO */
+function syncSlidersFromLogo(o){
+  const m=o&&o.__meta;if(!m)return;
+  rmwhite.checked=!!m.rmwhite;invert.checked=!!m.invert;
+  tol.value=m.tol;opa.value=m.opa;rot.value=m.rot;
+  [opa,rot,tol].forEach(setRangeFill);
+}
+/* 重新处理「当前选中的 LOGO」（每张 LOGO 各记一份处理参数，互不影响） */
 function reprocess(){
-  if(!logoImg||!currentOriginal)return;
-  const version=++processVersion;
-  const keepWidthMm=logoImg.width*logoImg.scaleX;
-  const geo={left:logoImg.left,top:logoImg.top,angle:logoImg.angle,opacity:logoImg.opacity};
-  const nextSrc=displayCanvas().toDataURL();
-  logoImg.setSrc(nextSrc,()=>{
-    if(version!==processVersion||!logoImg)return;
-    const s=keepWidthMm/logoImg.width;
-    logoImg.set({scaleX:s,scaleY:s,left:geo.left,top:geo.top,angle:geo.angle,opacity:geo.opacity});
+  const o=curLogo();const m=o&&o.__meta;
+  if(!m||!m.original)return;
+  const ver=++m.ver;
+  const keepWidthMm=o.width*o.scaleX;
+  const geo={left:o.left,top:o.top,angle:o.angle,opacity:o.opacity};
+  const nextSrc=displayCanvasFor(o).toDataURL();
+  o.setSrc(nextSrc,()=>{
+    if(ver!==m.ver||!o.canvas)return;
+    const s=keepWidthMm/o.width;
+    o.set({scaleX:s,scaleY:s,left:geo.left,top:geo.top,angle:geo.angle,opacity:geo.opacity});
     canvas.renderAll();updateSizeReadout();
   });
 }
@@ -604,25 +769,59 @@ fileInput.addEventListener('change',e=>{
   reader.onload=ev=>{
     const img=new Image();
     img.onload=()=>{
-      rmwhite.checked=true;opa.value=100;tol.value=0;setRangeFill(opa);setRangeFill(tol);
-      currentOriginal=img;
-      addLogo(displayCanvas());
-      upThumb.src=displayCanvas().toDataURL();upThumb.hidden=false;upPlus.style.display='none';
-      upText.textContent=(I18N[currentLang]&&I18N[currentLang].replace)||'点击更换 LOGO';
-      showSizeWarning();
+      /* 每张新 LOGO 都从干净参数开始（去背景开、擦边 0、透明 100、旋转 0） */
+      rmwhite.checked=true;invert.checked=false;opa.value=100;rot.value=0;tol.value=0;
+      [opa,rot,tol].forEach(setRangeFill);
+      const shown=processedFrom(img,0,true,false);
+      if(!shown)return;
+      const first=logoImgs.length===0;
+      /* 缩略图与「继续添加 LOGO (n/3)」文案统一由 addLogo → refreshUploadBox 维护 */
+      addLogo(shown,0,{original:img});
+      /* 只有第一张时才弹尺寸提醒，连传三张不会弹三次 */
+      if(first)showSizeWarning();
     };
     img.src=ev.target.result;
   };
   reader.readAsDataURL(f);
 });
 let tolTimer=null;
-rmwhite.addEventListener('change',reprocess);invert.addEventListener('change',reprocess);
-tol.addEventListener('input',()=>{clearTimeout(tolTimer);tolTimer=setTimeout(reprocess,50);});
-opa.addEventListener('input',()=>{if(logoImg){logoImg.set('opacity',Number(opa.value)/100);canvas.renderAll();}});
-rot.addEventListener('input',()=>{if(logoImg){logoImg.set('angle',Number(rot.value));canvas.renderAll();}});
-canvas.on('object:scaling',e=>{if(e.target===logoImg){const s=(logoImg.scaleX+logoImg.scaleY)/2;logoImg.set({scaleX:s,scaleY:s});updateSizeReadout();}});
-canvas.on('object:rotating',e=>{if(e.target===logoImg){const snapped=Math.round(logoImg.angle/5)*5;logoImg.set('angle',snapped);rot.value=Math.max(-180,Math.min(180,snapped));setRangeFill(rot);}});
-canvas.on('object:modified',e=>{if(e.target===logoImg){const s=(logoImg.scaleX+logoImg.scaleY)/2;logoImg.set({scaleX:s,scaleY:s});let a=Math.round(logoImg.angle/5)*5%360;if(a>180)a-=360;if(a<-180)a+=360;logoImg.set('angle',a);rot.value=a;setRangeFill(rot);canvas.renderAll();updateSizeReadout();}});
+/* 滑杆只作用于「当前选中的 LOGO」，并把参数记回它自己的 __meta */
+function activeMeta(){const o=curLogo();return o&&o.__meta?o.__meta:null;}
+rmwhite.addEventListener('change',()=>{const m=activeMeta();if(m)m.rmwhite=rmwhite.checked;reprocess();});
+invert.addEventListener('change',()=>{const m=activeMeta();if(m)m.invert=invert.checked;reprocess();});
+tol.addEventListener('input',()=>{
+  clearTimeout(tolTimer);
+  tolTimer=setTimeout(()=>{const m=activeMeta();if(m)m.tol=Number(tol.value);reprocess();},50);
+});
+opa.addEventListener('input',()=>{
+  const o=curLogo();if(!o)return;
+  o.set('opacity',Number(opa.value)/100);o.__meta.opa=Number(opa.value);canvas.renderAll();
+});
+rot.addEventListener('input',()=>{
+  const o=curLogo();if(!o)return;
+  o.set('angle',Number(rot.value));o.__meta.rot=Number(rot.value);canvas.renderAll();
+});
+/* 选中另一张 LOGO 时，滑杆自动切到它自己的参数 */
+function onLogoSelected(e){
+  const o=e.selected&&e.selected[0];
+  if(o&&o.__meta)syncSlidersFromLogo(o);
+}
+canvas.on('selection:created',onLogoSelected);
+canvas.on('selection:updated',onLogoSelected);
+canvas.on('object:scaling',e=>{const o=e.target;if(o&&o.__meta){const s=(o.scaleX+o.scaleY)/2;o.set({scaleX:s,scaleY:s});updateSizeReadout();}});
+canvas.on('object:rotating',e=>{const o=e.target;if(o&&o.__meta){const snapped=Math.round(o.angle/5)*5;o.set('angle',snapped);o.__meta.rot=snapped;rot.value=Math.max(-180,Math.min(180,snapped));setRangeFill(rot);}});
+canvas.on('object:modified',e=>{const o=e.target;if(o&&o.__meta){const s=(o.scaleX+o.scaleY)/2;o.set({scaleX:s,scaleY:s});let a=Math.round(o.angle/5)*5%360;if(a>180)a-=360;if(a<-180)a+=360;o.set('angle',a);o.__meta.rot=a;rot.value=a;setRangeFill(rot);canvas.renderAll();updateSizeReadout();}});
+/* 键盘 Delete / Backspace 删除当前选中的 LOGO（教程打开时让位给教程自己的按键） */
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Delete'&&e.key!=='Backspace')return;
+  if(tourOpen)return;
+  const t=e.target;
+  if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.tagName==='SELECT'||t.isContentEditable))return;
+  const active=canvas.getActiveObject();
+  if(!active||!active.__meta)return;
+  e.preventDefault();
+  removeLogo(active);
+});
 
 const zoomSlider=document.getElementById('zoom');
 function setViewZoom(v,silent){
@@ -655,7 +854,7 @@ const TOUR_STEPS=[
   {sel:['#invertChip'],pad:10,peek:true,demo:'invert',
    title:{zh:'颜色反向',en:'Invert Color',ru:'Инверсия цвета'},
    body:{zh:'勾选后 LOGO 颜色整体反转，浅色 LOGO 也能印在深色产品上。注意左侧画布上 LOGO 的颜色变化。',en:'Tick this to invert the logo colours, so a light logo can go on a dark product. Watch the logo change colour on the canvas at the left.',ru:'Отметьте, чтобы инвертировать цвета — светлый логотип подойдёт для тёмного товара. Следите за цветом логотипа на холсте слева.'}},
-  {sel:['#stageView'],pad:6,demo:'scale',pointer:'#logoSizeValue',bubble:'right',
+  {sel:['#stageView'],pad:6,demo:'scale',pointer:'#logoSizeList',bubble:'right',
    title:{zh:'LOGO 尺寸与比例',en:'Logo Size & Ratio',ru:'Размер и пропорции'},
    body:{zh:'拖动 LOGO 可移动位置，拉动四角等比例缩放。底部「LOGO 参考尺寸」会实时跟着变化——尺寸不能超过 12 × 12 cm。',en:'Drag the logo to move it, pull the corners to scale it proportionally. The reference size at the bottom updates live — it must not exceed 12 × 12 cm.',ru:'Перетащите логотип, потяните за углы — пропорции сохраняются. Размер внизу обновляется в реальном времени — не более 12 × 12 см.'}},
   {sel:['#zoomFit','#zoomOut','#zoom','#zoomIn'],pad:8,
@@ -706,17 +905,18 @@ function rectOfSelectors(sel,pad){
 }
 /* 画布上 LOGO 在屏幕中的位置：场景坐标 → 视口变换 → 页面坐标 */
 function logoHoleOnScreen(pad){
-  if(!logoImg)return null;
+  const o=demoOrCur();
+  if(!o)return null;
   const el=canvas.getElement();if(!el)return null;
   const cb=el.getBoundingClientRect();
   const disp=stageDisplayWidth();
   const z=disp/MODEL.canvasMm*viewZoom;
   const t=disp/2-z*MODEL.canvasMm/2;
-  const hw=logoImg.width*logoImg.scaleX/2,hh=logoImg.height*logoImg.scaleY/2;
-  const a=(logoImg.angle||0)*Math.PI/180;
+  const hw=o.width*o.scaleX/2,hh=o.height*o.scaleY/2;
+  const a=(o.angle||0)*Math.PI/180;
   const hx=Math.abs(hw*Math.cos(a))+Math.abs(hh*Math.sin(a));
   const hy=Math.abs(hw*Math.sin(a))+Math.abs(hh*Math.cos(a));
-  return clampHole({x:cb.left+z*(logoImg.left-hx)+t-pad,y:cb.top+z*(logoImg.top-hy)+t-pad,w:2*hx*z+pad*2,h:2*hy*z+pad*2});
+  return clampHole({x:cb.left+z*(o.left-hx)+t-pad,y:cb.top+z*(o.top-hy)+t-pad,w:2*hx*z+pad*2,h:2*hy*z+pad*2});
 }
 function holesFor(step){
   const out=[];
@@ -865,20 +1065,24 @@ function enterTourDemo(step){
   try{
     if(step.demo==='tol'){
       playTimeline([{k:0,m:0},{k:1,m:70}],1700,v=>{
-        tol.value=Math.round(v);setRangeFill(tol);reprocess();
+        tol.value=Math.round(v);setRangeFill(tol);
+        const m=activeMeta();if(m)m.tol=Number(tol.value);
+        reprocess();
       },150);
     }else if(step.demo==='invert'){
       clearDemo();
-      invert.checked=true;reprocess();
-      demoTimers.push(setTimeout(()=>{if(!tourOpen)return;invert.checked=false;reprocess();},1050));
-      demoTimers.push(setTimeout(()=>{if(!tourOpen)return;invert.checked=true;reprocess();},2100));
-    }else if(step.demo==='scale'&&logoImg){
+      invert.checked=true;{const m=activeMeta();if(m)m.invert=true;}
+      reprocess();
+      demoTimers.push(setTimeout(()=>{if(!tourOpen)return;invert.checked=false;{const m=activeMeta();if(m)m.invert=false;}reprocess();},1050));
+      demoTimers.push(setTimeout(()=>{if(!tourOpen)return;invert.checked=true;{const m=activeMeta();if(m)m.invert=true;}reprocess();},2100));
+    }else if(step.demo==='scale'&&demoOrCur()){
+      const o=demoOrCur();
       /* 教程打开时若还没有 LOGO，快照里没有尺寸，这里补记一次，保证中途退出也能还原 */
-      if(tourSnapshot&&!tourSnapshot.logoScale)tourSnapshot.logoScale=logoImg.scaleX;
-      const base=(tourSnapshot&&tourSnapshot.logoScale)||logoImg.scaleX;
+      if(tourSnapshot&&!tourSnapshot.logoScale)tourSnapshot.logoScale=o.scaleX;
+      const base=(tourSnapshot&&tourSnapshot.logoScale)||o.scaleX;
       playTimeline([{k:0,m:1},{k:.28,m:.3},{k:.72,m:1},{k:1,m:1}],3000,m=>{
-        if(!logoImg)return;
-        logoImg.set({scaleX:base*m,scaleY:base*m});
+        if(!o.canvas)return;
+        o.set({scaleX:base*m,scaleY:base*m});
         canvas.renderAll();updateSizeReadout();placePointer();
       },0);
     }
@@ -887,25 +1091,37 @@ function enterTourDemo(step){
 function exitTourDemo(step,nextIndex){
   clearDemo();
   if(!step||!step.demo||!tourSnapshot)return;
+  const o=demoOrCur();
   try{
     if(step.demo==='tol'){
       /* 往前进（第4步及以后）保留已擦除的效果，避免后面的步骤又把边缘还原回去 */
-      if(nextIndex==null||nextIndex<3){tol.value=tourSnapshot.tol;setRangeFill(tol);reprocess();}
+      if(nextIndex==null||nextIndex<3){
+        tol.value=tourSnapshot.tol;setRangeFill(tol);
+        const m=o&&o.__meta;if(m)m.tol=Number(tol.value);
+        reprocess();
+      }
     }
     else if(step.demo==='invert'){
       /* 往前进时锁定为"已勾选"，让第5步看到的就是反白后的 LOGO */
       invert.checked=(nextIndex!=null&&nextIndex>3)?true:tourSnapshot.invert;
+      const m=o&&o.__meta;if(m)m.invert=invert.checked;
       reprocess();
     }
-    else if(step.demo==='scale'&&logoImg&&tourSnapshot.logoScale){logoImg.set({scaleX:tourSnapshot.logoScale,scaleY:tourSnapshot.logoScale});canvas.renderAll();updateSizeReadout();}
+    else if(step.demo==='scale'&&o&&tourSnapshot.logoScale){
+      o.set({scaleX:tourSnapshot.logoScale,scaleY:tourSnapshot.logoScale});
+      canvas.renderAll();updateSizeReadout();
+    }
   }catch(e){}
 }
 function setLogoVisible(v){
-  if(!logoImg||logoImg.visible===v)return;
-  logoImg.set('visible',v);canvas.renderAll();
+  const list=demoLogo?[demoLogo]:logoImgs.slice();
+  let changed=false;
+  list.forEach(o=>{if(o.visible!==v){o.set('visible',v);changed=true;}});
+  if(changed){canvas.renderAll();updateSizeReadout();}
 }
 function ensureDemoLogo(){
-  if(currentOriginal&&logoImg){demoLoaded=true;return Promise.resolve(true);}
+  /* 用户已经传了 LOGO 就拿它演示，不再额外插入演示图 */
+  if(logoImgs.length){demoLoaded=true;return Promise.resolve(true);}
   if(demoTried)return Promise.resolve(demoLoaded);
   demoTried=true;
   return loadDemoLogo().then(ok=>{demoLoaded=!!ok;return demoLoaded;});
@@ -944,11 +1160,11 @@ function loadDemoLogo(){
       try{
         rmwhite.checked=true;invert.checked=false;opa.value=100;rot.value=0;tol.value=0;
         [opa,rot,tol].forEach(setRangeFill);
-        currentOriginal=img;demoSource=img;
-        const shown=displayCanvas();
-        addLogo(shown,0,()=>finish(true));
-        upThumb.src=shown.toDataURL();upThumb.hidden=false;upPlus.style.display='none';
-        upText.textContent=(I18N[currentLang]&&I18N[currentLang].replace)||'点击更换 LOGO';
+        const shown=processedFrom(img,0,true,false);
+        if(!shown){finish(false);return;}
+        demoSource=img;
+        /* 演示图单独标记，关闭教程时只删掉这一张，不动用户自己上传的 LOGO */
+        addLogo(shown,0,{original:img,demo:true,done:o=>{demoLogo=o;refreshUploadBox();finish(true);}});
       }catch(e){finish(false);}
     };
     img.onerror=()=>finish(false);
@@ -958,8 +1174,9 @@ function loadDemoLogo(){
 function openTour(){
   if(tourOpen)return;
   tourOpen=true;tourIndex=-1;tourToken++;
-  demoTried=false;demoLoaded=!!(currentOriginal&&logoImg);
-  tourSnapshot={tol:tol.value,invert:invert.checked,logoScale:logoImg?logoImg.scaleX:null,logoVisible:logoImg?logoImg.visible!==false:true};
+  const cur=curLogo();
+  demoTried=false;demoLoaded=!!(logoImgs.length);
+  tourSnapshot={tol:tol.value,invert:invert.checked,logoScale:cur?cur.scaleX:null,logoVisible:cur?cur.visible!==false:true};
   tourRoot.hidden=false;
   renderTourStep();
   document.addEventListener('keydown',tourKey);
@@ -969,14 +1186,13 @@ function closeTour(){
   if(!tourOpen)return;
   exitTourDemo(TOUR_STEPS[tourIndex],null);
   tourOpen=false;tourToken++;
-  const isDemoLogo=!!(currentOriginal&&currentOriginal===demoSource);
-  if(isDemoLogo){
-    /* 教程用的是演示 LOGO：跳过或走完都恢复到初始状态，画布不留 LOGO */
-    resetAll();
-    demoSource=null;
-  }else{
-    setLogoVisible(tourSnapshot?tourSnapshot.logoVisible!==false:true);
+  if(demoLogo){
+    /* 教程临时插入的演示 LOGO：跳过或走完都清掉；用户自己上传的 LOGO 一张不动 */
+    removeLogo(demoLogo,true);
+    demoLogo=null;
   }
+  demoSource=null;
+  setLogoVisible(tourSnapshot?tourSnapshot.logoVisible!==false:true);
   demoLoaded=false;demoTried=false;
   tourRoot.hidden=true;
   tourPointer.hidden=true;
@@ -1000,22 +1216,23 @@ tourSkip.addEventListener('click',closeTour);
 document.getElementById('zoomGuide').addEventListener('click',openTour);
 
 function resetAll(){
-  if(logoImg){canvas.remove(logoImg);logoImg=null;}
-  currentOriginal=null;fileInput.value='';
-  upThumb.hidden=true;upPlus.style.display='';
-  upText.innerHTML=(I18N[currentLang]||I18N.zh).uploadHint;
+  logoImgs.slice().forEach(o=>canvas.remove(o));
+  logoImgs=[];demoLogo=null;demoSource=null;
+  canvas.discardActiveObject();
+  fileInput.value='';
   rmwhite.checked=true;invert.checked=false;opa.value=100;rot.value=0;tol.value=0;
   [opa,rot,tol].forEach(setRangeFill);
   setViewZoom(DEFAULT_VIEW_ZOOM);
-  canvas.renderAll();updateSizeReadout();
+  canvas.renderAll();updateSizeReadout();refreshUploadBox();
 }
 document.getElementById('reset').addEventListener('click',resetAll);
 document.getElementById('model').addEventListener('change',e=>{
   const m=MODELS[e.target.value];if(!m)return;
   MODEL=m;
-  if(logoImg){canvas.remove(logoImg);logoImg=null;}
-  currentOriginal=null;fileInput.value='';upThumb.hidden=true;upPlus.style.display='';upText.innerHTML=I18N[currentLang].uploadHint;
-  opa.value=100;rot.value=0;rmwhite.checked=true;[opa,rot].forEach(setRangeFill);
+  renderColorSelect();
+  /* 切换型号保留已上传的 LOGO：物理尺寸不变，重新落到新画布正中心 */
+  const c=m.canvasMm/2;
+  logoImgs.forEach(o=>o.set({left:c,top:c}));
   setViewZoom(DEFAULT_VIEW_ZOOM);
   clearStageNotice();
   loadBag();applyView();updateSizeReadout();
@@ -1027,27 +1244,31 @@ function roundRectPath(ctx,x,y,w,h,r){
   ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();
 }
 function drawSizeHudOn(ctx,cw,ch,k){
-  const s=logoMm();if(!s)return;
+  const rows=sizeRows();
+  if(!rows.length)return;
   const t=I18N[currentLang]||I18N.zh;
-  const wmm=Math.round(s.w),hmm=Math.round(s.h);
-  const over=Math.max(s.w,s.h)>120;
   const fs=Math.max(10,11*k);
-  const label=(t.sizeTitle||'LOGO 参考尺寸')+' ';
-  const value=wmm+' × '+hmm+' mm  ('+(wmm/10).toFixed(1)+' × '+(hmm/10).toFixed(1)+' cm)';
+  const rowH=fs*1.45;
+  const label=t.sizeTitle||'LOGO 参考尺寸';
   ctx.font='400 '+fs+'px '+HUD_FONT;
   const lw=ctx.measureText(label).width;
-  ctx.font=(over?900:400)+' '+fs+'px '+HUD_FONT;
-  const vw=ctx.measureText(value).width;
-  const padX=10*k,padY=4*k,gap=6*k;
-  const boxW=lw+gap+vw+padX*2,boxH=fs+padY*2;
+  const texts=rows.map((r,i)=>sizeRowText(i,r.s));
+  const overs=rows.map(r=>Math.max(r.s.w,r.s.h)>120);
+  let maxTW=0;
+  texts.forEach((s,i)=>{ctx.font=(overs[i]?900:400)+' '+fs+'px '+HUD_FONT;maxTW=Math.max(maxTW,ctx.measureText(s).width);});
+  const padX=10*k,padY=4*k,gap=7*k;
+  const boxW=lw+gap+maxTW+padX*2,boxH=fs+(texts.length-1)*rowH+padY*2;
   const x=(cw-boxW)/2,y=ch-10*k-boxH;
   ctx.fillStyle='rgba(255,255,255,0.82)';
   roundRectPath(ctx,x,y,boxW,boxH,9*k);ctx.fill();
   ctx.textBaseline='top';
   ctx.fillStyle='#9a9a9a';ctx.font='400 '+fs+'px '+HUD_FONT;
   ctx.fillText(label,x+padX,y+padY);
-  ctx.fillStyle=over?'#c0392b':'#8a8a8a';ctx.font=(over?900:400)+' '+fs+'px '+HUD_FONT;
-  ctx.fillText(value,x+padX+lw+gap,y+padY);
+  texts.forEach((s,i)=>{
+    ctx.fillStyle=overs[i]?'#c0392b':'#8a8a8a';
+    ctx.font=(overs[i]?900:400)+' '+fs+'px '+HUD_FONT;
+    ctx.fillText(s,x+padX+lw+gap,y+padY+i*rowH);
+  });
 }
 function exportImage(){
   const active=canvas.getActiveObject();
@@ -1109,7 +1330,8 @@ document.getElementById('export').addEventListener('click',()=>{
   if(btn)btn.disabled=true;
   const t=I18N[currentLang]||I18N.zh;
   exportWithHud().then(out=>{
-    saveBlob(out,MODEL.id+'_LOGO预览.jpg');
+    const cc=currentColor();
+    saveBlob(out,MODEL.id+(cc&&cc.label?'_'+cc.label:'')+'_LOGO预览.jpg');
     showExportTip(t.exportOk||'图片已导出');
   }).catch(e=>{
     console.error('export failed',e);
@@ -1118,9 +1340,9 @@ document.getElementById('export').addEventListener('click',()=>{
 });
 let savedLang='';try{savedLang=localStorage.getItem('markryden-logo-lang')||''}catch(e){}
 setLanguage(I18N[savedLang]?savedLang:detectLang());
+renderColorSelect();
 loadBag();
-/* 首屏图片就位后再预热另一个型号，切换时直接命中缓存（不抢首屏带宽） */
-setTimeout(preloadOtherModel,2500);
+/* 同型号其余配色 / 其它型号首图的预热，由 loadBag() 首图就位后自行触发（不抢首屏带宽） */
 /* 预热教程演示图：等切到「上传 LOGO」那步时直接命中缓存，不再等待下载 */
 setTimeout(()=>{try{const w=new Image();w.src=DEMO_LOGO;}catch(e){}},900);
 let seenTour=false;try{seenTour=!!localStorage.getItem(TOUR_KEY)}catch(e){}
