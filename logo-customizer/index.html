@@ -45,7 +45,20 @@
   .zoom-fit:hover{border-color:#bcbcbc}
   .stage-tip{position:absolute;z-index:4;left:50%;bottom:30px;transform:translateX(-50%);height:26px;padding:0 11px;border-radius:2px;background:#303030;color:#fff;font-size:11px;white-space:nowrap;display:flex;align-items:center;pointer-events:none}
   .size-warning{position:absolute;z-index:8;top:18px;right:18px;width:32px;height:32px}
-  .size-hud{position:absolute;z-index:7;left:50%;bottom:10px;transform:translateX(-50%);display:flex;align-items:baseline;gap:6px;white-space:nowrap;font-size:10px;color:#9a9a9a;pointer-events:none;background:rgba(255,255,255,.8);padding:3px 10px;border-radius:9px}
+  .tut-mask{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.42);display:flex;align-items:center;justify-content:center;padding:20px}
+  .tut-mask[hidden]{display:none}
+  .tut-card{width:min(430px,100%);background:#fff;border-radius:14px;padding:26px 26px 20px;box-shadow:0 18px 50px rgba(0,0,0,.2)}
+  .tut-dots{display:flex;gap:5px;margin-bottom:16px}
+  .tut-dot{width:18px;height:3px;border-radius:2px;background:#e3e3e3}
+  .tut-dot.is-on{background:#151515}
+  .tut-title{font-size:15px;font-weight:700;color:#151515;margin-bottom:10px}
+  .tut-body{font-size:12px;line-height:1.8;color:#555;min-height:66px}
+  .tut-actions{display:flex;align-items:center;justify-content:space-between;margin-top:18px;gap:10px}
+  .tut-progress{font-size:11px;color:#aaa}
+  .tut-skip{font-size:11px;color:#999;background:none;border:0;cursor:pointer;padding:4px 0}
+  .tut-next{height:34px;padding:0 22px;background:#151515;color:#fff;border:0;border-radius:2px;font-size:12px;cursor:pointer}
+  .tut-reopen{display:block;margin-top:8px;font-size:11px;color:#999;background:none;border:0;padding:0;cursor:pointer;text-decoration:underline}
+  .size-hud{position:absolute;z-index:7;left:50%;bottom:10px;transform:translateX(-50%);display:flex;align-items:baseline;gap:6px;white-space:nowrap;font-size:10px;color:#9a9a9a;pointer-events:none;background:rgba(255,255,255,.84);padding:4px 11px;border-radius:9px}
   .size-hud b{font-weight:400;color:#8a8a8a;font-size:11px}
   .size-hud b.is-over{color:#c0392b;font-weight:900}
   .warning-trigger{width:32px;height:32px;padding:0;border:0;background:transparent;display:block;cursor:help}
@@ -95,6 +108,9 @@
   .btn:hover{background:#232323}
   .btn+.btn{margin-top:12px}
   .note{text-align:center;margin-top:17px;color:#aaa;font-size:11px}
+  .btn:disabled{opacity:.6;cursor:default}
+  .export-tip{position:fixed;left:50%;bottom:34px;transform:translate(-50%,10px);z-index:300;background:#303030;color:#fff;font-size:12px;line-height:1.5;padding:9px 16px;border-radius:6px;opacity:0;visibility:hidden;transition:opacity .2s ease,transform .2s ease,visibility .2s ease;max-width:80vw;text-align:center}
+  .export-tip.is-on{opacity:1;visibility:visible;transform:translate(-50%,0)}
 
   @media(min-width:1200px){
     header{height:118px}
@@ -245,15 +261,29 @@
       <button class="btn" id="reset" type="button">初始化（清除已上传LOGO）</button>
       <button class="btn" id="export" type="button">导出JPG图片</button>
       <div class="note" id="supportNote">注：遇到问题请联系与您对接的销售或者客服人员</div>
+      <button class="tut-reopen" id="tutReopen" type="button">查看使用教程</button>
     </div>
   </section>
 </main>
 
+<div class="tut-mask" id="tutMask" hidden>
+  <div class="tut-card" role="dialog" aria-modal="true" aria-labelledby="tutTitle">
+    <div class="tut-dots" id="tutDots"></div>
+    <div class="tut-title" id="tutTitle"></div>
+    <div class="tut-body" id="tutBody"></div>
+    <div class="tut-actions">
+      <button class="tut-skip" id="tutSkip" type="button">跳过</button>
+      <span class="tut-progress" id="tutProgress"></span>
+      <button class="tut-next" id="tutNext" type="button">下一步</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const I18N = {
-  zh:{name:'中文',htmlLang:'zh-CN',title:'MARK RYDEN · LOGO 定制预览',stageAria:'背包 LOGO 预览画布',settingsAria:'LOGO 定制设置',warningAria:'查看 LOGO 尺寸提醒',warning:'LOGO长宽不要超过12×12cm，超过后可能会导致无法定制！',stageTip:'拉动 LOGO 画布四角可缩放大小',model:'产品型号',color:'颜色选择',black:'商务黑',upload:'上传LOGO',uploadHint:'上传透明 PNG 最佳，直接可用；<br>带有背景颜色的 JPG 将自动去除背景',replace:'点击更换 LOGO',process:'LOGO处理',removeBg:'去除背景',invert:'颜色反向',tolerance:'LOGO边缘擦除',toleranceHint:'拖动滑块，边缘清除越彻底',opacity:'透明度调节',rotation:'360°旋转调节',reset:'初始化（清除已上传LOGO）',export:'导出JPG图片',note:'注：遇到问题请联系与您对接的销售或者客服人员',sizeTitle:'LOGO 参考尺寸',sizeEmpty:'—',fit:'适应'},
-  en:{name:'English',htmlLang:'en',title:'MARK RYDEN · Custom Logo Preview',stageAria:'Backpack logo preview canvas',settingsAria:'Logo customization settings',warningAria:'View logo size notice',warning:'The logo must not exceed 12 × 12 cm in width or height. Larger logos may not be customizable.',stageTip:'Drag the corner handles to resize the logo',model:'Product Model',color:'Color',black:'Business Black',upload:'Upload Logo',uploadHint:'Transparent PNG is recommended and ready to use;<br>backgrounds in JPG files will be removed automatically',replace:'Click to replace logo',process:'Logo Processing',removeBg:'Remove BG',invert:'Invert Color',tolerance:'Logo Edge Cleanup',toleranceHint:'Drag the slider to remove more of the background edge',opacity:'Opacity',rotation:'360° Rotation',reset:'Reset (remove uploaded logo)',export:'Export JPG',note:'Note: If you encounter any issues, please contact your sales representative or customer service.',sizeTitle:'Reference logo size',sizeEmpty:'—',fit:'Fit'},
-  ru:{name:'Русский',htmlLang:'ru',title:'MARK RYDEN · Предпросмотр логотипа',stageAria:'Область предпросмотра логотипа на рюкзаке',settingsAria:'Настройки логотипа',warningAria:'Показать ограничение размера логотипа',warning:'Ширина и высота логотипа не должны превышать 12 × 12 см. Превышение размера может сделать нанесение невозможным.',stageTip:'Потяните за углы рамки, чтобы изменить размер логотипа',model:'Модель товара',color:'Цвет',black:'Деловой чёрный',upload:'Загрузить логотип',uploadHint:'Рекомендуется прозрачный PNG;<br>фон изображения JPG удаляется автоматически',replace:'Нажмите, чтобы заменить логотип',process:'Обработка логотипа',removeBg:'Удалить фон',invert:'Инверсия',tolerance:'Очистка краёв логотипа',toleranceHint:'Перемещайте ползунок для более тщательной очистки краёв',opacity:'Прозрачность',rotation:'Поворот 360°',reset:'Сбросить (удалить логотип)',export:'Экспорт JPG',note:'Примечание: при возникновении вопросов обратитесь к вашему менеджеру или в службу поддержки.',sizeTitle:'Ориентировочный размер логотипа',sizeEmpty:'—',fit:'Вписать'}
+  zh:{name:'中文',htmlLang:'zh-CN',title:'MARK RYDEN · LOGO 定制预览',stageAria:'背包 LOGO 预览画布',settingsAria:'LOGO 定制设置',warningAria:'查看 LOGO 尺寸提醒',warning:'LOGO长宽不要超过12×12cm，超过后可能会导致无法定制！',stageTip:'拉动 LOGO 画布四角可缩放大小',model:'产品型号',color:'颜色选择',black:'商务黑',upload:'上传LOGO',uploadHint:'上传透明 PNG 最佳，直接可用；<br>带有背景颜色的 JPG 将自动去除背景',replace:'点击更换 LOGO',process:'LOGO处理',removeBg:'去除背景',invert:'颜色反向',tolerance:'LOGO边缘擦除',toleranceHint:'拖动滑块，边缘清除越彻底',opacity:'透明度调节',rotation:'360°旋转调节',reset:'初始化（清除已上传LOGO）',export:'导出JPG图片',exportOk:'图片已导出，请查看下载文件',exportFail:'导出失败，请重试',note:'注：遇到问题请联系与您对接的销售或者客服人员',sizeTitle:'LOGO 参考尺寸',tutorial:{title:'LOGO 定制教程',steps:['① 选择产品型号：先在右侧「产品型号」中选择要定制的产品。','② 上传 LOGO：透明 PNG 最佳，白底 JPG 会自动去除背景。','③ 调整位置与大小：拖动 LOGO 移动位置，四角等比例缩放，旋转按 5° 步进。','④ 处理边缘：拖动「LOGO边缘擦除」滑块清除残留白边，数值越大清除越彻底。','⑤ 确认尺寸：画布底部会显示 LOGO 参考尺寸，超过 12cm 会变红提醒。','⑥ 导出：调整完成后点击「导出JPG图片」保存预览图。'],next:'下一步',done:'开始使用',skip:'跳过',reopen:'查看使用教程'}},
+  en:{name:'English',htmlLang:'en',title:'MARK RYDEN · Custom Logo Preview',stageAria:'Backpack logo preview canvas',settingsAria:'Logo customization settings',warningAria:'View logo size notice',warning:'The logo must not exceed 12 × 12 cm in width or height. Larger logos may not be customizable.',stageTip:'Drag the corner handles to resize the logo',model:'Product Model',color:'Color',black:'Business Black',upload:'Upload Logo',uploadHint:'Transparent PNG is recommended and ready to use;<br>backgrounds in JPG files will be removed automatically',replace:'Click to replace logo',process:'Logo Processing',removeBg:'Remove BG',invert:'Invert Color',tolerance:'Logo Edge Cleanup',toleranceHint:'Drag the slider to remove more of the background edge',opacity:'Opacity',rotation:'360° Rotation',reset:'Reset (remove uploaded logo)',export:'Export JPG',exportOk:'Image exported, please check your downloads',exportFail:'Export failed, please try again',note:'Note: If you encounter any issues, please contact your sales representative or customer service.',sizeTitle:'Reference logo size',tutorial:{title:'How to customize your logo',steps:['1. Select the product model you want to customize on the right.','2. Upload your logo: transparent PNG is best, JPG backgrounds are removed automatically.','3. Move and resize: drag to position, corner handles keep proportions, rotation snaps to 5 degrees.','4. Clean the edges: drag the Logo Edge Cleanup slider to remove leftover background.','5. Check the size: the reference size shows at the bottom of the canvas and turns red over 12 cm.','6. Export: click Export JPG to save the preview image.'],next:'Next',done:'Get started',skip:'Skip',reopen:'View tutorial'}},
+  ru:{name:'Русский',htmlLang:'ru',title:'MARK RYDEN · Предпросмотр логотипа',stageAria:'Область предпросмотра логотипа на рюкзаке',settingsAria:'Настройки логотипа',warningAria:'Показать ограничение размера логотипа',warning:'Ширина и высота логотипа не должны превышать 12 × 12 см. Превышение размера может сделать нанесение невозможным.',stageTip:'Потяните за углы рамки, чтобы изменить размер логотипа',model:'Модель товара',color:'Цвет',black:'Деловой чёрный',upload:'Загрузить логотип',uploadHint:'Рекомендуется прозрачный PNG;<br>фон изображения JPG удаляется автоматически',replace:'Нажмите, чтобы заменить логотип',process:'Обработка логотипа',removeBg:'Удалить фон',invert:'Инверсия',tolerance:'Очистка краёв логотипа',toleranceHint:'Перемещайте ползунок для более тщательной очистки краёв',opacity:'Прозрачность',rotation:'Поворот 360°',reset:'Сбросить (удалить логотип)',export:'Экспорт JPG',exportOk:'Изображение экспортировано, проверьте загрузки',exportFail:'Не удалось экспортировать, попробуйте ещё раз',note:'Примечание: при возникновении вопросов обратитесь к вашему менеджеру или в службу поддержки.',sizeTitle:'Ориентировочный размер логотипа',tutorial:{title:'Как разместить логотип',steps:['1. Выберите модель товара справа.','2. Загрузите логотип: лучше прозрачный PNG, фон JPG удаляется автоматически.','3. Переместите и измените размер: углы сохраняют пропорции, поворот — с шагом 5 градусов.','4. Очистите края: ползунок очистки краёв убирает остатки фона.','5. Проверьте размер: ориентировочный размер внизу холста краснеет при превышении 12 см.','6. Экспорт: нажмите «Экспорт JPG», чтобы сохранить превью.'],next:'Далее',done:'Начать',skip:'Пропустить',reopen:'Инструкция'}}
 };
 let currentLang='zh';
 const langWrap=document.getElementById('langWrap'),langButton=document.getElementById('langButton'),langCurrent=document.getElementById('langCurrent');
@@ -274,6 +304,8 @@ function setLanguage(code){
   document.getElementById('labelSize').textContent=t.sizeTitle;
   document.getElementById('zoomFit').textContent=t.fit;
   updateSizeReadout();
+  if(tutMask&&!tutMask.hidden)renderTut();
+  const reopenBtn=document.getElementById('tutReopen');if(reopenBtn&&t.tutorial)reopenBtn.textContent=t.tutorial.reopen;
   document.getElementById('upText').innerHTML=currentOriginal?t.replace:t.uploadHint;
   document.querySelectorAll('.lang-option').forEach(btn=>btn.classList.toggle('is-active',btn.dataset.lang===code));
   try{localStorage.setItem('markryden-logo-lang',code)}catch(e){}
@@ -505,22 +537,127 @@ document.getElementById('model').addEventListener('change',e=>{
   setViewZoom(DEFAULT_VIEW_ZOOM);
   loadBag();applyView();updateSizeReadout();
 });
-document.getElementById('export').addEventListener('click',()=>{
+const HUD_FONT='"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif';
+function roundRectPath(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  if(ctx.roundRect){ctx.roundRect(x,y,w,h,r);return;}
+  ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();
+}
+function drawSizeHudOn(ctx,cw,ch,k){
+  const s=logoMm();if(!s)return;
+  const t=I18N[currentLang]||I18N.zh;
+  const wmm=Math.round(s.w),hmm=Math.round(s.h);
+  const over=Math.max(s.w,s.h)>120;
+  const fs=Math.max(10,11*k);
+  const label=(t.sizeTitle||'LOGO 参考尺寸')+' ';
+  const value=wmm+' × '+hmm+' mm  ('+(wmm/10).toFixed(1)+' × '+(hmm/10).toFixed(1)+' cm)';
+  ctx.font='400 '+fs+'px '+HUD_FONT;
+  const lw=ctx.measureText(label).width;
+  ctx.font=(over?900:400)+' '+fs+'px '+HUD_FONT;
+  const vw=ctx.measureText(value).width;
+  const padX=10*k,padY=4*k,gap=6*k;
+  const boxW=lw+gap+vw+padX*2,boxH=fs+padY*2;
+  const x=(cw-boxW)/2,y=ch-10*k-boxH;
+  ctx.fillStyle='rgba(255,255,255,0.82)';
+  roundRectPath(ctx,x,y,boxW,boxH,9*k);ctx.fill();
+  ctx.textBaseline='top';
+  ctx.fillStyle='#9a9a9a';ctx.font='400 '+fs+'px '+HUD_FONT;
+  ctx.fillText(label,x+padX,y+padY);
+  ctx.fillStyle=over?'#c0392b':'#8a8a8a';ctx.font=(over?900:400)+' '+fs+'px '+HUD_FONT;
+  ctx.fillText(value,x+padX+lw+gap,y+padY);
+}
+function exportImage(){
   const active=canvas.getActiveObject();
   canvas.discardActiveObject();
-  const savedZoom=viewZoom;
-  viewZoom=1;applyView();
-  const previousBg=canvas.backgroundColor;
-  canvas.setBackgroundColor('#ffffff',()=>{
-    canvas.renderAll();
-    const url=canvas.toDataURL({format:'jpeg',quality:.94,multiplier:2});
-    const a=document.createElement('a');a.href=url;a.download=MODEL.id+'_LOGO预览.jpg';a.click();
-    canvas.setBackgroundColor(previousBg||'',()=>{
-      if(active)canvas.setActiveObject(active);
-      viewZoom=savedZoom;applyView();
-    });
+  const savedZoom=viewZoom,savedBg=canvas.backgroundColor;
+  viewZoom=DEFAULT_VIEW_ZOOM;applyView();
+  canvas.backgroundColor='#ffffff';
+  canvas.renderAll();
+  let outUrl='';
+  try{outUrl=canvas.toDataURL({format:'jpeg',quality:.94,multiplier:2});}
+  finally{
+    canvas.backgroundColor=savedBg||'';
+    if(active)canvas.setActiveObject(active);
+    viewZoom=savedZoom;applyView();
+  }
+  return outUrl;
+}
+function saveBlob(blob,filename){
+  const a=document.createElement('a');
+  if(window.navigator&&window.navigator.msSaveBlob){window.navigator.msSaveBlob(blob,filename);return;}
+  const objUrl=URL.createObjectURL(blob);
+  a.href=objUrl;a.download=filename;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(objUrl),10000);
+}
+function exportWithHud(){
+  const src=exportImage();
+  if(!src)throw new Error('empty canvas');
+  return new Promise((resolve,reject)=>{
+    const img=new Image();
+    img.onload=()=>{
+      try{
+        const oc=document.createElement('canvas');
+        oc.width=img.width;oc.height=img.height;
+        const ctx=oc.getContext('2d');
+        ctx.drawImage(img,0,0);
+        drawSizeHudOn(ctx,oc.width,oc.height,oc.width/stageDisplayWidth());
+        if(oc.toBlob){oc.toBlob(b=>b?resolve(b):reject(new Error('toBlob null')),'image/jpeg',0.94);}
+        else{resolve(oc.toDataURL('image/jpeg',0.94));}
+      }catch(e){reject(e);}
+    };
+    img.onerror=()=>reject(new Error('image decode failed'));
+    img.src=src;
   });
+}
+function showExportTip(msg){
+  let el=document.getElementById('exportTip');
+  if(!el){
+    el=document.createElement('div');
+    el.id='exportTip';el.className='export-tip';
+    document.body.appendChild(el);
+  }
+  el.textContent=msg;el.classList.add('is-on');
+  clearTimeout(showExportTip._t);
+  showExportTip._t=setTimeout(()=>el.classList.remove('is-on'),4200);
+}
+document.getElementById('export').addEventListener('click',()=>{
+  const btn=document.getElementById('export');
+  if(btn&&btn.disabled)return;
+  if(btn)btn.disabled=true;
+  const t=I18N[currentLang]||I18N.zh;
+  exportWithHud().then(out=>{
+    saveBlob(out,MODEL.id+'_LOGO预览.jpg');
+    showExportTip(t.exportOk||'图片已导出');
+  }).catch(e=>{
+    console.error('export failed',e);
+    showExportTip((t.exportFail||'导出失败，请重试')+'（'+e.message+'）');
+  }).then(()=>{if(btn)btn.disabled=false;});
 });
+const tutMask=document.getElementById('tutMask'),tutTitle=document.getElementById('tutTitle'),tutBody=document.getElementById('tutBody');
+const tutNext=document.getElementById('tutNext'),tutSkip=document.getElementById('tutSkip'),tutDots=document.getElementById('tutDots'),tutProgress=document.getElementById('tutProgress');
+const TUT_KEY='markryden-logo-tutorial';
+let tutIndex=0;
+function tutData(){return (I18N[currentLang]||I18N.zh).tutorial||I18N.zh.tutorial;}
+function renderTut(){
+  const d=tutData();
+  tutTitle.textContent=d.title;
+  tutBody.textContent=d.steps[Math.min(tutIndex,d.steps.length-1)];
+  tutProgress.textContent=(tutIndex+1)+' / '+d.steps.length;
+  tutNext.textContent=tutIndex===d.steps.length-1?d.done:d.next;
+  tutSkip.textContent=d.skip;
+  tutDots.innerHTML='';
+  d.steps.forEach((_,i)=>{const s=document.createElement('span');s.className='tut-dot'+(i===tutIndex?' is-on':'');tutDots.appendChild(s);});
+}
+function openTut(){tutIndex=0;renderTut();tutMask.hidden=false;}
+function closeTut(){tutMask.hidden=true;try{localStorage.setItem(TUT_KEY,'1')}catch(e){}}
+tutNext.addEventListener('click',()=>{const d=tutData();if(tutIndex<d.steps.length-1){tutIndex++;renderTut();}else{closeTut();}});
+tutSkip.addEventListener('click',closeTut);
+tutMask.addEventListener('click',e=>{if(e.target===tutMask)closeTut();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!tutMask.hidden)closeTut();});
+document.getElementById('tutReopen').addEventListener('click',openTut);
+let seenTut=null;try{seenTut=localStorage.getItem(TUT_KEY)}catch(e){}
+if(!seenTut)setTimeout(openTut,500);
+
 let savedLang='zh';try{savedLang=localStorage.getItem('markryden-logo-lang')||'zh'}catch(e){}setLanguage(I18N[savedLang]?savedLang:'zh');
 loadBag();
 </script>
