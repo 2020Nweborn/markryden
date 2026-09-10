@@ -36,28 +36,18 @@
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Cpath d='M44 0V44M0 44H44' fill='none' stroke='%23d8dce0' stroke-width='1' stroke-dasharray='3 4'/%3E%3C/svg%3E");
     background-size:44px 44px}
   .canvas-container{position:absolute!important;inset:0;border-radius:13px;overflow:hidden}
-  .zoom-bar{height:46px;flex:0 0 46px;display:flex;align-items:center;gap:8px;padding:0 14px;border-top:1px solid #f0f0f0}
-  .zoom-btn{width:26px;height:26px;flex:0 0 26px;border:1px solid #e0e0e0;border-radius:2px;background:#fff;font-size:15px;line-height:1;color:#333;cursor:pointer;display:flex;align-items:center;justify-content:center}
-  .zoom-btn:hover{border-color:#bcbcbc}
-  .zoom-bar input[type=range]{flex:1;min-width:0}
-  .zoom-val{width:46px;flex:0 0 46px;text-align:center;font-size:11px;color:#555}
-  .zoom-fit{height:26px;flex:0 0 auto;padding:0 10px;border:1px solid #e0e0e0;border-radius:2px;background:#fff;font-size:11px;color:#333;cursor:pointer;white-space:nowrap}
-  .zoom-fit:hover{border-color:#bcbcbc}
+  .zoom-bar{height:56px;flex:0 0 56px;display:flex;align-items:center;gap:10px;padding:0 14px;border-top:1px solid #f0f0f0}
+  .zoom-btn{width:34px;height:34px;flex:0 0 34px;border:1px solid #e2e2e2;border-radius:4px;background:#fff;font-size:16px;line-height:1;color:#1a1a1a;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .zoom-btn:hover{border-color:#b8b8b8}
+  .zoom-bar input[type=range]{flex:1;min-width:0;height:6px;border-radius:99px}
+  .zoom-bar input[type=range]::-webkit-slider-thumb{width:14px;height:14px}
+  .zoom-fit{height:34px;flex:0 0 auto;padding:0 14px;border:1px solid #e2e2e2;border-radius:4px;background:#fff;font-size:12px;color:#1a1a1a;cursor:pointer;white-space:nowrap}
+  .zoom-fit:hover{border-color:#b8b8b8}
+  .zoom-guide{height:34px;flex:0 0 auto;margin-left:auto;padding:0 14px;border:1px solid #e2e2e2;border-radius:4px;background:#fff;font-size:12px;color:#1a1a1a;cursor:pointer;display:flex;align-items:center;gap:7px;white-space:nowrap}
+  .zoom-guide:hover{border-color:#b8b8b8}
+  .zoom-guide svg{display:block;width:15px;height:15px;flex:0 0 15px}
   .stage-tip{position:absolute;z-index:4;left:50%;bottom:30px;transform:translateX(-50%);height:26px;padding:0 11px;border-radius:2px;background:#303030;color:#fff;font-size:11px;white-space:nowrap;display:flex;align-items:center;pointer-events:none}
   .size-warning{position:absolute;z-index:8;top:18px;right:18px;width:32px;height:32px}
-  .tut-mask{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.42);display:flex;align-items:center;justify-content:center;padding:20px}
-  .tut-mask[hidden]{display:none}
-  .tut-card{width:min(430px,100%);background:#fff;border-radius:14px;padding:26px 26px 20px;box-shadow:0 18px 50px rgba(0,0,0,.2)}
-  .tut-dots{display:flex;gap:5px;margin-bottom:16px}
-  .tut-dot{width:18px;height:3px;border-radius:2px;background:#e3e3e3}
-  .tut-dot.is-on{background:#151515}
-  .tut-title{font-size:15px;font-weight:700;color:#151515;margin-bottom:10px}
-  .tut-body{font-size:12px;line-height:1.8;color:#555;min-height:66px}
-  .tut-actions{display:flex;align-items:center;justify-content:space-between;margin-top:18px;gap:10px}
-  .tut-progress{font-size:11px;color:#aaa}
-  .tut-skip{font-size:11px;color:#999;background:none;border:0;cursor:pointer;padding:4px 0}
-  .tut-next{height:34px;padding:0 22px;background:#151515;color:#fff;border:0;border-radius:2px;font-size:12px;cursor:pointer}
-  .tut-reopen{display:block;margin-top:8px;font-size:11px;color:#999;background:none;border:0;padding:0;cursor:pointer;text-decoration:underline}
   .size-hud{position:absolute;z-index:7;left:50%;bottom:10px;transform:translateX(-50%);display:flex;align-items:baseline;gap:6px;white-space:nowrap;font-size:10px;color:#9a9a9a;pointer-events:none;background:rgba(255,255,255,.84);padding:4px 11px;border-radius:9px}
   .size-hud b{font-weight:400;color:#8a8a8a;font-size:11px}
   .size-hud b.is-over{color:#c0392b;font-weight:900}
@@ -67,7 +57,7 @@
   .warning-popover:before{content:"";position:absolute;right:10px;top:-8px;width:16px;height:16px;background:#fff;transform:rotate(45deg);border-radius:2px 0 0 0}
   .size-warning:hover .warning-popover,.size-warning:focus-within .warning-popover,.size-warning.is-open .warning-popover{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto}
 
-  .panel{width:404px;min-height:578px;padding:27px 30px 20px;background:#fff;border-radius:14px}
+  .panel{width:404px;min-height:578px;align-self:stretch;display:flex;flex-direction:column;padding:27px 30px 20px;background:#fff;border-radius:14px}
   .top-grid,.middle-grid,.adjust-grid{display:grid;grid-template-columns:148px 148px;column-gap:37px}
   .field-title{font-size:15px;line-height:20px;font-weight:700;margin:0 0 9px}
   select{display:block;width:148px;height:34px;border:1px solid #dcdcdc;border-radius:2px;color:#222;font-size:14px;padding:0 36px 0 12px;outline:none;appearance:none;-webkit-appearance:none;background-color:#fff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.25 6 6.25 11 1.25' fill='none' stroke='%23222' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:10px 7px}
@@ -103,7 +93,7 @@
   .size-value{font-size:15px;font-weight:700;color:#151515;line-height:1.3}
   .size-value.is-over{color:#c0392b}
   .size-note{font-size:10px;color:#aaa;line-height:1.5;margin-top:6px}
-  .actions{margin-top:24px}
+  .actions{margin-top:auto}
   .btn{display:block;width:334px;height:47px;border:0;border-radius:2px;background:var(--dark);color:#fff;font-size:15px;font-weight:400;cursor:pointer}
   .btn:hover{background:#232323}
   .btn+.btn{margin-top:12px}
@@ -123,10 +113,12 @@
     .stage{width:650px;border-radius:18px}
     .stage-view{background-size:54px 54px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='54' height='54' viewBox='0 0 54 54'%3E%3Cpath d='M54 0V54M0 54H54' fill='none' stroke='%23d8dce0' stroke-width='1' stroke-dasharray='4 5'/%3E%3C/svg%3E")}
     .canvas-container{border-radius:17px}
-    .zoom-bar{height:54px;flex:0 0 54px;gap:10px;padding:0 18px}
-    .zoom-btn{width:30px;height:30px;flex:0 0 30px;font-size:17px}
-    .zoom-val{width:52px;flex:0 0 52px;font-size:12px}
-    .zoom-fit{height:30px;padding:0 12px;font-size:12px}
+    .zoom-bar{height:66px;flex:0 0 66px;gap:12px;padding:0 18px}
+    .zoom-btn{width:40px;height:40px;flex:0 0 40px;font-size:19px}
+    .zoom-bar input[type=range]{height:7px}
+    .zoom-bar input[type=range]::-webkit-slider-thumb{width:16px;height:16px}
+    .zoom-fit,.zoom-guide{height:40px;padding:0 18px;font-size:14px;gap:8px}
+    .zoom-guide svg{width:17px;height:17px;flex:0 0 17px}
     .stage-tip{bottom:36px;height:32px;padding:0 14px;font-size:13px}
     .size-warning{top:22px;right:22px;width:40px;height:40px}
     .warning-trigger,.warning-trigger img{width:40px;height:40px}
@@ -151,7 +143,7 @@
     .range-hint{font-size:11px;line-height:1.5;margin-top:10px;white-space:normal;width:205px}
     .adjust-grid{margin-top:29px}
     .adjust-grid .field-title{margin-bottom:18px}
-    .actions{margin-top:72px}
+    .actions{margin-top:auto}
     .btn{width:424px;height:57px;font-size:18px}
     .btn+.btn{margin-top:14px}
     .note{margin-top:19px;font-size:13px}
@@ -163,6 +155,12 @@
     .header-inner,main{width:calc(100% - 32px)}
     main{grid-template-columns:1fr;margin-top:32px}
     .stage{width:100%}
+    .zoom-bar{height:52px;flex:0 0 52px;gap:7px;padding:0 10px}
+    .zoom-btn{width:30px;height:30px;flex:0 0 30px;font-size:15px}
+    .zoom-bar input[type=range]{width:auto;height:5px}
+    .zoom-bar input[type=range]::-webkit-slider-thumb{width:12px;height:12px}
+    .zoom-fit,.zoom-guide{height:30px;padding:0 10px;font-size:11px;gap:5px}
+    .zoom-guide svg{width:13px;height:13px;flex:0 0 13px}
     .panel{width:100%;min-width:0;height:auto}
     .top-grid,.middle-grid,.adjust-grid{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:24px}
     select,input[type=range]{width:100%}
@@ -172,7 +170,50 @@
     .check-chip{grid-template-columns:minmax(0,1fr) 11px;flex:1 1 0;padding:5px 4px;column-gap:3px;font-size:9px;white-space:normal}
     .check-chip input{width:11px;height:11px}
     .btn{width:100%}
+    .actions{margin-top:24px}
     .header-inner{padding:0}
+  }
+
+  /* ===== 教程：聚光灯引导 ===== */
+  .tour{position:fixed;inset:0;z-index:400}
+  .tour[hidden]{display:none!important}
+  .tour-shades,.tour-rings{position:absolute;inset:0;pointer-events:none}
+  .tour-shade{position:absolute;display:block;background:rgba(0,0,0,.62)}
+  .tour-ring{position:absolute;border:2px solid #fff;border-radius:8px;pointer-events:none;animation:tourPulse 1.9s ease-in-out infinite}
+  .tour-ring.is-peek{border-style:dashed;border-radius:10px;animation:tourPeek 1.9s ease-in-out infinite}
+  @keyframes tourPulse{
+    0%,100%{box-shadow:0 0 0 4px rgba(255,255,255,.16),0 12px 34px rgba(0,0,0,.30)}
+    50%{box-shadow:0 0 0 10px rgba(255,255,255,.07),0 12px 34px rgba(0,0,0,.30)}
+  }
+  @keyframes tourPeek{
+    0%,100%{box-shadow:0 0 0 3px rgba(255,255,255,.14),0 10px 26px rgba(0,0,0,.24);opacity:1}
+    50%{box-shadow:0 0 0 10px rgba(255,255,255,.05),0 10px 26px rgba(0,0,0,.24);opacity:.72}
+  }
+  .tour-pointer{position:absolute;pointer-events:none;filter:drop-shadow(0 3px 8px rgba(232,53,43,.42));animation:tourBounce .85s ease-in-out infinite alternate}
+  .tour-pointer[hidden]{display:none}
+  .tour-pointer svg{display:block;width:26px;height:17px}
+  @keyframes tourBounce{
+    from{transform:translate(-50%,-100%) translateY(0)}
+    to{transform:translate(-50%,-100%) translateY(6px)}
+  }
+  .tour-bubble{position:absolute;width:min(310px,calc(100vw - 32px));padding:15px 17px 13px;background:#fff;border-radius:12px;box-shadow:0 18px 46px rgba(0,0,0,.26)}
+  .tour-head{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+  .tour-step{flex:0 0 auto;font-size:10px;font-weight:700;letter-spacing:.04em;color:#fff;background:#151515;border-radius:20px;padding:3px 9px}
+  .tour-title{font-size:14px;font-weight:700;color:#151515;line-height:1.3}
+  .tour-body{font-size:12px;line-height:1.75;color:#5f5f5f}
+  .tour-foot{display:flex;align-items:center;gap:10px;margin-top:15px}
+  .tour-skip{flex:0 0 auto;background:none;border:0;padding:4px 0;font-size:11px;color:#a8a8a8;cursor:pointer}
+  .tour-skip:hover{color:#666}
+  .tour-nav{display:flex;gap:8px;margin-left:auto}
+  .tour-prev{height:32px;padding:0 15px;border:1px solid #e2e2e2;border-radius:4px;background:#fff;color:#333;font-size:12px;cursor:pointer}
+  .tour-prev:hover{border-color:#b8b8b8}
+  .tour-prev[disabled]{opacity:.35;cursor:default}
+  .tour-prev[disabled]:hover{border-color:#e2e2e2}
+  .tour-next{height:32px;padding:0 18px;border:0;border-radius:4px;background:#151515;color:#fff;font-size:12px;cursor:pointer}
+  .tour-next:hover{background:#2c2c2c}
+  @media(max-width:1000px){
+    .tour-bubble{width:min(300px,calc(100vw - 28px));padding:13px 15px 11px}
+    .tour-body{font-size:11.5px;line-height:1.7}
   }
 </style>
 </head>
@@ -204,11 +245,14 @@
       <div class="size-hud" id="sizeHud"><span id="labelSize">LOGO 参考尺寸</span><b id="logoSizeValue">—</b></div>
     </div>
     <div class="zoom-bar">
+      <button class="zoom-fit" id="zoomFit" type="button">适合大小</button>
       <button class="zoom-btn" id="zoomOut" type="button" aria-label="缩小视图">−</button>
-      <input type="range" id="zoom" class="dark" min="50" max="400" step="10" value="100" aria-label="视图缩放">
-      <span class="zoom-val" id="zoomVal">100%</span>
+      <input type="range" id="zoom" class="dark" min="50" max="200" step="10" value="100" aria-label="视图缩放">
       <button class="zoom-btn" id="zoomIn" type="button" aria-label="放大视图">+</button>
-      <button class="zoom-fit" id="zoomFit" type="button">适应</button>
+      <button class="zoom-guide" id="zoomGuide" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.5 3h11A2.5 2.5 0 0 1 20 5.5V21a.9.9 0 0 1-1.32.8L12 18.3l-6.68 3.5A.9.9 0 0 1 4 21V5.5A2.5 2.5 0 0 1 6.5 3z"/></svg>
+        <span id="zoomGuideText">查看教程</span>
+      </button>
     </div>
   </section>
 
@@ -238,7 +282,7 @@
         <div class="field-title" id="labelProcess" data-page-node-id="9R3ajVahoB6iJbVmqaXMgi">LOGO处理</div>
         <div class="process-options" data-page-node-id="n7fEMbUBLmY50CVa36bIkU">
           <label class="check-chip"><span id="labelRemoveBg">去除背景</span><input type="checkbox" id="rmwhite" checked></label>
-          <label class="check-chip"><span id="labelInvert">颜色反向</span><input type="checkbox" id="invert"></label>
+          <label class="check-chip" id="invertChip"><span id="labelInvert">颜色反向</span><input type="checkbox" id="invert"></label>
         </div>
         <div class="range-title" id="labelTolerance">LOGO边缘擦除</div>
         <input type="range" id="tol" class="blue" min="0" max="100" value="0" data-page-node-id="71fsyLkpg6qijTDnv3K5eC">
@@ -261,33 +305,61 @@
       <button class="btn" id="reset" type="button">初始化（清除已上传LOGO）</button>
       <button class="btn" id="export" type="button">导出JPG图片</button>
       <div class="note" id="supportNote">注：遇到问题请联系与您对接的销售或者客服人员</div>
-      <button class="tut-reopen" id="tutReopen" type="button">查看使用教程</button>
     </div>
   </section>
 </main>
 
-<div class="tut-mask" id="tutMask" hidden>
-  <div class="tut-card" role="dialog" aria-modal="true" aria-labelledby="tutTitle">
-    <div class="tut-dots" id="tutDots"></div>
-    <div class="tut-title" id="tutTitle"></div>
-    <div class="tut-body" id="tutBody"></div>
-    <div class="tut-actions">
-      <button class="tut-skip" id="tutSkip" type="button">跳过</button>
-      <span class="tut-progress" id="tutProgress"></span>
-      <button class="tut-next" id="tutNext" type="button">下一步</button>
+<div class="tour" id="tourRoot" hidden>
+  <div class="tour-shades" id="tourShades"></div>
+  <div class="tour-rings" id="tourRings"></div>
+  <div class="tour-pointer" id="tourPointer" hidden>
+    <svg viewBox="0 0 26 17" aria-hidden="true"><path d="M13 16 1.6 1.6h22.8z" fill="#e8352b" stroke="#e8352b" stroke-width="2" stroke-linejoin="round"/></svg>
+  </div>
+  <div class="tour-bubble" id="tourBubble" role="dialog" aria-modal="true" aria-labelledby="tourTitle">
+    <div class="tour-head">
+      <span class="tour-step" id="tourStepNum"></span>
+      <span class="tour-title" id="tourTitle"></span>
+    </div>
+    <div class="tour-body" id="tourBody"></div>
+    <div class="tour-foot">
+      <button class="tour-skip" id="tourSkip" type="button">跳过</button>
+      <div class="tour-nav">
+        <button class="tour-prev" id="tourPrev" type="button">上一步</button>
+        <button class="tour-next" id="tourNext" type="button">下一步</button>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
 const I18N = {
-  zh:{name:'中文',htmlLang:'zh-CN',title:'MARK RYDEN · LOGO 定制预览',stageAria:'背包 LOGO 预览画布',settingsAria:'LOGO 定制设置',warningAria:'查看 LOGO 尺寸提醒',warning:'LOGO长宽不要超过12×12cm，超过后可能会导致无法定制！',stageTip:'拉动 LOGO 画布四角可缩放大小',model:'产品型号',color:'颜色选择',black:'商务黑',upload:'上传LOGO',uploadHint:'上传透明 PNG 最佳，直接可用；<br>带有背景颜色的 JPG 将自动去除背景',replace:'点击更换 LOGO',process:'LOGO处理',removeBg:'去除背景',invert:'颜色反向',tolerance:'LOGO边缘擦除',toleranceHint:'拖动滑块，边缘清除越彻底',opacity:'透明度调节',rotation:'360°旋转调节',reset:'初始化（清除已上传LOGO）',export:'导出JPG图片',exportOk:'图片已导出，请查看下载文件',exportFail:'导出失败，请重试',note:'注：遇到问题请联系与您对接的销售或者客服人员',sizeTitle:'LOGO 参考尺寸',tutorial:{title:'LOGO 定制教程',steps:['① 选择产品型号：先在右侧「产品型号」中选择要定制的产品。','② 上传 LOGO：透明 PNG 最佳，白底 JPG 会自动去除背景。','③ 调整位置与大小：拖动 LOGO 移动位置，四角等比例缩放，旋转按 5° 步进。','④ 处理边缘：拖动「LOGO边缘擦除」滑块清除残留白边，数值越大清除越彻底。','⑤ 确认尺寸：画布底部会显示 LOGO 参考尺寸，超过 12cm 会变红提醒。','⑥ 导出：调整完成后点击「导出JPG图片」保存预览图。'],next:'下一步',done:'开始使用',skip:'跳过',reopen:'查看使用教程'}},
-  en:{name:'English',htmlLang:'en',title:'MARK RYDEN · Custom Logo Preview',stageAria:'Backpack logo preview canvas',settingsAria:'Logo customization settings',warningAria:'View logo size notice',warning:'The logo must not exceed 12 × 12 cm in width or height. Larger logos may not be customizable.',stageTip:'Drag the corner handles to resize the logo',model:'Product Model',color:'Color',black:'Business Black',upload:'Upload Logo',uploadHint:'Transparent PNG is recommended and ready to use;<br>backgrounds in JPG files will be removed automatically',replace:'Click to replace logo',process:'Logo Processing',removeBg:'Remove BG',invert:'Invert Color',tolerance:'Logo Edge Cleanup',toleranceHint:'Drag the slider to remove more of the background edge',opacity:'Opacity',rotation:'360° Rotation',reset:'Reset (remove uploaded logo)',export:'Export JPG',exportOk:'Image exported, please check your downloads',exportFail:'Export failed, please try again',note:'Note: If you encounter any issues, please contact your sales representative or customer service.',sizeTitle:'Reference logo size',tutorial:{title:'How to customize your logo',steps:['1. Select the product model you want to customize on the right.','2. Upload your logo: transparent PNG is best, JPG backgrounds are removed automatically.','3. Move and resize: drag to position, corner handles keep proportions, rotation snaps to 5 degrees.','4. Clean the edges: drag the Logo Edge Cleanup slider to remove leftover background.','5. Check the size: the reference size shows at the bottom of the canvas and turns red over 12 cm.','6. Export: click Export JPG to save the preview image.'],next:'Next',done:'Get started',skip:'Skip',reopen:'View tutorial'}},
-  ru:{name:'Русский',htmlLang:'ru',title:'MARK RYDEN · Предпросмотр логотипа',stageAria:'Область предпросмотра логотипа на рюкзаке',settingsAria:'Настройки логотипа',warningAria:'Показать ограничение размера логотипа',warning:'Ширина и высота логотипа не должны превышать 12 × 12 см. Превышение размера может сделать нанесение невозможным.',stageTip:'Потяните за углы рамки, чтобы изменить размер логотипа',model:'Модель товара',color:'Цвет',black:'Деловой чёрный',upload:'Загрузить логотип',uploadHint:'Рекомендуется прозрачный PNG;<br>фон изображения JPG удаляется автоматически',replace:'Нажмите, чтобы заменить логотип',process:'Обработка логотипа',removeBg:'Удалить фон',invert:'Инверсия',tolerance:'Очистка краёв логотипа',toleranceHint:'Перемещайте ползунок для более тщательной очистки краёв',opacity:'Прозрачность',rotation:'Поворот 360°',reset:'Сбросить (удалить логотип)',export:'Экспорт JPG',exportOk:'Изображение экспортировано, проверьте загрузки',exportFail:'Не удалось экспортировать, попробуйте ещё раз',note:'Примечание: при возникновении вопросов обратитесь к вашему менеджеру или в службу поддержки.',sizeTitle:'Ориентировочный размер логотипа',tutorial:{title:'Как разместить логотип',steps:['1. Выберите модель товара справа.','2. Загрузите логотип: лучше прозрачный PNG, фон JPG удаляется автоматически.','3. Переместите и измените размер: углы сохраняют пропорции, поворот — с шагом 5 градусов.','4. Очистите края: ползунок очистки краёв убирает остатки фона.','5. Проверьте размер: ориентировочный размер внизу холста краснеет при превышении 12 см.','6. Экспорт: нажмите «Экспорт JPG», чтобы сохранить превью.'],next:'Далее',done:'Начать',skip:'Пропустить',reopen:'Инструкция'}}
+  zh:{name:'中文',htmlLang:'zh-CN',title:'MARK RYDEN · LOGO 定制预览',stageAria:'背包 LOGO 预览画布',settingsAria:'LOGO 定制设置',warningAria:'查看 LOGO 尺寸提醒',warning:'LOGO长宽不要超过12×12cm，超过后可能会导致无法定制！',stageTip:'拉动 LOGO 画布四角可缩放大小',model:'产品型号',color:'颜色选择',black:'商务黑',upload:'上传LOGO',uploadHint:'上传透明 PNG 最佳，直接可用；<br>带有背景颜色的 JPG 将自动去除背景',replace:'点击更换 LOGO',process:'LOGO处理',removeBg:'去除背景',invert:'颜色反向',tolerance:'LOGO边缘擦除',toleranceHint:'拖动滑块，边缘清除越彻底',opacity:'透明度调节',rotation:'360°旋转调节',reset:'初始化（清除已上传LOGO）',export:'导出JPG图片',exportOk:'图片已导出，请查看下载文件',exportFail:'导出失败，请重试',note:'注：遇到问题请联系与您对接的销售或者客服人员',sizeTitle:'LOGO 参考尺寸',fit:'适合大小',guide:'查看教程',guideUI:{step:'步骤',back:'上一步',next:'下一步',done:'我知道了',skip:'跳过'}},
+  en:{name:'English',htmlLang:'en',title:'MARK RYDEN · Custom Logo Preview',stageAria:'Backpack logo preview canvas',settingsAria:'Logo customization settings',warningAria:'View logo size notice',warning:'The logo must not exceed 12 × 12 cm in width or height. Larger logos may not be customizable.',stageTip:'Drag the corner handles to resize the logo',model:'Product Model',color:'Color',black:'Business Black',upload:'Upload Logo',uploadHint:'Transparent PNG is recommended and ready to use;<br>backgrounds in JPG files will be removed automatically',replace:'Click to replace logo',process:'Logo Processing',removeBg:'Remove BG',invert:'Invert Color',tolerance:'Logo Edge Cleanup',toleranceHint:'Drag the slider to remove more of the background edge',opacity:'Opacity',rotation:'360° Rotation',reset:'Reset (remove uploaded logo)',export:'Export JPG',exportOk:'Image exported, please check your downloads',exportFail:'Export failed, please try again',note:'Note: If you encounter any issues, please contact your sales representative or customer service.',sizeTitle:'Reference logo size',fit:'Fit to Size',guide:'View Guide',guideUI:{step:'Step',back:'Back',next:'Next',done:'Got it',skip:'Skip'}},
+  ru:{name:'Русский',htmlLang:'ru',title:'MARK RYDEN · Предпросмотр логотипа',stageAria:'Область предпросмотра логотипа на рюкзаке',settingsAria:'Настройки логотипа',warningAria:'Показать ограничение размера логотипа',warning:'Ширина и высота логотипа не должны превышать 12 × 12 см. Превышение размера может сделать нанесение невозможным.',stageTip:'Потяните за углы рамки, чтобы изменить размер логотипа',model:'Модель товара',color:'Цвет',black:'Деловой чёрный',upload:'Загрузить логотип',uploadHint:'Рекомендуется прозрачный PNG;<br>фон изображения JPG удаляется автоматически',replace:'Нажмите, чтобы заменить логотип',process:'Обработка логотипа',removeBg:'Удалить фон',invert:'Инверсия',tolerance:'Очистка краёв логотипа',toleranceHint:'Перемещайте ползунок для более тщательной очистки краёв',opacity:'Прозрачность',rotation:'Поворот 360°',reset:'Сбросить (удалить логотип)',export:'Экспорт JPG',exportOk:'Изображение экспортировано, проверьте загрузки',exportFail:'Не удалось экспортировать, попробуйте ещё раз',note:'Примечание: при возникновении вопросов обратитесь к вашему менеджеру или в службу поддержки.',sizeTitle:'Ориентировочный размер логотипа',fit:'По размеру',guide:'Инструкция',guideUI:{step:'Шаг',back:'Назад',next:'Далее',done:'Понятно',skip:'Пропустить'}}
 };
 let currentLang='zh';
+/* 语言自动判定：只有中国大陆显示中文，其他地区一律英文 */
+function detectLang(){
+  let tag='';
+  try{tag=(navigator.languages&&navigator.languages[0])||navigator.language||'';}catch(e){}
+  tag=String(tag||'').toLowerCase();
+  if(tag){
+    const p=tag.split('-');
+    if(p[0]!=='zh')return 'en';
+    const region=(p[1]||'').toUpperCase();
+    if(region==='CN'||region==='HANS')return 'zh';   /* zh-CN / zh-Hans(-CN) → 中文 */
+    if(region)return 'en';                           /* zh-TW / zh-HK / zh-MO / zh-SG 等 → 英文 */
+  }
+  return timezoneIsMainland()?'zh':'en';             /* 只给到 'zh' 或读不到语言时，用时区兜底 */
+}
+function timezoneIsMainland(){
+  try{
+    const tz=String(Intl.DateTimeFormat().resolvedOptions().timeZone||'').toLowerCase();
+    return /^asia\/(shanghai|chongqing|urumqi|harbin|kashgar)$/.test(tz);
+  }catch(e){return false;}
+}
 const langWrap=document.getElementById('langWrap'),langButton=document.getElementById('langButton'),langCurrent=document.getElementById('langCurrent');
-function setLanguage(code){
+function setLanguage(code,remember){
   const t=I18N[code]||I18N.zh;currentLang=code;
   document.documentElement.lang=t.htmlLang;document.title=t.title;langCurrent.textContent=t.name;
   document.getElementById('stageSection').setAttribute('aria-label',t.stageAria);
@@ -303,16 +375,16 @@ function setLanguage(code){
   document.getElementById('export').textContent=t.export;document.getElementById('supportNote').textContent=t.note;
   document.getElementById('labelSize').textContent=t.sizeTitle;
   document.getElementById('zoomFit').textContent=t.fit;
+  document.getElementById('zoomGuideText').textContent=t.guide;
   updateSizeReadout();
-  if(tutMask&&!tutMask.hidden)renderTut();
-  const reopenBtn=document.getElementById('tutReopen');if(reopenBtn&&t.tutorial)reopenBtn.textContent=t.tutorial.reopen;
+  if(tourOpen)renderTourStep();
   document.getElementById('upText').innerHTML=currentOriginal?t.replace:t.uploadHint;
   document.querySelectorAll('.lang-option').forEach(btn=>btn.classList.toggle('is-active',btn.dataset.lang===code));
-  try{localStorage.setItem('markryden-logo-lang',code)}catch(e){}
+  try{if(remember)localStorage.setItem('markryden-logo-lang',code);}catch(e){}
 }
 function closeLanguageMenu(){langWrap.classList.remove('is-open');langButton.setAttribute('aria-expanded','false')}
 langButton.addEventListener('click',e=>{e.stopPropagation();const open=!langWrap.classList.contains('is-open');langWrap.classList.toggle('is-open',open);langButton.setAttribute('aria-expanded',String(open))});
-document.querySelectorAll('.lang-option').forEach(btn=>btn.addEventListener('click',()=>{setLanguage(btn.dataset.lang);closeLanguageMenu()}));
+document.querySelectorAll('.lang-option').forEach(btn=>btn.addEventListener('click',()=>{setLanguage(btn.dataset.lang,true);closeLanguageMenu()}));
 document.addEventListener('click',e=>{if(!langWrap.contains(e.target))closeLanguageMenu()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLanguageMenu()});
 
@@ -337,7 +409,6 @@ function applyView(){
   canvas.setViewportTransform([z,0,0,z,t,t]);
   if(logoImg){logoImg.set({cornerSize:Math.max(5,9/z),padding:2/z});}
   canvas.renderAll();
-  updateZoomLabel();
 }
 window.addEventListener('resize',applyView);
 let bagImg=null,logoImg=null,currentOriginal=null,processVersion=0;
@@ -386,7 +457,7 @@ function trimToContent(srcCanvas,pad){
 }
 
 function logoMm(){
-  if(!logoImg)return null;
+  if(!logoImg||logoImg.visible===false)return null;
   return {w:logoImg.width*logoImg.scaleX,h:logoImg.height*logoImg.scaleY};
 }
 function updateSizeReadout(){
@@ -443,7 +514,7 @@ function displayCanvas(){
   const processed=processedCurrent();
   return trimToContent(processed,2)||processed;
 }
-function addLogo(srcCanvas,keepWidthMm){
+function addLogo(srcCanvas,keepWidthMm,done){
   if(logoImg)canvas.remove(logoImg);
   fabric.Image.fromURL(srcCanvas.toDataURL(),img=>{
     const z=MODEL.logoSpot;
@@ -453,6 +524,7 @@ function addLogo(srcCanvas,keepWidthMm){
     img.set({left:z.cxMm,top:z.cyMm,originX:'center',originY:'center',scaleX:scale,scaleY:scale,lockUniScaling:true,lockScalingFlip:true,transparentCorners:false,cornerColor:'#fff',cornerStrokeColor:'#222',borderColor:'#222',cornerSize:9,padding:2,opacity:Number(opa.value)/100,angle:Number(rot.value)});
     img.setControlsVisibility({mt:false,mb:false,ml:false,mr:false});
     logoImg=img;canvas.add(img);canvas.setActiveObject(img);canvas.renderAll();updateSizeReadout();
+    if(typeof done==='function')done(img);
   });
 }
 function reprocess(){
@@ -462,7 +534,7 @@ function reprocess(){
   const geo={left:logoImg.left,top:logoImg.top,angle:logoImg.angle,opacity:logoImg.opacity};
   const nextSrc=displayCanvas().toDataURL();
   logoImg.setSrc(nextSrc,()=>{
-    if(version!==processVersion)return;
+    if(version!==processVersion||!logoImg)return;
     const s=keepWidthMm/logoImg.width;
     logoImg.set({scaleX:s,scaleY:s,left:geo.left,top:geo.top,angle:geo.angle,opacity:geo.opacity});
     canvas.renderAll();updateSizeReadout();
@@ -509,14 +581,13 @@ canvas.on('object:scaling',e=>{if(e.target===logoImg){const s=(logoImg.scaleX+lo
 canvas.on('object:rotating',e=>{if(e.target===logoImg){const snapped=Math.round(logoImg.angle/5)*5;logoImg.set('angle',snapped);rot.value=Math.max(-180,Math.min(180,snapped));setRangeFill(rot);}});
 canvas.on('object:modified',e=>{if(e.target===logoImg){const s=(logoImg.scaleX+logoImg.scaleY)/2;logoImg.set({scaleX:s,scaleY:s});let a=Math.round(logoImg.angle/5)*5%360;if(a>180)a-=360;if(a<-180)a+=360;logoImg.set('angle',a);rot.value=a;setRangeFill(rot);canvas.renderAll();updateSizeReadout();}});
 
-const zoomSlider=document.getElementById('zoom'),zoomVal=document.getElementById('zoomVal');
-function updateZoomLabel(){if(zoomVal)zoomVal.textContent=Math.round(viewZoom*100)+'%';}
+const zoomSlider=document.getElementById('zoom');
 function setViewZoom(v,silent){
-  viewZoom=Math.max(0.5,Math.min(4,v));
+  viewZoom=Math.max(0.5,Math.min(2,v));
   if(!silent){zoomSlider.value=Math.round(viewZoom*100);setRangeFill(zoomSlider);}
   applyView();
 }
-zoomSlider.addEventListener('input',()=>{setViewZoom(Number(zoomSlider.value)/100,true);setRangeFill(zoomSlider);updateZoomLabel();});
+zoomSlider.addEventListener('input',()=>{setViewZoom(Number(zoomSlider.value)/100,true);setRangeFill(zoomSlider);});
 document.getElementById('zoomIn').addEventListener('click',()=>setViewZoom(viewZoom+0.1));
 document.getElementById('zoomOut').addEventListener('click',()=>setViewZoom(viewZoom-0.1));
 document.getElementById('zoomFit').addEventListener('click',()=>{
@@ -525,9 +596,377 @@ document.getElementById('zoomFit').addEventListener('click',()=>{
 });
 setRangeFill(zoomSlider);
 
-document.getElementById('reset').addEventListener('click',()=>{
-  if(logoImg){canvas.remove(logoImg);logoImg=null;}currentOriginal=null;fileInput.value='';upThumb.hidden=true;upPlus.style.display='';upText.innerHTML=I18N[currentLang].uploadHint;opa.value=100;rot.value=0;rmwhite.checked=true;[opa,rot].forEach(setRangeFill);canvas.renderAll();updateSizeReadout();
-});
+/* ===================== 查看教程：聚光灯引导 ===================== */
+const TOUR_KEY='markryden-logo-guide';
+const DEMO_LOGO='demo_logo.png';
+const TOUR_STEPS=[
+  {sel:['#labelModel','#model'],pad:8,
+   title:{zh:'产品型号',en:'Product Model',ru:'Модель товара'},
+   body:{zh:'先选择要定制的产品型号，画布里的产品图会跟着一起切换。',en:'Choose the product model you want to customize — the product image on the canvas switches with it.',ru:'Сначала выберите модель товара — изображение на холсте изменится автоматически.'}},
+  {sel:['#labelUpload','#uploadBox'],pad:8,peek:true,
+   title:{zh:'上传 LOGO',en:'Upload Logo',ru:'Загрузить логотип'},
+   body:{zh:'点击上传框选择您的 LOGO。透明 PNG 效果最好；带白色背景的 JPG 会自动去掉背景。上传后左侧产品上会立刻出现 LOGO。',en:'Click the upload box to choose your logo. A transparent PNG works best; a white background in a JPG is removed automatically. The logo appears on the product on the left right away.',ru:'Нажмите на окно загрузки и выберите логотип. Лучше всего подходит прозрачный PNG; белый фон в JPG удаляется автоматически. Логотип сразу появится на товаре слева.'}},
+  {sel:['#labelTolerance','#tol','#toleranceHint'],pad:10,peek:true,demo:'tol',
+   title:{zh:'LOGO 边缘擦除',en:'Logo Edge Cleanup',ru:'Очистка краёв логотипа'},
+   body:{zh:'拖动滑块清除 LOGO 边缘残留的杂色。看左侧画布：拖得越远，LOGO 边缘越干净。',en:'Drag the slider to clean leftover colour around the logo edge. Watch the canvas on the left — the further you drag, the cleaner the edge.',ru:'Перемещайте ползунок, чтобы убрать остатки цвета по краям. Смотрите на холст слева — чем дальше, тем чище край.'}},
+  {sel:['#invertChip'],pad:10,peek:true,demo:'invert',
+   title:{zh:'颜色反向',en:'Invert Color',ru:'Инверсия цвета'},
+   body:{zh:'勾选后 LOGO 颜色整体反转，浅色 LOGO 也能印在深色产品上。注意左侧画布上 LOGO 的颜色变化。',en:'Tick this to invert the logo colours, so a light logo can go on a dark product. Watch the logo change colour on the canvas at the left.',ru:'Отметьте, чтобы инвертировать цвета — светлый логотип подойдёт для тёмного товара. Следите за цветом логотипа на холсте слева.'}},
+  {sel:['#stageView'],pad:6,demo:'scale',pointer:'#logoSizeValue',bubble:'right',
+   title:{zh:'LOGO 尺寸与比例',en:'Logo Size & Ratio',ru:'Размер и пропорции'},
+   body:{zh:'拖动 LOGO 可移动位置，拉动四角等比例缩放。底部「LOGO 参考尺寸」会实时跟着变化——尺寸不能超过 12 × 12 cm。',en:'Drag the logo to move it, pull the corners to scale it proportionally. The reference size at the bottom updates live — it must not exceed 12 × 12 cm.',ru:'Перетащите логотип, потяните за углы — пропорции сохраняются. Размер внизу обновляется в реальном времени — не более 12 × 12 см.'}},
+  {sel:['#zoomFit','#zoomOut','#zoom','#zoomIn'],pad:8,
+   title:{zh:'适合大小 / 缩放',en:'Fit to Size / Zoom',ru:'По размеру / Масштаб'},
+   body:{zh:'「适合大小」一键回到初始视图；用 − / + 放大查看细节，最多放大到 200%（放大只改变视图，不改 LOGO 真实尺寸）。',en:'"Fit to Size" returns to the default view; use − / + to zoom in, up to 200% (this only changes the view, not the real logo size).',ru:'«По размеру» возвращает исходный вид; кнопки − / + приближают до 200% (меняется только вид, а не реальный размер).'}},
+  {sel:['#export'],pad:8,
+   title:{zh:'导出 JPG 图片',en:'Export JPG',ru:'Экспорт JPG'},
+   body:{zh:'调整完成后导出预览图，发给销售或客服确认。',en:'When everything looks right, export the preview image and send it to your sales rep or customer service.',ru:'Когда всё готово, экспортируйте превью и отправьте менеджеру или в поддержку.'}}
+];
+const tourRoot=document.getElementById('tourRoot');
+const tourShadeLayer=document.getElementById('tourShades'),tourRingLayer=document.getElementById('tourRings');
+const tourPointer=document.getElementById('tourPointer'),tourBubble=document.getElementById('tourBubble');
+const tourStepNum=document.getElementById('tourStepNum'),tourTitle=document.getElementById('tourTitle'),tourBody=document.getElementById('tourBody');
+const tourPrev=document.getElementById('tourPrev'),tourNext=document.getElementById('tourNext'),tourSkip=document.getElementById('tourSkip');
+let tourOpen=false,tourIndex=0,tourSnapshot=null,tourToken=0;
+let currentHoles=[],holeAnim=null;
+let demoAnim=null,demoTimers=[],demoLoaded=false,demoTried=false,demoSource=null;
+
+function tourUI(){const t=I18N[currentLang]||I18N.zh;return t.guideUI||I18N.zh.guideUI;}
+function renderTourStep(){
+  const s=TOUR_STEPS[tourIndex];if(!s)return;
+  const l=currentLang;
+  tourStepNum.textContent=(tourIndex+1)+' / '+TOUR_STEPS.length;
+  tourTitle.textContent=s.title[l]||s.title.zh;
+  tourBody.textContent=s.body[l]||s.body.zh;
+  const u=tourUI();
+  tourPrev.textContent=u.back;tourNext.textContent=(tourIndex===TOUR_STEPS.length-1)?u.done:u.next;tourSkip.textContent=u.skip;
+  tourPrev.disabled=tourIndex===0;
+}
+function clampHole(h){
+  const vw=window.innerWidth,vh=window.innerHeight;
+  const x1=Math.max(0,Math.min(vw,h.x)),y1=Math.max(0,Math.min(vh,h.y));
+  const x2=Math.max(x1,Math.min(vw,h.x+h.w)),y2=Math.max(y1,Math.min(vh,h.y+h.h));
+  return {x:Math.round(x1),y:Math.round(y1),w:Math.round(x2-x1),h:Math.round(y2-y1)};
+}
+function rectOfSelectors(sel,pad){
+  let x1=Infinity,y1=Infinity,x2=-Infinity,y2=-Infinity;
+  sel.forEach(s=>{
+    document.querySelectorAll(s).forEach(el=>{
+      const q=el.getBoundingClientRect();
+      if(q.width<=0||q.height<=0)return;
+      x1=Math.min(x1,q.left);y1=Math.min(y1,q.top);
+      x2=Math.max(x2,q.right);y2=Math.max(y2,q.bottom);
+    });
+  });
+  if(!isFinite(x1))return null;
+  return clampHole({x:x1-pad,y:y1-pad,w:x2-x1+pad*2,h:y2-y1+pad*2});
+}
+/* 画布上 LOGO 在屏幕中的位置：场景坐标 → 视口变换 → 页面坐标 */
+function logoHoleOnScreen(pad){
+  if(!logoImg)return null;
+  const el=canvas.getElement();if(!el)return null;
+  const cb=el.getBoundingClientRect();
+  const disp=stageDisplayWidth();
+  const z=disp/MODEL.canvasMm*viewZoom;
+  const t=disp/2-z*MODEL.canvasMm/2;
+  const hw=logoImg.width*logoImg.scaleX/2,hh=logoImg.height*logoImg.scaleY/2;
+  const a=(logoImg.angle||0)*Math.PI/180;
+  const hx=Math.abs(hw*Math.cos(a))+Math.abs(hh*Math.sin(a));
+  const hy=Math.abs(hw*Math.sin(a))+Math.abs(hh*Math.cos(a));
+  return clampHole({x:cb.left+z*(logoImg.left-hx)+t-pad,y:cb.top+z*(logoImg.top-hy)+t-pad,w:2*hx*z+pad*2,h:2*hy*z+pad*2});
+}
+function holesFor(step){
+  const out=[];
+  const main=rectOfSelectors(step.sel,step.pad==null?8:step.pad);
+  if(main)out.push(main);
+  if(step.peek){const p=logoHoleOnScreen(step.peekPad==null?34:step.peekPad);if(p)out.push(p);}
+  return out;
+}
+/* 把「挖了若干洞的视口」拆成互不重叠的矩形（扫描线法），避免叠加变黑 */
+function decomposeHoles(holes,vw,vh){
+  const xs=[0,vw];holes.forEach(h=>{xs.push(h.x,h.x+h.w)});
+  const ux=Array.from(new Set(xs.map(v=>Math.max(0,Math.min(vw,Math.round(v)))))).sort((a,b)=>a-b);
+  const out=[];
+  for(let i=0;i<ux.length-1;i++){
+    const x0=ux[i],x1=ux[i+1];if(x1<=x0)continue;
+    const mx=(x0+x1)/2,ys=[0,vh];
+    holes.forEach(h=>{if(h.x<=mx&&mx<=h.x+h.w)ys.push(h.y,h.y+h.h)});
+    const uy=Array.from(new Set(ys.map(v=>Math.max(0,Math.min(vh,Math.round(v)))))).sort((a,b)=>a-b);
+    for(let j=0;j<uy.length-1;j++){
+      const y0=uy[j],y1=uy[j+1];if(y1<=y0)continue;
+      const my=(y0+y1)/2;
+      if(holes.some(h=>h.x<=mx&&mx<=h.x+h.w&&h.y<=my&&my<=h.y+h.h))continue;
+      out.push({x:x0,y:y0,w:x1-x0,h:y1-y0});
+    }
+  }
+  return out;
+}
+function renderHoles(holes){
+  const vw=window.innerWidth,vh=window.innerHeight;
+  const rects=decomposeHoles(holes,vw,vh);
+  while(tourShadeLayer.children.length<rects.length){
+    const el=document.createElement('i');el.className='tour-shade';tourShadeLayer.appendChild(el);
+  }
+  for(let i=0;i<tourShadeLayer.children.length;i++){
+    const el=tourShadeLayer.children[i];
+    if(i<rects.length){const r=rects[i];el.style.cssText='left:'+r.x+'px;top:'+r.y+'px;width:'+r.w+'px;height:'+r.h+'px';}
+    else el.style.cssText='left:0;top:0;width:0;height:0';
+  }
+  while(tourRingLayer.children.length<holes.length){
+    const el=document.createElement('div');el.className='tour-ring';tourRingLayer.appendChild(el);
+  }
+  for(let i=0;i<tourRingLayer.children.length;i++){
+    const el=tourRingLayer.children[i];
+    if(i<holes.length){
+      const h=holes[i];
+      el.style.cssText='left:'+(h.x-2)+'px;top:'+(h.y-2)+'px;width:'+(h.w+4)+'px;height:'+(h.h+4)+'px';
+      const cls=i===0?'tour-ring':'tour-ring is-peek';
+      if(el.className!==cls)el.className=cls;
+    }else el.style.cssText='left:0;top:0;width:0;height:0';
+  }
+}
+function placeBubble(hole){
+  if(!hole)return;
+  const vw=window.innerWidth,vh=window.innerHeight;
+  const bw=tourBubble.offsetWidth,bh=tourBubble.offsetHeight;
+  const gap=14,m=16,y2=hole.y+hole.h;
+  const sp=TOUR_STEPS[tourIndex];
+  let bx=null,by=null;
+  /* 目标区太大时（如整块画布），气泡让到右侧，避免压住 LOGO 与数值 */
+  if(sp&&sp.bubble==='right'&&vw-(hole.x+hole.w)>=bw+28){
+    const anchor=logoHoleOnScreen(0)||hole;
+    bx=hole.x+hole.w+24;
+    by=anchor.y+anchor.h/2-bh/2;
+  }
+  if(bx===null){
+    bx=Math.max(m,Math.min(hole.x+hole.w/2-bw/2,vw-bw-m));
+    if(y2+gap+bh<=vh-m)by=y2+gap;
+    else if(hole.y-gap-bh>=m)by=hole.y-gap-bh;
+    else by=hole.y+hole.h/2-bh/2;
+  }
+  bx=Math.max(m,Math.min(bx,vw-bw-m));
+  by=Math.max(m,Math.min(by,vh-bh-m));
+  tourBubble.style.left=Math.round(bx)+'px';tourBubble.style.top=Math.round(by)+'px';
+}
+function placePointer(){
+  const s=TOUR_STEPS[tourIndex];
+  const el=(s&&s.pointer)?document.querySelector(s.pointer):null;
+  if(!el){tourPointer.hidden=true;return;}
+  const r=el.getBoundingClientRect();
+  tourPointer.hidden=false;
+  tourPointer.style.left=Math.round(r.left+r.width/2)+'px';
+  tourPointer.style.top=Math.round(r.top-9)+'px';
+}
+function animateHoles(target,dur){
+  if(holeAnim){cancelAnimationFrame(holeAnim);holeAnim=null;}
+  const from=currentHoles.map(h=>({...h}));
+  const n=Math.max(from.length,target.length),pairs=[];
+  for(let i=0;i<n;i++){
+    const a=from[i],b=target[i];
+    if(a&&b)pairs.push({a:{...a},b:{...b}});
+    else if(!a&&b)pairs.push({a:{x:b.x+b.w/2,y:b.y+b.h/2,w:0,h:0},b:{...b}});
+    else if(a&&!b)pairs.push({a:{...a},b:{x:a.x+a.w/2,y:a.y+a.h/2,w:0,h:0}});
+  }
+  if(!pairs.length){currentHoles=[];renderHoles([]);placePointer();return;}
+  const start=performance.now();
+  const tick=now=>{
+    const k=Math.min(1,(now-start)/(dur||200));
+    const e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+    const cur=pairs.map(p=>({x:p.a.x+(p.b.x-p.a.x)*e,y:p.a.y+(p.b.y-p.a.y)*e,w:p.a.w+(p.b.w-p.a.w)*e,h:p.a.h+(p.b.h-p.a.h)*e}));
+    currentHoles=cur;renderHoles(cur);placeBubble(cur[0]);placePointer();
+    if(k<1)holeAnim=requestAnimationFrame(tick);
+    else{
+      holeAnim=null;
+      currentHoles=target.map(h=>({...h}));
+      renderHoles(currentHoles);placeBubble(currentHoles[0]);placePointer();
+    }
+  };
+  holeAnim=requestAnimationFrame(tick);
+}
+function refreshTour(animate){
+  const s=TOUR_STEPS[tourIndex];if(!s)return;
+  const holes=holesFor(s);
+  if(holeAnim){cancelAnimationFrame(holeAnim);holeAnim=null;}
+  if(animate)animateHoles(holes,200);
+  else{currentHoles=holes;renderHoles(currentHoles);placeBubble(currentHoles[0]);placePointer();}
+}
+function sampleKeys(keys,k){
+  for(let i=0;i<keys.length-1;i++){
+    const a=keys[i],b=keys[i+1];
+    if(k<=b.k){
+      const span=b.k-a.k;
+      const t=span>0?(k-a.k)/span:1;
+      const e=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+      return a.m+(b.m-a.m)*e;
+    }
+  }
+  return keys[keys.length-1].m;
+}
+function clearDemo(){
+  if(demoAnim){cancelAnimationFrame(demoAnim);demoAnim=null;}
+  demoTimers.forEach(t=>clearTimeout(t));demoTimers=[];
+}
+function playTimeline(keys,dur,onValue,minGap){
+  clearDemo();
+  const start=performance.now();
+  let last=-1e9;
+  const tick=now=>{
+    const k=Math.min(1,(now-start)/dur);
+    if(k>=1||now-last>=(minGap||0)){last=now;onValue(sampleKeys(keys,k));}
+    if(k<1)demoAnim=requestAnimationFrame(tick);else demoAnim=null;
+  };
+  demoAnim=requestAnimationFrame(tick);
+}
+function enterTourDemo(step){
+  if(!step||!step.demo)return;
+  try{
+    if(step.demo==='tol'){
+      playTimeline([{k:0,m:0},{k:1,m:70}],1700,v=>{
+        tol.value=Math.round(v);setRangeFill(tol);reprocess();
+      },150);
+    }else if(step.demo==='invert'){
+      clearDemo();
+      invert.checked=true;reprocess();
+      demoTimers.push(setTimeout(()=>{if(!tourOpen)return;invert.checked=false;reprocess();},1050));
+      demoTimers.push(setTimeout(()=>{if(!tourOpen)return;invert.checked=true;reprocess();},2100));
+    }else if(step.demo==='scale'&&logoImg){
+      /* 教程打开时若还没有 LOGO，快照里没有尺寸，这里补记一次，保证中途退出也能还原 */
+      if(tourSnapshot&&!tourSnapshot.logoScale)tourSnapshot.logoScale=logoImg.scaleX;
+      const base=(tourSnapshot&&tourSnapshot.logoScale)||logoImg.scaleX;
+      playTimeline([{k:0,m:1},{k:.28,m:.3},{k:.72,m:1},{k:1,m:1}],3000,m=>{
+        if(!logoImg)return;
+        logoImg.set({scaleX:base*m,scaleY:base*m});
+        canvas.renderAll();updateSizeReadout();placePointer();
+      },0);
+    }
+  }catch(e){}
+}
+function exitTourDemo(step,nextIndex){
+  clearDemo();
+  if(!step||!step.demo||!tourSnapshot)return;
+  try{
+    if(step.demo==='tol'){
+      /* 往前进（第4步及以后）保留已擦除的效果，避免后面的步骤又把边缘还原回去 */
+      if(nextIndex==null||nextIndex<3){tol.value=tourSnapshot.tol;setRangeFill(tol);reprocess();}
+    }
+    else if(step.demo==='invert'){
+      /* 往前进时锁定为"已勾选"，让第5步看到的就是反白后的 LOGO */
+      invert.checked=(nextIndex!=null&&nextIndex>3)?true:tourSnapshot.invert;
+      reprocess();
+    }
+    else if(step.demo==='scale'&&logoImg&&tourSnapshot.logoScale){logoImg.set({scaleX:tourSnapshot.logoScale,scaleY:tourSnapshot.logoScale});canvas.renderAll();updateSizeReadout();}
+  }catch(e){}
+}
+function setLogoVisible(v){
+  if(!logoImg||logoImg.visible===v)return;
+  logoImg.set('visible',v);canvas.renderAll();
+}
+function ensureDemoLogo(){
+  if(currentOriginal&&logoImg){demoLoaded=true;return Promise.resolve(true);}
+  if(demoTried)return Promise.resolve(demoLoaded);
+  demoTried=true;
+  return loadDemoLogo().then(ok=>{demoLoaded=!!ok;return demoLoaded;});
+}
+function goTourStep(i){
+  const token=++tourToken;
+  const next=Math.max(0,Math.min(TOUR_STEPS.length-1,i));
+  exitTourDemo(TOUR_STEPS[tourIndex],next);
+  tourIndex=next;
+  const s=TOUR_STEPS[tourIndex];
+  renderTourStep();
+  setLogoVisible(tourIndex>=1);
+  if(tourIndex===0)tourPointer.hidden=true;
+  const first=document.querySelector(s.sel[0]);
+  if(first){
+    const q=first.getBoundingClientRect();
+    if(q.top<48||q.bottom>window.innerHeight-48)first.scrollIntoView({block:'center',behavior:'auto'});
+  }
+  refreshTour(true);
+  setTimeout(()=>{if(token===tourToken&&tourOpen)refreshTour(true);},190);
+  const start=()=>{
+    if(token!==tourToken||!tourOpen)return;
+    refreshTour(true);
+    enterTourDemo(s);
+  };
+  if(tourIndex>=1&&!demoLoaded)ensureDemoLogo().then(start);
+  else start();
+}
+function loadDemoLogo(){
+  return new Promise(resolve=>{
+    let settled=false;
+    const finish=v=>{if(!settled){settled=true;resolve(v);}};
+    setTimeout(()=>finish(false),4000);
+    const img=new Image();
+    img.onload=()=>{
+      try{
+        rmwhite.checked=true;invert.checked=false;opa.value=100;rot.value=0;tol.value=0;
+        [opa,rot,tol].forEach(setRangeFill);
+        currentOriginal=img;demoSource=img;
+        const shown=displayCanvas();
+        addLogo(shown,0,()=>finish(true));
+        upThumb.src=shown.toDataURL();upThumb.hidden=false;upPlus.style.display='none';
+        upText.textContent=(I18N[currentLang]&&I18N[currentLang].replace)||'点击更换 LOGO';
+      }catch(e){finish(false);}
+    };
+    img.onerror=()=>finish(false);
+    img.src=DEMO_LOGO;
+  });
+}
+function openTour(){
+  if(tourOpen)return;
+  tourOpen=true;tourIndex=-1;tourToken++;
+  demoTried=false;demoLoaded=!!(currentOriginal&&logoImg);
+  tourSnapshot={tol:tol.value,invert:invert.checked,logoScale:logoImg?logoImg.scaleX:null,logoVisible:logoImg?logoImg.visible!==false:true};
+  tourRoot.hidden=false;
+  renderTourStep();
+  document.addEventListener('keydown',tourKey);
+  goTourStep(0);
+}
+function closeTour(){
+  if(!tourOpen)return;
+  exitTourDemo(TOUR_STEPS[tourIndex],null);
+  tourOpen=false;tourToken++;
+  const isDemoLogo=!!(currentOriginal&&currentOriginal===demoSource);
+  if(isDemoLogo){
+    /* 教程用的是演示 LOGO：跳过或走完都恢复到初始状态，画布不留 LOGO */
+    resetAll();
+    demoSource=null;
+  }else{
+    setLogoVisible(tourSnapshot?tourSnapshot.logoVisible!==false:true);
+  }
+  demoLoaded=false;demoTried=false;
+  tourRoot.hidden=true;
+  tourPointer.hidden=true;
+  document.removeEventListener('keydown',tourKey);
+  try{localStorage.setItem(TOUR_KEY,'1');}catch(e){}
+}
+function tourKey(e){
+  if(!tourOpen)return;
+  if(e.key==='Escape'){e.preventDefault();closeTour();}
+  else if(e.key==='ArrowRight'){e.preventDefault();if(tourIndex<TOUR_STEPS.length-1)goTourStep(tourIndex+1);else closeTour();}
+  else if(e.key==='ArrowLeft'){e.preventDefault();if(tourIndex>0)goTourStep(tourIndex-1);}
+}
+function stopTourScroll(e){if(e.cancelable)e.preventDefault();}
+tourRoot.addEventListener('wheel',stopTourScroll,{passive:false});
+tourRoot.addEventListener('touchmove',stopTourScroll,{passive:false});
+window.addEventListener('scroll',()=>{if(tourOpen)requestAnimationFrame(()=>refreshTour(true));},{passive:true});
+window.addEventListener('resize',()=>{if(tourOpen)requestAnimationFrame(()=>refreshTour(true));});
+tourNext.addEventListener('click',()=>{if(tourIndex<TOUR_STEPS.length-1)goTourStep(tourIndex+1);else closeTour();});
+tourPrev.addEventListener('click',()=>{if(tourIndex>0)goTourStep(tourIndex-1);});
+tourSkip.addEventListener('click',closeTour);
+document.getElementById('zoomGuide').addEventListener('click',openTour);
+
+function resetAll(){
+  if(logoImg){canvas.remove(logoImg);logoImg=null;}
+  currentOriginal=null;fileInput.value='';
+  upThumb.hidden=true;upPlus.style.display='';
+  upText.innerHTML=(I18N[currentLang]||I18N.zh).uploadHint;
+  rmwhite.checked=true;invert.checked=false;opa.value=100;rot.value=0;tol.value=0;
+  [opa,rot,tol].forEach(setRangeFill);
+  setViewZoom(DEFAULT_VIEW_ZOOM);
+  canvas.renderAll();updateSizeReadout();
+}
+document.getElementById('reset').addEventListener('click',resetAll);
 document.getElementById('model').addEventListener('change',e=>{
   const m=MODELS[e.target.value];if(!m)return;
   MODEL=m;
@@ -633,33 +1072,23 @@ document.getElementById('export').addEventListener('click',()=>{
     showExportTip((t.exportFail||'导出失败，请重试')+'（'+e.message+'）');
   }).then(()=>{if(btn)btn.disabled=false;});
 });
-const tutMask=document.getElementById('tutMask'),tutTitle=document.getElementById('tutTitle'),tutBody=document.getElementById('tutBody');
-const tutNext=document.getElementById('tutNext'),tutSkip=document.getElementById('tutSkip'),tutDots=document.getElementById('tutDots'),tutProgress=document.getElementById('tutProgress');
-const TUT_KEY='markryden-logo-tutorial';
-let tutIndex=0;
-function tutData(){return (I18N[currentLang]||I18N.zh).tutorial||I18N.zh.tutorial;}
-function renderTut(){
-  const d=tutData();
-  tutTitle.textContent=d.title;
-  tutBody.textContent=d.steps[Math.min(tutIndex,d.steps.length-1)];
-  tutProgress.textContent=(tutIndex+1)+' / '+d.steps.length;
-  tutNext.textContent=tutIndex===d.steps.length-1?d.done:d.next;
-  tutSkip.textContent=d.skip;
-  tutDots.innerHTML='';
-  d.steps.forEach((_,i)=>{const s=document.createElement('span');s.className='tut-dot'+(i===tutIndex?' is-on':'');tutDots.appendChild(s);});
-}
-function openTut(){tutIndex=0;renderTut();tutMask.hidden=false;}
-function closeTut(){tutMask.hidden=true;try{localStorage.setItem(TUT_KEY,'1')}catch(e){}}
-tutNext.addEventListener('click',()=>{const d=tutData();if(tutIndex<d.steps.length-1){tutIndex++;renderTut();}else{closeTut();}});
-tutSkip.addEventListener('click',closeTut);
-tutMask.addEventListener('click',e=>{if(e.target===tutMask)closeTut();});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!tutMask.hidden)closeTut();});
-document.getElementById('tutReopen').addEventListener('click',openTut);
-let seenTut=null;try{seenTut=localStorage.getItem(TUT_KEY)}catch(e){}
-if(!seenTut)setTimeout(openTut,500);
-
-let savedLang='zh';try{savedLang=localStorage.getItem('markryden-logo-lang')||'zh'}catch(e){}setLanguage(I18N[savedLang]?savedLang:'zh');
+let savedLang='';try{savedLang=localStorage.getItem('markryden-logo-lang')||''}catch(e){}
+setLanguage(I18N[savedLang]?savedLang:detectLang());
 loadBag();
+/* 预热教程演示图：等切到「上传 LOGO」那步时直接命中缓存，不再等待下载 */
+setTimeout(()=>{try{const w=new Image();w.src=DEMO_LOGO;}catch(e){}},900);
+let seenTour=false;try{seenTour=!!localStorage.getItem(TOUR_KEY)}catch(e){}
+if(!seenTour){
+  /* 首次访问自动弹出教程。等画布产品图就位后再弹，避免背后空着（最长等 2.5 秒兜底） */
+  const autoTour=()=>setTimeout(()=>{if(!tourOpen)openTour();},700);
+  if(bagImg){autoTour();}
+  else{
+    const waitFrom=Date.now();
+    const poll=setInterval(()=>{
+      if(bagImg||Date.now()-waitFrom>2500){clearInterval(poll);autoTour();}
+    },120);
+  }
+}
 </script>
 </body>
 </html>
