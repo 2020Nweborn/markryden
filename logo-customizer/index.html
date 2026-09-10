@@ -31,31 +31,49 @@
   .lang-option:hover,.lang-option.is-active{background:#f3f3f3;font-weight:600}
 
   main{width:950px;margin:70px auto 0;display:grid;grid-template-columns:532px 404px;gap:14px;align-items:start}
-  .stage{position:relative;width:532px;height:532px;background-color:#fff;border:1px solid #e3e3e3;border-radius:14px;overflow:hidden;
+  .stage{width:532px;display:flex;flex-direction:column;background-color:#fff;border:1px solid #e3e3e3;border-radius:14px;overflow:hidden}
+  .stage-view{position:relative;width:100%;aspect-ratio:1;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Cpath d='M44 0V44M0 44H44' fill='none' stroke='%23d8dce0' stroke-width='1' stroke-dasharray='3 4'/%3E%3C/svg%3E");
     background-size:44px 44px}
   .canvas-container{position:absolute!important;inset:0;border-radius:13px;overflow:hidden}
+  .zoom-bar{height:46px;flex:0 0 46px;display:flex;align-items:center;gap:8px;padding:0 14px;border-top:1px solid #f0f0f0}
+  .zoom-btn{width:26px;height:26px;flex:0 0 26px;border:1px solid #e0e0e0;border-radius:2px;background:#fff;font-size:15px;line-height:1;color:#333;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .zoom-btn:hover{border-color:#bcbcbc}
+  .zoom-bar input[type=range]{flex:1;min-width:0}
+  .zoom-val{width:46px;flex:0 0 46px;text-align:center;font-size:11px;color:#555}
+  .zoom-fit{height:26px;flex:0 0 auto;padding:0 10px;border:1px solid #e0e0e0;border-radius:2px;background:#fff;font-size:11px;color:#333;cursor:pointer;white-space:nowrap}
+  .zoom-fit:hover{border-color:#bcbcbc}
   .stage-tip{position:absolute;z-index:4;left:50%;bottom:30px;transform:translateX(-50%);height:26px;padding:0 11px;border-radius:2px;background:#303030;color:#fff;font-size:11px;white-space:nowrap;display:flex;align-items:center;pointer-events:none}
   .size-warning{position:absolute;z-index:8;top:18px;right:18px;width:32px;height:32px}
+  .size-hud{position:absolute;z-index:7;left:50%;bottom:10px;transform:translateX(-50%);display:flex;align-items:baseline;gap:6px;white-space:nowrap;font-size:10px;color:#9a9a9a;pointer-events:none;background:rgba(255,255,255,.8);padding:3px 10px;border-radius:9px}
+  .size-hud b{font-weight:400;color:#8a8a8a;font-size:11px}
+  .size-hud b.is-over{color:#c0392b;font-weight:900}
   .warning-trigger{width:32px;height:32px;padding:0;border:0;background:transparent;display:block;cursor:help}
   .warning-trigger img{display:block;width:32px;height:32px}
   .warning-popover{position:absolute;top:43px;right:0;width:300px;min-height:58px;padding:17px 18px;border-radius:14px;background:#fff;color:#111;box-shadow:0 8px 28px rgba(0,0,0,.14);font-size:15px;font-weight:700;line-height:24px;text-align:center;white-space:normal;opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .18s ease,transform .18s ease,visibility .18s ease;pointer-events:none}
   .warning-popover:before{content:"";position:absolute;right:10px;top:-8px;width:16px;height:16px;background:#fff;transform:rotate(45deg);border-radius:2px 0 0 0}
   .size-warning:hover .warning-popover,.size-warning:focus-within .warning-popover,.size-warning.is-open .warning-popover{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto}
 
-  .panel{width:404px;height:532px;padding:27px 30px 20px;background:#fff;border-radius:14px}
+  .panel{width:404px;min-height:578px;padding:27px 30px 20px;background:#fff;border-radius:14px}
   .top-grid,.middle-grid,.adjust-grid{display:grid;grid-template-columns:148px 148px;column-gap:37px}
   .field-title{font-size:15px;line-height:20px;font-weight:700;margin:0 0 9px}
   select{display:block;width:148px;height:34px;border:1px solid #dcdcdc;border-radius:2px;color:#222;font-size:14px;padding:0 36px 0 12px;outline:none;appearance:none;-webkit-appearance:none;background-color:#fff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.25 6 6.25 11 1.25' fill='none' stroke='%23222' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:10px 7px}
   .middle-grid{margin-top:31px}
-  .upload{width:148px;height:95px;border:1px solid #dedede;border-radius:2px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;text-align:center;overflow:hidden}
-  .upload:hover{border-color:#bcbcbc}
-  .up-plus{width:20px;height:20px;border:1px solid #d2d2d2;color:#aaa;font-size:17px;line-height:17px;font-weight:300;margin-bottom:17px}
-  .up-text{font-size:8px;line-height:1.5;color:#aaa;transform:scale(.92);width:154px}
-  .up-thumb{max-width:88px;max-height:55px;object-fit:contain;margin-bottom:5px}
-  .process-options{display:flex;gap:9px;margin-bottom:18px}
-  .check-chip{height:34px;padding:0 8px;border:1px solid #e2e2e2;border-radius:2px;display:flex;align-items:center;gap:6px;font-size:10px;white-space:nowrap;cursor:pointer}
-  .check-chip input{appearance:none;width:13px;height:13px;margin:0;border-radius:2px;border:1px solid #222;background:#fff;position:relative}
+  .upload{position:relative;width:148px;height:95px;border:1px solid #dedede;border-radius:2px;background:#fff;cursor:pointer;text-align:center;overflow:hidden}
+  .upload:before{content:"";position:absolute;z-index:0;inset:0;background:#111;clip-path:polygon(0 100%,0 100%,0 100%);transition:clip-path .34s cubic-bezier(.22,.61,.36,1)}
+  .upload:hover{border-color:#111}
+  .upload:hover:before{clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}
+  .up-plus{position:absolute;left:50%;top:13px;width:20px;height:20px;transform:translateX(-50%);border:1px solid #d2d2d2;color:#aaa;font-size:17px;line-height:1;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 0 1px;margin:0;z-index:1;transition:color .2s ease,border-color .2s ease}
+  .upload:hover .up-plus{color:#fff;border-color:#fff}
+  .up-text{position:absolute;left:50%;bottom:7px;font-size:8px;line-height:1.5;color:#aaa;transform:translateX(-50%) scale(.92);transform-origin:center bottom;width:154px;z-index:1;transition:color .2s ease}
+  .upload:hover .up-text{color:#fff}
+  .up-thumb{position:absolute;left:50%;top:8px;transform:translateX(-50%);max-width:88px;max-height:55px;object-fit:contain;margin:0;z-index:1}
+  .process-options{display:flex;flex-wrap:nowrap;gap:9px;margin-bottom:18px;min-width:0}
+  .check-chip{min-width:0;min-height:34px;height:auto;flex:1 1 0;padding:7px 8px;border:1px solid #e2e2e2;border-radius:2px;display:grid;grid-template-columns:minmax(0,1fr) 13px;align-items:center;column-gap:6px;font-size:10px;line-height:1.25;white-space:normal;overflow:hidden;cursor:pointer}
+  .check-chip span{min-width:0;overflow-wrap:anywhere;white-space:normal;word-break:break-word}
+  html[lang="zh-CN"] .check-chip span{white-space:nowrap;word-break:normal;overflow-wrap:normal}
+  #labelProcess{white-space:nowrap}
+  .check-chip input{appearance:none;width:13px;height:13px;margin:0;border-radius:2px;border:1px solid #222;background:#fff;position:relative;justify-self:end}
   .check-chip input:checked{background:#171717}
   .check-chip input:checked:after{content:"";position:absolute;left:3px;top:1px;width:4px;height:7px;border:solid #fff;border-width:0 1.5px 1.5px 0;transform:rotate(45deg)}
   .range-title{font-size:11px;font-weight:600;margin-bottom:8px}
@@ -63,10 +81,16 @@
   input[type=range].dark{background:linear-gradient(to right,#111 0,#111 var(--value),#eeeeee var(--value),#eeeeee 100%)}
   input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:9px;height:9px;border-radius:50%;background:#111;cursor:pointer}
   input[type=range].blue::-webkit-slider-thumb{background:var(--blue)}
-  .range-hint{font-size:8px;line-height:1.45;color:#aaa;white-space:nowrap;margin-top:9px;transform-origin:left top}
+  .range-hint{font-size:8px;line-height:1.45;color:#aaa;white-space:normal;overflow-wrap:anywhere;margin-top:9px;transform-origin:left top}
   .adjust-grid{margin-top:22px}
   .adjust-grid .field-title{margin-bottom:15px}
-  .actions{margin-top:58px}
+  .size-grid{display:none}
+  .size-card{background:#fafafa;border:1px solid #ededed;border-radius:2px;padding:9px 11px}
+  .size-label{font-size:11px;color:#888;margin-bottom:3px}
+  .size-value{font-size:15px;font-weight:700;color:#151515;line-height:1.3}
+  .size-value.is-over{color:#c0392b}
+  .size-note{font-size:10px;color:#aaa;line-height:1.5;margin-top:6px}
+  .actions{margin-top:24px}
   .btn{display:block;width:334px;height:47px;border:0;border-radius:2px;background:var(--dark);color:#fff;font-size:15px;font-weight:400;cursor:pointer}
   .btn:hover{background:#232323}
   .btn+.btn{margin-top:12px}
@@ -80,25 +104,29 @@
     .lang-menu{top:47px;width:136px;padding:7px;border-radius:14px}
     .lang-option{height:40px;padding:0 12px;font-size:15px}
     main{width:1174px;margin-top:74px;grid-template-columns:650px 500px;gap:24px}
-    .stage{width:650px;height:650px;border-radius:18px;background-size:54px 54px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='54' height='54' viewBox='0 0 54 54'%3E%3Cpath d='M54 0V54M0 54H54' fill='none' stroke='%23d8dce0' stroke-width='1' stroke-dasharray='4 5'/%3E%3C/svg%3E")}
+    .stage{width:650px;border-radius:18px}
+    .stage-view{background-size:54px 54px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='54' height='54' viewBox='0 0 54 54'%3E%3Cpath d='M54 0V54M0 54H54' fill='none' stroke='%23d8dce0' stroke-width='1' stroke-dasharray='4 5'/%3E%3C/svg%3E")}
     .canvas-container{border-radius:17px}
-    .canvas-container{transform:scale(1.223);transform-origin:left top}
+    .zoom-bar{height:54px;flex:0 0 54px;gap:10px;padding:0 18px}
+    .zoom-btn{width:30px;height:30px;flex:0 0 30px;font-size:17px}
+    .zoom-val{width:52px;flex:0 0 52px;font-size:12px}
+    .zoom-fit{height:30px;padding:0 12px;font-size:12px}
     .stage-tip{bottom:36px;height:32px;padding:0 14px;font-size:13px}
     .size-warning{top:22px;right:22px;width:40px;height:40px}
     .warning-trigger,.warning-trigger img{width:40px;height:40px}
     .warning-popover{top:54px;width:338px;min-height:72px;padding:21px 22px;border-radius:18px;font-size:18px;line-height:28px}
     .warning-popover:before{right:12px;top:-9px;width:18px;height:18px}
-    .panel{width:500px;height:650px;padding:34px 38px 25px;border-radius:18px}
+    .panel{width:500px;min-height:704px;padding:34px 38px 25px;border-radius:18px}
     .top-grid,.middle-grid,.adjust-grid{grid-template-columns:188px 188px;column-gap:48px}
     .field-title{font-size:18px;line-height:24px;margin-bottom:11px}
     select{width:188px;height:42px;font-size:16px;padding-left:14px;padding-right:42px;background-position:right 15px center;background-size:11px 8px}
     .middle-grid{margin-top:38px}
-    .upload{width:188px;height:118px}
-    .up-plus{width:26px;height:26px;font-size:20px;line-height:23px;margin-bottom:16px}
-    .up-text{font-size:11px;line-height:1.55;transform:none;width:170px}
+    .upload{width:188px;height:118px;grid-template-rows:31px 1fr 39px}
+    .up-plus{top:16px;width:26px;height:26px;font-size:20px;line-height:1;padding-bottom:1px}
+    .up-text{font-size:11px;line-height:1.55;transform:translateX(-50%);width:170px}
     .up-thumb{max-width:104px;max-height:68px}
     .process-options{gap:10px;margin-bottom:20px}
-    .check-chip{height:42px;padding:0 10px;gap:7px;font-size:12px}
+    .check-chip{height:42px;padding:0 10px;grid-template-columns:minmax(0,1fr) 15px;column-gap:7px;font-size:12px}
     .check-chip input{width:15px;height:15px}
     .check-chip input:checked:after{left:4px;top:1px;width:4px;height:8px}
     .range-title{font-size:13px;margin-bottom:10px}
@@ -112,14 +140,22 @@
     .btn+.btn{margin-top:14px}
     .note{margin-top:19px;font-size:13px}
   }
-  html[lang="ru"] .check-chip{font-size:9px;padding:0 6px;gap:4px}
+  html[lang="ru"] .check-chip{font-size:9px;padding:7px 6px;gap:4px}
   html[lang="ru"] .process-options{gap:5px}
-  @media(min-width:1200px){html[lang="ru"] .check-chip{font-size:11px;padding:0 8px;gap:5px}}
+  @media(min-width:1200px){html[lang="ru"] .check-chip{font-size:11px;padding:9px 8px;gap:5px}}
   @media(max-width:1000px){
     .header-inner,main{width:calc(100% - 32px)}
     main{grid-template-columns:1fr;margin-top:32px}
-    .stage{width:min(532px,100%);height:auto;aspect-ratio:1}
-    .panel{width:min(404px,100%)}
+    .stage{width:100%}
+    .panel{width:100%;min-width:0;height:auto}
+    .top-grid,.middle-grid,.adjust-grid{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:24px}
+    select,input[type=range]{width:100%}
+    .upload{width:100%}
+    .range-hint{max-width:100%}
+    .process-options{flex-wrap:nowrap;gap:3px}
+    .check-chip{grid-template-columns:minmax(0,1fr) 11px;flex:1 1 0;padding:5px 4px;column-gap:3px;font-size:9px;white-space:normal}
+    .check-chip input{width:11px;height:11px}
+    .btn{width:100%}
     .header-inner{padding:0}
   }
 </style>
@@ -141,12 +177,22 @@
 
 <main data-page-node-id="5n6yB8ZvVHHwXjRzBGB2xP">
   <section class="stage" id="stageSection" aria-label="背包 LOGO 预览画布">
-    <canvas id="c" width="530" height="530" data-page-node-id="F2oEoKDVQG3Xr8dxfM1DR3"></canvas>
-    <div class="size-warning" id="sizeWarning">
-      <button class="warning-trigger" id="warningTrigger" type="button" aria-label="查看 LOGO 尺寸提醒" aria-describedby="warningPopover">
-        <img src="warning.svg" alt="">
-      </button>
-      <div class="warning-popover" id="warningPopover" role="tooltip">请注意，LOGO超过12cm，无法定制！</div>
+    <div class="stage-view" id="stageView">
+      <canvas id="c" width="530" height="530" data-page-node-id="F2oEoKDVQG3Xr8dxfM1DR3"></canvas>
+      <div class="size-warning" id="sizeWarning">
+        <button class="warning-trigger" id="warningTrigger" type="button" aria-label="查看 LOGO 尺寸提醒" aria-describedby="warningPopover">
+          <img src="warning.svg" alt="">
+        </button>
+        <div class="warning-popover" id="warningPopover" role="tooltip">请注意，LOGO超过12cm，无法定制！</div>
+      </div>
+      <div class="size-hud" id="sizeHud"><span id="labelSize">LOGO 参考尺寸</span><b id="logoSizeValue">—</b></div>
+    </div>
+    <div class="zoom-bar">
+      <button class="zoom-btn" id="zoomOut" type="button" aria-label="缩小视图">−</button>
+      <input type="range" id="zoom" class="dark" min="50" max="400" step="10" value="100" aria-label="视图缩放">
+      <span class="zoom-val" id="zoomVal">100%</span>
+      <button class="zoom-btn" id="zoomIn" type="button" aria-label="放大视图">+</button>
+      <button class="zoom-fit" id="zoomFit" type="button">适应</button>
     </div>
   </section>
 
@@ -154,7 +200,7 @@
     <div class="top-grid" data-page-node-id="So4Dtxl1a4hWa5d4IMA85c">
       <div data-page-node-id="3gNYqaMTFljlZvRaIvetAN">
         <div class="field-title" id="labelModel">产品型号</div>
-        <select id="model" data-page-node-id="hMpMcuCAHjI68KZRfubiqG"><option data-page-node-id="P3irB5DsGYwxOwNH7scJsq">MR_9100</option></select>
+        <select id="model" data-page-node-id="hMpMcuCAHjI68KZRfubiqG"><option value="MR_9100" data-page-node-id="P3irB5DsGYwxOwNH7scJsq">MR_9100</option><option value="WALLET_82">82钱包</option></select>
       </div>
       <div data-page-node-id="jN1HEVxsUVuiorhIy04EUv">
         <div class="field-title" id="labelColor">颜色选择</div>
@@ -173,7 +219,7 @@
         <input type="file" id="file" hidden accept="image/png,image/jpeg,image/svg+xml" data-page-node-id="qN2i7EWeKDr5H6aq1C9y1v">
       </div>
       <div data-page-node-id="xMO7I8rG5vK6xACwkqycX7">
-        <div class="field-title" data-page-node-id="9R3ajVahoB6iJbVmqaXMgi">LOGO处理</div>
+        <div class="field-title" id="labelProcess" data-page-node-id="9R3ajVahoB6iJbVmqaXMgi">LOGO处理</div>
         <div class="process-options" data-page-node-id="n7fEMbUBLmY50CVa36bIkU">
           <label class="check-chip"><span id="labelRemoveBg">去除背景</span><input type="checkbox" id="rmwhite" checked></label>
           <label class="check-chip"><span id="labelInvert">颜色反向</span><input type="checkbox" id="invert"></label>
@@ -205,9 +251,9 @@
 
 <script>
 const I18N = {
-  zh:{name:'中文',htmlLang:'zh-CN',title:'MARK RYDEN · LOGO 定制预览',stageAria:'背包 LOGO 预览画布',settingsAria:'LOGO 定制设置',warningAria:'查看 LOGO 尺寸提醒',warning:'LOGO长宽不要超过12×12cm，超过后可能会导致无法定制！',stageTip:'拉动 LOGO 画布四角可缩放大小',model:'产品型号',color:'颜色选择',black:'商务黑',upload:'上传LOGO',uploadHint:'上传透明 PNG 最佳，直接可用；<br>带有背景颜色的 JPG 将自动去除背景',replace:'点击更换 LOGO',process:'LOGO处理',removeBg:'去除背景',invert:'颜色反向',tolerance:'LOGO边缘擦除',toleranceHint:'拖动滑块，边缘清除越彻底',opacity:'透明度调节',rotation:'360°旋转调节',reset:'初始化（清除已上传LOGO）',export:'导出JPG图片',note:'注：遇到问题请联系与您对接的销售或者客服人员'},
-  en:{name:'English',htmlLang:'en',title:'MARK RYDEN · Custom Logo Preview',stageAria:'Backpack logo preview canvas',settingsAria:'Logo customization settings',warningAria:'View logo size notice',warning:'The logo must not exceed 12 × 12 cm in width or height. Larger logos may not be customizable.',stageTip:'Drag the corner handles to resize the logo',model:'Product Model',color:'Color',black:'Business Black',upload:'Upload Logo',uploadHint:'Transparent PNG is recommended and ready to use;<br>backgrounds in JPG files will be removed automatically',replace:'Click to replace logo',process:'Logo Processing',removeBg:'Remove BG',invert:'Invert Color',tolerance:'Logo Edge Cleanup',toleranceHint:'Drag the slider to remove more of the background edge',opacity:'Opacity',rotation:'360° Rotation',reset:'Reset (remove uploaded logo)',export:'Export JPG',note:'Note: If you encounter any issues, please contact your sales representative or customer service.'},
-  ru:{name:'Русский',htmlLang:'ru',title:'MARK RYDEN · Предпросмотр логотипа',stageAria:'Область предпросмотра логотипа на рюкзаке',settingsAria:'Настройки логотипа',warningAria:'Показать ограничение размера логотипа',warning:'Ширина и высота логотипа не должны превышать 12 × 12 см. Превышение размера может сделать нанесение невозможным.',stageTip:'Потяните за углы рамки, чтобы изменить размер логотипа',model:'Модель товара',color:'Цвет',black:'Деловой чёрный',upload:'Загрузить логотип',uploadHint:'Рекомендуется прозрачный PNG;<br>фон изображения JPG удаляется автоматически',replace:'Нажмите, чтобы заменить логотип',process:'Обработка логотипа',removeBg:'Удалить фон',invert:'Инверсия',tolerance:'Очистка краёв логотипа',toleranceHint:'Перемещайте ползунок для более тщательной очистки краёв',opacity:'Прозрачность',rotation:'Поворот 360°',reset:'Сбросить (удалить логотип)',export:'Экспорт JPG',note:'Примечание: при возникновении вопросов обратитесь к вашему менеджеру или в службу поддержки.'}
+  zh:{name:'中文',htmlLang:'zh-CN',title:'MARK RYDEN · LOGO 定制预览',stageAria:'背包 LOGO 预览画布',settingsAria:'LOGO 定制设置',warningAria:'查看 LOGO 尺寸提醒',warning:'LOGO长宽不要超过12×12cm，超过后可能会导致无法定制！',stageTip:'拉动 LOGO 画布四角可缩放大小',model:'产品型号',color:'颜色选择',black:'商务黑',upload:'上传LOGO',uploadHint:'上传透明 PNG 最佳，直接可用；<br>带有背景颜色的 JPG 将自动去除背景',replace:'点击更换 LOGO',process:'LOGO处理',removeBg:'去除背景',invert:'颜色反向',tolerance:'LOGO边缘擦除',toleranceHint:'拖动滑块，边缘清除越彻底',opacity:'透明度调节',rotation:'360°旋转调节',reset:'初始化（清除已上传LOGO）',export:'导出JPG图片',note:'注：遇到问题请联系与您对接的销售或者客服人员',sizeTitle:'LOGO 参考尺寸',sizeEmpty:'—',fit:'适应'},
+  en:{name:'English',htmlLang:'en',title:'MARK RYDEN · Custom Logo Preview',stageAria:'Backpack logo preview canvas',settingsAria:'Logo customization settings',warningAria:'View logo size notice',warning:'The logo must not exceed 12 × 12 cm in width or height. Larger logos may not be customizable.',stageTip:'Drag the corner handles to resize the logo',model:'Product Model',color:'Color',black:'Business Black',upload:'Upload Logo',uploadHint:'Transparent PNG is recommended and ready to use;<br>backgrounds in JPG files will be removed automatically',replace:'Click to replace logo',process:'Logo Processing',removeBg:'Remove BG',invert:'Invert Color',tolerance:'Logo Edge Cleanup',toleranceHint:'Drag the slider to remove more of the background edge',opacity:'Opacity',rotation:'360° Rotation',reset:'Reset (remove uploaded logo)',export:'Export JPG',note:'Note: If you encounter any issues, please contact your sales representative or customer service.',sizeTitle:'Reference logo size',sizeEmpty:'—',fit:'Fit'},
+  ru:{name:'Русский',htmlLang:'ru',title:'MARK RYDEN · Предпросмотр логотипа',stageAria:'Область предпросмотра логотипа на рюкзаке',settingsAria:'Настройки логотипа',warningAria:'Показать ограничение размера логотипа',warning:'Ширина и высота логотипа не должны превышать 12 × 12 см. Превышение размера может сделать нанесение невозможным.',stageTip:'Потяните за углы рамки, чтобы изменить размер логотипа',model:'Модель товара',color:'Цвет',black:'Деловой чёрный',upload:'Загрузить логотип',uploadHint:'Рекомендуется прозрачный PNG;<br>фон изображения JPG удаляется автоматически',replace:'Нажмите, чтобы заменить логотип',process:'Обработка логотипа',removeBg:'Удалить фон',invert:'Инверсия',tolerance:'Очистка краёв логотипа',toleranceHint:'Перемещайте ползунок для более тщательной очистки краёв',opacity:'Прозрачность',rotation:'Поворот 360°',reset:'Сбросить (удалить логотип)',export:'Экспорт JPG',note:'Примечание: при возникновении вопросов обратитесь к вашему менеджеру или в службу поддержки.',sizeTitle:'Ориентировочный размер логотипа',sizeEmpty:'—',fit:'Вписать'}
 };
 let currentLang='zh';
 const langWrap=document.getElementById('langWrap'),langButton=document.getElementById('langButton'),langCurrent=document.getElementById('langCurrent');
@@ -220,11 +266,14 @@ function setLanguage(code){
   document.getElementById('warningPopover').textContent=t.warning;
   document.getElementById('labelModel').textContent=t.model;document.getElementById('labelColor').textContent=t.color;
   document.getElementById('colorBlack').textContent=t.black;document.getElementById('labelUpload').textContent=t.upload;
-  document.querySelector('.middle-grid > div:nth-child(2) > .field-title').textContent=t.process;document.getElementById('labelRemoveBg').textContent=t.removeBg;
+  document.getElementById('labelProcess').textContent=t.process;document.getElementById('labelRemoveBg').textContent=t.removeBg;
   document.getElementById('labelInvert').textContent=t.invert;document.getElementById('labelTolerance').textContent=t.tolerance;
   document.getElementById('toleranceHint').textContent=t.toleranceHint;document.getElementById('labelOpacity').textContent=t.opacity;
   document.getElementById('labelRotation').textContent=t.rotation;document.getElementById('reset').textContent=t.reset;
   document.getElementById('export').textContent=t.export;document.getElementById('supportNote').textContent=t.note;
+  document.getElementById('labelSize').textContent=t.sizeTitle;
+  document.getElementById('zoomFit').textContent=t.fit;
+  updateSizeReadout();
   document.getElementById('upText').innerHTML=currentOriginal?t.replace:t.uploadHint;
   document.querySelectorAll('.lang-option').forEach(btn=>btn.classList.toggle('is-active',btn.dataset.lang===code));
   try{localStorage.setItem('markryden-logo-lang',code)}catch(e){}
@@ -235,15 +284,32 @@ document.querySelectorAll('.lang-option').forEach(btn=>btn.addEventListener('cli
 document.addEventListener('click',e=>{if(!langWrap.contains(e.target))closeLanguageMenu()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLanguageMenu()});
 
-const CANVAS_SIZE = 530;
-const MODEL = {
-  id:'MR_9100',
-  image:'bag_mr9100.jpg',
-  logoSpot:{cx:265,cy:236,maxW:125,maxH:70}
+const DEFAULT_VIEW_ZOOM = 0.7;
+const MODELS = {
+  MR_9100:{id:'MR_9100',image:'bag_9100_trim.png',pxPerMm:1,canvasMm:532,logoSpot:{cxMm:266,cyMm:340,maxWMm:120,maxHMm:80}},
+  WALLET_82:{id:'WALLET_82',image:'wallet_82_trim.png',pxPerMm:5,canvasMm:121.6,logoSpot:{cxMm:60.8,cyMm:60.8,maxWMm:60,maxHMm:60}}
 };
+let MODEL = MODELS.MR_9100;
+let viewZoom = DEFAULT_VIEW_ZOOM;
+
 const canvas = new fabric.Canvas('c',{preserveObjectStacking:true,selection:false,uniformScaling:true,uniScaleTransform:true});
-canvas.setDimensions({width:CANVAS_SIZE,height:CANVAS_SIZE});
+function stageDisplayWidth(){
+  const v=document.getElementById('stageView');
+  return Math.max(200,Math.round((v&&v.clientWidth)||532));
+}
+function applyView(){
+  const disp=stageDisplayWidth();
+  canvas.setDimensions({width:disp,height:disp});
+  const z=disp/MODEL.canvasMm*viewZoom;
+  const t=disp/2-z*MODEL.canvasMm/2;
+  canvas.setViewportTransform([z,0,0,z,t,t]);
+  if(logoImg){logoImg.set({cornerSize:Math.max(5,9/z),padding:2/z});}
+  canvas.renderAll();
+  updateZoomLabel();
+}
+window.addEventListener('resize',applyView);
 let bagImg=null,logoImg=null,currentOriginal=null,processVersion=0;
+requestAnimationFrame(applyView);
 
 function setRangeFill(el){
   const pct=(Number(el.value)-Number(el.min))/(Number(el.max)-Number(el.min))*100;
@@ -252,10 +318,53 @@ function setRangeFill(el){
 document.querySelectorAll('input[type=range]').forEach(el=>{setRangeFill(el);el.addEventListener('input',()=>setRangeFill(el));});
 
 function loadBag(){
+  if(bagImg){canvas.remove(bagImg);bagImg=null;}
   fabric.Image.fromURL(MODEL.image,img=>{
-    img.set({left:0,top:0,originX:'left',originY:'top',scaleX:CANVAS_SIZE/img.width,scaleY:CANVAS_SIZE/img.height,selectable:false,evented:false});
+    const s=1/MODEL.pxPerMm;
+    img.set({left:MODEL.canvasMm/2,top:MODEL.canvasMm/2,originX:'center',originY:'center',scaleX:s,scaleY:s,selectable:false,evented:false});
     bagImg=img;canvas.add(img);canvas.sendToBack(img);canvas.renderAll();
   });
+}
+
+function trimToContent(srcCanvas,pad){
+  const w=srcCanvas.width,h=srcCanvas.height;
+  const ctx=srcCanvas.getContext('2d',{willReadFrequently:true});
+  const px=ctx.getImageData(0,0,w,h).data;
+  let minX=w,minY=h,maxX=-1,maxY=-1;
+  for(let y=0;y<h;y++){
+    for(let x=0;x<w;x++){
+      if(px[(y*w+x)*4+3]>16){
+        if(x<minX)minX=x;
+        if(x>maxX)maxX=x;
+        if(y<minY)minY=y;
+        if(y>maxY)maxY=y;
+      }
+    }
+  }
+  if(maxX<0)return null;
+  const p=(pad==null?2:pad);
+  minX=Math.max(0,minX-p);minY=Math.max(0,minY-p);
+  maxX=Math.min(w-1,maxX+p);maxY=Math.min(h-1,maxY+p);
+  const nw=maxX-minX+1,nh=maxY-minY+1;
+  if(nw>=w&&nh>=h)return null;
+  const out=document.createElement('canvas');
+  out.width=nw;out.height=nh;
+  out.getContext('2d').drawImage(srcCanvas,minX,minY,nw,nh,0,0,nw,nh);
+  return out;
+}
+
+function logoMm(){
+  if(!logoImg)return null;
+  return {w:logoImg.width*logoImg.scaleX,h:logoImg.height*logoImg.scaleY};
+}
+function updateSizeReadout(){
+  const el=document.getElementById('logoSizeValue');
+  if(!el)return;
+  const s=logoMm();
+  if(!s){el.textContent=(I18N[currentLang]&&I18N[currentLang].sizeEmpty)||'—';el.classList.remove('is-over');return;}
+  const w=Math.round(s.w),h=Math.round(s.h);
+  el.textContent=w+' × '+h+' mm  ('+(w/10).toFixed(1)+' × '+(h/10).toFixed(1)+' cm)';
+  el.classList.toggle('is-over',Math.max(s.w,s.h)>120);
 }
 
 function detectEdgeBackground(px,w,h){
@@ -298,21 +407,34 @@ function processLogo(imgEl,tolerance,removeBackground,invert){
   ctx.putImageData(data,0,0);return oc;
 }
 function processedCurrent(){return processLogo(currentOriginal,Number(tol.value),rmwhite.checked,invert.checked)}
-function addLogo(srcCanvas){
+function displayCanvas(){
+  const processed=processedCurrent();
+  return trimToContent(processed,2)||processed;
+}
+function addLogo(srcCanvas,keepWidthMm){
   if(logoImg)canvas.remove(logoImg);
   fabric.Image.fromURL(srcCanvas.toDataURL(),img=>{
-    const z=MODEL.logoSpot,scale=Math.min(z.maxW/img.width,z.maxH/img.height,1);
-    img.set({left:z.cx,top:z.cy,originX:'center',originY:'center',scaleX:scale,scaleY:scale,lockUniScaling:true,lockScalingFlip:true,transparentCorners:false,cornerColor:'#fff',cornerStrokeColor:'#222',borderColor:'#222',cornerSize:9,padding:2,opacity:Number(opa.value)/100,angle:Number(rot.value)});
+    const z=MODEL.logoSpot;
+    let scale;
+    if(keepWidthMm&&keepWidthMm>0){scale=keepWidthMm/img.width;}
+    else{scale=Math.min(z.maxWMm/img.width,z.maxHMm/img.height);}
+    img.set({left:z.cxMm,top:z.cyMm,originX:'center',originY:'center',scaleX:scale,scaleY:scale,lockUniScaling:true,lockScalingFlip:true,transparentCorners:false,cornerColor:'#fff',cornerStrokeColor:'#222',borderColor:'#222',cornerSize:9,padding:2,opacity:Number(opa.value)/100,angle:Number(rot.value)});
     img.setControlsVisibility({mt:false,mb:false,ml:false,mr:false});
-    logoImg=img;canvas.add(img);canvas.setActiveObject(img);canvas.renderAll();
+    logoImg=img;canvas.add(img);canvas.setActiveObject(img);canvas.renderAll();updateSizeReadout();
   });
 }
 function reprocess(){
   if(!logoImg||!currentOriginal)return;
   const version=++processVersion;
-  const geo={left:logoImg.left,top:logoImg.top,scaleX:logoImg.scaleX,scaleY:logoImg.scaleY,angle:logoImg.angle,opacity:logoImg.opacity};
-  const nextSrc=processedCurrent().toDataURL();
-  logoImg.setSrc(nextSrc,()=>{if(version!==processVersion)return;logoImg.set(geo);canvas.renderAll();});
+  const keepWidthMm=logoImg.width*logoImg.scaleX;
+  const geo={left:logoImg.left,top:logoImg.top,angle:logoImg.angle,opacity:logoImg.opacity};
+  const nextSrc=displayCanvas().toDataURL();
+  logoImg.setSrc(nextSrc,()=>{
+    if(version!==processVersion)return;
+    const s=keepWidthMm/logoImg.width;
+    logoImg.set({scaleX:s,scaleY:s,left:geo.left,top:geo.top,angle:geo.angle,opacity:geo.opacity});
+    canvas.renderAll();updateSizeReadout();
+  });
 }
 
 const uploadBox=document.getElementById('uploadBox');
@@ -334,30 +456,69 @@ fileInput.addEventListener('change',e=>{
   const reader=new FileReader();
   reader.onload=ev=>{
     const img=new Image();
-    img.onload=()=>{currentOriginal=img;rmwhite.checked=true;opa.value=100;tol.value=0;setRangeFill(opa);setRangeFill(tol);addLogo(processedCurrent());upThumb.src=ev.target.result;upThumb.hidden=false;upPlus.style.display='none';upText.textContent='点击更换 LOGO';showSizeWarning();};
+    img.onload=()=>{
+      rmwhite.checked=true;opa.value=100;tol.value=0;setRangeFill(opa);setRangeFill(tol);
+      currentOriginal=img;
+      addLogo(displayCanvas());
+      upThumb.src=displayCanvas().toDataURL();upThumb.hidden=false;upPlus.style.display='none';
+      upText.textContent=(I18N[currentLang]&&I18N[currentLang].replace)||'点击更换 LOGO';
+      showSizeWarning();
+    };
     img.src=ev.target.result;
   };
   reader.readAsDataURL(f);
 });
-rmwhite.addEventListener('change',reprocess);invert.addEventListener('change',reprocess);tol.addEventListener('input',reprocess);
+let tolTimer=null;
+rmwhite.addEventListener('change',reprocess);invert.addEventListener('change',reprocess);
+tol.addEventListener('input',()=>{clearTimeout(tolTimer);tolTimer=setTimeout(reprocess,50);});
 opa.addEventListener('input',()=>{if(logoImg){logoImg.set('opacity',Number(opa.value)/100);canvas.renderAll();}});
 rot.addEventListener('input',()=>{if(logoImg){logoImg.set('angle',Number(rot.value));canvas.renderAll();}});
-canvas.on('object:scaling',e=>{if(e.target===logoImg){const s=(logoImg.scaleX+logoImg.scaleY)/2;logoImg.set({scaleX:s,scaleY:s});}});
+canvas.on('object:scaling',e=>{if(e.target===logoImg){const s=(logoImg.scaleX+logoImg.scaleY)/2;logoImg.set({scaleX:s,scaleY:s});updateSizeReadout();}});
 canvas.on('object:rotating',e=>{if(e.target===logoImg){const snapped=Math.round(logoImg.angle/5)*5;logoImg.set('angle',snapped);rot.value=Math.max(-180,Math.min(180,snapped));setRangeFill(rot);}});
-canvas.on('object:modified',e=>{if(e.target===logoImg){const s=(logoImg.scaleX+logoImg.scaleY)/2;logoImg.set({scaleX:s,scaleY:s});let a=Math.round(logoImg.angle/5)*5%360;if(a>180)a-=360;if(a<-180)a+=360;logoImg.set('angle',a);rot.value=a;setRangeFill(rot);canvas.renderAll();}});
+canvas.on('object:modified',e=>{if(e.target===logoImg){const s=(logoImg.scaleX+logoImg.scaleY)/2;logoImg.set({scaleX:s,scaleY:s});let a=Math.round(logoImg.angle/5)*5%360;if(a>180)a-=360;if(a<-180)a+=360;logoImg.set('angle',a);rot.value=a;setRangeFill(rot);canvas.renderAll();updateSizeReadout();}});
+
+const zoomSlider=document.getElementById('zoom'),zoomVal=document.getElementById('zoomVal');
+function updateZoomLabel(){if(zoomVal)zoomVal.textContent=Math.round(viewZoom*100)+'%';}
+function setViewZoom(v,silent){
+  viewZoom=Math.max(0.5,Math.min(4,v));
+  if(!silent){zoomSlider.value=Math.round(viewZoom*100);setRangeFill(zoomSlider);}
+  applyView();
+}
+zoomSlider.addEventListener('input',()=>{setViewZoom(Number(zoomSlider.value)/100,true);setRangeFill(zoomSlider);updateZoomLabel();});
+document.getElementById('zoomIn').addEventListener('click',()=>setViewZoom(viewZoom+0.1));
+document.getElementById('zoomOut').addEventListener('click',()=>setViewZoom(viewZoom-0.1));
+document.getElementById('zoomFit').addEventListener('click',()=>{
+  const pw=(bagImg?bagImg.width*bagImg.scaleX:MODEL.canvasMm)||MODEL.canvasMm;
+  setViewZoom(DEFAULT_VIEW_ZOOM*MODEL.canvasMm/pw);
+});
+setRangeFill(zoomSlider);
 
 document.getElementById('reset').addEventListener('click',()=>{
-  if(logoImg){canvas.remove(logoImg);logoImg=null;}currentOriginal=null;fileInput.value='';upThumb.hidden=true;upPlus.style.display='';upText.innerHTML=I18N[currentLang].uploadHint;opa.value=100;rot.value=0;rmwhite.checked=true;[opa,rot].forEach(setRangeFill);canvas.renderAll();
+  if(logoImg){canvas.remove(logoImg);logoImg=null;}currentOriginal=null;fileInput.value='';upThumb.hidden=true;upPlus.style.display='';upText.innerHTML=I18N[currentLang].uploadHint;opa.value=100;rot.value=0;rmwhite.checked=true;[opa,rot].forEach(setRangeFill);canvas.renderAll();updateSizeReadout();
+});
+document.getElementById('model').addEventListener('change',e=>{
+  const m=MODELS[e.target.value];if(!m)return;
+  MODEL=m;
+  if(logoImg){canvas.remove(logoImg);logoImg=null;}
+  currentOriginal=null;fileInput.value='';upThumb.hidden=true;upPlus.style.display='';upText.innerHTML=I18N[currentLang].uploadHint;
+  opa.value=100;rot.value=0;rmwhite.checked=true;[opa,rot].forEach(setRangeFill);
+  setViewZoom(DEFAULT_VIEW_ZOOM);
+  loadBag();applyView();updateSizeReadout();
 });
 document.getElementById('export').addEventListener('click',()=>{
   const active=canvas.getActiveObject();
   canvas.discardActiveObject();
+  const savedZoom=viewZoom;
+  viewZoom=1;applyView();
   const previousBg=canvas.backgroundColor;
   canvas.setBackgroundColor('#ffffff',()=>{
     canvas.renderAll();
     const url=canvas.toDataURL({format:'jpeg',quality:.94,multiplier:2});
     const a=document.createElement('a');a.href=url;a.download=MODEL.id+'_LOGO预览.jpg';a.click();
-    canvas.setBackgroundColor(previousBg||'',()=>{if(active)canvas.setActiveObject(active);canvas.renderAll();});
+    canvas.setBackgroundColor(previousBg||'',()=>{
+      if(active)canvas.setActiveObject(active);
+      viewZoom=savedZoom;applyView();
+    });
   });
 });
 let savedLang='zh';try{savedLang=localStorage.getItem('markryden-logo-lang')||'zh'}catch(e){}setLanguage(I18N[savedLang]?savedLang:'zh');
