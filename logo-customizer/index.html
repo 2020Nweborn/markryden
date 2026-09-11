@@ -48,6 +48,13 @@
   .zoom-guide svg{display:block;width:15px;height:15px;flex:0 0 15px}
   .stage-tip{position:absolute;z-index:4;left:50%;bottom:30px;transform:translateX(-50%);height:26px;padding:0 11px;border-radius:2px;background:#303030;color:#fff;font-size:11px;white-space:nowrap;display:flex;align-items:center;pointer-events:none}
   .size-warning{position:absolute;z-index:8;top:18px;right:18px;width:32px;height:32px}
+  /* 画布左上角：显示/隐藏包体自带的品牌 LOGO（复用同一份 SVG，不额外增加产品图） */
+  .brand-toggle{position:absolute;z-index:8;left:18px;top:18px;display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:11px;line-height:1;color:#767676;background:rgba(255,255,255,.86);border:1px solid #e3e6e9;border-radius:999px;padding:7px 12px;cursor:pointer;transition:background .18s,color .18s,border-color .18s;white-space:nowrap}
+  .brand-toggle:hover{background:#fff;color:#333;border-color:#d7dbdf}
+  .brand-toggle .bdot{width:7px;height:7px;border-radius:50%;background:#d2d6da;transition:background .18s}
+  .brand-toggle.is-on{color:#2f2f2f;border-color:#c9cdd1;background:#fff}
+  .brand-toggle.is-on .bdot{background:#2f2f2f}
+  .brand-toggle[hidden]{display:none}
   .size-hud{position:absolute;z-index:7;left:50%;bottom:10px;transform:translateX(-50%);display:flex;align-items:flex-start;gap:7px;white-space:nowrap;font-size:10px;color:#9a9a9a;pointer-events:none;background:rgba(255,255,255,.84);padding:5px 11px;border-radius:9px}
   .size-hud #labelSize{padding-top:1px}
   .size-list{display:flex;flex-direction:column;line-height:1.45}
@@ -125,6 +132,8 @@
     .zoom-guide svg{width:17px;height:17px;flex:0 0 17px}
     .stage-tip{bottom:36px;height:32px;padding:0 14px;font-size:13px}
     .size-warning{top:22px;right:22px;width:40px;height:40px}
+    .brand-toggle{left:22px;top:22px;font-size:15px;gap:8px;padding:10px 16px}
+    .brand-toggle .bdot{width:9px;height:9px}
     .warning-trigger,.warning-trigger img{width:40px;height:40px}
     .warning-popover{top:54px;width:338px;min-height:72px;padding:21px 22px;border-radius:18px;font-size:18px;line-height:28px}
     .warning-popover:before{right:12px;top:-9px;width:18px;height:18px}
@@ -240,6 +249,7 @@
   <section class="stage" id="stageSection" aria-label="背包 LOGO 预览画布">
     <div class="stage-view" id="stageView">
       <canvas id="c" width="530" height="530" data-page-node-id="F2oEoKDVQG3Xr8dxfM1DR3"></canvas>
+      <button class="brand-toggle" id="brandToggle" type="button" aria-pressed="false" hidden><span class="bdot"></span><span id="brandToggleText">显示品牌LOGO</span></button>
       <div class="size-warning" id="sizeWarning">
         <button class="warning-trigger" id="warningTrigger" type="button" aria-label="查看 LOGO 尺寸提醒" aria-describedby="warningPopover">
           <img src="warning.svg" alt="">
@@ -265,7 +275,7 @@
     <div class="top-grid" data-page-node-id="So4Dtxl1a4hWa5d4IMA85c">
       <div data-page-node-id="3gNYqaMTFljlZvRaIvetAN">
         <div class="field-title" id="labelModel">产品型号</div>
-        <select id="model" data-page-node-id="hMpMcuCAHjI68KZRfubiqG"><option value="MR_9100" data-page-node-id="P3irB5DsGYwxOwNH7scJsq">MR_9100</option><option value="MR_82">MR_82</option><option value="MR_21">MR_21</option><option value="MR_35">MR_35</option><option value="MR_9031SJ">MR_9031SJ</option></select>
+        <select id="model" data-page-node-id="hMpMcuCAHjI68KZRfubiqG"></select>
       </div>
       <div data-page-node-id="jN1HEVxsUVuiorhIy04EUv">
         <div class="field-title" id="labelColor">颜色选择</div>
@@ -338,9 +348,9 @@
 
 <script>
 const I18N = {
-  zh:{name:'中文',htmlLang:'zh-CN',title:'MARK RYDEN · LOGO 定制预览',stageAria:'背包 LOGO 预览画布',settingsAria:'LOGO 定制设置',warningAria:'查看 LOGO 尺寸提醒',warning:'LOGO长宽不要超过12×12cm，超过后可能会导致无法定制！',stageTip:'拉动 LOGO 画布四角可缩放大小',model:'产品型号',color:'颜色选择',black:'商务黑',upload:'上传LOGO',uploadHint:'上传透明 PNG 最佳，直接可用；<br>带有背景颜色的 JPG 将自动去除背景',addMore:'继续添加 LOGO',slotsFull:'已达 3 个上限，再添加会替换最早的 LOGO',process:'LOGO处理',removeBg:'去除背景',invert:'颜色反向',tolerance:'LOGO边缘擦除',toleranceHint:'拖动滑块，边缘清除越彻底',opacity:'透明度调节',rotation:'360°旋转调节',reset:'初始化（清除已上传LOGO）',export:'导出JPG图片',exportOk:'图片已导出，请查看下载文件',exportFail:'导出失败，请重试',imageFail:'产品图加载失败，请检查网络后刷新重试',note:'注：遇到问题请联系与您对接的销售或者客服人员',sizeTitle:'LOGO 参考尺寸',fit:'适合大小',guide:'查看教程',guideUI:{step:'步骤',back:'上一步',next:'下一步',done:'我知道了',skip:'跳过'}},
-  en:{name:'English',htmlLang:'en',title:'MARK RYDEN · Custom Logo Preview',stageAria:'Backpack logo preview canvas',settingsAria:'Logo customization settings',warningAria:'View logo size notice',warning:'The logo must not exceed 12 × 12 cm in width or height. Larger logos may not be customizable.',stageTip:'Drag the corner handles to resize the logo',model:'Product Model',color:'Color',black:'Business Black',upload:'Upload Logo',uploadHint:'Transparent PNG is recommended and ready to use;<br>backgrounds in JPG files will be removed automatically',addMore:'Add another logo',slotsFull:'Limit of 3 reached — adding more replaces the earliest logo',process:'Logo Processing',removeBg:'Remove BG',invert:'Invert Color',tolerance:'Logo Edge Cleanup',toleranceHint:'Drag the slider to remove more of the background edge',opacity:'Opacity',rotation:'360° Rotation',reset:'Reset (remove uploaded logo)',export:'Export JPG',exportOk:'Image exported, please check your downloads',exportFail:'Export failed, please try again',imageFail:'The product image failed to load. Please check your connection and refresh.',note:'Note: If you encounter any issues, please contact your sales representative or customer service.',sizeTitle:'Reference logo size',fit:'Fit to Size',guide:'View Guide',guideUI:{step:'Step',back:'Back',next:'Next',done:'Got it',skip:'Skip'}},
-  ru:{name:'Русский',htmlLang:'ru',title:'MARK RYDEN · Предпросмотр логотипа',stageAria:'Область предпросмотра логотипа на рюкзаке',settingsAria:'Настройки логотипа',warningAria:'Показать ограничение размера логотипа',warning:'Ширина и высота логотипа не должны превышать 12 × 12 см. Превышение размера может сделать нанесение невозможным.',stageTip:'Потяните за углы рамки, чтобы изменить размер логотипа',model:'Модель товара',color:'Цвет',black:'Деловой чёрный',upload:'Загрузить логотип',uploadHint:'Рекомендуется прозрачный PNG;<br>фон изображения JPG удаляется автоматически',addMore:'Добавить ещё логотип',slotsFull:'Достигнут лимит 3 — новое заменит самое раннее',process:'Обработка логотипа',removeBg:'Удалить фон',invert:'Инверсия',tolerance:'Очистка краёв логотипа',toleranceHint:'Перемещайте ползунок для более тщательной очистки краёв',opacity:'Прозрачность',rotation:'Поворот 360°',reset:'Сбросить (удалить логотип)',export:'Экспорт JPG',exportOk:'Изображение экспортировано, проверьте загрузки',exportFail:'Не удалось экспортировать, попробуйте ещё раз',imageFail:'Не удалось загрузить изображение товара. Проверьте соединение и обновите страницу.',note:'Примечание: при возникновении вопросов обратитесь к вашему менеджеру или в службу поддержки.',sizeTitle:'Ориентировочный размер логотипа',fit:'По размеру',guide:'Инструкция',guideUI:{step:'Шаг',back:'Назад',next:'Далее',done:'Понятно',skip:'Пропустить'}}
+  zh:{name:'中文',htmlLang:'zh-CN',title:'MARK RYDEN · LOGO 定制预览',stageAria:'背包 LOGO 预览画布',settingsAria:'LOGO 定制设置',warningAria:'查看 LOGO 尺寸提醒',warning:'LOGO长宽不要超过12×12cm，超过后可能会导致无法定制！',stageTip:'拉动 LOGO 画布四角可缩放大小',model:'产品型号',color:'颜色选择',black:'商务黑',upload:'上传LOGO',uploadHint:'上传透明 PNG 最佳，直接可用；<br>带有背景颜色的 JPG 将自动去除背景',addMore:'继续添加 LOGO',slotsFull:'已达 3 个上限，再添加会替换最早的 LOGO',process:'LOGO处理',removeBg:'去除背景',invert:'颜色反向',tolerance:'LOGO边缘擦除',toleranceHint:'拖动滑块，边缘清除越彻底',opacity:'透明度调节',rotation:'360°旋转调节',reset:'初始化（清除已上传LOGO）',export:'导出JPG图片',exportOk:'图片已导出，请查看下载文件',exportFail:'导出失败，请重试',imageFail:'产品图加载失败，请检查网络后刷新重试',note:'注：遇到问题请联系与您对接的销售或者客服人员',sizeTitle:'LOGO 参考尺寸',brandLogo:'显示品牌LOGO',fit:'适合大小',guide:'查看教程',guideUI:{step:'步骤',back:'上一步',next:'下一步',done:'我知道了',skip:'跳过'}},
+  en:{name:'English',htmlLang:'en',title:'MARK RYDEN · Custom Logo Preview',stageAria:'Backpack logo preview canvas',settingsAria:'Logo customization settings',warningAria:'View logo size notice',warning:'The logo must not exceed 12 × 12 cm in width or height. Larger logos may not be customizable.',stageTip:'Drag the corner handles to resize the logo',model:'Product Model',color:'Color',black:'Business Black',upload:'Upload Logo',uploadHint:'Transparent PNG is recommended and ready to use;<br>backgrounds in JPG files will be removed automatically',addMore:'Add another logo',slotsFull:'Limit of 3 reached — adding more replaces the earliest logo',process:'Logo Processing',removeBg:'Remove BG',invert:'Invert Color',tolerance:'Logo Edge Cleanup',toleranceHint:'Drag the slider to remove more of the background edge',opacity:'Opacity',rotation:'360° Rotation',reset:'Reset (remove uploaded logo)',export:'Export JPG',exportOk:'Image exported, please check your downloads',exportFail:'Export failed, please try again',imageFail:'The product image failed to load. Please check your connection and refresh.',note:'Note: If you encounter any issues, please contact your sales representative or customer service.',sizeTitle:'Reference logo size',brandLogo:'Show brand logo',fit:'Fit to Size',guide:'View Guide',guideUI:{step:'Step',back:'Back',next:'Next',done:'Got it',skip:'Skip'}},
+  ru:{name:'Русский',htmlLang:'ru',title:'MARK RYDEN · Предпросмотр логотипа',stageAria:'Область предпросмотра логотипа на рюкзаке',settingsAria:'Настройки логотипа',warningAria:'Показать ограничение размера логотипа',warning:'Ширина и высота логотипа не должны превышать 12 × 12 см. Превышение размера может сделать нанесение невозможным.',stageTip:'Потяните за углы рамки, чтобы изменить размер логотипа',model:'Модель товара',color:'Цвет',black:'Деловой чёрный',upload:'Загрузить логотип',uploadHint:'Рекомендуется прозрачный PNG;<br>фон изображения JPG удаляется автоматически',addMore:'Добавить ещё логотип',slotsFull:'Достигнут лимит 3 — новое заменит самое раннее',process:'Обработка логотипа',removeBg:'Удалить фон',invert:'Инверсия',tolerance:'Очистка краёв логотипа',toleranceHint:'Перемещайте ползунок для более тщательной очистки краёв',opacity:'Прозрачность',rotation:'Поворот 360°',reset:'Сбросить (удалить логотип)',export:'Экспорт JPG',exportOk:'Изображение экспортировано, проверьте загрузки',exportFail:'Не удалось экспортировать, попробуйте ещё раз',imageFail:'Не удалось загрузить изображение товара. Проверьте соединение и обновите страницу.',note:'Примечание: при возникновении вопросов обратитесь к вашему менеджеру или в службу поддержки.',sizeTitle:'Ориентировочный размер логотипа',brandLogo:'Показать логотип',fit:'По размеру',guide:'Инструкция',guideUI:{step:'Шаг',back:'Назад',next:'Далее',done:'Понятно',skip:'Пропустить'}}
 };
 let currentLang='zh';
 /* 语言自动判定：只有中国大陆显示中文，其他地区一律英文 */
@@ -381,6 +391,8 @@ function setLanguage(code,remember){
   document.getElementById('labelSize').textContent=t.sizeTitle;
   document.getElementById('zoomFit').textContent=t.fit;
   document.getElementById('zoomGuideText').textContent=t.guide;
+  const bt=document.getElementById('brandToggleText');
+  if(bt)bt.textContent=t.brandLogo||I18N.zh.brandLogo;
   updateSizeReadout();
   if(tourOpen)renderTourStep();
   refreshUploadBox();
@@ -400,6 +412,9 @@ const DEFAULT_VIEW_ZOOM = 0.7;
    查不到就原样显示中文，新增颜色只要在这里补一行即可（不补也能跑）。 */
 const COLOR_I18N={
   '商务黑':{zh:'商务黑',en:'Business Black',ru:'Деловой чёрный'},
+  '精英灰':{zh:'精英灰',en:'Elite Gray',ru:'Серый элит'},
+  '都会蓝':{zh:'都会蓝',en:'Metro Blue',ru:'Синий метрополитен'},
+  '城际绿':{zh:'城际绿',en:'City Green',ru:'Зелёный city'},
   '黑':{zh:'黑',en:'Black',ru:'Чёрный'},
   '灰':{zh:'灰',en:'Gray',ru:'Серый'},
   '紫':{zh:'紫',en:'Purple',ru:'Фиолетовый'},
@@ -417,11 +432,17 @@ function colorName(label){
    LOGO 上传后固定落在画布正中心（canvasMm/2, canvasMm/2），代码里算，不在这里配。
    logoMax = 上传后 LOGO 的初始最大尺寸（mm），不得超过页面 120mm 红线。
    新增型号见 skill「logo-customizer-add-product」。 */
+/* ==== MODELS:BEGIN（本块由 add_model.py 自动生成；加型号/配色请直接给图跑脚本） ==== */
 const MODELS = {
+/* ==== MODELS:BEGIN（本块由 add_model.py 自动生成；加型号/配色请直接给图跑脚本） ==== */
   MR_9100:{id:'MR_9100',pxPerMm:1,canvasMm:532,logoMax:{wMm:120,hMm:80},
-    colors:[{key:'bizblack',label:'商务黑',image:'bag_9100_trim.png',webp:'bag_9100_trim.webp'}]},
+    colors:[
+      {key:'bizblack',label:'商务黑',image:'bag_9100_trim.png',webp:'bag_9100_trim.webp'}
+    ]},
   MR_82:{id:'MR_82',pxPerMm:5,canvasMm:121.6,logoMax:{wMm:60,hMm:60},
-    colors:[{key:'bizblack',label:'商务黑',image:'wallet_82_trim.png',webp:'wallet_82_trim.webp'}]},
+    colors:[
+      {key:'bizblack',label:'商务黑',image:'wallet_82_trim.png',webp:'wallet_82_trim.webp'}
+    ]},
   /* MR_21 竖版卡套 66.0 × 100.8 mm；素材 5000px -> pxPerMm 5 */
   MR_21:{id:'MR_21',pxPerMm:5,canvasMm:113.6,logoMax:{wMm:40,hMm:40},
     colors:[
@@ -434,13 +455,70 @@ const MODELS = {
     ]},
   /* MR_35 横版收纳袋 袋身 245.5 × 118.5 mm（右侧挂环另占约 35mm）；素材 2000px -> pxPerMm 2 */
   MR_35:{id:'MR_35',pxPerMm:2,canvasMm:307,logoMax:{wMm:110,hMm:60},
-    colors:[{key:'bizblack',label:'商务黑',image:'mr_35_bizblack_trim.png',webp:'mr_35_bizblack_trim.webp'}]},
-  /* MR_9031SJ 双肩包 328.0 × 557.0 mm；素材 1000px -> pxPerMm 1 */
-  MR_9031SJ:{id:'MR_9031SJ',pxPerMm:1,canvasMm:569,logoMax:{wMm:60,hMm:60},
     colors:[
-      {key:'bizblack',label:'商务黑',image:'mr_9031sj_bizblack_trim.png',webp:'mr_9031sj_bizblack_trim.webp'}
-    ]}
+      {key:'bizblack',label:'商务黑',image:'mr_35_bizblack_trim.png',webp:'mr_35_bizblack_trim.webp'}
+    ]},
+  /* MR_9031SJ 产品 333.0 × 577.0 mm；素材 1000px -> pxPerMm 1 */
+  MR_9031SJ:{id:'MR_9031SJ',pxPerMm:1,canvasMm:589,logoMax:{wMm:60,hMm:60},
+    colors:[
+      {key:'bizblack',label:'商务黑',image:'mr_9031sj_bizblack_trim.png',webp:'mr_9031sj_bizblack_trim.webp'},
+      {key:'citygreen',label:'城际绿',image:'mr_9031sj_citygreen_trim.png',webp:'mr_9031sj_citygreen_trim.webp'},
+      {key:'elitegray',label:'精英灰',image:'mr_9031sj_elitegray_trim.png',webp:'mr_9031sj_elitegray_trim.webp'},
+      {key:'metro',label:'都会蓝',image:'mr_9031sj_metro_trim.png',webp:'mr_9031sj_metro_trim.webp'}
+    ],
+    /* 包体自带品牌 LOGO 落点（mm，画布左上为原点）：由「有 LOGO 参考图」差分标定得出。
+       cxMm/cyMm=中心 lenMm=字标长度 rot=顺时针角度 color=参考图实测色 */
+    brandLogo:{cxMm:292,cyMm:430.5,lenMm:80,rot:90,color:'#a6a7ac'}},  /* @base 589px@(206,192) */
 };
+/* ==== MODELS:END ==== */
+
+/* ==== 包体自带品牌 LOGO（一份 SVG 全型号复用） ====
+   来源：LOGO [转换].svg（MARK RYDEN 横排字标，viewBox 1578 x 112.09）。
+   全站只内联这一份、不随型号增加，因此完全不增加产品图加载量。
+   每个型号的落点存在 MODELS[x].brandLogo（mm），由「有 LOGO 参考图」差分标定得出。
+   坐标约定：画布 1 个 fabric 单位 = 1mm（bagImg 已按 1/pxPerMm 缩放），原点在左上。 */
+const BRAND_LOGO_W=1578, BRAND_LOGO_AR=1578/112.09;
+const BRAND_LOGO_SVG=`<svg id="_图层_1" data-name="图层 1" xmlns="http://www.w3.org/2000/svg" width="1578" height="112.09" viewBox="0 0 1578 112.09"><defs><style>.cls-1 {fill: __BRAND_FILL__;}</style></defs><path class="cls-1" d="M1232.39,0h-124.37c-2.22,0-4.02,1.8-4.02,4.02v104.05c0,2.22,1.8,4.02,4.02,4.02h124.37c8.57,0,15.52-6.95,15.52-15.52V15.52c0-8.57-6.95-15.52-15.52-15.52ZM1219.58,83.84c0,5.35-4.33,9.68-9.68,9.68h-67.68c-5.46,0-9.89-4.43-9.89-9.89V28.25c0-5.46,4.43-9.89,9.89-9.89h67.68c5.35,0,9.68,4.33,9.68,9.68v55.8Z"/><path class="cls-1" d="M1395.8,0h-117.29c-1.81,0-3.27,1.47-3.27,3.27v105.55c0,1.81,1.47,3.27,3.27,3.27h25.05v-.21h92.24c1.34,0,2.42-1.08,2.42-2.42v-13.52c0-1.34-1.08-2.42-2.42-2.42h-86.69c-3.07,0-5.55-2.49-5.55-5.55v-17.3c0-3.07,2.49-5.55,5.55-5.55h86.69c1.34,0,2.42-1.08,2.42-2.42v-13.52c0-1.34-1.08-2.42-2.42-2.42h-86.69c-3.07,0-5.55-2.49-5.55-5.55v-17.29c0-3.07,2.49-5.55,5.55-5.55h86.69c1.34,0,2.42-1.08,2.42-2.42V2.42c0-1.34-1.08-2.42-2.42-2.42Z"/><path class="cls-1" d="M1571.85,0h-16.02c-3.4,0-6.16,2.76-6.16,6.15v71.9c0,4.87-6.23,6.89-9.08,2.95l-56.71-78.12c-1.31-1.81-3.4-2.88-5.64-2.88h-49.24c-2.22,0-4.02,1.8-4.02,4.02v101.92c0,3.4,2.76,6.15,6.15,6.15h16.02c3.4,0,6.15-2.76,6.15-6.15V33.58c0-4.84,6.18-6.88,9.06-2.99l57.07,77.06c2.07,2.79,5.34,4.44,8.82,4.44h34.31l11.57-.16c2.15-.03,3.88-1.78,3.88-3.93V6.15c0-3.4-2.76-6.15-6.15-6.15Z"/><path class="cls-1" d="M307.43,0h-41.58c-2.29,0-4.38,1.29-5.41,3.34l-53.77,107.29c-.34.67.15,1.46.9,1.46h21.05c2.5,0,4.78-1.41,5.9-3.64l6.73-13.42c1.12-2.23,3.4-3.65,5.9-3.65h78.84c2.5,0,4.78,1.41,5.9,3.65l6.73,13.42c1.12,2.23,3.4,3.64,5.9,3.64h21.18c.75,0,1.24-.79.9-1.46L312.84,3.34c-1.03-2.05-3.12-3.34-5.41-3.34ZM308.27,73.02h-43.25c-5.79,0-9.55-6.09-6.96-11.27l21.63-43.15c1.32-2.63,4.01-4.3,6.96-4.3s5.64,1.66,6.96,4.3l21.63,43.15c2.59,5.18-1.17,11.27-6.96,11.27Z"/><path class="cls-1" d="M634.49,61.7c-2.03-1.74-3.2-4.29-3.2-6.97s1.17-5.22,3.2-6.97l52.74-45.21c1.03-.88.4-2.56-.95-2.56h-27.09c-3.92,0-7.72,1.4-10.7,3.96l-45.94,39.38c-1.66,1.43-3.78,2.21-5.97,2.21h-8.5c-5.07,0-9.18-4.11-9.18-9.18V3.17c0-1.75-1.42-3.17-3.17-3.17h-21.99c-1.75,0-3.17,1.42-3.17,3.17v105.76c0,1.75,1.42,3.17,3.17,3.17h21.99c1.75,0,3.17-1.42,3.17-3.17v-35.84c0-5.07,4.11-9.18,9.18-9.18h4.52c2.19,0,4.31.78,5.97,2.21l49.01,42.02c2.98,2.55,6.77,3.96,10.7,3.96h31.05c1.35,0,1.97-1.68.95-2.56l-55.8-47.83Z"/><path class="cls-1" d="M1081.23,0h-30.2l-32.82,39.49c-3.69,4.44-10.52,4.43-14.2-.02L971.38,0h-30.2c-1.18,0-1.83,1.37-1.07,2.28l54.36,65.76c1.37,1.65,2.11,3.73,2.11,5.88v36.24c0,1.07.87,1.93,1.93,1.93h24.46c1.07,0,1.93-.87,1.93-1.93v-35.13c0-2.14.75-4.22,2.11-5.88l55.28-66.87c.75-.91.11-2.28-1.07-2.28Z"/><path class="cls-1" d="M185.04,0h-48.03c-2.3,0-4.4,1.34-5.37,3.42l-30.37,65.34c-2.66,5.76-10.84,5.76-13.5,0L57.62,3.44c-.97-2.1-3.07-3.44-5.37-3.44H3.92C1.75,0,0,1.75,0,3.92v104.26c0,2.16,1.75,3.92,3.92,3.92h18.5c2.16,0,3.92-1.75,3.92-3.92V27.93c0-4.11,3.33-7.43,7.44-7.43h.07c2.9,0,5.54,1.69,6.75,4.32l39.09,83.86c.97,2.09,3.06,3.42,5.37,3.42h19.33c2.31,0,4.41-1.34,5.37-3.44l38.68-83.84c1.22-2.63,3.85-4.32,6.75-4.32,4.11,0,7.43,3.33,7.43,7.43v80.25c0,2.16,1.75,3.92,3.92,3.92h18.5c2.16,0,3.92-1.75,3.92-3.92V3.92c0-2.16-1.75-3.92-3.92-3.92Z"/><path class="cls-1" d="M510.23,0h-118.71c-1.3,0-2.35,1.05-2.35,2.35v13.66c0,1.3,1.05,2.35,2.35,2.35h100.07c3.97,0,7.19,3.22,7.19,7.19v27.47c0,3.97-3.22,7.19-7.19,7.19h-100.07c-1.3,0-2.35,1.05-2.35,2.35v47.19c0,1.3,1.05,2.35,2.35,2.35h21.6c1.32,0,2.39-1.07,2.39-2.39v-22.88c0-4.56,3.7-8.26,8.26-8.26h66.75c4.56,0,8.26,3.7,8.26,8.26v22.92c0,1.3,1.05,2.35,2.35,2.35h23.63c1.3,0,2.35-1.05,2.35-2.35v-24.26c0-3.84-2.63-7.17-6.37-8.07l-5.07-1.21c-3.31-.79-5.64-3.75-5.64-7.15,0-3.15,2-5.94,4.98-6.96l4.85-1.65c4.33-1.48,7.25-5.55,7.25-10.12V16.87c0-9.32-7.55-16.87-16.87-16.87Z"/><path class="cls-1" d="M904.8,0h-118.71c-1.3,0-2.35,1.05-2.35,2.35v13.66c0,1.3,1.05,2.35,2.35,2.35h100.07c3.97,0,7.19,3.22,7.19,7.19v27.47c0,3.97-3.22,7.19-7.19,7.19h-100.07c-1.3,0-2.35,1.05-2.35,2.35v47.19c0,1.3,1.05,2.35,2.35,2.35h21.6c1.32,0,2.39-1.07,2.39-2.39v-22.88c0-4.56,3.7-8.26,8.26-8.26h66.75c4.56,0,8.26,3.7,8.26,8.26v22.92c0,1.3,1.05,2.35,2.35,2.35h23.63c1.3,0,2.35-1.05,2.35-2.35v-24.26c0-3.84-2.63-7.17-6.37-8.07l-5.07-1.21c-3.31-.79-5.64-3.75-5.64-7.15,0-3.15,2-5.94,4.98-6.96l4.85-1.65c4.33-1.48,7.25-5.55,7.25-10.12V16.87c0-9.32-7.55-16.87-16.87-16.87Z"/></svg>`;
+function brandLogoUrl(color){
+  return 'data:image/svg+xml;charset=utf-8,'+
+    encodeURIComponent(BRAND_LOGO_SVG.replace(/__BRAND_FILL__/g,color||'#a6a7ac'));
+}
+let brandLogoObj=null,brandLogoOn=false,brandLogoTok=0,brandLogoSig='';
+function modelHasBrandLogo(){return !!(MODEL&&MODEL.brandLogo);}
+function syncBrandToggleUI(){
+  const btn=document.getElementById('brandToggle');
+  if(!btn)return;
+  btn.hidden=!modelHasBrandLogo();
+  btn.classList.toggle('is-on',brandLogoOn);
+  btn.setAttribute('aria-pressed',String(brandLogoOn));
+}
+/* 显示/隐藏包体自带 LOGO。只在配置或开关变化时重建对象，避免切色时反复重建。 */
+function syncBrandLogo(){
+  syncBrandToggleUI();
+  /* 一份坐标全配色共用。不同颜色的渲染图取景本来就有几毫米差异，
+     LOGO 跟着差一点点属正常，不做逐色换算。 */
+  const cfg=modelHasBrandLogo()?MODEL.brandLogo:null;
+  const sig=(cfg&&brandLogoOn)?JSON.stringify(cfg):'';
+  if(sig===brandLogoSig){if(brandLogoObj)canvas.renderAll();return;}
+  brandLogoSig=sig;
+  if(brandLogoObj){canvas.remove(brandLogoObj);brandLogoObj=null;}
+  if(!cfg||!brandLogoOn||!(Number(cfg.lenMm)>0)){canvas.renderAll();return;}
+  const token=++brandLogoTok;
+  fabric.Image.fromURL(brandLogoUrl(cfg.color),(img,isError)=>{
+    if(token!==brandLogoTok)return;
+    if(isError||!img||!img._element)return;
+    const lenMm=Number(cfg.lenMm), sc=lenMm/BRAND_LOGO_W;
+    img.set({left:Number(cfg.cxMm)||0,top:Number(cfg.cyMm)||0,
+             originX:'center',originY:'center',angle:Number(cfg.rot)||0,
+             scaleX:sc,scaleY:sc,selectable:false,evented:false,
+             hoverCursor:'default'});
+    brandLogoObj=img;canvas.add(img);
+    /* 压在包体之上、用户上传的 LOGO 之下 */
+    if(bagImg)canvas.moveTo(img,1);
+    canvas.renderAll();
+  });
+}
+/* ==== 品牌 LOGO 结束 ==== */
 /* 每个型号各自记住选中的配色 */
 const colorPick={};
 function currentColor(){
@@ -473,7 +551,18 @@ colorSelect.addEventListener('change',e=>{
 /* WebP 体积只有 PNG 的四分之一左右，能明显缩短产品图加载时间；浏览器不支持时自动回退 PNG */
 const CAN_WEBP=(()=>{try{const c=document.createElement('canvas');c.width=c.height=1;return c.toDataURL('image/webp').indexOf('data:image/webp')===0;}catch(e){return false;}})();
 function modelSrc(c,forcePng){return (!forcePng&&CAN_WEBP&&c&&c.webp)?c.webp:(c?c.image:'');}
-let MODEL = MODELS.MR_9100;
+/* 型号下拉按 MODELS 动态生成：加型号只改 MODELS，不必再动 HTML */
+const modelSelect=document.getElementById('model');
+function renderModelSelect(){
+  modelSelect.innerHTML='';
+  Object.keys(MODELS).forEach(k=>{
+    const o=document.createElement('option');
+    o.value=k;o.textContent=k;
+    modelSelect.appendChild(o);
+  });
+  modelSelect.value=MODEL.id;
+}
+let MODEL = MODELS.MR_9100 || MODELS[Object.keys(MODELS)[0]];
 let viewZoom = DEFAULT_VIEW_ZOOM;
 
 const canvas = new fabric.Canvas('c',{preserveObjectStacking:true,selection:false,uniformScaling:true,uniScaleTransform:true});
@@ -537,6 +626,7 @@ function loadBag(attempt){
     const s=1/m.pxPerMm;
     img.set({left:m.canvasMm/2,top:m.canvasMm/2,originX:'center',originY:'center',scaleX:s,scaleY:s,selectable:false,evented:false});
     bagImg=img;canvas.add(img);canvas.sendToBack(img);canvas.renderAll();
+    syncBrandLogo();
     /* 首图就位后，空闲时把同型号其余配色 + 其它型号首图预热，切色/切型号即刻命中缓存 */
     preloadImages();
   });
@@ -1231,6 +1321,8 @@ function resetAll(){
   canvas.renderAll();updateSizeReadout();refreshUploadBox();
 }
 document.getElementById('reset').addEventListener('click',resetAll);
+/* 画布左上角：切换显示包体自带的品牌 LOGO */
+document.getElementById('brandToggle').addEventListener('click',()=>{brandLogoOn=!brandLogoOn;syncBrandLogo();});
 document.getElementById('model').addEventListener('change',e=>{
   const m=MODELS[e.target.value];if(!m)return;
   MODEL=m;
@@ -1241,6 +1333,7 @@ document.getElementById('model').addEventListener('change',e=>{
   setViewZoom(DEFAULT_VIEW_ZOOM);
   clearStageNotice();
   loadBag();applyView();updateSizeReadout();
+  syncBrandLogo();
 });
 const HUD_FONT='"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif';
 function roundRectPath(ctx,x,y,w,h,r){
@@ -1345,6 +1438,7 @@ document.getElementById('export').addEventListener('click',()=>{
 });
 let savedLang='';try{savedLang=localStorage.getItem('markryden-logo-lang')||''}catch(e){}
 setLanguage(I18N[savedLang]?savedLang:detectLang());
+renderModelSelect();
 renderColorSelect();
 loadBag();
 /* 同型号其余配色 / 其它型号首图的预热，由 loadBag() 首图就位后自行触发（不抢首屏带宽） */
