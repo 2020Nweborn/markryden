@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-14T08:31:16.180Z",
+  "updatedAt": "2026-09-14T08:52:48.555Z",
   "models": {
     "MR_9100": {
       "id": "MR_9100",
@@ -162,6 +162,23 @@
           "label": "123",
           "image": "mr_123_123_trim.png",
           "webp": "mr_123_123_trim.webp"
+        }
+      ]
+    },
+    "MR_567": {
+      "id": "MR_567",
+      "pxPerMm": 1.111,
+      "canvasMm": 1012.6,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "456",
+          "label": "456",
+          "image": "mr_567_456_trim.png",
+          "webp": "mr_567_456_trim.webp"
         }
       ]
     }
