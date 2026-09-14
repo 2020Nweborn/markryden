@@ -168,8 +168,8 @@
   .dark-btn:hover{background:#2a2c31}
   /* 进度条默认隐藏：它 8px 高、浅灰、又紧贴上传区下方，很容易被当成「第二条滚动条」，
      拖动它当然没反应。只有真正开始上传时才由 JS 加 .on 显示。 */
+  /* 进度条只出现在「提交中」弹窗里，所以默认不显示，由 .job-card 放开。 */
   .progress{display:none;height:8px;border-radius:999px;background:#ececee;margin:20px 0 18px;overflow:hidden}
-  .progress.on{display:block}
   .progress i{display:block;height:100%;background:#141519;border-radius:999px;width:0;transition:width .3s}
   .big-btn{width:100%;height:56px;border:0;border-radius:999px;background:#141519;color:#fff;
     font:600 15px/1 inherit;font-family:inherit;cursor:pointer;letter-spacing:.08em;margin-top:auto}
@@ -220,9 +220,14 @@
   /* token 弹层 */
   .tp-card{background:#fff;border-radius:20px;padding:24px;width:520px;max-width:100%}
   .tp-card h3{margin:0 0 12px;font-size:15px}
-  .tp-card ol{padding-left:18px;margin:0 0 12px;color:var(--tx2);font-size:13px}
   .tp-card input{width:100%;height:44px;border:1px solid var(--bd);border-radius:10px;padding:0 14px;font:inherit;margin-bottom:12px}
   .log{white-space:pre-wrap;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;background:#f6f7f8;border-radius:8px;padding:10px;max-height:180px;overflow:auto;color:#333;display:none}
+  /* 提交中弹窗。里面的进度条与明细日志常显 —— 默认都带 display:none，靠这里放开。 */
+  .job-card{background:#fff;border-radius:20px;padding:24px;width:520px;max-width:100%}
+  .job-card h3{margin:0 0 16px;font-size:15px}
+  .job-card .progress{display:block;margin:0 0 14px}
+  .job-card .log{display:block;max-height:200px}
+  .job-card .hint{margin:14px 0 0}
 </style>
 </head>
 <body>
@@ -264,7 +269,6 @@
         </div>
       </div>
       <div class="m-list" id="list"></div>
-      <p class="hint" style="margin:12px 0 0">改颜色名：点颜色文字 · 删颜色：点 × · 改型号名 / 删型号：型号名后的灰色小图标。所有改动要点右侧「确认提交上传」才生效。</p>
     </section>
     <section class="card dropzone">
       <h2 id="upTitle">新增型号与图片</h2>
@@ -276,13 +280,11 @@
       </div>
       <div class="uprow" id="previews"></div>
       <input type="file" id="file" accept="image/png,image/jpeg,image/webp" multiple hidden>
-      <div class="progress"><i id="progFill"></i></div>
       <button class="big-btn" id="btnPublish">确认提交上传</button>
       <p class="hint" style="margin-top:12px">
         图片要求 PNG、宽 1000 或 1000 的倍数（1000px = 100cm）。<span id="pendingTip"></span>
         <button class="link" id="btnDiscard">放弃改动</button>
       </p>
-      <div class="log" id="pubLog"></div>
     </section>
   </div>
 </div>
@@ -294,12 +296,10 @@
     <p class="ov-sub" id="ipSub">新传的同名颜色会替换原图，新颜色会追加；方框会按全部配色统一重算。</p>
     <div class="uprow" id="ipPreviews"></div>
     <input type="file" id="ipFile" accept="image/png,image/jpeg,image/webp" multiple hidden>
-    <div class="progress" style="margin:16px 0 14px"><i id="ipProg"></i></div>
     <div class="ov-btns">
       <button class="ghost-btn" id="ipCancel">取消</button>
       <button class="dark-btn" id="ipSave">确认提交上传</button>
     </div>
-    <div class="log" id="ipLog"></div>
   </div>
 </div>
 
@@ -332,17 +332,23 @@
 <div class="overlay" id="tokenPanel" hidden>
   <div class="tp-card">
     <h3>连接 GitHub（只需一次）</h3>
-    <ol>
-      <li>打开 <a href="https://github.com/settings/personal-access-tokens" target="_blank" rel="noopener">GitHub Token 页面</a></li>
-      <li>生成 Fine-grained token：只勾 <b>markryden</b> 仓库，权限 <b>Contents → Read and write</b></li>
-      <li>把 <b>github_pat_...</b> 粘到下面，点连接</li>
-    </ol>
     <input id="token" placeholder="github_pat_...">
-    <div class="row" style="justify-content:flex-end">
+    <div class="ov-btns">
       <button class="ghost-btn" id="tpCancel">取消</button>
       <button class="dark-btn" id="tpSave">连接</button>
     </div>
-    <p class="hint" style="margin-top:10px">密钥只存在你这台电脑的浏览器里，不经过任何服务器。</p>
+    <p class="hint" style="margin-top:10px">GitHub密钥请咨询上级。</p>
+  </div>
+</div>
+
+<!-- 提交中弹窗：进度条 + 上传明细都收在这里，不再往页面底部堆代码行；
+     提交结束（成功或失败）自动消失。 -->
+<div class="overlay" id="jobPanel" hidden>
+  <div class="job-card">
+    <h3 id="jobTitle">正在提交到 GitHub</h3>
+    <div class="progress"><i id="jobFill"></i></div>
+    <div class="log" id="jobLog"></div>
+    <p class="hint" id="jobHint">提交期间请不要关闭或刷新本页面。</p>
   </div>
 </div>
 
@@ -807,7 +813,6 @@ function openImgPanel(k){
   ip.key=k;ip.items=[];ip.loading=true;
   $('ipTitle').textContent='修改图片 · '+k;
   $('ipSub').textContent='正在读取线上现有配色…';
-  $('ipLog').style.display='none';$('ipLog').textContent='';
   $('ipPreviews').innerHTML='<p class="empty-tip">加载中…</p>';
   $('imgPanel').hidden=false;
   var m=state.models[k];
@@ -914,41 +919,53 @@ function buildUpload(){
 }
 
 /* ========== 发布 ========== */
-/* ⛔ ui.prog 必须是「进度条元素」（#progFill / #ipProg），不是 prog 函数本身。
+/* ⛔ ui.prog 必须是「进度条元素」（#jobFill），不是 prog 函数本身。
    踩过的坑：publish() 和 LOGO 保存两处写成 {prog:prog,...}，把函数当元素传进来，
    fill.style 是 undefined 却仍执行 fill.style.width=… —— 直接抛
    「Cannot set properties of undefined (setting 'width')」，
    一次完整的「确认提交上传」在第一个任务之前就被打断。
-   统一走 progEl() 归一：拿不到元素就回落 #progFill，再拿不到就静默不画，
+   统一走 progEl() 归一：拿不到元素就回落 #jobFill，再拿不到就静默不画，
    进度条画不出来不该让发布失败。 */
 function progEl(ui){
   var el=(ui&&ui.prog)||null;
-  if(!el||!el.style)el=$('progFill');
+  if(!el||!el.style)el=$('jobFill');
   if(!el||!el.style)return null;
   return el;
 }
 function prog(p,ui){
   var fill=progEl(ui);
   if(!fill)return;
-  /* 进度条默认隐藏（那条 8px 浅灰长条紧贴上传区，很容易被当成「第二条滚动条」，
-     拖它当然没反应）。只有真正开始上传才让它出现。 */
-  if(fill.parentNode&&fill.parentNode.classList)fill.parentNode.classList.add('on');
   fill.style.width=Math.round(p*100)+'%';
 }
-/* 上传结束（成功或失败）后把进度条收起来，恢复「只有一条滚动条」的干净状态。 */
-function progDone(ui){
-  var fill=progEl(ui);
-  if(!fill)return;
-  setTimeout(function(){
-    fill.style.width='0%';
-    if(fill.parentNode&&fill.parentNode.classList)fill.parentNode.classList.remove('on');
-  },900);
+/* 进度条和上传明细都关在「提交中」弹窗里：提交期间出现，提交结束整块消失，
+   不再把「上传 xx.png / 更新 models.json」这些行堆在页面底部。 */
+function openJobPanel(title){
+  var p=$('jobPanel');if(!p)return;
+  var t=$('jobTitle');if(t&&title)t.textContent=title;
+  var f=$('jobFill');if(f)f.style.width='0%';
+  var l=$('jobLog');if(l)l.textContent='';
+  p.hidden=false;
 }
-/* 执行一组发布任务。ui={prog,log,btn} 让「新增」和「修改弹窗」共用同一套执行/进度/日志。 */
+function closeJobPanel(){
+  var p=$('jobPanel');if(!p)return;
+  p.hidden=true;
+  var f=$('jobFill');if(f)f.style.width='0%';
+}
+/* 兼容旧调用点：进度条现在随弹窗一起收，这里只做兜底复位。 */
+function progDone(ui){closeJobPanel();}
+/* 执行一组发布任务。ui={prog,log,title} 可选；
+   不传就统一落到「提交中」弹窗（#jobFill / #jobLog）。
+   弹窗由本函数自己开关：进来就弹，跑完（成功或失败）自动消失。 */
 function runJobs(jobs,ui){
+  ui=ui||{};
   var total=jobs.length,done=0;
-  ui.log.textContent='';
-  var log=function(s){ui.log.style.display='block';ui.log.textContent+=s+'\n';ui.log.scrollTop=ui.log.scrollHeight;};
+  var logEl=$('jobLog')||ui.log||null;
+  if(logEl)logEl.textContent='';
+  openJobPanel(ui.title||'正在提交到 GitHub');
+  var log=function(s){
+    if(!logEl)return;
+    logEl.textContent+=s+'\n';logEl.scrollTop=logEl.scrollHeight;
+  };
   prog(0.02,ui);
   var runOne=function(){
     if(!jobs.length)return Promise.resolve();
@@ -988,22 +1005,26 @@ function runJobs(jobs,ui){
       }else{
         label='更新 models.json';
         var merged=state.models;
-        /* 覆盖已有型号时不能直接 merged[key]=newModel —— 那样会把 brandLogo、
-           logoMax 这类「本次没动的字段」整段抹掉（9100 的 logoMax 就是这样
-           被改成 60×60、9031SJ 之外的型号品牌 LOGO 就是这样消失的）。
-           改为：以新配置为基准，再用旧配置补齐所有未出现的键。 */
-        var old=merged[j.model.key];
-        var nm2=j.model.model;
-        if(old){
-          Object.keys(old).forEach(function(f){
-            if(nm2[f]===undefined)nm2[f]=old[f];
+        /* j.model 为空表示「只写配置」：删型号 / 删颜色 / 改颜色名这些操作
+           已经在 state.models 上改完了，直接把当前配置落盘即可。 */
+        if(j.model){
+          /* 覆盖已有型号时不能直接 merged[key]=newModel —— 那样会把 brandLogo、
+             logoMax 这类「本次没动的字段」整段抹掉（9100 的 logoMax 就是这样
+             被改成 60×60、9031SJ 之外的型号品牌 LOGO 就是这样消失的）。
+             改为：以新配置为基准，再用旧配置补齐所有未出现的键。 */
+          var old=merged[j.model.key];
+          var nm2=j.model.model;
+          if(old){
+            Object.keys(old).forEach(function(f){
+              if(nm2[f]===undefined)nm2[f]=old[f];
+            });
+          }
+          merged[j.model.key]=nm2;
+          (j.model.keepColors||[]).forEach(function(c){
+            var exist=merged[j.model.key].colors.some(function(x){return x.key===c.key;});
+            if(!exist)merged[j.model.key].colors.push(c);
           });
         }
-        merged[j.model.key]=nm2;
-        (j.model.keepColors||[]).forEach(function(c){
-          var exist=merged[j.model.key].colors.some(function(x){return x.key===c.key;});
-          if(!exist)merged[j.model.key].colors.push(c);
-        });
         var body=JSON.stringify({updatedAt:new Date().toISOString(),models:merged},null,2);
         task=(function(){
           var b64=btoa(unescape(encodeURIComponent(body)));
@@ -1017,7 +1038,9 @@ function runJobs(jobs,ui){
     return task.catch(function(e){if(e&&e.message!=='__skip__')log('  出错：'+e.message);throw e;})
       .then(function(){done++;prog(done/total,ui);return runOne();});
   };
-  return runOne();
+  /* 收尾一定要关弹窗：否则失败时「上传 xx.png」这些行会一直挂在页面上。 */
+  return runOne().then(function(r){closeJobPanel();return r;},
+                       function(e){closeJobPanel();throw e;});
 }
 /* 组装本次要跑的任务（新增/修改弹窗共用） */
 function buildJobs(up,opt){
@@ -1032,6 +1055,16 @@ function buildJobs(up,opt){
     state.dels.forEach(function(p){jobs.push({kind:'del',path:p});});
   }
   jobs.push({kind:'json',model:up});
+  return jobs;
+}
+/* 只改配置、不新增图片时的任务清单（删型号 / 删颜色 / 改颜色名 / 改型号名）。
+   这些改动都直接落在 state.models 上，所以只需要把图片增删跑完，
+   再把当前配置整体写回 models.json。 */
+function buildConfigJobs(){
+  var jobs=[];
+  state.pendingCopy.forEach(function(cp){jobs.push({kind:'copy',from:cp.from,to:cp.to});});
+  state.dels.forEach(function(p){jobs.push({kind:'del',path:p});});
+  jobs.push({kind:'json',model:null});
   return jobs;
 }
 /* 型号名称是必填项：为空就拦在提交之前，聚焦并高亮输入框，
@@ -1051,20 +1084,32 @@ function requireModelName(){
 function publish(){
   if(state.busy)return;
   if(!token()){openTokenPanel();alert('还没有连接 GitHub，请先连接');return;}
+  /* ⛔ 右侧栏没有待传图片时必须走「纯配置提交」。
+     以前这里无条件 buildUpload()，会以「请先放几张颜色图」软失败 ——
+     于是「删掉的型号 / 删掉的颜色」永远写不进 models.json，刷新一下全长回来。
+     删型号、删颜色、改颜色名、改型号名都只改配置，本来就不需要图片。 */
+  if(!draft.items.length){
+    /* 有待发布的配置改动（删型号/删颜色/改名）→ 纯配置提交，不需要型号名、也不需要图。
+       什么都没有 → 只做引导：先填型号名，再放图。 */
+    if(pendingCount())return publishConfig();
+    if(!requireModelName())return;
+    toastMsg('请先放几张颜色图');
+    return;
+  }
   if(!requireModelName())return;
   buildUpload().then(function(up){
     if(state.models[up.key]&&!confirm('型号 '+up.key+' 已存在，覆盖它的配色？'))return Promise.resolve();
     var jobs=buildJobs(up);
     state.busy=true;$('btnPublish').disabled=true;
-    return runJobs(jobs,{prog:$('progFill'),log:$('pubLog'),btn:$('btnPublish')}).then(function(){
-      state.busy=false;$('btnPublish').disabled=false;prog(1);progDone();
+    return runJobs(jobs,{title:'正在提交到 GitHub'}).then(function(){
+      state.busy=false;$('btnPublish').disabled=false;
       state.puts=[];state.dels=[];state.pendingCopy=[];state.dirty=false;
       renderPreviews();
       alert('发布完成！\n前端页面约 30–60 秒后会自动显示新内容。');
       return loadModels();
     });
   }).catch(function(e){
-    state.busy=false;$('btnPublish').disabled=false;progDone();
+    state.busy=false;$('btnPublish').disabled=false;
     var m=(e&&e.message)||'';
     var soft=m.indexOf('请先')>=0||m.indexOf('宽度')>=0||m.indexOf('英文名')>=0;
     /* ⛔ 顺序不能反：refreshPending() 会把 #pendingTip 重写成「待发布项数」，
@@ -1073,6 +1118,23 @@ function publish(){
     refreshPending();
     if(!soft)alert('发布中断：'+m+'\n已提交的部分不会回滚，修好后可重新发布。');
     else if(m)toastMsg(m);
+  });
+}
+/* 只改配置的提交（右侧栏没有图片）：把图片增删跑完 + 当前配置写回 models.json。
+   不需要型号名称，也不该被型号名称的必填校验拦住。 */
+function publishConfig(){
+  if(!pendingCount()){toastMsg('还没有任何改动');return;}
+  state.busy=true;$('btnPublish').disabled=true;
+  runJobs(buildConfigJobs(),{title:'正在提交配置到 GitHub'}).then(function(){
+    state.busy=false;$('btnPublish').disabled=false;
+    state.dels=[];state.pendingCopy=[];state.dirty=false;
+    renderPreviews();
+    alert('发布完成！\n前端页面约 30–60 秒后会自动显示新内容。');
+    return loadModels();
+  }).catch(function(e){
+    state.busy=false;$('btnPublish').disabled=false;
+    refreshPending();
+    alert('发布中断：'+((e&&e.message)||e)+'\n已提交的部分不会回滚，修好后可重新发布。');
   });
 }
 
@@ -1220,7 +1282,7 @@ $('lpSave').addEventListener('click',function(){
   if(!token()){toastMsg('LOGO 定位已记录，连接 GitHub 后再点「确认提交上传」');return;}
   var up={key:lp.key,model:m,files:[],keepColors:[]};
   state.busy=true;
-  runJobs([{kind:'json',model:up}],{prog:$('progFill'),log:$('pubLog'),btn:$('btnPublish')}).then(function(){
+  runJobs([{kind:'json',model:up}],{title:'正在保存 LOGO 定位到 GitHub'}).then(function(){
     state.busy=false;state.dirty=false;refreshPending();
     alert('品牌LOGO定位已保存到线上。');
     return loadModels();
@@ -1344,18 +1406,15 @@ $('ipSave').addEventListener('click',function(){
   });
   $('ipSave').disabled=true;$('ipSave').textContent='提交中…';
   packUpload(changed,model,keep,{brandLogo:m.brandLogo}).then(function(up){
-    $('ipLog').textContent='';$('ipLog').style.display='block';
     return runJobs(buildJobs(up,{skipGlobalEdits:true}),
-      {prog:$('ipProg'),log:$('ipLog'),btn:$('ipSave')});
+      {title:'正在提交到 GitHub'});
   }).then(function(){
     $('ipSave').disabled=false;$('ipSave').textContent='确认提交上传';
-    progDone({prog:$('ipProg')});
     $('imgPanel').hidden=true;ip.items=[];
     alert('已提交！前端页面约 30–60 秒后会自动显示新内容。');
     return loadModels();
   }).catch(function(e){
     $('ipSave').disabled=false;$('ipSave').textContent='确认提交上传';
-    progDone({prog:$('ipProg')});
     alert('提交中断：'+((e&&e.message)||e));
   });
 });
