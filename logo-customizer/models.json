@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-14T09:53:12.480Z",
+  "updatedAt": "2026-09-14T08:27:08.120Z",
   "models": {
     "MR_9100": {
       "id": "MR_9100",
@@ -52,10 +52,10 @@
       },
       "colors": [
         {
-          "key": "123",
-          "label": "橙123",
-          "image": "mr_21_123_trim.png",
-          "webp": "mr_21_123_trim.webp"
+          "key": "orange",
+          "label": "橙",
+          "image": "mr_21_orange_trim.png",
+          "webp": "mr_21_orange_trim.webp"
         },
         {
           "key": "gray",
@@ -147,57 +147,6 @@
         "rot": 90,
         "color": "#a6a7ac"
       }
-    },
-    "MR_123": {
-      "id": "MR_123",
-      "pxPerMm": 1.111,
-      "canvasMm": 1012.6,
-      "logoMax": {
-        "wMm": 60,
-        "hMm": 60
-      },
-      "colors": [
-        {
-          "key": "123",
-          "label": "123",
-          "image": "mr_123_123_trim.png",
-          "webp": "mr_123_123_trim.webp"
-        }
-      ]
-    },
-    "MR_567": {
-      "id": "MR_567",
-      "pxPerMm": 1.111,
-      "canvasMm": 1012.6,
-      "logoMax": {
-        "wMm": 60,
-        "hMm": 60
-      },
-      "colors": [
-        {
-          "key": "456",
-          "label": "456",
-          "image": "mr_567_456_trim.png",
-          "webp": "mr_567_456_trim.webp"
-        }
-      ]
-    },
-    "MR_369": {
-      "id": "MR_369",
-      "pxPerMm": 1,
-      "canvasMm": 573,
-      "logoMax": {
-        "wMm": 60,
-        "hMm": 60
-      },
-      "colors": [
-        {
-          "key": "elitegray",
-          "label": "精英灰",
-          "image": "mr_369_elitegray_trim.png",
-          "webp": "mr_369_elitegray_trim.webp"
-        }
-      ]
     }
   }
 }
