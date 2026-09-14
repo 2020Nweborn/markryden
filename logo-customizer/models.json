@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-14T08:27:08.120Z",
+  "updatedAt": "2026-09-14T08:31:16.180Z",
   "models": {
     "MR_9100": {
       "id": "MR_9100",
@@ -52,10 +52,10 @@
       },
       "colors": [
         {
-          "key": "orange",
-          "label": "橙",
-          "image": "mr_21_orange_trim.png",
-          "webp": "mr_21_orange_trim.webp"
+          "key": "123",
+          "label": "橙123",
+          "image": "mr_21_123_trim.png",
+          "webp": "mr_21_123_trim.webp"
         },
         {
           "key": "gray",
@@ -147,6 +147,23 @@
         "rot": 90,
         "color": "#a6a7ac"
       }
+    },
+    "MR_123": {
+      "id": "MR_123",
+      "pxPerMm": 1.111,
+      "canvasMm": 1012.6,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "123",
+          "label": "123",
+          "image": "mr_123_123_trim.png",
+          "webp": "mr_123_123_trim.webp"
+        }
+      ]
     }
   }
 }
