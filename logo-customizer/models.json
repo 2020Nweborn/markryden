@@ -1,23 +1,6 @@
 {
-  "updatedAt": "2026-09-14T08:27:08.120Z",
+  "updatedAt": "2026-09-15T06:09:43.509Z",
   "models": {
-    "MR_9100": {
-      "id": "MR_9100",
-      "pxPerMm": 1,
-      "canvasMm": 532,
-      "logoMax": {
-        "wMm": 120,
-        "hMm": 80
-      },
-      "colors": [
-        {
-          "key": "bizblack",
-          "label": "商务黑",
-          "image": "bag_9100_trim.png",
-          "webp": "bag_9100_trim.webp"
-        }
-      ]
-    },
     "MR_82": {
       "id": "MR_82",
       "pxPerMm": 5,
