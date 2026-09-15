@@ -175,6 +175,11 @@
     font:600 15px/1 inherit;font-family:inherit;cursor:pointer;letter-spacing:.08em;margin-top:auto}
   .big-btn:hover{background:#2a2c31}
   .big-btn:disabled{opacity:.45;cursor:not-allowed}
+  /* 有未提交改动时高亮 —— 删除类操作已改为自动提交，但改色名/改型号名
+     等仍需要手动点提交，这里必须让「还没落盘」一眼可见。 */
+  .big-btn.has-pending{background:#c8442a}
+  .big-btn.has-pending:hover{background:#ad3a23}
+  #pendingTip.warn{color:#c8442a;font-weight:600}
   .hint{color:var(--tx2);font-size:12px;line-height:1.7}
   .link{color:var(--tx2);text-decoration:underline;cursor:pointer;background:none;border:0;font-size:12px;
     padding:0;font-family:inherit}
@@ -407,8 +412,11 @@ function parseName(name){
 function pendingCount(){return state.puts.length+state.dels.length+state.pendingCopy.length+(state.dirty?1:0);}
 function refreshPending(){
   var n=pendingCount();
-  $('pendingTip').textContent=n?('当前有 '+n+' 项改动待发布。'):'';
-  $('btnPublish').textContent=n?('确认提交上传 ('+n+')'):'确认提交上传';
+  var tip=$('pendingTip'), btn=$('btnPublish');
+  tip.textContent=n?('当前有 '+n+' 项改动待发布。'):'';
+  tip.classList.toggle('warn',!!n);
+  btn.textContent=n?('确认提交上传 ('+n+')'):'确认提交上传';
+  btn.classList.toggle('has-pending',!!n);
 }
 
 /* ========== GitHub ========== */
@@ -460,6 +468,7 @@ function b64ToText(b64){
    会拿到 5 分钟前的旧配置并把页面状态覆盖回去 —— 表现就是「删了型号，刷新它又回来了」。
    api 的 contents 端点没有 CDN 缓存，公开仓库不登录也能读。 */
 function loadModels(){
+  var src='api';
   return fetch(API+CFG+'?t='+Date.now(),{cache:'no-store'}).then(function(r){
     if(!r.ok)throw new Error('api 读不到 '+CFG);
     return r.json();
@@ -467,11 +476,13 @@ function loadModels(){
     if(!j||!j.content)throw new Error('api 返回里没有 content');
     return JSON.parse(b64ToText(j.content));
   }).catch(function(){
+    src='raw CDN 缓存';
     return fetch(RAW+'?t='+Date.now(),{cache:'no-store'}).then(function(r){
       if(!r.ok)throw new Error('线上还没有 '+CFG);
       return r.json();
     });
   }).catch(function(){
+    src='本地文件';
     return fetch(CFG+'?t='+Date.now(),{cache:'no-store'}).then(function(r){
       if(!r.ok)throw new Error('线上和本地都读不到 '+CFG);
       return r.json();
@@ -483,6 +494,9 @@ function loadModels(){
     $('newModel').value='';
     $('upTitle').textContent='新增型号与图片';
     renderList();renderPreviews();refreshPending();
+    /* ⛔ 降级读取必须说出来。以前这里是静默 fallback：api 一旦读不到就悄悄换 CDN 缓存副本，
+       用户看到的是「刚删掉的型号刷新又回来了」，却完全无从归因。 */
+    if(src!=='api')toastMsg('⚠ 读到的是'+src+'，可能不是最新。稍等片刻再刷新；若持续如此，多半是 PAT 失效或网络受限。');
     return state.models;
   });
 }
@@ -611,15 +625,14 @@ $('list').addEventListener('click',function(e){
     m.id=nk;state.models[nk]=m;
     state.dirty=true;renderList();refreshPending();
   }else if(act==='mdel'){
-    if(!confirm('删除型号 '+k+'？'))return;
     var cols2=m.colors||[];
     var prot=cols2.filter(function(c){return !inSandbox(c.image);}).length;
-    var tip=prot?('其中 '+prot+' 个配色用的是正式版素材，测试版受保护、图片不会被删。\n'):'';
-    if(confirm(tip+'同时删除它的 '+cols2.length+' 张图片文件？')){
-      cols2.forEach(function(c){stageDel(c.image);stageDel(c.webp);});
-    }
+    var tip=prot?('\n\n其中 '+prot+' 个配色用的是正式版素材，测试版受保护，那几张图不会被删。'):'';
+    if(!confirm('删除型号 '+k+'（连同它的 '+cols2.length+' 张图片文件）？'+tip+'\n\n确认后会立即同步到线上。'))return;
+    cols2.forEach(function(c){stageDel(c.image);stageDel(c.webp);});
     delete state.models[k];
     state.dirty=true;renderList();refreshPending();
+    autoCommit('删除型号 '+k).then(function(r){if(r==='ok')toastMsg('型号 '+k+' 已从线上删除');});
   }else if(act==='cedit'){
     var c0=(m.colors||[])[i];if(!c0)return;
     var nn=prompt('新的颜色名：',c0.label||c0.key);
@@ -633,10 +646,11 @@ $('list').addEventListener('click',function(e){
     state.dirty=true;renderList();refreshPending();
   }else if(act==='cdel'){
     var c1=(m.colors||[])[i];if(!c1)return;
-    if(!confirm('删除颜色「'+(c1.label||c1.key)+'」？'))return;
+    if(!confirm('删除颜色「'+(c1.label||c1.key)+'」？\n\n确认后会立即同步到线上。'))return;
     stageDel(c1.image);stageDel(c1.webp);
     m.colors.splice(i,1);
     state.dirty=true;renderList();refreshPending();
+    autoCommit('删除颜色').then(function(r){if(r==='ok')toastMsg('颜色已从线上删除');});
   }
 });
 
@@ -1128,7 +1142,9 @@ function requireModelName(){
   return false;
 }
 function publish(){
-  if(state.busy)return;
+  /* ⛔ 不能静默 return：以前 busy 卡住时点提交毫无反应、也不报错，
+     用户看到的就是「点了提交但什么都没发生」。 */
+  if(state.busy){toastMsg('上一次提交还在进行中，请稍候…');return;}
   if(!token()){openTokenPanel();alert('还没有连接 GitHub，请先连接');return;}
   /* ⛔ 右侧栏没有待传图片时必须走「纯配置提交」。
      以前这里无条件 buildUpload()，会以「请先放几张颜色图」软失败 ——
@@ -1169,19 +1185,32 @@ function publish(){
 /* 只改配置的提交（右侧栏没有图片）：把图片增删跑完 + 当前配置写回 models.test.json。
    不需要型号名称，也不该被型号名称的必填校验拦住。 */
 function publishConfig(){
-  if(!pendingCount()){toastMsg('还没有任何改动');return;}
+  if(!pendingCount()){toastMsg('还没有任何改动');return Promise.resolve('nochange');}
   state.busy=true;$('btnPublish').disabled=true;
-  runJobs(buildConfigJobs(),{title:'正在提交配置到 GitHub'}).then(function(){
+  return runJobs(buildConfigJobs(),{title:'正在提交配置到 GitHub'}).then(function(){
     state.busy=false;$('btnPublish').disabled=false;
     state.dels=[];state.pendingCopy=[];state.dirty=false;
     renderPreviews();
     alert('发布完成！\n前端页面约 30–60 秒后会自动显示新内容。'+blockedTip());
-    return loadModels();
+    return loadModels().then(function(){return 'ok';});
   }).catch(function(e){
     state.busy=false;$('btnPublish').disabled=false;
     refreshPending();
     alert('发布中断：'+((e&&e.message)||e)+'\n已提交的部分不会回滚，修好后可重新发布。');
+    return 'fail';
   });
+}
+/* 删除型号 / 删除颜色 / 清除品牌LOGO —— 这类操作的用户意图在确认框那一下就表达完了，
+   不该再要求「记得去右上角点提交」。以前只改内存 + 标 dirty，用户以为删完就完了，
+   实际上一个字都没写回 GitHub，刷新自然全长回来。
+   所以：确认后直接写回，一步到位。返回 Promise，调用方可据此决定是否刷新界面。 */
+function autoCommit(what){
+  if(!token()){
+    openTokenPanel();
+    toastMsg(what+'已记在页面上，但还没写回线上 —— 先连接 GitHub，再点右上角提交');
+    return Promise.resolve('nologin');
+  }
+  return publishConfig();
 }
 
 /* ========== 品牌 LOGO 手动定位 ========== */
@@ -1302,11 +1331,18 @@ $('lpColor').addEventListener('input',function(){
 });
 $('lpCancel').addEventListener('click',function(){$('logoPanel').hidden=true;});
 $('lpClear').addEventListener('click',function(){
-  if(!confirm('清除该型号的品牌LOGO？保存后前端将不再显示。'))return;
-  if(lp.key&&state.models[lp.key])delete state.models[lp.key].brandLogo;
+  /* ⛔ 先确认真的有目标型号。以前 lp.key 为空时会静默跳过删除，
+     却仍然弹「已清除 null 的品牌LOGO」—— 用户以为清除成功了，其实一个字都没改。 */
+  if(!lp.key){alert('请先从型号卡上的「品牌LOGO定位」进入，再清除。');return;}
+  var key=lp.key;
+  if(!state.models[key]){alert('型号 '+key+' 不在当前配置里，无法清除。');return;}
+  if(!confirm('清除型号 '+key+' 的品牌LOGO？\n\n确认后会立即同步到线上，前端不再显示这个 LOGO。'))return;
+  delete state.models[key].brandLogo;
   state.dirty=true;renderList();refreshPending();
   $('logoPanel').hidden=true;
-  toastMsg('已清除 '+lp.key+' 的品牌LOGO（记得提交上传）');
+  autoCommit('清除 '+key+' 的品牌LOGO').then(function(r){
+    if(r==='ok')toastMsg('型号 '+key+' 的品牌LOGO 已从线上清除');
+  });
 });
 $('lpSave').addEventListener('click',function(){
   if(lp.key&&!state.models[lp.key]){alert('型号不存在');return;}
