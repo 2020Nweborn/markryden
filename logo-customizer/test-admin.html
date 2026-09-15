@@ -374,7 +374,7 @@ var PWD_HASH='05b9cf9467959a1affbf336782b033fa2bef12581d9fa41367a2f84506e8925d';
 var COLOR_SLUG={'黑':'black','商务黑':'bizblack','灰':'gray','深灰':'darkgray','银灰':'gray','紫':'purple','绿':'green','蓝':'blue','橙':'orange','红':'red','棕':'brown','卡其':'khaki','米白':'beige','白':'white','粉':'pink','黄':'yellow','兰':'blue','杏':'apricot','奶茶':'milktea','精英灰':'elitegray','都会':'metro','都会蓝':'metro','城际绿':'citygreen'};
 
 var TK='mr_admin_token';
-var state={models:{},dirty:false,puts:[],dels:[],pendingCopy:[],busy:false};
+var state={models:{},dirty:false,puts:[],dels:[],pendingCopy:[],blocked:[],busy:false};
 var draft={model:'',items:[],editKey:'',geo:null,brandLogo:null};
 window.__mrDraft=function(){return draft;};
 var lp={key:null,cxMm:0,cyMm:0,lenMm:DEFAULT_LOGO_LEN,rot:DEFAULT_LOGO_ROT,color:'#a6a7ac',pxPerMmDisp:1,src:''};
@@ -445,18 +445,40 @@ function setGhChip(){
 }
 
 /* ========== 读取配置 ========== */
+/* base64 → UTF-8 文本。api.github.com 的 contents 端点返回 base64，
+   配置里有中文色名，不能 atob 了事，必须按 UTF-8 还原。
+   ⛔ 不要用 decodeURIComponent(escape(...))：escape 对部分字节会产出 %uXXXX，
+   decodeURIComponent 直接抛 URI malformed，把整条读取打掉、静默退回 CDN，修复等于没做。 */
+function b64ToText(b64){
+  var bin=atob(String(b64).replace(/\s/g,''));
+  var arr=new Uint8Array(bin.length);
+  for(var i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
+  return new TextDecoder('utf-8').decode(arr);
+}
+/* ⛔ 读取顺序固定为：api.github.com → raw.githubusercontent.com → 同源文件。
+   为什么 api 优先：raw 是 CDN，带 Cache-Control: max-age=300。提交写回成功后立刻重读，
+   会拿到 5 分钟前的旧配置并把页面状态覆盖回去 —— 表现就是「删了型号，刷新它又回来了」。
+   api 的 contents 端点没有 CDN 缓存，公开仓库不登录也能读。 */
 function loadModels(){
-  return fetch(RAW+'?t='+Date.now(),{cache:'no-store'}).then(function(r){
-    if(!r.ok)throw new Error('线上还没有 models.test.json');
+  return fetch(API+CFG+'?t='+Date.now(),{cache:'no-store'}).then(function(r){
+    if(!r.ok)throw new Error('api 读不到 '+CFG);
     return r.json();
+  }).then(function(j){
+    if(!j||!j.content)throw new Error('api 返回里没有 content');
+    return JSON.parse(b64ToText(j.content));
   }).catch(function(){
-    return fetch('models.test.json?t='+Date.now(),{cache:'no-store'}).then(function(r){
-      if(!r.ok)throw new Error('线上和本地都读不到 models.test.json');
+    return fetch(RAW+'?t='+Date.now(),{cache:'no-store'}).then(function(r){
+      if(!r.ok)throw new Error('线上还没有 '+CFG);
+      return r.json();
+    });
+  }).catch(function(){
+    return fetch(CFG+'?t='+Date.now(),{cache:'no-store'}).then(function(r){
+      if(!r.ok)throw new Error('线上和本地都读不到 '+CFG);
       return r.json();
     });
   }).then(function(j){
     state.models=(j&&j.models)||{};
-    state.dirty=false;state.puts=[];state.dels=[];state.pendingCopy=[];
+    state.dirty=false;state.puts=[];state.dels=[];state.pendingCopy=[];state.blocked=[];
     draft={model:'',items:[],editKey:'',geo:null,brandLogo:null};
     $('newModel').value='';
     $('upTitle').textContent='新增型号与图片';
@@ -591,7 +613,9 @@ $('list').addEventListener('click',function(e){
   }else if(act==='mdel'){
     if(!confirm('删除型号 '+k+'？'))return;
     var cols2=m.colors||[];
-    if(confirm('同时删除它的 '+cols2.length+' 张图片文件？')){
+    var prot=cols2.filter(function(c){return !inSandbox(c.image);}).length;
+    var tip=prot?('其中 '+prot+' 个配色用的是正式版素材，测试版受保护、图片不会被删。\n'):'';
+    if(confirm(tip+'同时删除它的 '+cols2.length+' 张图片文件？')){
       cols2.forEach(function(c){stageDel(c.image);stageDel(c.webp);});
     }
     delete state.models[k];
@@ -617,7 +641,19 @@ $('list').addEventListener('click',function(e){
 });
 
 function stageCopy(from,to){if(from!==to)state.pendingCopy.push({from:from,to:to});}
-function stageDel(path){if(!path||!inSandbox(path))return;if(state.dels.indexOf(path)<0)state.dels.push(path);}
+/* 白名单外的素材删不掉 —— 这不是 bug，是测试版沙盒的保护（防止测试配色覆盖正式素材）。
+   ⛔ 但必须记下来并明确告诉用户：静默跳过会让用户以为「整个删除都没生效」。 */
+function stageDel(path){
+  if(!path)return;
+  if(!inSandbox(path)){if(state.blocked.indexOf(path)<0)state.blocked.push(path);return;}
+  if(state.dels.indexOf(path)<0)state.dels.push(path);
+}
+function blockedTip(){
+  if(!state.blocked.length)return '';
+  return '\n\n注意：其中 '+state.blocked.length+' 个文件属于正式版素材，测试版受保护、不会删除：\n'+
+    state.blocked.slice(0,6).map(function(p){return '  · '+p;}).join('\n')+
+    (state.blocked.length>6?('\n  … 共 '+state.blocked.length+' 个'):'');
+}
 
 /* ========== 上传与裁切 ========== */
 /* 把 dataURL 字符串转成 Blob，好让后面统一走 createImageBitmap 一条路。
@@ -1115,7 +1151,7 @@ function publish(){
       state.busy=false;$('btnPublish').disabled=false;
       state.puts=[];state.dels=[];state.pendingCopy=[];state.dirty=false;
       renderPreviews();
-      alert('发布完成！\n前端页面约 30–60 秒后会自动显示新内容。');
+      alert('发布完成！\n前端页面约 30–60 秒后会自动显示新内容。'+blockedTip());
       return loadModels();
     });
   }).catch(function(e){
@@ -1139,7 +1175,7 @@ function publishConfig(){
     state.busy=false;$('btnPublish').disabled=false;
     state.dels=[];state.pendingCopy=[];state.dirty=false;
     renderPreviews();
-    alert('发布完成！\n前端页面约 30–60 秒后会自动显示新内容。');
+    alert('发布完成！\n前端页面约 30–60 秒后会自动显示新内容。'+blockedTip());
     return loadModels();
   }).catch(function(e){
     state.busy=false;$('btnPublish').disabled=false;
