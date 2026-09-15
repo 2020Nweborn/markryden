@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-15T05:57:59.621Z",
+  "updatedAt": "2026-09-15T05:58:41.268Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -103,36 +103,6 @@
         "cxMm": 292,
         "cyMm": 430.5,
         "lenMm": 80,
-        "rot": 90,
-        "color": "#a6a7ac"
-      }
-    },
-    "MR_300": {
-      "id": "MR_300",
-      "pxPerMm": 1,
-      "canvasMm": 583,
-      "logoMax": {
-        "wMm": 60,
-        "hMm": 60
-      },
-      "colors": [
-        {
-          "key": "metro",
-          "label": "都会蓝",
-          "image": "test-assets/mr_300_metro_trim.png",
-          "webp": "test-assets/mr_300_metro_trim.webp"
-        },
-        {
-          "key": "elitegray",
-          "label": "精英灰",
-          "image": "test-assets/mr_300_elitegray_trim.png",
-          "webp": "test-assets/mr_300_elitegray_trim.webp"
-        }
-      ],
-      "brandLogo": {
-        "cxMm": 286.5,
-        "cyMm": 413.9,
-        "lenMm": 100,
         "rot": 90,
         "color": "#a6a7ac"
       }
