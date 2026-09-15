@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-15T05:24:13.814Z",
+  "updatedAt": "2026-09-15T05:55:11.079Z",
   "models": {
     "MR_9100": {
       "id": "MR_9100",
@@ -156,7 +156,14 @@
           "image": "test-assets/mr_300_elitegray_trim.png",
           "webp": "test-assets/mr_300_elitegray_trim.webp"
         }
-      ]
+      ],
+      "brandLogo": {
+        "cxMm": 286.5,
+        "cyMm": 413.9,
+        "lenMm": 100,
+        "rot": 90,
+        "color": "#a6a7ac"
+      }
     }
   }
 }
