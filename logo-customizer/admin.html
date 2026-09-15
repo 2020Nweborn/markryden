@@ -175,6 +175,11 @@
     font:600 15px/1 inherit;font-family:inherit;cursor:pointer;letter-spacing:.08em;margin-top:auto}
   .big-btn:hover{background:#2a2c31}
   .big-btn:disabled{opacity:.45;cursor:not-allowed}
+  /* 有未提交改动时高亮 —— 删除类操作已改为自动提交，但改色名/改型号名
+     等仍需要手动点提交，这里必须让「还没落盘」一眼可见。 */
+  .big-btn.has-pending{background:#c8442a}
+  .big-btn.has-pending:hover{background:#ad3a23}
+  #pendingTip.warn{color:#c8442a;font-weight:600}
   .hint{color:var(--tx2);font-size:12px;line-height:1.7}
   .link{color:var(--tx2);text-decoration:underline;cursor:pointer;background:none;border:0;font-size:12px;
     padding:0;font-family:inherit}
@@ -214,6 +219,12 @@
   .lp-pos{font-size:12px;color:var(--tx2);margin-top:10px}
   .lp-btns{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
   .lp-btns .ghost-btn,.lp-btns .dark-btn{height:42px;border-radius:10px;font:inherit;cursor:pointer;white-space:nowrap}
+  .lp-add{width:100%;height:46px;margin-bottom:10px;border-radius:10px}
+  .lp-add[hidden]{display:none}
+  .lp-none{font-size:12.5px;color:var(--tx2);line-height:1.65;margin:0 0 6px}
+  .lp-none[hidden]{display:none}
+  .lp-fields.off{opacity:.45;pointer-events:none}
+  .ghost-btn:disabled{opacity:.45;cursor:not-allowed}
   .ghost-btn{background:#fff;color:var(--tx);border:1px solid var(--bd);border-radius:10px;height:40px;padding:0 16px;font:inherit;cursor:pointer}
   .ghost-btn:hover{border-color:#141519}
   .ghost-btn.warn{color:#c0392b;border-color:#f0c8c8}
@@ -311,13 +322,20 @@
       <div style="flex:0 0 320px">
         <div class="lp-stage" id="lpStage" style="width:320px"></div>
         <p class="lp-pos" id="lpPos"></p>
-        <p class="hint">直接在图上拖动 LOGO 调位置，右侧微调大小、角度和颜色。<br>
+        <p class="hint">添加后可直接在图上拖动 LOGO 调位置，右侧微调大小、角度和颜色。<br>
           若 LOGO 颜色与包体接近而看不清，改右侧「颜色」即可。</p>
       </div>
       <div class="lp-ctrl">
+        <!-- ⛔ 品牌LOGO 一律由用户显式添加：进面板时不会「默认已经放好一个 LOGO」，
+             否则用户会以为这个型号本来就有、或者已经保存过了。
+             没有 LOGO 时右侧控件全部禁用，只留这一个添加按钮可点。 -->
+        <button class="dark-btn lp-add" id="lpAdd">＋ 添加品牌LOGO</button>
+        <p class="lp-none" id="lpNone">这个型号还没有品牌LOGO，点上面的按钮添加（默认落在画布正中心）。</p>
+        <div class="lp-fields" id="lpFields">
         <label>字标长度（mm）</label><input type="number" id="lpLen" step="1" min="5" max="300">
         <label>旋转角度（顺时针，度）</label><input type="number" id="lpRot" step="1">
         <label>颜色</label><input type="color" id="lpColor" value="#a6a7ac">
+        </div>
         <div class="lp-btns">
           <button class="ghost-btn warn" id="lpClear" style="flex:1 1 100%">清除该型号LOGO</button>
           <button class="ghost-btn" id="lpCancel" style="flex:1">取消</button>
@@ -366,10 +384,25 @@ var PWD_HASH='05b9cf9467959a1affbf336782b033fa2bef12581d9fa41367a2f84506e8925d';
 var COLOR_SLUG={'黑':'black','商务黑':'bizblack','灰':'gray','深灰':'darkgray','银灰':'gray','紫':'purple','绿':'green','蓝':'blue','橙':'orange','红':'red','棕':'brown','卡其':'khaki','米白':'beige','白':'white','粉':'pink','黄':'yellow','兰':'blue','杏':'apricot','奶茶':'milktea','精英灰':'elitegray','都会':'metro','都会蓝':'metro','城际绿':'citygreen'};
 
 var TK='mr_admin_token';
+
+/* 最近一次「本机成功写回」的配置快照。
+   ⛔ 为什么必须有：GitHub 的 contents 接口和 raw CDN 都有分钟级缓存，刚写完立刻读，
+   很可能读回上一个版本 —— 表象就是「删掉的型号刷新又回来」；更糟的是下一次写回会把
+   这版旧配置整体覆盖回线上，等于把删除动作反向撤销（2026-09-15 线上真事：删掉的
+   MR_31 就是这样被旧配置复活的）。有了快照，就能按 updatedAt 判断「读回来的这版
+   比本机写的还旧」，从而拒绝采用。
+   键名带配置名：正式版后台与测试版后台同域，localStorage 共用，不隔开会互相串。
+   ⛔ 快照只是兜底，不能替代「写完不回头读」——见 afterWrite()。 */
+var LW='mr_cfg_lastwrite:'+'models.json';
+function lwGet(){try{return JSON.parse(localStorage.getItem(LW)||'null');}catch(e){return null;}}
+function lwSave(cfg){try{localStorage.setItem(LW,JSON.stringify({t:Date.now(),updatedAt:String((cfg&&cfg.updatedAt)||''),cfg:cfg}));}catch(e){}}
+function lwDrop(){try{localStorage.removeItem(LW);}catch(e){}}
+var lastSrc='api';   /* 最近一次读取的来源；enter() 靠它决定要不要用成功提示盖掉警告 */
 var state={models:{},dirty:false,puts:[],dels:[],pendingCopy:[],busy:false};
 var draft={model:'',items:[],editKey:'',geo:null,brandLogo:null};
 window.__mrDraft=function(){return draft;};
 var lp={key:null,cxMm:0,cyMm:0,lenMm:DEFAULT_LOGO_LEN,rot:DEFAULT_LOGO_ROT,color:'#a6a7ac',pxPerMmDisp:1,src:''};
+var lpAdded=false;   /* 面板里当前有没有 LOGO：没有时只显示「＋ 添加品牌LOGO」 */
 
 var $=function(id){return document.getElementById(id);};
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
@@ -399,8 +432,11 @@ function parseName(name){
 function pendingCount(){return state.puts.length+state.dels.length+state.pendingCopy.length+(state.dirty?1:0);}
 function refreshPending(){
   var n=pendingCount();
-  $('pendingTip').textContent=n?('当前有 '+n+' 项改动待发布。'):'';
-  $('btnPublish').textContent=n?('确认提交上传 ('+n+')'):'确认提交上传';
+  var tip=$('pendingTip'), btn=$('btnPublish');
+  tip.textContent=n?('当前有 '+n+' 项改动待发布。'):'';
+  tip.classList.toggle('warn',!!n);
+  btn.textContent=n?('确认提交上传 ('+n+')'):'确认提交上传';
+  btn.classList.toggle('has-pending',!!n);
 }
 
 /* ========== GitHub ========== */
@@ -435,22 +471,67 @@ function setGhChip(){
 }
 
 /* ========== 读取配置 ========== */
+/* base64 → UTF-8 文本。api.github.com 的 contents 端点返回 base64，
+   配置里有中文色名，不能 atob 了事，必须按 UTF-8 还原。
+   ⛔ 不要用 decodeURIComponent(escape(...))：escape 对部分字节会产出 %uXXXX，
+   decodeURIComponent 直接抛 URI malformed，把整条读取打掉、静默退回 CDN，修复等于没做。 */
+function b64ToText(b64){
+  var bin=atob(String(b64).replace(/\s/g,''));
+  var arr=new Uint8Array(bin.length);
+  for(var i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
+  return new TextDecoder('utf-8').decode(arr);
+}
+/* ⛔ 读取顺序固定为：api.github.com → 同源文件 → raw.githubusercontent.com。
+   为什么 api 优先：raw 是 CDN，带 Cache-Control: max-age=300。提交写回成功后立刻重读，
+   会拿到 5 分钟前的旧配置并把页面状态覆盖回去 —— 表现就是「删了型号，刷新它又回来了」。
+   api 的 contents 端点没有 CDN 缓存，公开仓库不登录也能读。
+   同源文件排第二：带 ?t= 的 URL 在 Pages 上是缓存未命中，会回源取最新文件。
+   raw 排最后：它是最可能仍在发旧内容的一环，只当兜底。
+   ⛔ 光靠顺序不够用：实测出现过「刚写回、api 仍返回上一版」，所以再加一道 updatedAt 防线 ——
+   读回来的版本比本机刚写回的还旧，就判定读到的是缓存副本，直接采用本机快照。 */
 function loadModels(){
-  return fetch(RAW+'?t='+Date.now(),{cache:'no-store'}).then(function(r){
-    if(!r.ok)throw new Error('线上还没有 models.json');
+  var src='api';
+  return fetch(API+'models.json?t='+Date.now(),{cache:'no-store'}).then(function(r){
+    if(!r.ok)throw new Error('api 读不到 models.json');
     return r.json();
+  }).then(function(j){
+    if(!j||!j.content)throw new Error('api 返回里没有 content');
+    return JSON.parse(b64ToText(j.content));
   }).catch(function(){
+    src='同源文件';
     return fetch('models.json?t='+Date.now(),{cache:'no-store'}).then(function(r){
-      if(!r.ok)throw new Error('线上和本地都读不到 models.json');
+      if(!r.ok)throw new Error('同源读不到 models.json');
+      return r.json();
+    });
+  }).catch(function(){
+    src='raw CDN 缓存';
+    return fetch(RAW+'?t='+Date.now(),{cache:'no-store'}).then(function(r){
+      if(!r.ok)throw new Error('线上还没有 models.json');
       return r.json();
     });
   }).then(function(j){
+    /* ---- 拒绝用旧版本覆盖新版本 ---- */
+    var lw=lwGet();
+    if(lw&&lw.cfg){
+      var lt=Date.parse(lw.updatedAt||''), rt=Date.parse((j&&j.updatedAt)||'');
+      if(rt&&lt&&rt>=lt)lwDrop();               /* 线上已追平本机写回的那版，快照退休 */
+      else if(Date.now()-lw.t<1800000){         /* 快照只在 30 分钟内作数 */
+        j=lw.cfg;src='本机刚写回的版本';
+      }
+    }
+    lastSrc=src;      /* ⛔ 必须记在守卫之后：守卫会改写 src，记早了等于没记 */
     state.models=(j&&j.models)||{};
     state.dirty=false;state.puts=[];state.dels=[];state.pendingCopy=[];
     draft={model:'',items:[],editKey:'',geo:null,brandLogo:null};
     $('newModel').value='';
     $('upTitle').textContent='新增型号与图片';
     renderList();renderPreviews();refreshPending();
+    /* ⛔ 降级读取必须说出来。以前这里是静默 fallback：api 一旦读不到就悄悄换 CDN 缓存副本，
+       用户看到的是「刚删掉的型号刷新又回来了」，却完全无从归因。 */
+    if(src==='本机刚写回的版本')
+      toastMsg('⚠ GitHub 缓存还没更新，本页采用本机最后写回的那一版（内容已提交，前端约 30–60 秒后同步）。');
+    else if(src!=='api')
+      toastMsg('⚠ 读到的是'+src+'，可能不是最新。稍等片刻再刷新；若持续如此，多半是 PAT 失效或网络受限。');
     return state.models;
   });
 }
@@ -579,13 +660,12 @@ $('list').addEventListener('click',function(e){
     m.id=nk;state.models[nk]=m;
     state.dirty=true;renderList();refreshPending();
   }else if(act==='mdel'){
-    if(!confirm('删除型号 '+k+'？'))return;
     var cols2=m.colors||[];
-    if(confirm('同时删除它的 '+cols2.length+' 张图片文件？')){
-      cols2.forEach(function(c){stageDel(c.image);stageDel(c.webp);});
-    }
+    if(!confirm('删除型号 '+k+'（连同它的 '+cols2.length+' 张图片文件）？\n\n确认后会立即同步到线上。'))return;
+    cols2.forEach(function(c){stageDel(c.image);stageDel(c.webp);});
     delete state.models[k];
     state.dirty=true;renderList();refreshPending();
+    autoCommit('删除型号 '+k).then(function(r){if(r==='ok')toastMsg('型号 '+k+' 已从线上删除');});
   }else if(act==='cedit'){
     var c0=(m.colors||[])[i];if(!c0)return;
     var nn=prompt('新的颜色名：',c0.label||c0.key);
@@ -599,10 +679,11 @@ $('list').addEventListener('click',function(e){
     state.dirty=true;renderList();refreshPending();
   }else if(act==='cdel'){
     var c1=(m.colors||[])[i];if(!c1)return;
-    if(!confirm('删除颜色「'+(c1.label||c1.key)+'」？'))return;
+    if(!confirm('删除颜色「'+(c1.label||c1.key)+'」？\n\n确认后会立即同步到线上。'))return;
     stageDel(c1.image);stageDel(c1.webp);
     m.colors.splice(i,1);
     state.dirty=true;renderList();refreshPending();
+    autoCommit('删除颜色').then(function(r){if(r==='ok')toastMsg('颜色已从线上删除');});
   }
 });
 
@@ -1028,8 +1109,14 @@ function runJobs(jobs,ui){
         var body=JSON.stringify({updatedAt:new Date().toISOString(),models:merged},null,2);
         task=(function(){
           var b64=btoa(unescape(encodeURIComponent(body)));
+          var snap=JSON.parse(body);
           return ghFile('models.json').catch(function(){return null;}).then(function(cur){
             return ghPut('models.json',b64,'后台：更新型号配置',cur&&cur.sha);
+          }).then(function(r){
+            /* 记下「这一版是本机写上去的」，供 loadModels() 识别线上读回来的是不是缓存旧版。
+               沙盒拦截（skipped）时不能记，否则会拿本机的假想状态去压真实线上配置。 */
+            if(!(r&&r.skipped))lwSave(snap);
+            return r;
           });
         })();
       }
@@ -1082,7 +1169,9 @@ function requireModelName(){
   return false;
 }
 function publish(){
-  if(state.busy)return;
+  /* ⛔ 不能静默 return：以前 busy 卡住时点提交毫无反应、也不报错，
+     用户看到的就是「点了提交但什么都没发生」。 */
+  if(state.busy){toastMsg('上一次提交还在进行中，请稍候…');return;}
   if(!token()){openTokenPanel();alert('还没有连接 GitHub，请先连接');return;}
   /* ⛔ 右侧栏没有待传图片时必须走「纯配置提交」。
      以前这里无条件 buildUpload()，会以「请先放几张颜色图」软失败 ——
@@ -1106,7 +1195,7 @@ function publish(){
       state.puts=[];state.dels=[];state.pendingCopy=[];state.dirty=false;
       renderPreviews();
       alert('发布完成！\n前端页面约 30–60 秒后会自动显示新内容。');
-      return loadModels();
+      return afterWrite();
     });
   }).catch(function(e){
     state.busy=false;$('btnPublish').disabled=false;
@@ -1122,20 +1211,38 @@ function publish(){
 }
 /* 只改配置的提交（右侧栏没有图片）：把图片增删跑完 + 当前配置写回 models.json。
    不需要型号名称，也不该被型号名称的必填校验拦住。 */
+/* 写回成功之后：内存里的 state.models 就是刚写进线上那一版，直接复用即可。
+   ⛔ 不要回头再 loadModels()：远端 / CDN 可能还没更新，重读会把刚删掉的型号重新装回内存，
+   紧接着的下一次写回就把它整段覆盖回线上 —— 这就是「删了刷新又回来」的真因。
+   渲染与待发布计数照旧刷新，页面表现不变。 */
+function afterWrite(){state.puts=[];renderList();renderPreviews();refreshPending();return 'ok';}
 function publishConfig(){
-  if(!pendingCount()){toastMsg('还没有任何改动');return;}
+  if(!pendingCount()){toastMsg('还没有任何改动');return Promise.resolve('nochange');}
   state.busy=true;$('btnPublish').disabled=true;
-  runJobs(buildConfigJobs(),{title:'正在提交配置到 GitHub'}).then(function(){
+  return runJobs(buildConfigJobs(),{title:'正在提交配置到 GitHub'}).then(function(){
     state.busy=false;$('btnPublish').disabled=false;
     state.dels=[];state.pendingCopy=[];state.dirty=false;
     renderPreviews();
     alert('发布完成！\n前端页面约 30–60 秒后会自动显示新内容。');
-    return loadModels();
+    return afterWrite();
   }).catch(function(e){
     state.busy=false;$('btnPublish').disabled=false;
     refreshPending();
     alert('发布中断：'+((e&&e.message)||e)+'\n已提交的部分不会回滚，修好后可重新发布。');
+    return 'fail';
   });
+}
+/* 删除型号 / 删除颜色 / 清除品牌LOGO —— 这类操作的用户意图在确认框那一下就表达完了，
+   不该再要求「记得去右上角点提交」。以前只改内存 + 标 dirty，用户以为删完就完了，
+   实际上一个字都没写回 GitHub，刷新自然全长回来。
+   所以：确认后直接写回，一步到位。返回 Promise，调用方可据此决定是否刷新界面。 */
+function autoCommit(what){
+  if(!token()){
+    openTokenPanel();
+    toastMsg(what+'已记在页面上，但还没写回线上 —— 先连接 GitHub，再点右上角提交');
+    return Promise.resolve('nologin');
+  }
+  return publishConfig();
 }
 
 /* ========== 品牌 LOGO 手动定位 ========== */
@@ -1154,6 +1261,9 @@ function brandLogoUrl(color){
 }
 function openLogoPanel(key){
   var isNew=!key;
+  /* 每次进面板都从干净状态开始：旧的节点引用必须清掉，否则「未添加」时
+     残留的旧节点会被 applyLp() 当成当前 LOGO 摆上去。 */
+  lp.logoEl=null;lp.srcEl=null;
   var mm,srcPromise,have=null;
   if(isNew){
     if(!draft.items.length){alert('请先上传这个型号的图片，再定位LOGO');return;}
@@ -1174,6 +1284,7 @@ function openLogoPanel(key){
     srcPromise=Promise.resolve(c0.image);
     have=m.brandLogo||null;
   }
+  lpAdded=!!have;
   $('lpTitle').textContent='品牌LOGO定位'+(isNew?(' · '+$('newModel').value):(' · '+key));
   if(have){
     lp.cxMm=have.cxMm;lp.cyMm=have.cyMm;lp.lenMm=have.lenMm;lp.rot=have.rot||0;lp.color=have.color||'#a6a7ac';
@@ -1186,6 +1297,7 @@ function openLogoPanel(key){
   lp.mm=mm;
   $('lpLen').value=lp.lenMm;$('lpRot').value=lp.rot;$('lpColor').value=lp.color;
   $('logoPanel').hidden=false;
+  renderLpState();
   var stage=$('lpStage');
   /* 底图是 width:100% 撑满 stage（有 1px 边框），先按此给一个正确比例，
      等图片解码完再用实测宽度校准一次，避免开场闪一下小 LOGO。 */
@@ -1212,9 +1324,38 @@ function openLogoPanel(key){
     return brandLogoUrl(lp.color);
   }).then(function(u){
     if(lp.logoEl)lp.logoEl.src=u;
-    applyLp();
+    applyLp();renderLpState();
   }).catch(function(e){alert(e.message||e);$('logoPanel').hidden=true;});
 }
+/* 面板的「有LOGO / 没有LOGO」两态。
+   ⛔ 用户明确要求：进面板不能默认就摆好一个 LOGO（会让人以为这个型号本来就有、
+   或者以为已经保存过了），必须由用户点「＋ 添加品牌LOGO」显式添加；
+   没有 LOGO 时右侧控件一律禁用，避免参数改了却没有对象。 */
+function renderLpState(){
+  var on=!!lpAdded, add=$('lpAdd'), none=$('lpNone'), fields=$('lpFields');
+  if(add)add.hidden=on;
+  if(none)none.hidden=on;
+  if(fields)fields.classList.toggle('off',!on);
+  ['lpLen','lpRot','lpColor'].forEach(function(id){var el=$(id);if(el)el.disabled=!on;});
+  var clr=$('lpClear');if(clr)clr.disabled=!on;
+  if(lp.logoEl)lp.logoEl.style.display=on?'':'none';
+  /* ⛔ 画布上不放虚线占位块和提示文字：用户明确要求去掉（视觉上像压了一层白膜）。
+     未添加时只看右侧的「＋ 添加品牌LOGO」按钮即可。 */
+  var emp=$('lpEmpty');if(emp)emp.hidden=true;
+  applyLp();
+}
+/* 添加品牌LOGO：默认落在画布正中心，长度/角度取默认值，颜色取面板当前值 */
+function addLp(){
+  if(lpAdded)return;
+  if(!lp.logoEl){toastMsg('图片还没准备好，稍等一下再试');return;}
+  lpAdded=true;
+  lp.cxMm=lp.mm/2;lp.cyMm=lp.mm/2;lp.lenMm=DEFAULT_LOGO_LEN;lp.rot=DEFAULT_LOGO_ROT;
+  lp.color=($('lpColor')&&$('lpColor').value)||'#a6a7ac';
+  $('lpLen').value=lp.lenMm;$('lpRot').value=lp.rot;$('lpColor').value=lp.color;
+  brandLogoUrl(lp.color).then(function(u){if(lp.logoEl)lp.logoEl.src=u;renderLpState();});
+  toastMsg('已添加品牌LOGO，直接在图上拖动调位置');
+}
+$('lpAdd').addEventListener('click',addLp);
 function applyLp(){
   var el=lp.logoEl;
   if(!el)return;
@@ -1229,6 +1370,7 @@ function applyLp(){
   el.style.left=(lp.cxMm*lp.pxPerMmDisp)+'px';
   el.style.top=(lp.cyMm*lp.pxPerMmDisp)+'px';
   el.style.transform='translate(-50%,-50%) rotate('+lp.rot+'deg)';
+  if(!lpAdded){$('lpPos').textContent='未添加品牌LOGO（画布 '+Math.round(lp.mm*10)/10+'mm）';return;}
   $('lpPos').textContent='中心位置：X '+Math.round(lp.cxMm*10)/10+' mm，Y '+Math.round(lp.cyMm*10)/10+' mm（画布 '+Math.round(lp.mm*10)/10+'mm）';
 }
 function bindLpDrag(){
@@ -1248,21 +1390,31 @@ function bindLpDrag(){
   stage.addEventListener('pointerup',function(){dragging=false;});
 }
 bindLpDrag();
-$('lpLen').addEventListener('input',function(){lp.lenMm=parseFloat($('lpLen').value)||lp.lenMm;applyLp();});
-$('lpRot').addEventListener('input',function(){lp.rot=parseFloat($('lpRot').value)||0;applyLp();});
+$('lpLen').addEventListener('input',function(){if(!lpAdded)return;lp.lenMm=parseFloat($('lpLen').value)||lp.lenMm;applyLp();});
+$('lpRot').addEventListener('input',function(){if(!lpAdded)return;lp.rot=parseFloat($('lpRot').value)||0;applyLp();});
 $('lpColor').addEventListener('input',function(){
+  if(!lpAdded)return;
   lp.color=$('lpColor').value;
   brandLogoUrl(lp.color).then(function(u){lp.logoEl.src=u;applyLp();});
 });
 $('lpCancel').addEventListener('click',function(){$('logoPanel').hidden=true;});
 $('lpClear').addEventListener('click',function(){
-  if(!confirm('清除该型号的品牌LOGO？保存后前端将不再显示。'))return;
-  if(lp.key&&state.models[lp.key])delete state.models[lp.key].brandLogo;
+  /* ⛔ 先确认真的有目标型号。以前 lp.key 为空时会静默跳过删除，
+     却仍然弹「已清除 null 的品牌LOGO」—— 用户以为清除成功了，其实一个字都没改。 */
+  if(!lp.key){alert('请先从型号卡上的「品牌LOGO定位」进入，再清除。');return;}
+  if(!lpAdded){toastMsg('这个型号目前没有品牌LOGO，不需要清除');return;}
+  var key=lp.key;
+  if(!state.models[key]){alert('型号 '+key+' 不在当前配置里，无法清除。');return;}
+  if(!confirm('清除型号 '+key+' 的品牌LOGO？\n\n确认后会立即同步到线上，前端不再显示这个 LOGO。'))return;
+  delete state.models[key].brandLogo;
   state.dirty=true;renderList();refreshPending();
   $('logoPanel').hidden=true;
-  toastMsg('已清除 '+lp.key+' 的品牌LOGO（记得提交上传）');
+  autoCommit('清除 '+key+' 的品牌LOGO').then(function(r){
+    if(r==='ok')toastMsg('型号 '+key+' 的品牌LOGO 已从线上清除');
+  });
 });
 $('lpSave').addEventListener('click',function(){
+  if(!lpAdded){toastMsg('请先点「＋ 添加品牌LOGO」再保存');return;}
   if(lp.key&&!state.models[lp.key]){alert('型号不存在');return;}
   var pos={cxMm:Math.round(lp.cxMm*10)/10,cyMm:Math.round(lp.cyMm*10)/10,
     lenMm:Math.round(lp.lenMm*10)/10,rot:Math.round(lp.rot),color:lp.color};
@@ -1285,7 +1437,7 @@ $('lpSave').addEventListener('click',function(){
   runJobs([{kind:'json',model:up}],{title:'正在保存 LOGO 定位到 GitHub'}).then(function(){
     state.busy=false;state.dirty=false;refreshPending();
     alert('品牌LOGO定位已保存到线上。');
-    return loadModels();
+    return afterWrite();
   }).catch(function(e){
     state.busy=false;
     alert('保存失败：'+(e.message||e)+'\n改动还留在页面上，再点一次可重试。');
@@ -1346,6 +1498,9 @@ function enter(){
   $('main').hidden=false;
   setGhChip();
   loadModels().then(function(){
+    /* ⛔ 读取降级时不能拿「已读取线上配置」把警告盖掉：loadModels() 已经说清读到的是哪一版，
+       这里再补一句成功提示等于把警告抹掉，用户就永远看不到「读到的是缓存旧版」。 */
+    if(lastSrc!=='api')return;
     toastMsg('已读取线上配置'+(token()?'':'，发布前请先点右上角连接 GitHub'));
   }).catch(function(e){
     $('list').innerHTML='<p class="empty-tip">读取失败：'+esc(e.message)+'</p>';
@@ -1412,7 +1567,7 @@ $('ipSave').addEventListener('click',function(){
     $('ipSave').disabled=false;$('ipSave').textContent='确认提交上传';
     $('imgPanel').hidden=true;ip.items=[];
     alert('已提交！前端页面约 30–60 秒后会自动显示新内容。');
-    return loadModels();
+    return afterWrite();
   }).catch(function(e){
     $('ipSave').disabled=false;$('ipSave').textContent='确认提交上传';
     alert('提交中断：'+((e&&e.message)||e));
