@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MARK RYDEN · 定制页后台 · 测试版</title>
+<style>
+  :root{--bd:#e6e8eb;--tx:#141519;--tx2:#7a7f87;--gray:#f2f3f5;--ok:#1fa971;}
+  *{box-sizing:border-box}
+  body{margin:0;background:#f4f5f7;color:var(--tx);font:14px/1.6 "Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif}
+  /* 页头 LOGO 一律用官方矢量图（logo.svg），不再用 Arial Black 文字冒充。
+     两处宽度不同：登录卡内 168px，顶栏 128px。 */
+  .brand{display:block;height:auto;width:168px}
+  img.brand{max-width:100%}
+  /* ---------- 登录 ---------- */
+  #gate{position:fixed;inset:0;background:#eef0f2;display:flex;align-items:center;justify-content:center;z-index:50}
+  .login-card{background:#fff;border-radius:28px;padding:56px 64px;width:420px;max-width:92vw;box-shadow:0 8px 40px rgba(0,0,0,.06)}
+  .login-card .brand{width:196px;margin:0 auto 36px}
+  .field{display:flex;align-items:center;background:var(--gray);border-radius:999px;padding:0 18px;height:52px;margin-bottom:16px}
+  .field span{color:var(--tx);white-space:nowrap}
+  .field input{flex:1;border:0;background:transparent;outline:none;font:inherit;color:var(--tx);padding-left:4px}
+  .eye{border:0;background:transparent;cursor:pointer;padding:4px;display:flex;color:#333}
+  /* ⛔ 浏览器会给 type=password 输入框挂一个原生的「显示密码」眼睛（Edge/Chromium 的
+     ::-ms-reveal、凭证自动填充按钮等），叠上我们自绘的 .eye 就变成「两个眼睛」。
+     原生的一律禁掉，只留自绘那个。 */
+  #pwd::-ms-reveal,#pwd::-ms-clear{display:none!important}
+  #pwd::-webkit-textfield-decoration-container{display:none!important}
+  #pwd::-webkit-credentials-auto-fill-button,
+  #pwd::-webkit-strong-password-auto-fill-button{
+    display:none!important;visibility:hidden;pointer-events:none;width:0;height:0}
+  .login-btn{width:100%;height:56px;border:0;border-radius:999px;background:#141519;color:#fff;font:600 16px/1 inherit;font-family:inherit;cursor:pointer;letter-spacing:.1em}
+  .login-btn:hover{background:#2a2c31}
+  #gateErr{color:#c0392b;font-size:13px;text-align:center;min-height:20px;margin:12px 0 0}
+  #main[hidden]{display:none}
+  /* ---------- 顶栏 ---------- */
+  .topbar{background:#fff;border-bottom:1px solid #ececee;padding:0 32px;height:76px;display:flex;align-items:center;gap:16px}
+  .topbar .brand{width:128px}
+  .topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+  .gh-btn{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--bd);border-radius:999px;padding:9px 18px;font:inherit;font-size:13px;cursor:pointer;color:var(--tx)}
+  .gh-btn:hover{border-color:#b9bec6}
+  .logout-btn{background:#fff;border:1px solid var(--bd);border-radius:999px;padding:9px 18px;
+    font:inherit;font-size:13px;cursor:pointer;color:var(--tx);white-space:nowrap}
+  .logout-btn:hover{border-color:#141519;color:#141519}
+  .dot{width:8px;height:8px;border-radius:50%;background:#d6d9dd}
+  .gh-btn.on .dot{background:var(--ok)}
+  /* ---------- 主体：两栏等高 ---------- */
+  /* align-items:stretch 让左右卡片自动等高；高度由较高的那栏决定，
+     左栏型号多时靠内部滚动消化，不撑高整页。 */
+  .cols{display:grid;grid-template-columns:1.06fr .94fr;gap:22px;max-width:1320px;
+    margin:28px auto;padding:0 28px 60px;align-items:stretch}
+  /* ⛔ grid 子项默认 min-width:auto，会被内容（那排 190px 的上传格）顶宽，
+     导致整栏撑破容器、横向滚动条永远不出现。必须显式压成 0。 */
+  .cols>.card{min-width:0}
+  @media(max-width:900px){.cols{grid-template-columns:1fr}}
+  /* --card-h 由 JS 实测两栏内容后统一写入，保证严格等高 */
+  .card{background:#fff;border-radius:24px;padding:26px;display:flex;flex-direction:column;
+    min-height:420px;height:var(--card-h,auto)}
+  .card h2{font-size:16px;font-weight:600;margin:0 0 16px}
+  .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:12px}
+  .card-head h2{margin:0;flex-shrink:0}
+  /* ---------- 搜索框（与看板文案子页一致：折叠胶囊，点开才展开） ---------- */
+  .search-box{position:relative;display:flex;align-items:center;height:36px;border-radius:999px;
+    background:#f0f0f0;overflow:hidden;width:96px;transition:width .3s cubic-bezier(.4,0,.2,1);flex-shrink:0}
+  .search-box.open{width:176px}
+  .search-box .s-label{position:absolute;left:0;top:0;bottom:0;width:58px;display:flex;align-items:center;
+    justify-content:flex-start;padding-left:16px;font-size:14px;color:#999;pointer-events:none;
+    transition:opacity .2s;z-index:2}
+  .search-box.open .s-label{opacity:0}
+  .search-box .s-input{position:absolute;left:0;right:44px;top:0;bottom:0;border:0;background:transparent;
+    outline:0;padding:0 0 0 16px;font:inherit;font-size:14px;color:#000;opacity:0;z-index:1;
+    transition:opacity .15s .15s;pointer-events:none}
+  .search-box.open .s-input{opacity:1;pointer-events:auto}
+  .search-box .s-input::placeholder{color:#bbb}
+  .search-box .s-btn{position:absolute;right:5px;top:50%;transform:translateY(-50%);width:28px;height:28px;
+    border-radius:50%;background:#fff;display:grid;place-items:center;cursor:pointer;flex-shrink:0;
+    transition:transform .2s;z-index:2;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .search-box .s-btn svg{width:14px;height:14px}
+  .search-box .s-btn:hover{transform:translateY(-50%) scale(1.08)}
+  /* ---------- 型号列表（内部滚动，最多露 3 张卡） ---------- */
+  .m-list{flex:1;min-height:0;overflow-y:auto;padding-right:4px;margin-right:-4px;
+    max-height:var(--list-h,520px)}
+  .m-list::-webkit-scrollbar{width:6px}
+  .m-list::-webkit-scrollbar-thumb{background:#dcdfe3;border-radius:99px}
+  .m-list::-webkit-scrollbar-thumb:hover{background:#c3c7cc}
+  .m-list::-webkit-scrollbar-track{background:transparent}
+  @supports not selector(::-webkit-scrollbar){.m-list{scrollbar-width:thin}}
+  /* 型号卡 */
+  /* 型号卡：按设计稿分「型号行 / 颜色行」两区，中间一条分隔线。
+     卡内不留左右 padding，改由 .m-head / .m-colors 各自撑满，分隔线才能通到两边。 */
+  .model-card{border:1px solid #e3e5e8;border-radius:16px;margin-bottom:14px;overflow:hidden;background:#fff}
+  .model-card:last-child{margin-bottom:0}
+  .m-head{display:flex;align-items:center;gap:10px;padding:18px 20px}
+  .m-name{font-weight:500;font-size:17px;margin-right:auto;display:inline-flex;align-items:center;gap:4px;
+    color:#141519;letter-spacing:.01em}
+  .mini-dark{background:#141519;color:#fff;border:0;border-radius:9px;padding:9px 14px;font-size:13px;
+    cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
+    font-weight:400}
+  .mini-dark:hover{background:#2a2c31}
+  .mini-dark svg{width:14px;height:14px;flex-shrink:0}
+  /* 外部 SVG 图标：原图 viewBox 很小（修改 6×6 / 删除 8×8），必须显式给尺寸，
+     否则会按固有尺寸渲染成针尖大小。 */
+  .mini-dark img.ico{width:14px;height:14px;flex-shrink:0;display:block}
+  .icon-btn{border:0;background:transparent;cursor:pointer;padding:2px 3px;line-height:0;
+    display:inline-flex;align-items:center;justify-content:center;opacity:.65}
+  .icon-btn img.ico{width:15px;height:15px;display:block}
+  .icon-btn:hover{opacity:1}
+  /* 颜色行：默认不出现滚动条，真的溢出才显示（JS 加 .is-overflow） */
+  .m-colors{display:flex;gap:10px;align-items:center;border-top:1px solid #eceef1;
+    padding:16px 20px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-ms-overflow-style:none}
+  .m-colors::-webkit-scrollbar{display:none}
+  .m-colors.is-overflow{padding-bottom:22px}
+  .m-colors.is-overflow::-webkit-scrollbar{display:block;height:5px}
+  .m-colors.is-overflow::-webkit-scrollbar-thumb{background:#dcdfe3;border-radius:99px}
+  .m-colors.is-overflow::-webkit-scrollbar-track{background:transparent}
+  .cchip{display:inline-flex;align-items:center;gap:6px;border:1px solid #dcdfe3;border-radius:999px;
+    padding:8px 12px 8px 16px;font-size:14px;background:#fff;flex-shrink:0;color:#141519}
+  .cchip .cname{cursor:pointer;white-space:nowrap}
+  .cchip .cname:hover{text-decoration:underline}
+  .cchip .x{border:0;background:transparent;color:#9aa0a8;cursor:pointer;font-size:15px;padding:0 2px;line-height:1}
+  .cchip .x:hover{color:#c0392b}
+  .add-c{width:36px;height:36px;border-radius:999px;border:1px solid #e3e5e8;background:#fff;color:#b9bec6;
+    font-size:18px;cursor:pointer;line-height:1;flex-shrink:0}
+  .add-c:hover{border-color:#141519;color:#141519}
+  .empty-tip{color:var(--tx2);font-size:13px}
+  /* 上传区：单行不换行，多了横向滚（设计稿要求左右滑动）。
+     ⛔ 两个坑必须同时避开，否则永远滚不动：
+     ① 父级 .card 是 flex column，子项默认 min-width:auto 会被内容撑大 →
+        必须给 .uprow 加 min-width:0，它才肯被限制在卡片宽度内。
+     ② 子项 .upbox 要 flex:0 0 auto，否则会被压缩到容器宽度、永远不溢出。
+     ⛔ 滚动条外观：设计稿原型用的是「系统原生」滚动条（两端带箭头那种），
+        所以这里**不要**写 ::-webkit-scrollbar —— 一旦写了就会被切成自定义细条，
+        和设计稿对不上。图片少时由 overflow-x:auto 保证完全不出现滚动条。 */
+  .uprow{display:flex;gap:14px;flex-wrap:nowrap;margin:16px 0 4px;
+    min-width:0;width:100%;max-width:100%;
+    overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;
+    padding-bottom:2px;scrollbar-width:auto;-ms-overflow-style:auto}
+  .uprow>.upbox{flex:0 0 auto}
+  .uprow.is-overflow{padding-bottom:6px}
+  /* 上传格：按设计稿——上半是图（白底），下半是色名条（与图之间有分隔线）。 */
+  .upbox{width:190px;height:266px;border-radius:16px;border:1px solid #e3e5e8;background:#fff;
+    display:flex;flex-direction:column;position:relative;overflow:hidden}
+  .upbox .thumb{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:16px}
+  .upbox img{max-width:100%;max-height:100%;object-fit:contain}
+  .upbox .cname{border:0;border-top:1px solid #eceef1;padding:14px 10px;text-align:center;font-size:14px;
+    color:#141519;flex-shrink:0;background:transparent;outline:none;font-family:inherit;width:100%}
+  .upbox .cname::placeholder{color:#c2c6cc}
+  .upbox .rm{position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;border:0;
+    background:rgba(0,0,0,.55);color:#fff;cursor:pointer;font-size:12px;line-height:1;z-index:2}
+  .upbox.add{border:1px dashed #d4d8dd;background:#fff;cursor:pointer;color:var(--tx2);
+    align-items:center;justify-content:center;text-align:center}
+  .upbox.add:hover{border-color:#141519;color:#141519}
+  .upbox.add .plus{font-size:30px;line-height:1;margin-bottom:14px;color:#b9bec6;font-weight:300}
+  .upbox.add .tip{font-size:13px;text-align:center;padding:0 22px;line-height:1.7;color:#8b9098}
+  .upbox.add:hover .plus,.upbox.add:hover .tip{color:#141519}
+  .dropzone.over .upbox.add{border-color:#141519;background:#f6f7f8}
+  .row{display:flex;gap:14px;align-items:stretch;flex-wrap:wrap}
+  /* 型号名称：前缀固定、只改后面数字 */
+  .name-field{flex:1;min-width:180px;display:flex;align-items:center;background:#f4f5f6;
+    border-radius:16px;height:64px;padding:0 24px;gap:2px}
+  .name-field .nf-label{color:var(--tx);white-space:nowrap;flex-shrink:0;font-size:15px}
+  .name-field input{flex:1;min-width:0;border:0;background:transparent;outline:none;font:inherit;
+    font-size:15px;color:var(--tx);padding:0}
+  /* 型号名称为空时点提交 → 高亮提示（必填项） */
+  .name-field.need{box-shadow:inset 0 0 0 2px #e8a3a3;background:#fdf3f3}
+  .name-field.need .nf-label{color:#c0392b}
+  .dark-btn{background:#141519;color:#fff;border:0;border-radius:16px;height:64px;padding:0 26px;
+    font:inherit;font-size:15px;cursor:pointer;font-family:inherit;white-space:nowrap}
+  .dark-btn:hover{background:#2a2c31}
+  /* 进度条默认隐藏：它 8px 高、浅灰、又紧贴上传区下方，很容易被当成「第二条滚动条」，
+     拖动它当然没反应。只有真正开始上传时才由 JS 加 .on 显示。 */
+  /* 进度条只出现在「提交中」弹窗里，所以默认不显示，由 .job-card 放开。 */
+  .progress{display:none;height:8px;border-radius:999px;background:#ececee;margin:20px 0 18px;overflow:hidden}
+  .progress i{display:block;height:100%;background:#141519;border-radius:999px;width:0;transition:width .3s}
+  .big-btn{width:100%;height:56px;border:0;border-radius:999px;background:#141519;color:#fff;
+    font:600 15px/1 inherit;font-family:inherit;cursor:pointer;letter-spacing:.08em;margin-top:auto}
+  .big-btn:hover{background:#2a2c31}
+  .big-btn:disabled{opacity:.45;cursor:not-allowed}
+  .hint{color:var(--tx2);font-size:12px;line-height:1.7}
+  .link{color:var(--tx2);text-decoration:underline;cursor:pointer;background:none;border:0;font-size:12px;
+    padding:0;font-family:inherit}
+  /* 通用弹层 */
+  .overlay{position:fixed;inset:0;background:rgba(20,21,25,.45);display:flex;align-items:center;
+    justify-content:center;z-index:60;padding:20px}
+  .overlay[hidden]{display:none}
+  .ov-card{background:#fff;border-radius:20px;padding:24px;max-height:92vh;overflow:auto;width:640px;max-width:100%}
+  .ov-card h3{margin:0 0 4px;font-size:16px}
+  .ov-sub{color:var(--tx2);font-size:12px;margin:0 0 16px}
+  /* 弹窗底部按钮：高度/宽度/圆角/字号必须完全一致，否则「取消」又矮又小、
+     「确认提交上传」又高又大，并排放一起很别扭。min-width 取「确认提交上传」的自然宽度，
+     两颗按钮就一样大了。样式对齐主界面底部那颗胶囊按钮。 */
+  .ov-btns{display:flex;justify-content:flex-end;gap:12px;margin-top:18px}
+  .ov-btns .ghost-btn,.ov-btns .dark-btn{
+    height:48px;min-width:148px;padding:0 28px;border-radius:999px;
+    font:inherit;font-size:14px;font-family:inherit;cursor:pointer;
+    display:inline-flex;align-items:center;justify-content:center}
+  .ov-btns .ghost-btn{background:#fff;color:var(--tx);border:1px solid var(--bd)}
+  .ov-btns .ghost-btn:hover{border-color:#141519}
+  .ov-btns .dark-btn{background:#141519;color:#fff;border:0}
+  .ov-btns .dark-btn:hover{background:#2a2c31}
+  .ov-btns button:disabled{opacity:.5;cursor:not-allowed}
+  /* LOGO 定位面板 */
+  .lp-card{background:#fff;border-radius:20px;padding:22px;width:680px;max-width:100%}
+  .lp-stage-wrap{display:flex;gap:18px;flex-wrap:wrap}
+  .lp-stage{position:relative;user-select:none;touch-action:none;flex:0 0 auto;background:
+    repeating-conic-gradient(#eef0f2 0% 25%,#fff 0% 50%) 50% / 16px 16px;border:1px solid var(--bd);border-radius:10px;overflow:hidden}
+  /* 底图撑满 stage；LOGO 必须排除在外，否则会被 width:100% 覆盖掉 inline 尺寸 */
+  .lp-stage>img:not(.lp-logo),.lp-stage>canvas{display:block;width:100%;height:auto}
+  .lp-logo{position:absolute;cursor:grab;pointer-events:auto;width:auto;max-width:none}
+  .lp-logo:active{cursor:grabbing}
+  .lp-ctrl{flex:1;min-width:180px}
+  .lp-ctrl label{display:block;font-size:12px;color:var(--tx2);margin:10px 0 4px}
+  .lp-ctrl input[type=number]{width:100%;height:36px;border:1px solid var(--bd);border-radius:8px;padding:0 10px;font:inherit}
+  .lp-ctrl input[type=color]{width:100%;height:36px;border:1px solid var(--bd);border-radius:8px;padding:2px;background:#fff}
+  .lp-pos{font-size:12px;color:var(--tx2);margin-top:10px}
+  .lp-btns{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+  .lp-btns .ghost-btn,.lp-btns .dark-btn{height:42px;border-radius:10px;font:inherit;cursor:pointer;white-space:nowrap}
+  .ghost-btn{background:#fff;color:var(--tx);border:1px solid var(--bd);border-radius:10px;height:40px;padding:0 16px;font:inherit;cursor:pointer}
+  .ghost-btn:hover{border-color:#141519}
+  .ghost-btn.warn{color:#c0392b;border-color:#f0c8c8}
+  /* token 弹层 */
+  .tp-card{background:#fff;border-radius:20px;padding:24px;width:520px;max-width:100%}
+  .tp-card h3{margin:0 0 12px;font-size:15px}
+  .tp-card input{width:100%;height:44px;border:1px solid var(--bd);border-radius:10px;padding:0 14px;font:inherit;margin-bottom:12px}
+  .log{white-space:pre-wrap;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;background:#f6f7f8;border-radius:8px;padding:10px;max-height:180px;overflow:auto;color:#333;display:none}
+  /* 提交中弹窗。里面的进度条与明细日志常显 —— 默认都带 display:none，靠这里放开。 */
+  .job-card{background:#fff;border-radius:20px;padding:24px;width:520px;max-width:100%}
+  .job-card h3{margin:0 0 16px;font-size:15px}
+  .job-card .progress{display:block;margin:0 0 14px}
+  .job-card .log{display:block;max-height:200px}
+  .job-card .hint{margin:14px 0 0}
+</style>
+</head>
+<body>
+<style id="mr-test-bar-css">.mr-test-bar{position:fixed;left:0;right:0;bottom:0;z-index:2147483000;background:#303030;color:#fff;font-size:12.5px;line-height:1.5;padding:7px 16px;text-align:center;letter-spacing:.02em;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",Arial,sans-serif}.mr-test-bar b{font-weight:600;color:#ffd66b}</style><div class="mr-test-bar">测试版后台 &middot; 只写入 <b>models.test.json</b> 与 <b>test-assets/</b>，不会影响正式版的配置与素材</div>
+
+<!-- 登录 -->
+<div id="gate">
+  <div class="login-card">
+    <img class="brand" src="logo.svg" alt="MARK RYDEN">
+    <div class="field"><span>账号：</span><input id="acc" autocomplete="username"></div>
+    <div class="field"><span>密码：</span><input id="pwd" type="password" autocomplete="current-password">
+      <button class="eye" id="eye" title="显示/隐藏密码">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12Z"/><circle cx="12" cy="12" r="2.8"/></svg>
+      </button>
+    </div>
+    <button class="login-btn" id="btnLogin">进入定制页后台</button>
+    <p id="gateErr"></p>
+  </div>
+</div>
+
+<!-- 主界面 -->
+<div id="main" hidden>
+  <header class="topbar">
+    <img class="brand" src="logo.svg" alt="MARK RYDEN">
+    <div class="topbar-right">
+      <button class="gh-btn" id="btnToken"><span class="dot"></span><span id="ghText">连接GitHub</span></button>
+      <button class="logout-btn" id="btnLogout">退出登录</button>
+    </div>
+  </header>
+  <div class="cols">
+    <section class="card">
+      <div class="card-head">
+        <h2>现有型号</h2>
+        <div class="search-box" id="searchBox">
+          <span class="s-label">搜索</span>
+          <input class="s-input" type="text" id="search" placeholder="型号">
+          <div class="s-btn" id="searchBtn" title="搜索">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#141519" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="m-list" id="list"></div>
+    </section>
+    <section class="card dropzone">
+      <h2 id="upTitle">新增型号与图片</h2>
+      <div class="row">
+        <div class="name-field">
+          <span class="nf-label">型号名称：</span><input id="newModel" placeholder="9031" spellcheck="false">
+        </div>
+        <button class="dark-btn" id="btnLogoPos">品牌LOGO定位</button>
+      </div>
+      <div class="uprow" id="previews"></div>
+      <input type="file" id="file" accept="image/png,image/jpeg,image/webp" multiple hidden>
+      <button class="big-btn" id="btnPublish">确认提交上传</button>
+      <p class="hint" style="margin-top:12px">
+        图片要求 PNG、宽 1000 或 1000 的倍数（1000px = 100cm）。<span id="pendingTip"></span>
+        <button class="link" id="btnDiscard">放弃改动</button>
+      </p>
+    </section>
+  </div>
+</div>
+
+<!-- 修改图片弹窗 -->
+<div class="overlay" id="imgPanel" hidden>
+  <div class="ov-card" style="width:720px">
+    <h3 id="ipTitle">修改图片</h3>
+    <p class="ov-sub" id="ipSub">新传的同名颜色会替换原图，新颜色会追加；方框会按全部配色统一重算。</p>
+    <div class="uprow" id="ipPreviews"></div>
+    <input type="file" id="ipFile" accept="image/png,image/jpeg,image/webp" multiple hidden>
+    <div class="ov-btns">
+      <button class="ghost-btn" id="ipCancel">取消</button>
+      <button class="dark-btn" id="ipSave">确认提交上传</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOGO 定位面板 -->
+<div class="overlay" id="logoPanel" hidden>
+  <div class="lp-card">
+    <h3 id="lpTitle">品牌LOGO定位</h3>
+    <div class="lp-stage-wrap">
+      <div style="flex:0 0 320px">
+        <div class="lp-stage" id="lpStage" style="width:320px"></div>
+        <p class="lp-pos" id="lpPos"></p>
+        <p class="hint">直接在图上拖动 LOGO 调位置，右侧微调大小、角度和颜色。<br>
+          若 LOGO 颜色与包体接近而看不清，改右侧「颜色」即可。</p>
+      </div>
+      <div class="lp-ctrl">
+        <label>字标长度（mm）</label><input type="number" id="lpLen" step="1" min="5" max="300">
+        <label>旋转角度（顺时针，度）</label><input type="number" id="lpRot" step="1">
+        <label>颜色</label><input type="color" id="lpColor" value="#a6a7ac">
+        <div class="lp-btns">
+          <button class="ghost-btn warn" id="lpClear" style="flex:1 1 100%">清除该型号LOGO</button>
+          <button class="ghost-btn" id="lpCancel" style="flex:1">取消</button>
+          <button class="dark-btn" id="lpSave" style="flex:1">保存定位</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- token 弹层 -->
+<div class="overlay" id="tokenPanel" hidden>
+  <div class="tp-card">
+    <h3>连接 GitHub（只需一次）</h3>
+    <input id="token" placeholder="github_pat_...">
+    <div class="ov-btns">
+      <button class="ghost-btn" id="tpCancel">取消</button>
+      <button class="dark-btn" id="tpSave">连接</button>
+    </div>
+    <p class="hint" style="margin-top:10px">GitHub密钥请咨询上级。</p>
+  </div>
+</div>
+
+<!-- 提交中弹窗：进度条 + 上传明细都收在这里，不再往页面底部堆代码行；
+     提交结束（成功或失败）自动消失。 -->
+<div class="overlay" id="jobPanel" hidden>
+  <div class="job-card">
+    <h3 id="jobTitle">正在提交到 GitHub</h3>
+    <div class="progress"><i id="jobFill"></i></div>
+    <div class="log" id="jobLog"></div>
+    <p class="hint" id="jobHint">提交期间请不要关闭或刷新本页面。</p>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ========== 常量（与 add_model.py 保持一致） ========== */
+var OWNER='2020Nweborn', REPO='markryden', DIR='logo-customizer', BRANCH='main';
+/* ===== 测试版沙盒 =====
+   本页是测试版后台，写入白名单：只允许写 models.test.json 与 test-assets/ 下的文件。
+   ghPut / ghDel / stageDel 对白名单外的路径直接跳过，因此删型号、改色名、
+   重算图片都不会碰到正式版的 models.json 与根目录素材。 */
+var SUB='test-assets/', CFG='models.test.json';
+function inSandbox(p){return p===CFG||String(p).indexOf(SUB)===0;}
+
+var RAW='https://raw.githubusercontent.com/'+OWNER+'/'+REPO+'/'+BRANCH+'/'+DIR+'/models.test.json';
+var API='https://api.github.com/repos/'+OWNER+'/'+REPO+'/contents/'+DIR+'/';
+var PAD_MM=6.0, WEBP_Q=0.92, MAX_LOGO_MM=60, DEFAULT_LOGO_LEN=80, DEFAULT_LOGO_ROT=90;
+var ACC_HASH='6201eb4dccc956cc4fa3a78dca0c2888177ec52efd48f125df214f046eb43138'; /* sha256('mark') */
+var PWD_HASH='05b9cf9467959a1affbf336782b033fa2bef12581d9fa41367a2f84506e8925d'; /* sha256('markryden') */
+var COLOR_SLUG={'黑':'black','商务黑':'bizblack','灰':'gray','深灰':'darkgray','银灰':'gray','紫':'purple','绿':'green','蓝':'blue','橙':'orange','红':'red','棕':'brown','卡其':'khaki','米白':'beige','白':'white','粉':'pink','黄':'yellow','兰':'blue','杏':'apricot','奶茶':'milktea','精英灰':'elitegray','都会':'metro','都会蓝':'metro','城际绿':'citygreen'};
+
+var TK='mr_admin_token';
+var state={models:{},dirty:false,puts:[],dels:[],pendingCopy:[],busy:false};
+var draft={model:'',items:[],editKey:'',geo:null,brandLogo:null};
+window.__mrDraft=function(){return draft;};
+var lp={key:null,cxMm:0,cyMm:0,lenMm:DEFAULT_LOGO_LEN,rot:DEFAULT_LOGO_ROT,color:'#a6a7ac',pxPerMmDisp:1,src:''};
+
+var $=function(id){return document.getElementById(id);};
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function sha256hex(str){
+  if(window.crypto&&crypto.subtle){
+    return crypto.subtle.digest('SHA-256',new TextEncoder().encode(str)).then(function(b){
+      return Array.from(new Uint8Array(b)).map(function(x){return ('0'+x.toString(16)).slice(-2);}).join('');
+    });
+  }
+  return Promise.resolve(null);
+}
+function normModel(s){return String(s||'').replace(/^(mr|MR)[_\- ]*/,'').replace(/[^0-9a-zA-Z]+/g,'');}
+function fileSlug(color){
+  var c=String(color||'').trim();
+  if(COLOR_SLUG[c])return COLOR_SLUG[c];
+  return c.replace(/[^0-9a-zA-Z]+/g,'').toLowerCase()||c;
+}
+function parseName(name){
+  var stem=name.replace(/\.[^.]+$/,'').trim();
+  var parts=stem.split(/\s+[-_]\s+|\s*[-–—]\s*/).map(function(p){return p.trim();}).filter(Boolean);
+  if(parts.length>=2)return {model:normModel(parts[0]),color:parts[1]};
+  /* 文件名里没有「型号 - 颜色」两段时，不能把整个文件名同时当成型号和颜色——
+     那样 bag_9100_trim 会变成型号 bag9100trim、颜色 bag_9100_trim。这种一律留空，
+     让用户自己填型号、自己点色名改中文。 */
+  return {model:'',color:''};
+}
+function pendingCount(){return state.puts.length+state.dels.length+state.pendingCopy.length+(state.dirty?1:0);}
+function refreshPending(){
+  var n=pendingCount();
+  $('pendingTip').textContent=n?('当前有 '+n+' 项改动待发布。'):'';
+  $('btnPublish').textContent=n?('确认提交上传 ('+n+')'):'确认提交上传';
+}
+
+/* ========== GitHub ========== */
+function token(){return localStorage.getItem(TK)||'';}
+function gh(path,opt){
+  opt=opt||{};
+  var h={'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};
+  if(token())h.Authorization='Bearer '+token();
+  if(opt.body)h['Content-Type']='application/json';
+  return fetch(API+path,{method:opt.method||'GET',headers:h,body:opt.body}).then(function(r){
+    return r.json().then(function(j){
+      if(!r.ok)throw new Error((j&&j.message)||('HTTP '+r.status));
+      return j;
+    });
+  });
+}
+function ghFile(path){
+  return gh(path).then(function(j){return {sha:j.sha,content:j.content||''};});
+}
+function ghPut(path,b64,msg,sha){
+  if(!inSandbox(path))return Promise.resolve({skipped:true,path:path});
+  var body={message:msg,content:b64,branch:BRANCH};
+  if(sha)body.sha=sha;
+  return gh(path,{method:'PUT',body:JSON.stringify(body)});
+}
+function ghDel(path,sha,msg){
+  if(!inSandbox(path))return Promise.resolve({skipped:true,path:path});
+  return gh(path,{method:'DELETE',body:JSON.stringify({message:msg,sha:sha,branch:BRANCH})});
+}
+function setGhChip(){
+  var on=!!token();
+  $('btnToken').classList.toggle('on',on);
+  $('ghText').textContent=on?'GitHub已连接':'连接GitHub';
+}
+
+/* ========== 读取配置 ========== */
+function loadModels(){
+  return fetch(RAW+'?t='+Date.now(),{cache:'no-store'}).then(function(r){
+    if(!r.ok)throw new Error('线上还没有 models.test.json');
+    return r.json();
+  }).catch(function(){
+    return fetch('models.test.json?t='+Date.now(),{cache:'no-store'}).then(function(r){
+      if(!r.ok)throw new Error('线上和本地都读不到 models.test.json');
+      return r.json();
+    });
+  }).then(function(j){
+    state.models=(j&&j.models)||{};
+    state.dirty=false;state.puts=[];state.dels=[];state.pendingCopy=[];
+    draft={model:'',items:[],editKey:'',geo:null,brandLogo:null};
+    $('newModel').value='';
+    $('upTitle').textContent='新增型号与图片';
+    renderList();renderPreviews();refreshPending();
+    return state.models;
+  });
+}
+
+/* ========== 型号列表渲染 ========== */
+/* 图标一律走外部 SVG（用户提供的设计稿素材），不再手写 path。
+   icon-edit 是白色描边的「修改」图标——它只用在墨色按钮里，所以保持白。
+   icon-delete 是浅灰的垃圾桶图标，用在型号名后面。 */
+var ICON_EDIT='<img class="ico" src="icon-edit.svg" alt="">';
+var ICON_DEL='<img class="ico" src="icon-delete.svg" alt="">';
+function renderList(){
+  var kw=($('search').value||'').trim().toLowerCase();
+  var box=$('list');
+  var keys=Object.keys(state.models).filter(function(k){return !kw||k.toLowerCase().indexOf(kw)>=0;});
+  if(!keys.length){box.innerHTML='<p class="empty-tip">'+(kw?'没有匹配的型号。':'线上还没有型号，先在右侧新增。')+'</p>';syncCardHeight();return;}
+  box.innerHTML=keys.map(function(k){
+    var m=state.models[k]||{};
+    var cols=(m.colors||[]).map(function(c,i){
+      return '<span class="cchip"><span class="cname" data-act="cedit" data-m="'+esc(k)+'" data-i="'+i+'" title="点击改名">'+esc(c.label||c.key)+'</span>'+
+        '<button class="x" data-act="cdel" data-m="'+esc(k)+'" data-i="'+i+'" title="删除该颜色">×</button></span>';
+    }).join('');
+    return '<div class="model-card">'+
+      '<div class="m-head">'+
+        '<span class="m-name">'+esc(k)+
+          '<button class="icon-btn del" data-act="mdel" data-m="'+esc(k)+'" title="删除型号">'+ICON_DEL+'</button></span>'+
+        '<button class="mini-dark" data-act="mimg" data-m="'+esc(k)+'">'+ICON_EDIT+'修改</button>'+
+        '<button class="mini-dark" data-act="mlogo" data-m="'+esc(k)+'">品牌LOGO定位</button>'+
+      '</div>'+
+      '<div class="m-colors">'+cols+
+        '<button class="add-c" data-act="mimg" data-m="'+esc(k)+'" title="添加颜色">＋</button>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+  markOverflow();
+  syncCardHeight();
+}
+/* 颜色行只有真的放不下才出现横向滚动条：逐个量 scrollWidth 与 clientWidth。
+   写完 innerHTML 立刻量拿不到正确值（字体还没算完），放到下一帧再测一次。 */
+/* 只有真的放不下才显示滚动条：逐个比 scrollWidth 与 clientWidth。
+   覆盖两处横向列表：型号卡里的颜色行 .m-colors、上传区 .uprow。 */
+function markOverflow(){
+  var rows=$('list').querySelectorAll('.m-colors');
+  Array.prototype.forEach.call(rows,function(r){
+    r.classList.remove('is-overflow');
+    if(r.scrollWidth-r.clientWidth>2)r.classList.add('is-overflow');
+  });
+  ['previews','ipPreviews'].forEach(function(id){
+    var el=$(id);if(!el)return;
+    el.classList.remove('is-overflow');
+    if(el.scrollWidth-el.clientWidth>2)el.classList.add('is-overflow');
+  });
+}
+/* 两栏等高：把较高一栏的高度写成 --card-h，另一栏跟着长。
+   左栏型号多时先靠自身滚动，所以只量「内容高度」，不量被滚动截断后的可视高度。 */
+/* 左栏列表最多露 3 张型号卡，第 4 张起靠内部滚动。
+   卡高是实测的（每张卡内容不同），所以这里量前 3 张的实际高度 + 间距求和。 */
+function syncListHeight(){
+  var list=$('list');
+  if(!list)return;
+  list.style.setProperty('--list-h','none');
+  var cards=list.querySelectorAll('.model-card');
+  if(!cards.length)return;
+  var n=Math.min(3,cards.length);
+  var h=0;
+  for(var i=0;i<n;i++){
+    h+=cards[i].offsetHeight;
+    if(i<n-1)h+=parseFloat(getComputedStyle(cards[i]).marginBottom)||0;
+  }
+  list.style.setProperty('--list-h',h+'px');
+}
+function syncCardHeight(){
+  var cards=document.querySelectorAll('.cols .card');
+  if(cards.length<2)return;
+  cards.forEach(function(c){c.style.setProperty('--card-h','auto');});
+  syncListHeight();
+  /* 先把左右两栏的高度差异量出来，再统一取较大的那个。 */
+  var natural=0;
+  cards.forEach(function(c){natural=Math.max(natural,c.offsetHeight);});
+  /* 但不能无限长高：最多占视口的一部分，超出的部分让左栏型号列表自己滚。 */
+  var cap=Math.max(560,window.innerHeight-170);
+  var want=Math.min(natural,cap);
+  cards.forEach(function(c){c.style.setProperty('--card-h',want+'px');});
+  /* 卡片被压到 cap 之后左栏列表的可用高度会变，再按实际剩余空间收敛一次，
+     保证滚动条出现在列表内部、并且露出的正好是 3 张卡。 */
+  syncListHeight();
+}
+$('search').addEventListener('input',renderList);
+/* 折叠搜索框：与看板文案子页同一套交互 */
+(function(){
+  var sb=$('searchBox'),si=$('search');
+  $('searchBtn').addEventListener('click',function(){
+    if(!sb.classList.contains('open')){sb.classList.add('open');setTimeout(function(){si.focus();},80);}
+    else renderList();
+  });
+  sb.addEventListener('click',function(e){
+    if(e.target===$('searchBtn'))return;
+    if(!sb.classList.contains('open')){sb.classList.add('open');setTimeout(function(){si.focus();},80);}
+  });
+  si.addEventListener('blur',function(){
+    if(!si.value.trim())sb.classList.remove('open');
+  });
+})();
+window.addEventListener('resize',function(){markOverflow();syncCardHeight();});
+
+$('list').addEventListener('click',function(e){
+  var t=e.target.closest('[data-act]');
+  if(!t)return;
+  var act=t.getAttribute('data-act'),k=t.getAttribute('data-m'),i=parseInt(t.getAttribute('data-i'),10);
+  var m=state.models[k];
+  if(!m)return;
+  if(act==='mimg'){openImgPanel(k);}
+  else if(act==='mlogo'){openLogoPanel(k);}
+  else if(act==='medit'){
+    var nv=prompt('新的型号名（例如 9031SJ）：',k.replace(/^MR_/,''));
+    if(!nv)return;
+    var nk='MR_'+normModel(nv);
+    if(nk===k)return;
+    if(state.models[nk]){alert('已存在同名型号');return;}
+    (m.colors||[]).forEach(function(c){
+      var np='test-assets/'+'mr_'+normModel(nv).toLowerCase()+'_'+fileSlug(c.label||c.key)+'_trim.png';
+      stageCopy(c.image,np);stageCopy(c.webp,np.replace(/\.png$/,'.webp'));
+      stageDel(c.image);stageDel(c.webp);
+      c.image=np;c.webp=np.replace(/\.png$/,'.webp');
+    });
+    delete state.models[k];
+    m.id=nk;state.models[nk]=m;
+    state.dirty=true;renderList();refreshPending();
+  }else if(act==='mdel'){
+    if(!confirm('删除型号 '+k+'？'))return;
+    var cols2=m.colors||[];
+    if(confirm('同时删除它的 '+cols2.length+' 张图片文件？')){
+      cols2.forEach(function(c){stageDel(c.image);stageDel(c.webp);});
+    }
+    delete state.models[k];
+    state.dirty=true;renderList();refreshPending();
+  }else if(act==='cedit'){
+    var c0=(m.colors||[])[i];if(!c0)return;
+    var nn=prompt('新的颜色名：',c0.label||c0.key);
+    if(!nn)return;
+    var ns=fileSlug(nn);
+    if(!ns){alert('颜色名「'+nn+'」没有对应的英文名，请告诉我，我加进映射表后再改名。');return;}
+    var np2='test-assets/'+'mr_'+k.replace(/^MR_/,'').toLowerCase()+'_'+ns+'_trim.png';
+    stageCopy(c0.image,np2);stageCopy(c0.webp,np2.replace(/\.png$/,'.webp'));
+    stageDel(c0.image);stageDel(c0.webp);
+    c0.label=nn.trim();c0.key=ns;c0.image=np2;c0.webp=np2.replace(/\.png$/,'.webp');
+    state.dirty=true;renderList();refreshPending();
+  }else if(act==='cdel'){
+    var c1=(m.colors||[])[i];if(!c1)return;
+    if(!confirm('删除颜色「'+(c1.label||c1.key)+'」？'))return;
+    stageDel(c1.image);stageDel(c1.webp);
+    m.colors.splice(i,1);
+    state.dirty=true;renderList();refreshPending();
+  }
+});
+
+function stageCopy(from,to){if(from!==to)state.pendingCopy.push({from:from,to:to});}
+function stageDel(path){if(!path||!inSandbox(path))return;if(state.dels.indexOf(path)<0)state.dels.push(path);}
+
+/* ========== 上传与裁切 ========== */
+/* 把 dataURL 字符串转成 Blob，好让后面统一走 createImageBitmap 一条路。
+   注意：createImageBitmap 不接受字符串（只收 Blob/Canvas/ImageBitmap 等），
+   直接丢 dataURL 进去会抛 TypeError —— 这是「修改图片」弹窗读不出线上配色的根因。 */
+function dataUrlToBlob(u){
+  var i=u.indexOf(',');
+  var head=u.slice(0,i),body=u.slice(i+1);
+  var mime=(head.match(/data:([^;]+)/)||[])[1]||'image/png';
+  var bin=atob(body);
+  var arr=new Uint8Array(bin.length);
+  for(var k=0;k<bin.length;k++)arr[k]=bin.charCodeAt(k);
+  return new Blob([arr],{type:mime});
+}
+function readImage(fileOrBlob){
+  /* 输入可能是 File/Blob（用户上传），也可能是 dataURL 字符串（从 GitHub 取回的线上图）。
+     一律先归一成 Blob，再用 createImageBitmap 解码；预览用 ObjectURL。
+     不要用 FileReader→dataURL 做预览：千像素 PNG 的 base64 有 1MB+，
+     塞进 DOM 的 img.src 会让渲染线程长时间阻塞（实测直接卡死）。 */
+  var blob=fileOrBlob;
+  if(typeof fileOrBlob==='string'){
+    try{blob=dataUrlToBlob(fileOrBlob);}catch(e){return Promise.reject(new Error('图片数据解析失败'));}
+  }
+  if(window.createImageBitmap&&blob instanceof Blob){
+    return createImageBitmap(blob).then(function(bmp){
+      var cv=document.createElement('canvas');
+      cv.width=bmp.width;cv.height=bmp.height;
+      cv.getContext('2d').drawImage(bmp,0,0);
+      if(bmp.close)bmp.close();
+      return {canvas:cv,W:cv.width,H:cv.height,url:URL.createObjectURL(blob),revoke:true};
+    }).catch(function(){return readImageFallback(blob);});
+  }
+  return readImageFallback(blob);
+}
+/* 回退路径：createImageBitmap 不可用或解码失败时，用 <img> 解一次再画进 canvas。
+   入参已由 readImage 归一成 Blob。 */
+function readImageFallback(blob){
+  if(!(blob instanceof Blob))return Promise.reject(new Error('图片解码失败'));
+  return new Promise(function(res,rej){
+    var url=URL.createObjectURL(blob);
+    var img=new Image();
+    img.onload=function(){
+      var cv=document.createElement('canvas');
+      cv.width=img.naturalWidth;cv.height=img.naturalHeight;
+      cv.getContext('2d').drawImage(img,0,0);
+      res({canvas:cv,W:cv.width,H:cv.height,url:url,revoke:true});
+    };
+    img.onerror=function(){URL.revokeObjectURL(url);rej(new Error('图片解码失败'));};
+    img.src=url;
+  });
+}
+function bboxOf(cv){
+  /* 逐像素遍历在 1000px 图上会让主线程卡死几秒（浏览器可能提示无响应）。
+     这里只用 alpha 通道做「行/列扫描」：先取一次 ImageData（不可避免），
+     但判断循环改成按行取 Uint8 视图 + 逐行提前退出，比双重 for 快一个量级。 */
+  var W=cv.width,H=cv.height;
+  var d=cv.getContext('2d').getImageData(0,0,W,H).data;
+  var x0=W,y0=H,x1=-1,y1=-1;
+  var i,y,x;
+  for(y=0;y<H;y++){
+    var row=y*W*4,rowHit=false;
+    for(x=0;x<W;x++){
+      if(d[row+x*4+3]>10){
+        rowHit=true;
+        if(x<x0)x0=x;
+        if(x>x1)x1=x;
+      }
+    }
+    if(rowHit){if(y<y0)y0=y;if(y>y1)y1=y;}
+  }
+  if(x1<0)throw new Error('图片全透明，找不到产品轮廓');
+  return {W:W,H:H,x0:x0,x1:x1,y0:y0,y1:y1};
+}
+function cropTo(cv,cx,cy,side){
+  var out=document.createElement('canvas');
+  out.width=out.height=side;
+  out.getContext('2d').drawImage(cv,-Math.round(cx-side/2),-Math.round(cy-side/2));
+  return out;
+}
+function toBlob(cv,type,q){
+  return new Promise(function(res){cv.toBlob(function(b){res(b);},type,q);});
+}
+function toB64(blob){
+  return new Promise(function(res,rej){
+    var fr=new FileReader();
+    fr.onload=function(){var s=String(fr.result);res(s.slice(s.indexOf(',')+1));};
+    fr.onerror=function(){rej(new Error('转换失败'));};
+    fr.readAsDataURL(blob);
+  });
+}
+function addFiles(files){
+  var arr=[].slice.call(files||[]);
+  if(!arr.length)return;
+  var names=arr.map(function(f){return f.name||'';});
+  Promise.all(arr.map(function(f){return readImage(f);})).then(function(list){
+    list.forEach(function(it,i){
+      var p=parseName(names[i]||'');
+      /* bbox 计算放在解码后立刻做，但用 try 包住：单张图算不出来不该拖死整批 */
+      var bx=null;
+      try{bx=bboxOf(it.canvas);}catch(e){bx={W:it.W,H:it.H,x0:0,x1:it.W-1,y0:0,y1:it.H-1};}
+      draft.items.push({label:p.color,name:names[i],canvas:it.canvas,W:it.W,H:it.H,
+        bbox:bx,url:it.url,revoke:it.revoke});
+      if(!draft.model&&p.model)draft.model=p.model;
+    });
+    /* 只有解析出真实型号时才回填输入框；解析不出来（文件名不规范）就保持原样，
+       绝不要把文件名塞进「型号名称」。 */
+    if(!$('newModel').value&&draft.model)$('newModel').value=draft.model;
+    /* 让浏览器先画一帧，避免大图解码后紧接着的布局计算把主线程憋住 */
+    return new Promise(function(r){requestAnimationFrame(function(){setTimeout(r,0);});});
+  }).then(function(){
+    renderPreviews();
+  }).catch(function(e){alert(e.message||e);});
+}
+function removeItem(i){
+  draft.items.splice(i,1);
+  renderPreviews();
+}
+function renderPreviews(){
+  var box=$('previews');
+  box.innerHTML='';
+  draft.items.forEach(function(it,i){
+    var d=document.createElement('div');
+    d.className='upbox';
+    var th=document.createElement('div');
+    th.className='thumb';
+    var img=document.createElement('img');
+    img.src=it.url;
+    th.appendChild(img);
+    var inp=document.createElement('input');
+    inp.className='cname';inp.value=it.label;
+    inp.placeholder='点此填色名';
+    inp.addEventListener('input',function(){it.label=inp.value;});
+    var rm=document.createElement('button');
+    rm.className='rm';rm.textContent='×';rm.title='移除';
+    rm.addEventListener('click',function(){removeItem(i);});
+    d.appendChild(rm);d.appendChild(th);d.appendChild(inp);
+    box.appendChild(d);
+  });
+  var add=document.createElement('div');
+  add.className='upbox add';
+  add.innerHTML='<div class="plus">＋</div><div class="tip">请提交 PNG 1000×1000<br>或 1000 倍数的图片</div>';
+  add.addEventListener('click',function(){$('file').click();});
+  box.appendChild(add);
+  calcDraft();
+  /* 图片多到一行放不下时才显示横向滚动条 */
+  markOverflow();
+}
+/* 统一方框计算：同一型号所有配色取包围盒并集 + 四周固定留白，再取正方形。
+   与 add_model.py 完全一致（这也是后台的价值：不用记住脚本参数）。
+   warnEl 传 null 时不提示宽度不一致，由调用方自己判断。 */
+function calcGeo(items,warnEl){
+  if(!items.length)return null;
+  var widths={};
+  items.forEach(function(it){widths[it.W]=1;});
+  var ws=Object.keys(widths).map(Number);
+  if(ws.length>1){
+    var msg='图片宽度不一致（'+ws.join(' / ')+'px），同一个型号必须用同样宽度的图。';
+    if(warnEl){
+      if(warnEl.dataset.shown==='1')warnEl.textContent=msg;
+      else{warnEl.textContent=msg;warnEl.dataset.shown='1';}
+    }
+    return null;
+  }
+  if(warnEl&&warnEl.dataset.shown==='1'){warnEl.textContent='';warnEl.dataset.shown='0';}
+  var W=ws[0],px=W/1000,pad=Math.round(PAD_MM*px);
+  var ux0=Math.min.apply(null,items.map(function(i){return i.bbox.x0;}));
+  var ux1=Math.max.apply(null,items.map(function(i){return i.bbox.x1;}));
+  var uy0=Math.min.apply(null,items.map(function(i){return i.bbox.y0;}));
+  var uy1=Math.max.apply(null,items.map(function(i){return i.bbox.y1;}));
+  return {px:px,pad:pad,cx:(ux0+ux1)/2,cy:(uy0+uy1)/2,
+    side:Math.max(ux1-ux0+1,uy1-uy0+1)+2*pad,W:W};
+}
+function calcDraft(){
+  draft.geo=null;
+  var items=draft.items;
+  var warnEl=$('warnW');
+  if(!items.length){if(warnEl)warnEl.textContent='';return null;}
+  var g=calcGeo(items,warnEl);
+  draft.geo=g;
+  return g;
+}
+
+/* 编辑现有型号：弹窗形式。下载现有配色图 → 与上传图合并 → 统一重算方框。
+   不再占用右侧「新增型号与图片」栏，避免把新增和修改两种意图混在一处。 */
+function fetchExistingColors(key){
+  var m=state.models[key];
+  if(!m)return Promise.resolve([]);
+  return Promise.all((m.colors||[]).map(function(c){
+    return ghFile(c.image).then(function(f){
+      return readImage('data:image/png;base64,'+f.content).then(function(it){
+        return {label:c.label||c.key,canvas:it.canvas,W:it.W,H:it.H,bbox:bboxOf(it.canvas),url:it.url,old:c};
+      });
+    }).catch(function(e){
+      /* 单张读不到不该整批失败，但必须留下痕迹 —— 静默 return null 会让弹窗
+         变成空白且毫无线索（曾经因为 createImageBitmap 不吃 dataURL 而全空）。 */
+      console.warn('读取配色失败 '+c.image+'：'+(e&&e.message||e));
+      return null;
+    });
+  })).then(function(list){return list.filter(Boolean);});
+}
+var ip={key:'',items:[],loading:false};
+function openImgPanel(k){
+  ip.key=k;ip.items=[];ip.loading=true;
+  $('ipTitle').textContent='修改图片 · '+k;
+  $('ipSub').textContent='正在读取线上现有配色…';
+  $('ipPreviews').innerHTML='<p class="empty-tip">加载中…</p>';
+  $('imgPanel').hidden=false;
+  var m=state.models[k];
+  var have=(m&&m.colors)||[];
+  fetchExistingColors(k).then(function(list){
+    ip.items=list;
+    ip.loading=false;
+    $('ipSub').textContent='共 '+have.length+' 个配色。新传的同名颜色会替换原图，新颜色会追加；方框按全部配色统一重算。';
+    renderIpPreviews();
+  }).catch(function(e){
+    ip.loading=false;
+    $('ipPreviews').innerHTML='<p class="empty-tip" style="color:#c0392b">读取失败：'+esc(e.message||e)+'</p>';
+  });
+}
+function renderIpPreviews(){
+  var box=$('ipPreviews');
+  box.innerHTML='';
+  ip.items.forEach(function(it,i){
+    var d=document.createElement('div');
+    d.className='upbox';
+    var th=document.createElement('div');
+    th.className='thumb';
+    var img=document.createElement('img');
+    img.src=it.url;
+    th.appendChild(img);
+    var inp=document.createElement('input');
+    inp.className='cname';inp.value=it.label;
+    inp.placeholder='点此填色名';
+    inp.addEventListener('input',function(){it.label=inp.value;});
+    var rm=document.createElement('button');
+    rm.className='rm';rm.textContent='×';rm.title='移除该颜色';
+    rm.addEventListener('click',function(){ip.items.splice(i,1);renderIpPreviews();});
+    d.appendChild(rm);d.appendChild(th);d.appendChild(inp);
+    box.appendChild(d);
+  });
+  var add=document.createElement('div');
+  add.className='upbox add';
+  add.innerHTML='<div class="plus">＋</div><div class="tip">请提交 PNG 1000×1000<br>或 1000 倍数的图片</div>';
+  add.addEventListener('click',function(){$('ipFile').click();});
+  box.appendChild(add);
+  markOverflow();
+}
+function ipAddFiles(files){
+  var arr=[].slice.call(files||[]);
+  if(!arr.length)return;
+  var names=arr.map(function(f){return f.name||'';});
+  $('ipSub').textContent='正在解码 '+arr.length+' 张图…';
+  Promise.all(arr.map(function(f){return readImage(f);})).then(function(list){
+    list.forEach(function(it,i){
+      var p=parseName(names[i]||'');
+      var bx=null;
+      try{bx=bboxOf(it.canvas);}catch(e){bx={x0:0,x1:it.W-1,y0:0,y1:it.H-1};}
+      ip.items.push({label:p.color,name:names[i],canvas:it.canvas,W:it.W,H:it.H,bbox:bx,url:it.url,revoke:it.revoke});
+    });
+    return new Promise(function(r){requestAnimationFrame(function(){setTimeout(r,0);});});
+  }).then(function(){
+    var m=state.models[ip.key];
+    $('ipSub').textContent='共 '+((m&&m.colors)||[]).length+' 个配色（原有）+ 本次新传。同名会替换，新颜色会追加。';
+    renderIpPreviews();
+  }).catch(function(e){alert(e.message||e);});
+}
+
+/* 把一批「已解码的图」打包成待上传数据。
+   items 每项含 canvas/W/H/bbox/label；keepColors 是本次没重传、但要保留在 colors 里的旧配色。
+   型号卡里两个「什么都不做也必须原样继承」的字段在这里兜底（见下方注释）。 */
+function packUpload(items,model,keepColors,opt){
+  opt=opt||{};
+  var g=opt.geo||calcGeo(items,null);
+  if(!g)return Promise.reject(new Error('图片宽度不一致，同一个型号必须用同样宽度的图'));
+  var bad=items.filter(function(it){return !fileSlug(it.label);});
+  if(bad.length)return Promise.reject(new Error('这些颜色名还没有英文名，告诉我我来加：'+
+    bad.map(function(b){return b.label;}).join('、')));
+
+  var key='MR_'+model,lower=model.toLowerCase();
+  var prev=state.models[key]||null;
+  /* 两个字段必须在后台「什么都不做」时原样继承，否则等于每次上传图片都把它们抹掉：
+     · brandLogo —— 品牌 LOGO 落点。新型号取定位面板暂存值；覆盖已有型号时若没重新定位则保留原值。
+     · logoMax  —— 用户可上传 LOGO 的尺寸上限。原本每个型号不同（如 9100 是 120×80），
+                   早前这里写死 MAX_LOGO_MM(60×60)，导致只要从后台上传一次图片，
+                   该型号的上限就被永久改成 60×60。 */
+  var keepLogo=opt.brandLogo||(prev&&prev.brandLogo)||null;
+  var keepLogoMax=(prev&&prev.logoMax)||{wMm:MAX_LOGO_MM,hMm:MAX_LOGO_MM};
+  var out={key:key,model:{id:key,pxPerMm:g.px,canvasMm:Math.round(g.side/g.px*10)/10,
+    logoMax:{wMm:Number(keepLogoMax.wMm)||MAX_LOGO_MM,hMm:Number(keepLogoMax.hMm)||MAX_LOGO_MM},
+    colors:[]},files:[],keepColors:keepColors||[]};
+  if(keepLogo)out.model.brandLogo=keepLogo;
+  return Promise.all(items.map(function(it){
+    var cv=cropTo(it.canvas,g.cx,g.cy,g.side);
+    var base='test-assets/'+'mr_'+lower+'_'+fileSlug(it.label)+'_trim';
+    return Promise.all([toBlob(cv,'image/png'),toBlob(cv,'image/webp',WEBP_Q)]).then(function(bs){
+      out.files.push({path:base+'.png',blob:bs[0]},{path:base+'.webp',blob:bs[1]});
+      out.model.colors.push({key:fileSlug(it.label),label:it.label.trim(),image:base+'.png',webp:base+'.webp'});
+    });
+  })).then(function(){return out;});
+}
+/* 新增型号：右侧栏 */
+function buildUpload(){
+  var g=calcDraft();
+  if(!draft.items.length)return Promise.reject(new Error('请先放几张颜色图'));
+  if(!g)return Promise.reject(new Error('图片宽度不一致，同一个型号必须用同样宽度的图'));
+  var model=normModel($('newModel').value||draft.model);
+  if(!model)return Promise.reject(new Error('请填写型号名称'));
+  return packUpload(draft.items,model,[],{geo:g,brandLogo:draft.brandLogo});
+}
+
+/* ========== 发布 ========== */
+/* ⛔ ui.prog 必须是「进度条元素」（#jobFill），不是 prog 函数本身。
+   踩过的坑：publish() 和 LOGO 保存两处写成 {prog:prog,...}，把函数当元素传进来，
+   fill.style 是 undefined 却仍执行 fill.style.width=… —— 直接抛
+   「Cannot set properties of undefined (setting 'width')」，
+   一次完整的「确认提交上传」在第一个任务之前就被打断。
+   统一走 progEl() 归一：拿不到元素就回落 #jobFill，再拿不到就静默不画，
+   进度条画不出来不该让发布失败。 */
+function progEl(ui){
+  var el=(ui&&ui.prog)||null;
+  if(!el||!el.style)el=$('jobFill');
+  if(!el||!el.style)return null;
+  return el;
+}
+function prog(p,ui){
+  var fill=progEl(ui);
+  if(!fill)return;
+  fill.style.width=Math.round(p*100)+'%';
+}
+/* 进度条和上传明细都关在「提交中」弹窗里：提交期间出现，提交结束整块消失，
+   不再把「上传 xx.png / 更新 models.test.json」这些行堆在页面底部。 */
+function openJobPanel(title){
+  var p=$('jobPanel');if(!p)return;
+  var t=$('jobTitle');if(t&&title)t.textContent=title;
+  var f=$('jobFill');if(f)f.style.width='0%';
+  var l=$('jobLog');if(l)l.textContent='';
+  p.hidden=false;
+}
+function closeJobPanel(){
+  var p=$('jobPanel');if(!p)return;
+  p.hidden=true;
+  var f=$('jobFill');if(f)f.style.width='0%';
+}
+/* 兼容旧调用点：进度条现在随弹窗一起收，这里只做兜底复位。 */
+function progDone(ui){closeJobPanel();}
+/* 执行一组发布任务。ui={prog,log,title} 可选；
+   不传就统一落到「提交中」弹窗（#jobFill / #jobLog）。
+   弹窗由本函数自己开关：进来就弹，跑完（成功或失败）自动消失。 */
+function runJobs(jobs,ui){
+  ui=ui||{};
+  var total=jobs.length,done=0;
+  var logEl=$('jobLog')||ui.log||null;
+  if(logEl)logEl.textContent='';
+  openJobPanel(ui.title||'正在提交到 GitHub');
+  var log=function(s){
+    if(!logEl)return;
+    logEl.textContent+=s+'\n';logEl.scrollTop=logEl.scrollHeight;
+  };
+  prog(0.02,ui);
+  var runOne=function(){
+    if(!jobs.length)return Promise.resolve();
+    var j=jobs.shift();
+    var task,label='';
+    try{
+      if(j.kind==='put'){
+        label='上传 '+j.path;
+        task=toB64(j.blob).then(function(b64){
+          return ghFile(j.path).catch(function(){return null;}).then(function(cur){
+            return ghPut(j.path,b64,'后台：上传 '+j.path,cur&&cur.sha);
+          });
+        });
+      }else if(j.kind==='refile'){
+        label='重算 '+j.key+' '+j.color.label;
+        task=(function(){
+          /* 用当前方框重裁保留色：从 draft 合并后的几何重裁需要原图，这里直接重传原文件内容 */
+          return ghFile(j.color.image).then(function(cur){
+            return ghPut(j.color.image,cur.content,'后台：重算 '+j.color.image,cur.sha).then(function(){
+              return ghFile(j.color.webp).then(function(c2){
+                return ghPut(j.color.webp,c2.content,'后台：重算 '+j.color.webp,c2.sha);
+              });
+            });
+          });
+        })();
+      }else if(j.kind==='del'){
+        label='删除 '+j.path;
+        task=ghFile(j.path).then(function(cur){return ghDel(j.path,cur.sha,'后台：删除 '+j.path);})
+          .catch(function(e){log('跳过删除 '+j.path+'：'+e.message);});
+      }else if(j.kind==='copy'){
+        label='改名 '+j.from;
+        task=ghFile(j.from).then(function(cur){
+          return ghPut(j.to,cur.content,'后台：改名 '+j.from+' → '+j.to,null);
+        }).then(function(){
+          return ghFile(j.from).then(function(c2){return ghDel(j.from,c2.sha,'后台：改名删除 '+j.from);});
+        }).catch(function(e){log('跳过改名 '+j.from+'：'+e.message);});
+      }else{
+        label='更新 models.test.json';
+        var merged=state.models;
+        /* j.model 为空表示「只写配置」：删型号 / 删颜色 / 改颜色名这些操作
+           已经在 state.models 上改完了，直接把当前配置落盘即可。 */
+        if(j.model){
+          /* 覆盖已有型号时不能直接 merged[key]=newModel —— 那样会把 brandLogo、
+             logoMax 这类「本次没动的字段」整段抹掉（9100 的 logoMax 就是这样
+             被改成 60×60、9031SJ 之外的型号品牌 LOGO 就是这样消失的）。
+             改为：以新配置为基准，再用旧配置补齐所有未出现的键。 */
+          var old=merged[j.model.key];
+          var nm2=j.model.model;
+          if(old){
+            Object.keys(old).forEach(function(f){
+              if(nm2[f]===undefined)nm2[f]=old[f];
+            });
+          }
+          merged[j.model.key]=nm2;
+          (j.model.keepColors||[]).forEach(function(c){
+            var exist=merged[j.model.key].colors.some(function(x){return x.key===c.key;});
+            if(!exist)merged[j.model.key].colors.push(c);
+          });
+        }
+        var body=JSON.stringify({updatedAt:new Date().toISOString(),models:merged},null,2);
+        task=(function(){
+          var b64=btoa(unescape(encodeURIComponent(body)));
+          return ghFile('models.test.json').catch(function(){return null;}).then(function(cur){
+            return ghPut('models.test.json',b64,'后台：更新型号配置',cur&&cur.sha);
+          });
+        })();
+      }
+    }catch(e){task=Promise.reject(e);}
+    log(label);
+    return task.catch(function(e){if(e&&e.message!=='__skip__')log('  出错：'+e.message);throw e;})
+      .then(function(){done++;prog(done/total,ui);return runOne();});
+  };
+  /* 收尾一定要关弹窗：否则失败时「上传 xx.png」这些行会一直挂在页面上。 */
+  return runOne().then(function(r){closeJobPanel();return r;},
+                       function(e){closeJobPanel();throw e;});
+}
+/* 组装本次要跑的任务（新增/修改弹窗共用） */
+function buildJobs(up,opt){
+  opt=opt||{};
+  var jobs=[];
+  if(!opt.skipGlobalEdits){
+    state.pendingCopy.forEach(function(cp){jobs.push({kind:'copy',from:cp.from,to:cp.to});});
+  }
+  up.files.forEach(function(f){jobs.push({kind:'put',path:f.path,blob:f.blob});});
+  up.keepColors.forEach(function(c){jobs.push({kind:'refile',color:c,key:up.key});});
+  if(!opt.skipGlobalEdits){
+    state.dels.forEach(function(p){jobs.push({kind:'del',path:p});});
+  }
+  jobs.push({kind:'json',model:up});
+  return jobs;
+}
+/* 只改配置、不新增图片时的任务清单（删型号 / 删颜色 / 改颜色名 / 改型号名）。
+   这些改动都直接落在 state.models 上，所以只需要把图片增删跑完，
+   再把当前配置整体写回 models.test.json。 */
+function buildConfigJobs(){
+  var jobs=[];
+  state.pendingCopy.forEach(function(cp){jobs.push({kind:'copy',from:cp.from,to:cp.to});});
+  state.dels.forEach(function(p){jobs.push({kind:'del',path:p});});
+  jobs.push({kind:'json',model:null});
+  return jobs;
+}
+/* 型号名称是必填项：为空就拦在提交之前，聚焦并高亮输入框，
+   不要让用户走完一整遍流程才收到「发布中断」。 */
+function requireModelName(){
+  var nm=$('newModel');
+  if(normModel((nm?nm.value:'')||draft.model))return true;
+  if(nm){
+    nm.focus();
+    var box=nm.closest('.name-field')||nm;
+    box.classList.add('need');
+    setTimeout(function(){box.classList.remove('need');},2600);
+  }
+  toastMsg('型号名称是必填项，请先填写');
+  return false;
+}
+function publish(){
+  if(state.busy)return;
+  if(!token()){openTokenPanel();alert('还没有连接 GitHub，请先连接');return;}
+  /* ⛔ 右侧栏没有待传图片时必须走「纯配置提交」。
+     以前这里无条件 buildUpload()，会以「请先放几张颜色图」软失败 ——
+     于是「删掉的型号 / 删掉的颜色」永远写不进 models.test.json，刷新一下全长回来。
+     删型号、删颜色、改颜色名、改型号名都只改配置，本来就不需要图片。 */
+  if(!draft.items.length){
+    /* 有待发布的配置改动（删型号/删颜色/改名）→ 纯配置提交，不需要型号名、也不需要图。
+       什么都没有 → 只做引导：先填型号名，再放图。 */
+    if(pendingCount())return publishConfig();
+    if(!requireModelName())return;
+    toastMsg('请先放几张颜色图');
+    return;
+  }
+  if(!requireModelName())return;
+  buildUpload().then(function(up){
+    if(state.models[up.key]&&!confirm('型号 '+up.key+' 已存在，覆盖它的配色？'))return Promise.resolve();
+    var jobs=buildJobs(up);
+    state.busy=true;$('btnPublish').disabled=true;
+    return runJobs(jobs,{title:'正在提交到 GitHub'}).then(function(){
+      state.busy=false;$('btnPublish').disabled=false;
+      state.puts=[];state.dels=[];state.pendingCopy=[];state.dirty=false;
+      renderPreviews();
+      alert('发布完成！\n前端页面约 30–60 秒后会自动显示新内容。');
+      return loadModels();
+    });
+  }).catch(function(e){
+    state.busy=false;$('btnPublish').disabled=false;
+    var m=(e&&e.message)||'';
+    var soft=m.indexOf('请先')>=0||m.indexOf('宽度')>=0||m.indexOf('英文名')>=0;
+    /* ⛔ 顺序不能反：refreshPending() 会把 #pendingTip 重写成「待发布项数」，
+        先 toast 再 refresh 的话提示会被当场清掉，用户点了提交像什么都没发生。
+        所以先刷新待发布数，再给出错提示。 */
+    refreshPending();
+    if(!soft)alert('发布中断：'+m+'\n已提交的部分不会回滚，修好后可重新发布。');
+    else if(m)toastMsg(m);
+  });
+}
+/* 只改配置的提交（右侧栏没有图片）：把图片增删跑完 + 当前配置写回 models.test.json。
+   不需要型号名称，也不该被型号名称的必填校验拦住。 */
+function publishConfig(){
+  if(!pendingCount()){toastMsg('还没有任何改动');return;}
+  state.busy=true;$('btnPublish').disabled=true;
+  runJobs(buildConfigJobs(),{title:'正在提交配置到 GitHub'}).then(function(){
+    state.busy=false;$('btnPublish').disabled=false;
+    state.dels=[];state.pendingCopy=[];state.dirty=false;
+    renderPreviews();
+    alert('发布完成！\n前端页面约 30–60 秒后会自动显示新内容。');
+    return loadModels();
+  }).catch(function(e){
+    state.busy=false;$('btnPublish').disabled=false;
+    refreshPending();
+    alert('发布中断：'+((e&&e.message)||e)+'\n已提交的部分不会回滚，修好后可重新发布。');
+  });
+}
+
+/* ========== 品牌 LOGO 手动定位 ========== */
+var BRAND_SVG=null, BRAND_ASPECT=1578/112.09;
+function brandSvgText(){
+  if(BRAND_SVG)return Promise.resolve(BRAND_SVG);
+  return fetch('brand-logo.svg').then(function(r){
+    if(!r.ok)throw new Error('brand-logo.svg 读取失败 HTTP '+r.status);
+    return r.text();
+  }).then(function(t){BRAND_SVG=t;return t;});
+}
+function brandLogoUrl(color){
+  return brandSvgText().then(function(t){
+    return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(t.replace(/__BRAND_FILL__/g,color||'#a6a7ac'));
+  });
+}
+function openLogoPanel(key){
+  var isNew=!key;
+  var mm,srcPromise,have=null;
+  if(isNew){
+    if(!draft.items.length){alert('请先上传这个型号的图片，再定位LOGO');return;}
+    calcDraft();
+    if(!draft.geo){alert('图片还没准备好');return;}
+    lp.key='';
+    mm=draft.geo.side/draft.geo.px;
+    srcPromise=Promise.resolve(draft.items[0].url);
+    var ex=state.models['MR_'+normModel($('newModel').value)];
+    have=(ex&&ex.brandLogo)||draft.brandLogo||null;
+  }else{
+    var m=state.models[key];
+    if(!m)return;
+    lp.key=key;
+    mm=m.canvasMm;
+    var c0=(m.colors||[])[0];
+    if(!c0){alert('该型号还没有图片');return;}
+    srcPromise=Promise.resolve(c0.image);
+    have=m.brandLogo||null;
+  }
+  $('lpTitle').textContent='品牌LOGO定位'+(isNew?(' · '+$('newModel').value):(' · '+key));
+  if(have){
+    lp.cxMm=have.cxMm;lp.cyMm=have.cyMm;lp.lenMm=have.lenMm;lp.rot=have.rot||0;lp.color=have.color||'#a6a7ac';
+  }else{
+    /* 新型号默认放正中心。颜色给浅灰（与 9031SJ 的实测色一致），
+       它在深色包体上对比很低、容易被误判成「没显示」，
+       所以下面面板里放一句提示，让用户知道改颜色即可。 */
+    lp.cxMm=mm/2;lp.cyMm=mm/2;lp.lenMm=DEFAULT_LOGO_LEN;lp.rot=DEFAULT_LOGO_ROT;lp.color='#a6a7ac';
+  }
+  lp.mm=mm;
+  $('lpLen').value=lp.lenMm;$('lpRot').value=lp.rot;$('lpColor').value=lp.color;
+  $('logoPanel').hidden=false;
+  var stage=$('lpStage');
+  /* 底图是 width:100% 撑满 stage（有 1px 边框），先按此给一个正确比例，
+     等图片解码完再用实测宽度校准一次，避免开场闪一下小 LOGO。 */
+  lp.pxPerMmDisp=318/mm;
+  srcPromise.then(function(src){
+    stage.innerHTML='';
+    lp.srcEl=document.createElement('img');
+    lp.srcEl.src=src;
+    stage.appendChild(lp.srcEl);
+    var lg=document.createElement('img');
+    lg.className='lp-logo';lg.id='lpLogo';
+    stage.appendChild(lg);
+    lp.logoEl=lg;
+    /* 等底图真正渲染出来，用它此刻的实测宽度换算 px/mm，
+       不能预设 stage 宽度：底图有 padding、边框，且尺寸要等解码后才定。 */
+    return new Promise(function(res){
+      var done=function(){res();};
+      if(lp.srcEl.complete&&lp.srcEl.naturalWidth)setTimeout(done,0);
+      else{lp.srcEl.onload=done;lp.srcEl.onerror=done;setTimeout(done,1500);}
+    });
+  }).then(function(){
+    var w=lp.srcEl?lp.srcEl.getBoundingClientRect().width:0;
+    if(w>1)lp.pxPerMmDisp=w/lp.mm;
+    return brandLogoUrl(lp.color);
+  }).then(function(u){
+    if(lp.logoEl)lp.logoEl.src=u;
+    applyLp();
+  }).catch(function(e){alert(e.message||e);$('logoPanel').hidden=true;});
+}
+function applyLp(){
+  var el=lp.logoEl;
+  if(!el)return;
+  /* SVG 在 position:absolute + height:auto 下会退化成按宽高比反算，
+     必须同时把宽和高都按 mm 显式算出来（这个字标长宽比约 14.08:1）。 */
+  var w=lp.lenMm*lp.pxPerMmDisp;
+  if(!(w>0))w=DEFAULT_LOGO_LEN;
+  var ar=BRAND_ASPECT||14.076;
+  el.style.width=w+'px';
+  el.style.height=(w/ar)+'px';
+  el.style.maxWidth='none';
+  el.style.left=(lp.cxMm*lp.pxPerMmDisp)+'px';
+  el.style.top=(lp.cyMm*lp.pxPerMmDisp)+'px';
+  el.style.transform='translate(-50%,-50%) rotate('+lp.rot+'deg)';
+  $('lpPos').textContent='中心位置：X '+Math.round(lp.cxMm*10)/10+' mm，Y '+Math.round(lp.cyMm*10)/10+' mm（画布 '+Math.round(lp.mm*10)/10+'mm）';
+}
+function bindLpDrag(){
+  var stage=$('lpStage'),dragging=false;
+  function move(e){
+    if(!dragging)return;
+    var r=stage.getBoundingClientRect();
+    lp.cxMm=(e.clientX-r.left)/lp.pxPerMmDisp;
+    lp.cyMm=(e.clientY-r.top)/lp.pxPerMmDisp;
+    applyLp();
+  }
+  stage.addEventListener('pointerdown',function(e){
+    if(e.target.id!=='lpLogo')return;
+    dragging=true;stage.setPointerCapture(e.pointerId);e.preventDefault();
+  });
+  stage.addEventListener('pointermove',move);
+  stage.addEventListener('pointerup',function(){dragging=false;});
+}
+bindLpDrag();
+$('lpLen').addEventListener('input',function(){lp.lenMm=parseFloat($('lpLen').value)||lp.lenMm;applyLp();});
+$('lpRot').addEventListener('input',function(){lp.rot=parseFloat($('lpRot').value)||0;applyLp();});
+$('lpColor').addEventListener('input',function(){
+  lp.color=$('lpColor').value;
+  brandLogoUrl(lp.color).then(function(u){lp.logoEl.src=u;applyLp();});
+});
+$('lpCancel').addEventListener('click',function(){$('logoPanel').hidden=true;});
+$('lpClear').addEventListener('click',function(){
+  if(!confirm('清除该型号的品牌LOGO？保存后前端将不再显示。'))return;
+  if(lp.key&&state.models[lp.key])delete state.models[lp.key].brandLogo;
+  state.dirty=true;renderList();refreshPending();
+  $('logoPanel').hidden=true;
+  toastMsg('已清除 '+lp.key+' 的品牌LOGO（记得提交上传）');
+});
+$('lpSave').addEventListener('click',function(){
+  if(lp.key&&!state.models[lp.key]){alert('型号不存在');return;}
+  var pos={cxMm:Math.round(lp.cxMm*10)/10,cyMm:Math.round(lp.cyMm*10)/10,
+    lenMm:Math.round(lp.lenMm*10)/10,rot:Math.round(lp.rot),color:lp.color};
+  var m=lp.key?state.models[lp.key]:null;
+  if(!m){
+    /* 新型号：暂存到 draft.brandLogo，跟型号图片一起提交 */
+    draft.brandLogo=pos;
+    $('logoPanel').hidden=true;
+    toastMsg('LOGO 定位已暂存，点「确认提交上传」后生效');
+    return;
+  }
+  /* 已有型号：只改 LOGO 落点。这里必须单独把 models.test.json 写回去 ——
+     否则「改了定位但不重传图片」时找不到提交入口，等于白改。 */
+  m.brandLogo=pos;
+  state.dirty=true;renderList();refreshPending();
+  $('logoPanel').hidden=true;
+  if(!token()){toastMsg('LOGO 定位已记录，连接 GitHub 后再点「确认提交上传」');return;}
+  var up={key:lp.key,model:m,files:[],keepColors:[]};
+  state.busy=true;
+  runJobs([{kind:'json',model:up}],{title:'正在保存 LOGO 定位到 GitHub'}).then(function(){
+    state.busy=false;state.dirty=false;refreshPending();
+    alert('品牌LOGO定位已保存到线上。');
+    return loadModels();
+  }).catch(function(e){
+    state.busy=false;
+    alert('保存失败：'+(e.message||e)+'\n改动还留在页面上，再点一次可重试。');
+  });
+});
+$('btnLogoPos').addEventListener('click',function(){openLogoPanel(null);});
+
+/* ========== token 弹层 ========== */
+function openTokenPanel(){
+  $('tokenPanel').hidden=false;
+  $('token').value=token();
+  if(!token())$('token').focus();
+}
+$('btnToken').addEventListener('click',openTokenPanel);
+$('tpCancel').addEventListener('click',function(){$('tokenPanel').hidden=true;});
+$('tpSave').addEventListener('click',function(){
+  var v=($('token').value||'').trim();
+  if(!v){alert('请粘贴密钥');return;}
+  localStorage.setItem(TK,v);
+  setGhChip();
+  $('tokenPanel').hidden=true;
+});
+
+/* ========== 登录 ========== */
+$('eye').addEventListener('click',function(){
+  var p=$('pwd');
+  p.type=p.type==='password'?'text':'password';
+});
+function doLogin(){
+  var acc=$('acc').value.trim(),pwd=$('pwd').value;
+  sha256hex(acc).then(function(ah){
+    if(ah!==ACC_HASH){$('gateErr').textContent='账号或密码不对';return;}
+    return sha256hex(pwd).then(function(ph){
+      if(ph!==PWD_HASH){$('gateErr').textContent='账号或密码不对';return;}
+      sessionStorage.setItem('mr_admin_ok','1');
+      enter();
+    });
+  });
+}
+$('btnLogin').addEventListener('click',doLogin);
+/* 退出登录：只清会话标记，不动 GitHub 密钥（那是本机凭据，重登后还要用）。
+   有未提交改动时先问一句，避免误点丢掉刚传的图。 */
+$('btnLogout').addEventListener('click',function(){
+  var n=pendingCount();
+  if(n&&!confirm('还有 '+n+' 项改动没有提交，退出会丢失。确定退出？'))return;
+  sessionStorage.removeItem('mr_admin_ok');
+  $('main').hidden=true;
+  $('gate').style.display='flex';
+  $('acc').value='';$('pwd').value='';
+  $('gateErr').textContent='';
+  $('pwd').type='password';
+});
+$('pwd').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
+$('acc').addEventListener('keydown',function(e){if(e.key==='Enter')$('pwd').focus();});
+
+function enter(){
+  $('gate').style.display='none';
+  $('main').hidden=false;
+  setGhChip();
+  loadModels().then(function(){
+    toastMsg('已读取线上配置'+(token()?'':'，发布前请先点右上角连接 GitHub'));
+  }).catch(function(e){
+    $('list').innerHTML='<p class="empty-tip">读取失败：'+esc(e.message)+'</p>';
+  });
+}
+
+/* ========== 上传交互 ========== */
+$('file').addEventListener('change',function(e){addFiles(e.target.files);$('file').value='';});
+['dragenter','dragover'].forEach(function(ev){
+  document.querySelector('.cols').addEventListener(ev,function(e){e.preventDefault();document.querySelector('.dropzone').classList.add('over');});
+});
+['dragleave','drop'].forEach(function(ev){
+  document.querySelector('.cols').addEventListener(ev,function(e){e.preventDefault();document.querySelector('.dropzone').classList.remove('over');});
+});
+document.querySelector('.cols').addEventListener('drop',function(e){
+  if(e.dataTransfer&&e.dataTransfer.files)addFiles(e.dataTransfer.files);
+});
+$('newModel').addEventListener('input',function(){
+  /* 「型号名称：」是固定标签，这里只收后面输入的数字/字母。
+     顺手把用户可能连带的 MR_ 前缀或空格清掉，避免生成 MR_MR_9100 这类名字。 */
+  var v=$('newModel').value;
+  var clean=v.replace(/^\s*(mr|MR)[_\- ]*/,'');
+  if(clean!==v){
+    var at=$('newModel').selectionStart-(v.length-clean.length);
+    $('newModel').value=clean;
+    try{$('newModel').setSelectionRange(Math.max(0,at),Math.max(0,at));}catch(e){}
+  }
+  draft.model=clean;
+});
+$('btnPublish').addEventListener('click',publish);
+$('btnDiscard').addEventListener('click',function(){
+  if(!pendingCount())return;
+  if(!confirm('放弃所有未发布的改动？'))return;
+  loadModels().then(function(){toastMsg('已放弃改动');});
+});
+function toastMsg(s){$('pendingTip').textContent=s;}
+
+/* ========== 修改图片弹窗 ========== */
+$('ipFile').addEventListener('change',function(e){ipAddFiles(e.target.files);$('ipFile').value='';});
+$('ipCancel').addEventListener('click',function(){
+  if(ip.items.some(function(it){return !it.old;})&&!confirm('放弃这次修改？'))return;
+  $('imgPanel').hidden=true;ip.items=[];
+});
+$('ipSave').addEventListener('click',function(){
+  if(ip.loading){alert('还在读取线上配色，稍等一下');return;}
+  if(!token()){openTokenPanel();alert('还没有连接 GitHub，请先连接');return;}
+  var key=ip.key,m=state.models[key];
+  if(!m)return;
+  /* 只要新增/改名过的颜色才需要重传；纯改名不改图的情况也走这里（同名会重裁） */
+  var changed=ip.items.filter(function(it){
+    if(!it.old)return true;                       /* 新加的颜色 */
+    return it.label!==(it.old.label||it.old.key); /* 改了色名 */
+  });
+  if(!changed.length){alert('没有检测到改动');return;}
+  var model=normModel(key.replace(/^MR_/,''));
+  var keep=(m.colors||[]).filter(function(c){
+    return !changed.some(function(it){return it.old===c;});
+  });
+  $('ipSave').disabled=true;$('ipSave').textContent='提交中…';
+  packUpload(changed,model,keep,{brandLogo:m.brandLogo}).then(function(up){
+    return runJobs(buildJobs(up,{skipGlobalEdits:true}),
+      {title:'正在提交到 GitHub'});
+  }).then(function(){
+    $('ipSave').disabled=false;$('ipSave').textContent='确认提交上传';
+    $('imgPanel').hidden=true;ip.items=[];
+    alert('已提交！前端页面约 30–60 秒后会自动显示新内容。');
+    return loadModels();
+  }).catch(function(e){
+    $('ipSave').disabled=false;$('ipSave').textContent='确认提交上传';
+    alert('提交中断：'+((e&&e.message)||e));
+  });
+});
+
+if(sessionStorage.getItem('mr_admin_ok')==='1')enter();
+})();
+</script>
+</body>
+</html>
