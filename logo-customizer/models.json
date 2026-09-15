@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-15T06:22:01.391Z",
+  "updatedAt": "2026-09-15T06:25:57.512Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -131,9 +131,9 @@
         }
       ],
       "brandLogo": {
-        "cxMm": 329,
-        "cyMm": 366,
-        "lenMm": 60,
+        "cxMm": 334.6,
+        "cyMm": 361.5,
+        "lenMm": 50,
         "rot": 0,
         "color": "#a6a7ac"
       }
