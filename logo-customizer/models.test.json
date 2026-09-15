@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-14T08:27:08.120Z",
+  "updatedAt": "2026-09-15T01:56:28.121Z",
   "models": {
     "MR_9100": {
       "id": "MR_9100",
@@ -143,6 +143,30 @@
       "brandLogo": {
         "cxMm": 292,
         "cyMm": 430.5,
+        "lenMm": 80,
+        "rot": 90,
+        "color": "#a6a7ac"
+      }
+    },
+    "MR_31": {
+      "id": "MR_31",
+      "pxPerMm": 1,
+      "canvasMm": 573,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "elitegray",
+          "label": "精英灰",
+          "image": "test-assets/mr_31_elitegray_trim.png",
+          "webp": "test-assets/mr_31_elitegray_trim.webp"
+        }
+      ],
+      "brandLogo": {
+        "cxMm": 279.3,
+        "cyMm": 397.7,
         "lenMm": 80,
         "rot": 90,
         "color": "#a6a7ac"
