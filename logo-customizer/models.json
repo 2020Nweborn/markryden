@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-15T06:16:36.297Z",
+  "updatedAt": "2026-09-15T06:18:57.131Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -63,7 +63,14 @@
           "image": "mr_35_bizblack_trim.png",
           "webp": "mr_35_bizblack_trim.webp"
         }
-      ]
+      ],
+      "brandLogo": {
+        "cxMm": 136.1,
+        "cyMm": 144.5,
+        "lenMm": 60,
+        "rot": 0,
+        "color": "#d3d4d9"
+      }
     },
     "MR_9031SJ": {
       "id": "MR_9031SJ",
