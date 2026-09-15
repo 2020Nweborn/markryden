@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-15T01:56:28.121Z",
+  "updatedAt": "2026-09-15T03:42:49.978Z",
   "models": {
     "MR_9100": {
       "id": "MR_9100",
@@ -33,14 +33,7 @@
           "image": "wallet_82_trim.png",
           "webp": "wallet_82_trim.webp"
         }
-      ],
-      "brandLogo": {
-        "cxMm": 58.1,
-        "cyMm": 58.8,
-        "lenMm": 39,
-        "rot": 90,
-        "color": "#a6a7ac"
-      }
+      ]
     },
     "MR_21": {
       "id": "MR_21",
