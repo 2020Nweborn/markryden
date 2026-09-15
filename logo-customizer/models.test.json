@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-15T05:23:19.285Z",
+  "updatedAt": "2026-09-15T05:24:13.814Z",
   "models": {
     "MR_9100": {
       "id": "MR_9100",
@@ -140,6 +140,23 @@
         "rot": 90,
         "color": "#a6a7ac"
       }
+    },
+    "MR_300": {
+      "id": "MR_300",
+      "pxPerMm": 1,
+      "canvasMm": 573,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "elitegray",
+          "label": "精英灰",
+          "image": "test-assets/mr_300_elitegray_trim.png",
+          "webp": "test-assets/mr_300_elitegray_trim.webp"
+        }
+      ]
     }
   }
 }
