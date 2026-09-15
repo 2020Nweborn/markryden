@@ -1,23 +1,6 @@
 {
-  "updatedAt": "2026-09-15T05:57:54.784Z",
+  "updatedAt": "2026-09-15T05:57:59.621Z",
   "models": {
-    "MR_82": {
-      "id": "MR_82",
-      "pxPerMm": 5,
-      "canvasMm": 121.6,
-      "logoMax": {
-        "wMm": 60,
-        "hMm": 60
-      },
-      "colors": [
-        {
-          "key": "bizblack",
-          "label": "商务黑",
-          "image": "wallet_82_trim.png",
-          "webp": "wallet_82_trim.webp"
-        }
-      ]
-    },
     "MR_21": {
       "id": "MR_21",
       "pxPerMm": 5,
