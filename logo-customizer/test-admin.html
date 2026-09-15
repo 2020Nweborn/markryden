@@ -224,11 +224,6 @@
   .lp-none{font-size:12.5px;color:var(--tx2);line-height:1.65;margin:0 0 6px}
   .lp-none[hidden]{display:none}
   .lp-fields.off{opacity:.45;pointer-events:none}
-  .lp-empty{position:absolute;left:9%;right:9%;top:12%;bottom:12%;border:1.5px dashed #c9cad0;
-    border-radius:12px;display:flex;align-items:center;justify-content:center;text-align:center;
-    white-space:pre-line;color:#8b8d94;font-size:12.5px;line-height:1.7;padding:10px;
-    background:rgba(255,255,255,.55);pointer-events:none}
-  .lp-empty[hidden]{display:none}
   .ghost-btn:disabled{opacity:.45;cursor:not-allowed}
   .ghost-btn{background:#fff;color:var(--tx);border:1px solid var(--bd);border-radius:10px;height:40px;padding:0 16px;font:inherit;cursor:pointer}
   .ghost-btn:hover{border-color:#141519}
@@ -1368,16 +1363,9 @@ function renderLpState(){
   ['lpLen','lpRot','lpColor'].forEach(function(id){var el=$(id);if(el)el.disabled=!on;});
   var clr=$('lpClear');if(clr)clr.disabled=!on;
   if(lp.logoEl)lp.logoEl.style.display=on?'':'none';
-  var stage=$('lpStage'), emp=$('lpEmpty');
-  if(on){if(emp)emp.hidden=true;}
-  else{
-    if(!emp){
-      emp=document.createElement('div');emp.className='lp-empty';emp.id='lpEmpty';
-      stage.appendChild(emp);
-    }
-    emp.hidden=false;
-    emp.textContent='未添加品牌LOGO\n点右侧「＋ 添加品牌LOGO」开始定位';
-  }
+  /* ⛔ 画布上不放虚线占位块和提示文字：用户明确要求去掉（视觉上像压了一层白膜）。
+     未添加时只看右侧的「＋ 添加品牌LOGO」按钮即可。 */
+  var emp=$('lpEmpty');if(emp)emp.hidden=true;
   applyLp();
 }
 /* 添加品牌LOGO：默认落在画布正中心，长度/角度取默认值，颜色取面板当前值 */
