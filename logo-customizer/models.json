@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-15T06:25:57.512Z",
+  "updatedAt": "2026-09-16T07:19:22.477Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -137,6 +137,23 @@
         "rot": 0,
         "color": "#a6a7ac"
       }
+    },
+    "MR_165": {
+      "id": "MR_165",
+      "pxPerMm": 4,
+      "canvasMm": 353,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "black",
+          "label": "黑",
+          "image": "mr_165_black_trim.png",
+          "webp": "mr_165_black_trim.webp"
+        }
+      ]
     }
   }
 }
