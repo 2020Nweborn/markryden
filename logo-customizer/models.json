@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-16T07:25:09.863Z",
+  "updatedAt": "2026-09-17T01:12:21.594Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -134,30 +134,6 @@
         "cxMm": 334.6,
         "cyMm": 361.5,
         "lenMm": 50,
-        "rot": 0,
-        "color": "#a6a7ac"
-      }
-    },
-    "MR_165": {
-      "id": "MR_165",
-      "pxPerMm": 4,
-      "canvasMm": 353,
-      "logoMax": {
-        "wMm": 60,
-        "hMm": 60
-      },
-      "colors": [
-        {
-          "key": "black",
-          "label": "黑",
-          "image": "mr_165_black_trim.png",
-          "webp": "mr_165_black_trim.webp"
-        }
-      ],
-      "brandLogo": {
-        "cxMm": 172.8,
-        "cyMm": 172.5,
-        "lenMm": 32,
         "rot": 0,
         "color": "#a6a7ac"
       }
