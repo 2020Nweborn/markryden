@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-17T02:31:29.185Z",
+  "updatedAt": "2026-09-17T02:35:38.487Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -50,13 +50,19 @@
     },
     "MR_35": {
       "id": "MR_35",
-      "pxPerMm": 0.614,
-      "canvasMm": 973.9,
+      "pxPerMm": 3,
+      "canvasMm": 310.7,
       "logoMax": {
         "wMm": 110,
         "hMm": 60
       },
       "colors": [
+        {
+          "key": "商务黑（反面）",
+          "label": "商务黑（反面）",
+          "image": "mr_35_商务黑（反面）_trim.png",
+          "webp": "mr_35_商务黑（反面）_trim.webp"
+        },
         {
           "key": "商务黑 - 反面",
           "label": "商务黑 - 反面",
