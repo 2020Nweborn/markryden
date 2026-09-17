@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-17T01:15:33.554Z",
+  "updatedAt": "2026-09-17T02:31:29.185Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -50,18 +50,18 @@
     },
     "MR_35": {
       "id": "MR_35",
-      "pxPerMm": 2,
-      "canvasMm": 307,
+      "pxPerMm": 0.614,
+      "canvasMm": 973.9,
       "logoMax": {
         "wMm": 110,
         "hMm": 60
       },
       "colors": [
         {
-          "key": "bizblack",
-          "label": "商务黑",
-          "image": "mr_35_bizblack_trim.png",
-          "webp": "mr_35_bizblack_trim.webp"
+          "key": "商务黑 - 反面",
+          "label": "商务黑 - 反面",
+          "image": "mr_35_商务黑 - 反面_trim.png",
+          "webp": "mr_35_商务黑 - 反面_trim.webp"
         }
       ],
       "brandLogo": {
