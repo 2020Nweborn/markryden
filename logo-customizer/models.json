@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-17T02:36:01.351Z",
+  "updatedAt": "2026-09-17T02:42:30.433Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -56,14 +56,7 @@
         "wMm": 110,
         "hMm": 60
       },
-      "colors": [
-        {
-          "key": "商务黑 - 反面",
-          "label": "商务黑 - 反面",
-          "image": "mr_35_商务黑 - 反面_trim.png",
-          "webp": "mr_35_商务黑 - 反面_trim.webp"
-        }
-      ],
+      "colors": [],
       "brandLogo": {
         "cxMm": 136.1,
         "cyMm": 144.5,
