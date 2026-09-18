@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-17T02:43:01.871Z",
+  "updatedAt": "2026-09-18T05:23:10.320Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -48,30 +48,6 @@
         }
       ]
     },
-    "MR_35": {
-      "id": "MR_35",
-      "pxPerMm": 3,
-      "canvasMm": 310.7,
-      "logoMax": {
-        "wMm": 110,
-        "hMm": 60
-      },
-      "colors": [
-        {
-          "key": "bizblack",
-          "label": "商务黑",
-          "image": "mr_35_bizblack_trim.png",
-          "webp": "mr_35_bizblack_trim.webp"
-        }
-      ],
-      "brandLogo": {
-        "cxMm": 136.1,
-        "cyMm": 144.5,
-        "lenMm": 60,
-        "rot": 0,
-        "color": "#d3d4d9"
-      }
-    },
     "MR_9031SJ": {
       "id": "MR_9031SJ",
       "pxPerMm": 1,
@@ -112,7 +88,15 @@
         "lenMm": 80,
         "rot": 90,
         "color": "#a6a7ac"
-      }
+      },
+      "safeZones": [
+        {
+          "xMm": 203.4,
+          "yMm": 212.6,
+          "wMm": 172.1,
+          "hMm": 335.1
+        }
+      ]
     },
     "MR_2422": {
       "id": "MR_2422",
