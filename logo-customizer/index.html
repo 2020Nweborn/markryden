@@ -60,13 +60,18 @@
   .size-list{display:flex;flex-direction:column;line-height:1.45}
   .stage-notice{position:absolute;z-index:9;left:50%;top:50%;transform:translate(-50%,-50%);max-width:80%;text-align:center;font-size:12px;line-height:1.6;color:#8a4a42;background:rgba(255,255,255,.94);border:1px solid #f0d7d3;padding:10px 16px;border-radius:8px}
   .stage-notice[hidden]{display:none}
+  /* 「一个型号都没有」的常驻说明。刻意跟 .stage-notice 分开：
+     后者的文案会被 setLanguage() 覆写成「图片加载失败」，共用会把真正的提示盖掉。 */
+  .no-models{position:absolute;z-index:10;left:50%;top:50%;transform:translate(-50%,-50%);max-width:82%;text-align:center;font-size:13px;font-weight:600;line-height:1.9;color:#3d4046;background:rgba(255,255,255,.96);border:1px solid #e3e5e8;padding:14px 20px;border-radius:10px}
+  .no-models[hidden]{display:none}
+  .no-models span{display:block;font-weight:400;font-size:12px;color:#8b9098}
   .size-hud b{font-weight:400;color:#8a8a8a;font-size:11px}
   .size-hud b.is-over{color:#c0392b;font-weight:900}
   .warning-trigger{width:32px;height:32px;padding:0;border:0;background:transparent;display:block;cursor:help}
   .warning-trigger img{display:block;width:32px;height:32px}
-  .warning-popover{position:absolute;top:43px;right:0;width:300px;min-height:58px;padding:17px 18px;border-radius:14px;background:#fff;color:#111;box-shadow:0 8px 28px rgba(0,0,0,.14);font-size:15px;font-weight:700;line-height:24px;text-align:center;white-space:normal;opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .18s ease,transform .18s ease,visibility .18s ease;pointer-events:none}
+  .warning-popover{position:absolute;top:43px;right:0;width:300px;min-height:58px;padding:17px 18px;border-radius:14px;background:#fff;color:#111;box-shadow:0 8px 28px rgba(0,0,0,.14);font-size:15px;font-weight:700;line-height:24px;text-align:center;white-space:normal;opacity:0;visibility:hidden;transform:translateY(-5px);transition:none;pointer-events:none}
   .warning-popover:before{content:"";position:absolute;right:10px;top:-8px;width:16px;height:16px;background:#fff;transform:rotate(45deg);border-radius:2px 0 0 0}
-  .size-warning:hover .warning-popover,.size-warning:focus-within .warning-popover,.size-warning.is-open .warning-popover{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto}
+  .size-warning.is-open .warning-popover{opacity:1;visibility:visible;transform:translateY(0);transition:opacity .18s ease,transform .18s ease;pointer-events:auto}
 
   .panel{width:404px;min-height:578px;align-self:stretch;display:flex;flex-direction:column;padding:27px 30px 20px;background:#fff;border-radius:14px}
   .top-grid,.middle-grid,.adjust-grid{display:grid;grid-template-columns:148px 148px;column-gap:37px}
@@ -112,6 +117,30 @@
   .btn:disabled{opacity:.6;cursor:default}
   .export-tip{position:fixed;left:50%;bottom:34px;transform:translate(-50%,10px);z-index:300;background:#303030;color:#fff;font-size:12px;line-height:1.5;padding:9px 16px;border-radius:6px;opacity:0;visibility:hidden;transition:opacity .2s ease,transform .2s ease,visibility .2s ease;max-width:80vw;text-align:center}
   .export-tip.is-on{opacity:1;visibility:visible;transform:translate(-50%,0)}
+  /* ===== 导出成功弹窗（设计稿 735×747 按 49% 等比还原） ===== */
+  .exdone{position:fixed;inset:0;z-index:450;display:flex;align-items:center;justify-content:center;padding:16px}
+  .exdone[hidden]{display:none!important}
+  .exdone-mask{position:absolute;inset:0;background:rgba(20,21,25,.45)}
+  .exdone-card{position:relative;width:min(360px,calc(100vw - 32px));height:366px;box-sizing:border-box;background:#fff;border-radius:19px;padding:0;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.30);animation:exdoneIn .22s ease}
+  @keyframes exdoneIn{from{opacity:0;transform:translateY(12px) scale(.975)}to{opacity:1;transform:none}}
+  .exdone-top{height:169px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:20px;padding:53px 16px 0;background:#fff}
+  .exdone-icon{display:block;width:36px;height:36px;flex:0 0 36px}
+  .exdone-icon svg{display:block;width:100%;height:100%}
+  .exdone-title{font-size:20px;font-weight:800;line-height:24px;color:#111}
+  .exdone-blue{height:197px;box-sizing:border-box;background:#1938D7;border-radius:7px 7px 19px 19px;padding:31px 39px 0;color:#fff}
+  .exdone-lead{font-size:16px;font-weight:800;line-height:21px;margin:0 0 13px;white-space:nowrap}
+  .exdone-line{margin:0 0 6px;font-size:13px;font-weight:600;line-height:18px}
+  .exdone-line:last-of-type{margin-bottom:0}
+  .exdone-line em{font-style:normal;font-weight:800;color:#00FF7F}
+  .exdone-ok{display:block;width:278px;height:38px;margin:22px auto 0;border:0;border-radius:19px;background:#fff;color:#111;font-family:inherit;font-size:17px;line-height:38px;font-weight:800;cursor:pointer;transition:background .15s ease}
+  .exdone-ok:hover{background:#f0f0f0}
+  .exdone-ok:active{background:#e6e6e6}
+  @media(max-width:390px){
+    .exdone-card{height:auto;min-height:366px}
+    .exdone-blue{padding-left:26px;padding-right:26px}
+    .exdone-lead{font-size:14px;white-space:normal}
+    .exdone-ok{width:100%}
+  }
 
   @media(min-width:1200px){
     header{height:118px}
@@ -231,6 +260,8 @@
 </style>
 </head>
 <body data-page-node-id="IPopAk2MU4y4SzLbrQdj7C">
+<style id="mr-draft-badge-css">.mr-draft-badge{position:fixed;left:12px;bottom:44px;z-index:2147483000;display:flex;align-items:center;gap:7px;padding:5px 12px;border:0;border-radius:999px;background:rgba(198,132,26,.95);color:#fff;cursor:pointer;font:12px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",Arial,sans-serif;letter-spacing:.02em;box-shadow:0 2px 10px rgba(0,0,0,.22)}.mr-draft-badge i{width:7px;height:7px;border-radius:50%;background:#fff;flex:0 0 auto}.mr-draft-badge u{text-decoration:underline;text-underline-offset:2px}</style>
+<button class="mr-draft-badge" id="mrDraftBadge" type="button" hidden><i></i><span id="mrDraftText"></span><u>清除</u></button>
 <header data-page-node-id="U872brYtajZACf2F2osm0r">
   <div class="header-inner" data-page-node-id="L1JFyBafuKGhyO3Smi2Kww">
     <img class="brand-img" src="logo.svg" alt="MARK RYDEN" data-page-node-id="Y8szS8FfaGNv2b6q7HvWIg">
@@ -258,6 +289,7 @@
       </div>
       <div class="size-hud" id="sizeHud"><span id="labelSize">LOGO 参考尺寸</span><span class="size-list" id="logoSizeList"><b id="logoSizeValue">—</b></span></div>
       <div class="stage-notice" id="stageNotice" hidden><span></span></div>
+      <div class="no-models" id="mrNoModels" hidden>当前没有型号<span>后台已把型号全部删除，请先在后台新增型号</span></div>
     </div>
     <div class="zoom-bar">
       <button class="zoom-fit" id="zoomFit" type="button">适合大小</button>
@@ -346,11 +378,29 @@
   </div>
 </div>
 
+<div class="exdone" id="exportDone" hidden>
+  <div class="exdone-mask" id="exportDoneMask"></div>
+  <div class="exdone-card" role="dialog" aria-modal="true" aria-labelledby="exportDoneTitle">
+    <div class="exdone-top">
+      <span class="exdone-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#1938D7" d="M12 0C5.37225 0 0 5.37225 0 12C0 18.6277 5.37225 24 12 24C18.6277 24 24 18.6277 24 12C24 5.37225 18.6277 0 12 0ZM18.5842 9.27075L10.776 17.109C10.6865 17.1967 10.5804 17.2656 10.4637 17.3115C10.3471 17.3573 10.2225 17.3793 10.0973 17.376C9.97666 17.377 9.85709 17.3539 9.74555 17.308C9.63402 17.2622 9.53277 17.1945 9.44775 17.109L5.41575 13.0823C5.24527 12.9094 5.1497 12.6763 5.1497 12.4335C5.1497 12.1907 5.24527 11.9576 5.41575 11.7848C5.58686 11.6141 5.81868 11.5182 6.06037 11.5182C6.30207 11.5182 6.53389 11.6141 6.705 11.7848H6.71325L10.0973 15.1635L17.2867 7.9725C17.457 7.80107 17.6881 7.70398 17.9297 7.70243C18.1712 7.70089 18.4036 7.79501 18.576 7.96425L18.5842 7.9725C18.7548 8.14552 18.8504 8.3787 18.8504 8.62162C18.8504 8.86455 18.7548 9.09773 18.5842 9.27075Z"/></svg>
+      </span>
+      <span class="exdone-title" id="exportDoneTitle">导出成功</span>
+    </div>
+    <div class="exdone-blue">
+      <div class="exdone-lead" id="exportDoneLead">提交以下文件给销售客服完成定制服务</div>
+      <p class="exdone-line" id="exportDoneL1">① 成功导出的JPG效果图;</p>
+      <p class="exdone-line" id="exportDoneL2">② <em>PDF</em> 或者 <em>AI</em> 格式的LOGO文件。</p>
+      <button class="exdone-ok" id="exportDoneOk" type="button">确定</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const I18N = {
-  zh:{name:'中文',htmlLang:'zh-CN',title:'MARK RYDEN · LOGO 定制预览',stageAria:'背包 LOGO 预览画布',settingsAria:'LOGO 定制设置',warningAria:'查看 LOGO 尺寸提醒',warning:'LOGO长宽不要超过12×12cm，超过后可能会导致无法定制！',stageTip:'拉动 LOGO 画布四角可缩放大小',model:'产品型号',color:'颜色选择',black:'商务黑',upload:'上传LOGO',uploadHint:'上传透明 PNG 最佳，直接可用；<br>带有背景颜色的 JPG 将自动去除背景',addMore:'继续添加 LOGO',slotsFull:'已达 3 个上限，再添加会替换最早的 LOGO',process:'LOGO处理',removeBg:'去除背景',invert:'颜色反向',tolerance:'LOGO边缘擦除',toleranceHint:'拖动滑块，边缘清除越彻底',opacity:'透明度调节',rotation:'360°旋转调节',reset:'初始化（清除已上传LOGO）',export:'导出JPG图片',exportOk:'图片已导出，请查看下载文件',exportFail:'导出失败，请重试',imageFail:'产品图加载失败，请检查网络后刷新重试',note:'注：遇到问题请联系与您对接的销售或者客服人员',sizeTitle:'LOGO 参考尺寸',brandLogo:'显示品牌LOGO',brandLogoHide:'隐藏品牌LOGO',fit:'适合大小',guide:'查看教程',guideUI:{step:'步骤',back:'上一步',next:'下一步',done:'我知道了',skip:'跳过'}},
-  en:{name:'English',htmlLang:'en',title:'MARK RYDEN · Custom Logo Preview',stageAria:'Backpack logo preview canvas',settingsAria:'Logo customization settings',warningAria:'View logo size notice',warning:'The logo must not exceed 12 × 12 cm in width or height. Larger logos may not be customizable.',stageTip:'Drag the corner handles to resize the logo',model:'Product Model',color:'Color',black:'Business Black',upload:'Upload Logo',uploadHint:'Transparent PNG is recommended and ready to use;<br>backgrounds in JPG files will be removed automatically',addMore:'Add another logo',slotsFull:'Limit of 3 reached — adding more replaces the earliest logo',process:'Logo Processing',removeBg:'Remove BG',invert:'Invert Color',tolerance:'Logo Edge Cleanup',toleranceHint:'Drag the slider to remove more of the background edge',opacity:'Opacity',rotation:'360° Rotation',reset:'Reset (remove uploaded logo)',export:'Export JPG',exportOk:'Image exported, please check your downloads',exportFail:'Export failed, please try again',imageFail:'The product image failed to load. Please check your connection and refresh.',note:'Note: If you encounter any issues, please contact your sales representative or customer service.',sizeTitle:'Reference logo size',brandLogo:'Show brand logo',brandLogoHide:'Hide brand logo',fit:'Fit to Size',guide:'View Guide',guideUI:{step:'Step',back:'Back',next:'Next',done:'Got it',skip:'Skip'}},
-  ru:{name:'Русский',htmlLang:'ru',title:'MARK RYDEN · Предпросмотр логотипа',stageAria:'Область предпросмотра логотипа на рюкзаке',settingsAria:'Настройки логотипа',warningAria:'Показать ограничение размера логотипа',warning:'Ширина и высота логотипа не должны превышать 12 × 12 см. Превышение размера может сделать нанесение невозможным.',stageTip:'Потяните за углы рамки, чтобы изменить размер логотипа',model:'Модель товара',color:'Цвет',black:'Деловой чёрный',upload:'Загрузить логотип',uploadHint:'Рекомендуется прозрачный PNG;<br>фон изображения JPG удаляется автоматически',addMore:'Добавить ещё логотип',slotsFull:'Достигнут лимит 3 — новое заменит самое раннее',process:'Обработка логотипа',removeBg:'Удалить фон',invert:'Инверсия',tolerance:'Очистка краёв логотипа',toleranceHint:'Перемещайте ползунок для более тщательной очистки краёв',opacity:'Прозрачность',rotation:'Поворот 360°',reset:'Сбросить (удалить логотип)',export:'Экспорт JPG',exportOk:'Изображение экспортировано, проверьте загрузки',exportFail:'Не удалось экспортировать, попробуйте ещё раз',imageFail:'Не удалось загрузить изображение товара. Проверьте соединение и обновите страницу.',note:'Примечание: при возникновении вопросов обратитесь к вашему менеджеру или в службу поддержки.',sizeTitle:'Ориентировочный размер логотипа',brandLogo:'Показать логотип',brandLogoHide:'Скрыть логотип',fit:'По размеру',guide:'Инструкция',guideUI:{step:'Шаг',back:'Назад',next:'Далее',done:'Понятно',skip:'Пропустить'}}
+  zh:{name:'中文',htmlLang:'zh-CN',title:'MARK RYDEN · LOGO 定制预览',stageAria:'背包 LOGO 预览画布',settingsAria:'LOGO 定制设置',warningAria:'查看 LOGO 尺寸提醒',warning:'LOGO长宽不要超过12×12cm，超过后可能会导致无法定制！',stageTip:'拉动 LOGO 画布四角可缩放大小',model:'产品型号',color:'颜色选择',black:'商务黑',upload:'上传LOGO',uploadHint:'上传透明 PNG 最佳，直接可用；<br>带有背景颜色的 JPG 将自动去除背景',addMore:'继续添加 LOGO',slotsFull:'已达 3 个上限，再添加会替换最早的 LOGO',process:'LOGO处理',removeBg:'去除背景',invert:'颜色反向',tolerance:'LOGO边缘擦除',toleranceHint:'拖动滑块，边缘清除越彻底',opacity:'透明度调节',rotation:'360°旋转调节',reset:'初始化（清除已上传LOGO）',export:'导出JPG图片',exportOk:'图片已导出，请查看下载文件',exportFail:'导出失败，请重试',exportDone:{title:'导出成功',lead:'提交以下文件给销售客服完成定制服务',l1:'① 成功导出的JPG效果图;',l2:'② <em>PDF</em> 或者 <em>AI</em> 格式的LOGO文件。',ok:'确定'},imageFail:'产品图加载失败，请检查网络后刷新重试',note:'注：遇到问题请联系与您对接的销售或者客服人员',sizeTitle:'LOGO 参考尺寸',brandLogo:'显示品牌LOGO',brandLogoHide:'隐藏品牌LOGO',fit:'适合大小',guide:'查看教程',zoneWarn:'LOGO 没有完整落在可定制范围（红色虚线框）内，工厂可能无法定制！请把 LOGO 完整移进框内。',guideUI:{step:'步骤',back:'上一步',next:'下一步',done:'我知道了',skip:'跳过'}},
+  en:{name:'English',htmlLang:'en',title:'MARK RYDEN · Custom Logo Preview',stageAria:'Backpack logo preview canvas',settingsAria:'Logo customization settings',warningAria:'View logo size notice',warning:'The logo must not exceed 12 × 12 cm in width or height. Larger logos may not be customizable.',stageTip:'Drag the corner handles to resize the logo',model:'Product Model',color:'Color',black:'Business Black',upload:'Upload Logo',uploadHint:'Transparent PNG is recommended and ready to use;<br>backgrounds in JPG files will be removed automatically',addMore:'Add another logo',slotsFull:'Limit of 3 reached — adding more replaces the earliest logo',process:'Logo Processing',removeBg:'Remove BG',invert:'Invert Color',tolerance:'Logo Edge Cleanup',toleranceHint:'Drag the slider to remove more of the background edge',opacity:'Opacity',rotation:'360° Rotation',reset:'Reset (remove uploaded logo)',export:'Export JPG',exportOk:'Image exported, please check your downloads',exportFail:'Export failed, please try again',exportDone:{title:'Export Successful',lead:'Submit the files below to your sales representative to complete the customization',l1:'① The exported JPG preview;',l2:'② The LOGO file in <em>PDF</em> or <em>AI</em> format.',ok:'OK'},imageFail:'The product image failed to load. Please check your connection and refresh.',note:'Note: If you encounter any issues, please contact your sales representative or customer service.',sizeTitle:'Reference logo size',brandLogo:'Show brand logo',brandLogoHide:'Hide brand logo',fit:'Fit to Size',guide:'View Guide',zoneWarn:'The logo does not fit entirely inside the customizable area (red dashed frame) and may not be producible. Please move the whole logo inside the frame.',guideUI:{step:'Step',back:'Back',next:'Next',done:'Got it',skip:'Skip'}},
+  ru:{name:'Русский',htmlLang:'ru',title:'MARK RYDEN · Предпросмотр логотипа',stageAria:'Область предпросмотра логотипа на рюкзаке',settingsAria:'Настройки логотипа',warningAria:'Показать ограничение размера логотипа',warning:'Ширина и высота логотипа не должны превышать 12 × 12 см. Превышение размера может сделать нанесение невозможным.',stageTip:'Потяните за углы рамки, чтобы изменить размер логотипа',model:'Модель товара',color:'Цвет',black:'Деловой чёрный',upload:'Загрузить логотип',uploadHint:'Рекомендуется прозрачный PNG;<br>фон изображения JPG удаляется автоматически',addMore:'Добавить ещё логотип',slotsFull:'Достигнут лимит 3 — новое заменит самое раннее',process:'Обработка логотипа',removeBg:'Удалить фон',invert:'Инверсия',tolerance:'Очистка краёв логотипа',toleranceHint:'Перемещайте ползунок для более тщательной очистки краёв',opacity:'Прозрачность',rotation:'Поворот 360°',reset:'Сбросить (удалить логотип)',export:'Экспорт JPG',exportOk:'Изображение экспортировано, проверьте загрузки',exportFail:'Не удалось экспортировать, попробуйте ещё раз',exportDone:{title:'Экспорт выполнен',lead:'Отправьте указанные ниже файлы вашему менеджеру для завершения нанесения',l1:'① Экспортированное изображение JPG;',l2:'② Файл логотипа в формате <em>PDF</em> или <em>AI</em>.',ok:'ОК'},imageFail:'Не удалось загрузить изображение товара. Проверьте соединение и обновите страницу.',note:'Примечание: при возникновении вопросов обратитесь к вашему менеджеру или в службу поддержки.',sizeTitle:'Ориентировочный размер логотипа',brandLogo:'Показать логотип',brandLogoHide:'Скрыть логотип',fit:'По размеру',guide:'Инструкция',zoneWarn:'Логотип не помещается целиком в области нанесения (красная пунктирная рамка) — нанесение может быть невозможно. Переместите логотип целиком внутрь рамки.',guideUI:{step:'Шаг',back:'Назад',next:'Далее',done:'Понятно',skip:'Пропустить'}}
 };
 let currentLang='zh';
 /* 语言自动判定：只有中国大陆显示中文，其他地区一律英文 */
@@ -380,7 +430,8 @@ function setLanguage(code,remember){
   document.getElementById('stageSection').setAttribute('aria-label',t.stageAria);
   document.getElementById('settingsPanel').setAttribute('aria-label',t.settingsAria);
   document.getElementById('warningTrigger').setAttribute('aria-label',t.warningAria);
-  document.getElementById('warningPopover').textContent=t.warning;
+  /* 警告文案有两种：超过 12cm、以及超出安全区。哪种成立显示哪种，由 syncWarningText 决定 */
+  syncWarningText();
   document.getElementById('labelModel').textContent=t.model;document.getElementById('labelColor').textContent=t.color;
   renderColorSelect();document.getElementById('labelUpload').textContent=t.upload;
   document.getElementById('labelProcess').textContent=t.process;document.getElementById('labelRemoveBg').textContent=t.removeBg;
@@ -391,6 +442,8 @@ function setLanguage(code,remember){
   document.getElementById('labelSize').textContent=t.sizeTitle;
   document.getElementById('zoomFit').textContent=t.fit;
   document.getElementById('zoomGuideText').textContent=t.guide;
+  /* 导出成功弹窗的文案（弹窗可能没打开，函数内部逐个判空） */
+  applyExportDoneText();
   /* 按钮文案要跟着「当前是显示还是隐藏」变：显示中→「隐藏品牌LOGO」，
      已隐藏→「显示品牌LOGO」。这里的 t 只在切换语言时给一次，
      真正的字由 syncBrandToggleText() 按当前状态决定。 */
@@ -411,7 +464,8 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLanguageMenu()}
 
 const DEFAULT_VIEW_ZOOM = 0.7;
 /* 颜色名多语言表。MODELS 里 color.label 用中文色名（与素材文件名一致），显示时按当前语言查这张表；
-   查不到就原样显示中文，新增颜色只要在这里补一行即可（不补也能跑）。 */
+   查不到就原样显示中文，新增颜色只要在这里补一行即可（不补也能跑）。
+   ⛔ 带「（背面）」这类后缀的色名走 COLOR_SUFFIX 拆解，不要在这里硬凑整串。 */
 const COLOR_I18N={
   '商务黑':{zh:'商务黑',en:'Business Black',ru:'Деловой чёрный'},
   '精英灰':{zh:'精英灰',en:'Elite Gray',ru:'Серый элит'},
@@ -422,11 +476,60 @@ const COLOR_I18N={
   '紫':{zh:'紫',en:'Purple',ru:'Фиолетовый'},
   '绿':{zh:'绿',en:'Green',ru:'Зелёный'},
   '蓝':{zh:'蓝',en:'Blue',ru:'Синий'},
-  '橙':{zh:'橙',en:'Orange',ru:'Оранжевый'}
+  '橙':{zh:'橙',en:'Orange',ru:'Оранжевый'},
+  '白':{zh:'白',en:'White',ru:'Белый'},
+  '红':{zh:'红',en:'Red',ru:'Красный'},
+  '黄':{zh:'黄',en:'Yellow',ru:'Жёлтый'},
+  '粉':{zh:'粉',en:'Pink',ru:'Розовый'},
+  '棕':{zh:'棕',en:'Brown',ru:'Коричневый'},
+  '米':{zh:'米',en:'Beige',ru:'Бежевый'},
+  '卡其':{zh:'卡其',en:'Khaki',ru:'Хаки'},
+  '银':{zh:'银',en:'Silver',ru:'Серебристый'},
+  '金':{zh:'金',en:'Gold',ru:'Золотой'},
+  '藏青':{zh:'藏青',en:'Navy',ru:'Тёмно-синий'},
+  '深灰':{zh:'深灰',en:'Dark Gray',ru:'Тёмно-серый'},
+  '浅灰':{zh:'浅灰',en:'Light Gray',ru:'Светло-серый'},
+  '碳灰':{zh:'碳灰',en:'Carbon Gray',ru:'Угольно-серый'},
+  '迷雾灰':{zh:'迷雾灰',en:'Mist Gray',ru:'Туманно-серый'},
+  '曜石黑':{zh:'曜石黑',en:'Obsidian Black',ru:'Обсидиановый чёрный'},
+  '墨绿':{zh:'墨绿',en:'Dark Green',ru:'Тёмно-зелёный'},
+  '军绿':{zh:'军绿',en:'Army Green',ru:'Оливковый'},
+  '天蓝':{zh:'天蓝',en:'Sky Blue',ru:'Небесно-голубой'},
+  '湖蓝':{zh:'湖蓝',en:'Lake Blue',ru:'Голубой'},
+  '驼':{zh:'驼',en:'Camel',ru:'Верблюжий'},
+  '咖':{zh:'咖',en:'Coffee',ru:'Кофейный'},
+  '酒红':{zh:'酒红',en:'Burgundy',ru:'Бордовый'},
+  '米白':{zh:'米白',en:'Off-White',ru:'Кремовый'},
+  '象牙白':{zh:'象牙白',en:'Ivory',ru:'Айвори'}
 };
+/* 色名后缀表：色名里带括号的补充说明（如「商务黑（背面）」）。
+   标的是「同一个型号的哪个面」，属于固定词，拆开查表即可，
+   ⛔ 不要在 COLOR_I18N 里为每种「色名 × 每个面」硬凑整串。 */
+const COLOR_SUFFIX={
+  '背面':{en:'Back',ru:'Задняя сторона'},
+  '正面':{en:'Front',ru:'Передняя сторона'},
+  '侧面':{en:'Side',ru:'Боковая сторона'},
+  '内侧':{en:'Inside',ru:'Внутренняя сторона'},
+  '外侧':{en:'Outside',ru:'Наружная сторона'},
+  '顶部':{en:'Top',ru:'Верхняя сторона'},
+  '底部':{en:'Bottom',ru:'Нижняя сторона'}
+};
+/* 色名 → 当前语言的显示名。
+   带括号后缀的先拆开分别查表再拼回（「商务黑（背面）」→「Business Black (Back)」）；
+   主体查不到就整串原样返回 —— ⛔ 绝不硬猜，猜错的色名比不翻译更糟。 */
 function colorName(label){
-  const d=COLOR_I18N[label];
-  return (d&&(d[currentLang]||d.zh))||label;
+  if(!label)return label;
+  const str=String(label);
+  const m=str.match(/^(.*?)[（(]([^）)]*)[）)]\s*$/);
+  if(m&&m[1].trim()){
+    const base=colorName(m[1].trim());
+    const suf=m[2].trim();
+    const sd=COLOR_SUFFIX[suf];
+    const ss=(sd&&(sd[currentLang]||suf))||suf;
+    return currentLang==='zh'?(base+'（'+ss+'）'):(base+' ('+ss+')');
+  }
+  const d=COLOR_I18N[str];
+  return (d&&(d[currentLang]||d.zh))||str;
 }
 /* 每个型号：pxPerMm / canvasMm / logoMax 为型号级（同型号所有配色几何一致）；
    配色列表在 colors 里，每项一张图（png 兜底 + webp 主用）。
@@ -477,14 +580,21 @@ const MODELS = {
 /* ==== 后台维护的型号配置 ====
    内置 MODELS 只作为兜底。启动时读取同目录 models.json（由后台页写入），
    读到就整体覆盖并重新渲染；读不到或格式不对时静默沿用内置配置，页面照常可用。 */
+/* ⛔ 「型号表为空」是合法状态，不是坏配置。
+   2026-09-17 用户报「本地后台删了型号，前端不跟着变」——根因就在这里：
+   旧代码 `if(!keys.length)return false;` 把空对象当读取失败，调用方于是转头去读
+   `models.json` 旧文件，前端继续显示已经被删掉的型号，**而且一句提示都没有**。
+   区分标准只有一条：`models` 不是对象才算坏配置；是对象（哪怕没有键）就是有效配置。
+   只有「读不到 / 解析不出来」才该退回内置配置。 */
 function applyRemoteModels(j){
   const nm=j&&j.models;
   if(!nm||typeof nm!=='object')return false;
   const keys=Object.keys(nm);
-  if(!keys.length)return false;
   Object.keys(MODELS).forEach(k=>{delete MODELS[k];});
   keys.forEach(k=>{MODELS[k]=nm[k];});
+  if(!keys.length)return showNoModels();
   try{
+    hideNoModels();
     renderModelSelect();
     let want=modelSelect.value;
     if(!MODELS[want])want=keys[0];
@@ -498,11 +608,109 @@ function applyRemoteModels(j){
     return false;
   }
 }
+/* 一个型号都没有时的显式呈现：清空画布 + 禁用两个下拉 + 中央常驻一条说明。
+   ⛔ 刻意不复用 #stageNotice —— setLanguage() 会把它的文案覆写成「图片加载失败」，
+      等于把真正的提示盖掉（项目已有「警告不得被后续提示盖掉」这条红线）。
+   ⛔ 也不能默默留白：删光了型号却看不出区别，就是用户这次报的现象。 */
+let noModels=false;
+function showNoModels(){
+  noModels=true;
+  try{canvas.clear();canvas.renderAll();}catch(e){}
+  /* MODEL 留一个形状完整的占位：后面的 applyView / updateSizeReadout / syncBrandLogo
+     都可能被窗口 resize、切语言之类的事件再叫一次，直接置 null 会散点报错。 */
+  MODEL={id:'',name:'',canvasMm:1,pxPerMm:1,colors:[]};
+  try{modelSelect.innerHTML='';modelSelect.disabled=true;}catch(e){}
+  try{colorSelect.innerHTML='';colorSelect.disabled=true;}catch(e){}
+  const el=document.getElementById('mrNoModels');
+  if(el)el.hidden=false;
+  return true;
+}
+function hideNoModels(){
+  const el=document.getElementById('mrNoModels');
+  if(el)el.hidden=true;
+  if(!noModels)return;
+  noModels=false;
+  try{modelSelect.disabled=false;colorSelect.disabled=false;}catch(e){}
+}
+/* ==== 本机草稿（只在本地开发时用） ====
+   ⛔ 为什么要有：本地起静态服务时没有后端能写磁盘，后台唯一的写回通道是 GitHub，
+   于是「本地后台改一版 → 本地前端看效果」这条闭环本来是断的。
+   现在本地环境下后台会把整份配置另存进 localStorage，前端在本地优先读它。
+   边界（都很要紧）：
+    ⛔ 只在开发环境生效。只有真正的线上部署域（github.io）算线上 —— 永远不读草稿，
+       否则线上会拿本机草稿把线上配置盖掉，这是事故级。
+    ⛔ 不许静默：用草稿时左下角常驻一条橙色角标，写明「未上传线上」并给出一键清除，
+       否则很容易误以为线上配置已经更新了。
+    ⛔ 只在开发环境替换读取来源，不动「后台 api → 同源 → raw」那条线上读取顺序。 */
+const LOCAL_DRAFT_KEY='mr_cfg_draft:models.json';
+/* ⛔ 判定规则（2026-09-17 第二次修正，别改回「hostname 是不是 localhost」）：
+   旧规则只认 localhost / 127.* / 私网 IP / file:，任何别的开发预览形态
+   （IDE 内置预览、代理域名、容器 host、about:srcdoc…）都会被误判成线上，
+   草稿通道整个失效 —— 表现就是「本地改完刷新又变回去」。
+   新规则反过来：**只有线上部署域（github.io）算线上**，其它一律开发环境。 */
+const PROD_HOST=/(^|\.)github\.io$/i;
+/* ⛔ 仅供验证脚本使用的开关（URL 上没有入口）：预置 window.__MR_FORCE_ONLINE=true
+   即按「线上」跑，用来保证旧套件（在 127.0.0.1 上跑、断言读的是 models.json）
+   不被新判定引入的草稿通道干扰。 */
+const IS_LOCAL=!(PROD_HOST.test(String(location.hostname||'')))&&(window.__MR_FORCE_ONLINE!==true);
+function localDraft(){
+  if(!IS_LOCAL)return null;
+  try{
+    const o=JSON.parse(localStorage.getItem(LOCAL_DRAFT_KEY)||'null');
+    return (o&&o.cfg&&o.cfg.models)?o:null;
+  }catch(e){return null;}
+}
+function dropLocalDraft(){try{localStorage.removeItem(LOCAL_DRAFT_KEY);}catch(e){}}
+function draftStamp(o){
+  const t=o&&o.t?new Date(o.t):null;
+  if(!t||isNaN(t.getTime()))return '';
+  const p=n=>(n<10?'0':'')+n;
+  return p(t.getMonth()+1)+'-'+p(t.getDate())+' '+p(t.getHours())+':'+p(t.getMinutes());
+}
+function syncDraftBadge(o){
+  const b=document.getElementById('mrDraftBadge');
+  if(!b)return;
+  b.hidden=!o;
+  if(o){
+    const x=document.getElementById('mrDraftText');
+    if(x)x.textContent='本地草稿 '+draftStamp(o)+'（未上传线上）';
+  }
+}
+window.__mrLocalDraft={isLocal:()=>IS_LOCAL,get:localDraft,drop:dropLocalDraft,key:LOCAL_DRAFT_KEY};
 (function(){
-  fetch('models.json?t='+Date.now(),{cache:'no-store'})
-    .then(function(r){return r.ok?r.json():null;})
-    .then(function(j){if(applyRemoteModels(j))console.log('已加载后台型号配置');})
-    .catch(function(){});
+  const b=document.getElementById('mrDraftBadge');
+  if(b)b.addEventListener('click',function(){
+    if(!confirm('清除本地草稿？\n\n清掉后本页会显示线上的 models.json 配置。\n草稿只存在本机浏览器里、没有别的备份，删了不可恢复。'))return;
+    dropLocalDraft();
+    /* 图片仓与草稿是同一份本机数据的两半，必须一起清干净，否则会留下引不到的残留图片 */
+    localAssetsClear().then(function(){location.reload();});
+  });
+})();
+/* ⛔ 必须推迟到 DOMContentLoaded 之后才动手：applyRemoteModels 会走 loadBag，
+   而 canvas 是这个脚本后面才声明的 const —— 在这里同步调用会踩 TDZ 报错，
+   又被 applyRemoteModels 自己的 try 吞掉，表象就是「草稿明明在，前端却当没有」。
+   （DOMContentLoaded 在 load 之前触发，所以「加载期抓请求」的断言照样抓得到。） */
+(function(){
+  const boot=function(){
+    /* ⛔ 必须等本机图片仓预载完，再应用配置：本地新增型号的产品图只存在那里，
+       没预载好就 loadBag 去请求同源路径必然 404，画布直接留白（会被当成页面 bug）。
+       预载在脚本解析期就已经启动，所以这里的等待通常已经完成、不产生额外延迟。 */
+    localAssetsPromise.then(function(){
+    const draft=localDraft();
+    if(draft&&applyRemoteModels(draft.cfg)){
+      syncDraftBadge(draft);
+      console.log('已加载本机草稿（'+draftStamp(draft)+'，未上传线上）');
+      return;
+    }
+    syncDraftBadge(null);
+    fetch('models.json?t='+Date.now(),{cache:'no-store'})
+      .then(function(r){return r.ok?r.json():null;})
+      .then(function(j){if(applyRemoteModels(j))console.log('已加载后台型号配置');})
+      .catch(function(){});
+    });
+  };
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);
+  else boot();
 })();
 
 /* ==== 包体自带品牌 LOGO（一份 SVG 全型号复用） ====
@@ -565,12 +773,183 @@ function syncBrandLogo(){
              scaleX:sc,scaleY:sc,selectable:false,evented:false,
              hoverCursor:'default'});
     brandLogoObj=img;canvas.add(img);
-    /* 压在包体之上、用户上传的 LOGO 之下 */
-    if(bagImg)canvas.moveTo(img,1);
+    /* 压在包体之上、安全区之上、用户上传的 LOGO 之下（安全区占 1..n，所以这里要跳过它们） */
+    if(bagImg)canvas.moveTo(img,1+zoneObjs.length);
     canvas.renderAll();
   });
 }
 /* ==== 品牌 LOGO 结束 ==== */
+/* ==== 安全区（可定制范围） ====
+   MODEL.safeZones = [{xMm,yMm,wMm,hMm}]，画布坐标（mm，左上原点），由后台「安全区」面板维护。
+   不配 / 空数组 = 不限制 —— 没画过安全区的型号行为与改动前完全一致。
+   规则（2026-09-17 用户定）：LOGO 与**任一**安全区有重叠即算合格；
+   超界只做视觉提示（该 LOGO 选框变红 + 尺寸栏标红 + 弹一次警告），
+   ⛔ 不阻断拖动、不阻断导出 —— 用户明确要的是「允许拖出但要看得见」。
+   安全区框属于引导层：excludeFromExport:true 能挡住 toJSON / toSVG，
+   ⛔ 但 fabric 5 的 toDataURL / toCanvasElement **根本不看这个字段**（实测：勾与不勾导出的图一模一样），
+   所以导出前必须在 exportImage() 里显式把这些对象 visible 关掉，导完再恢复。 */
+var zoneObjs=[],zoneSig='',zoneBad=false;
+function safeZonesOf(){
+  const z=MODEL&&MODEL.safeZones;
+  if(!Array.isArray(z))return [];
+  return z.map(o=>({xMm:Number(o.xMm),yMm:Number(o.yMm),wMm:Number(o.wMm),hMm:Number(o.hMm)}))
+          .filter(o=>isFinite(o.xMm)&&isFinite(o.yMm)&&o.wMm>0&&o.hMm>0);
+}
+/* ⛔ 判定口径（2026-09-18 用户明确）：LOGO 必须**完整落在**红色虚线框内。
+   ⛔ 不是「有重叠就算合格」—— 那是旧口径，用户原话：
+      「目前 LOGO 完全移出红色虚线框才会出现提示，正常应该说 LOGO 贴近红色虚线框就要出现提示。」
+   所以 LOGO 只要**贴到 / 压到**框线（哪怕只露出去一角）就算超界。
+   实现：LOGO 是可能旋转的有向矩形，把 4 个角全部换算到世界坐标，
+   只要有一角落到轴对齐的安全区之外就判不合格。 */
+function obbInside(a,b){
+  const A=a.ang*Math.PI/180,c=Math.cos(A),s=Math.sin(A);
+  const hw=a.w/2,hh=a.h/2;
+  const x0=b.cx-b.w/2,x1=b.cx+b.w/2,y0=b.cy-b.h/2,y1=b.cy+b.h/2;
+  const corners=[[hw,hh],[-hw,hh],[-hw,-hh],[hw,-hh]];
+  for(let i=0;i<4;i++){
+    const px=a.cx+corners[i][0]*c-corners[i][1]*s;
+    const py=a.cy+corners[i][0]*s+corners[i][1]*c;
+    if(px<x0||px>x1||py<y0||py>y1)return false;
+  }
+  return true;
+}
+/* 两个有向矩形是否相交（分离轴定理）。**已不是判定口径**，
+   只留给验证脚本当「客点探测」用（找区外/区内位置），页面里不再调用。 */
+function obbOverlap(a,b){
+  const A=a.ang*Math.PI/180,B=b.ang*Math.PI/180;
+  const ax=[Math.cos(A),Math.sin(A)],ay=[-Math.sin(A),Math.cos(A)];
+  const bx=[Math.cos(B),Math.sin(B)],by=[-Math.sin(B),Math.cos(B)];
+  const dx=b.cx-a.cx,dy=b.cy-a.cy;
+  const axes=[ax,ay,bx,by];
+  for(let i=0;i<axes.length;i++){
+    const L=axes[i];
+    const d=Math.abs(dx*L[0]+dy*L[1]);
+    const ra=(a.w/2)*Math.abs(ax[0]*L[0]+ax[1]*L[1])+(a.h/2)*Math.abs(ay[0]*L[0]+ay[1]*L[1]);
+    const rb=(b.w/2)*Math.abs(bx[0]*L[0]+bx[1]*L[1])+(b.h/2)*Math.abs(by[0]*L[0]+by[1]*L[1]);
+    if(d>ra+rb)return false;
+  }
+  return true;
+}
+function zoneRect(z){return {cx:z.xMm+z.wMm/2,cy:z.yMm+z.hMm/2,w:z.wMm,h:z.hMm,ang:0};}
+/* 合格 = LOGO **完整落在任一安全区内**（不是「沾上边就行」，见 obbInside 的注释）。
+   区小到装不下时判不合格 —— 显示红框由用户自己缩，比偷偷放行可预期。 */
+function logoInZones(o){
+  const zs=safeZonesOf();
+  if(!zs.length)return true;
+  const m=logoMmOf(o);
+  if(!m)return true;
+  const box={cx:o.left,cy:o.top,w:m.w,h:m.h,ang:o.angle||0};
+  return zs.some(z=>obbInside(box,zoneRect(z)));
+}
+/* 画布 1 个单位 = 1mm，所以描边宽度要按当前视口换算，否则小画布型号（如 MR_21）会粗成一条带 */
+function syncZoneStroke(){
+  if(!zoneObjs.length)return;
+  const disp=stageDisplayWidth();
+  const z=disp/(MODEL.canvasMm||1)*viewZoom;
+  const sw=Math.max(0.4,2/z),dash=Math.max(2.5,9/z);
+  zoneObjs.forEach(o=>{if(o.stroke)o.set({strokeWidth:sw,strokeDashArray:[dash,dash*0.7]});});
+}
+/* 引导层：每个安全区一个红色虚线框。
+   ⛔ 没有「区外淡化」遮罩了（2026-09-17 用户明确：前端不要那个半透明灰框 ——
+      遮罩盖满画布，反而把画布边界显影成一个大灰方块）。
+   ⛔ 框也不是常显：默认整层隐藏，**只有 LOGO 越界时**才由 refreshZoneState() 露出来当提醒。
+      未越界 / 没有 LOGO → 画布干干净净，一点引导痕迹都没有。 */
+function renderSafeZones(){
+  const zs=safeZonesOf();
+  const sig=zs.map(z=>[z.xMm,z.yMm,z.wMm,z.hMm].join(',')).join(';')+'|'+(MODEL.canvasMm||0);
+  if(sig!==zoneSig){
+    zoneSig=sig;
+    zoneObjs.forEach(o=>canvas.remove(o));
+    zoneObjs=[];
+    if(zs.length){
+      zs.forEach(z=>{
+        zoneObjs.push(new fabric.Rect({left:z.xMm,top:z.yMm,width:z.wMm,height:z.hMm,
+          originX:'left',originY:'top',fill:'',stroke:'#c0392b',strokeWidth:2,strokeDashArray:[10,7],
+          strokeUniform:true,selectable:false,evented:false,hoverCursor:'default',
+          visible:false,excludeFromExport:true}));
+      });
+      zoneObjs.forEach(o=>canvas.add(o));
+    }
+  }
+  /* 层级每次都对一遍：底图 → 安全区框 → 品牌LOGO → 用户 LOGO。
+     框虽然默认藏着，但层级要先摆好，越界时一露出来就在正确的位置。 */
+  zoneObjs.forEach((o,i)=>canvas.moveTo(o,1+i));
+  syncZoneStroke();
+  refreshZoneState();
+  canvas.renderAll();
+}
+/* 引导框的显隐：只在越界时露出来当提醒。
+   ⛔ 判据是「越界」，不是「这个型号配了安全区」——
+      没有 LOGO、或 LOGO 都在区内时，前端不许出现任何引导痕迹（2026-09-17 用户定）。
+   返回是否真的动过可见性（调用方据此决定要不要重渲）。 */
+function syncZoneGuide(){
+  const show=!!zoneBad;
+  let changed=false;
+  zoneObjs.forEach(o=>{if(o.visible!==show){o.set('visible',show);changed=true;}});
+  return changed;
+}
+/* 判定所有 LOGO 是否**完整落在**安全区内：不合格的那张选框变红。
+   ⛔ 口径见 obbInside —— 贴到框线就算不合格（2026-09-18 用户明确）。
+   只在「从合格变成不合格」的那一下弹一次警告，不在拖动过程中反复弹。 */
+function refreshZoneState(){
+  const zs=safeZonesOf();
+  if(!zs.length){
+    /* 没有安全区的型号：把「超区」留下的痕迹全部收回 ——
+       越界提示要收、警告文案要换回 12cm 那条、尺寸行的标红也要重算（否则切型号后残留）。 */
+    zoneBad=false;
+    syncZoneGuide();
+    syncWarningText();
+    syncSizeRowOver();
+    if(warnActive())warnInfoUntil=0;
+    syncWarningBubble();
+    return;
+  }
+  let bad=false;
+  logoImgs.forEach(o=>{
+    const ok=logoInZones(o);
+    if(!ok)bad=true;
+    const col=ok?'#222':'#c0392b';
+    if(o.__zoneCol!==col){o.__zoneCol=col;o.set({borderColor:col,cornerStrokeColor:col});}
+  });
+  zoneBad=bad;
+  /* ⛔ 顺序：先换文案、再同步显隐。
+     气泡是**状态指示器**，不再靠计时器：移回区内、或缩回 12cm 以内，
+     同一下就收回；拉大到超 12cm、或移出框，同一下就露出。
+     （旧实现「只在合格→不合格那一下弹 + 到点才收」是用户 2026-09-18 报的两条 bug 的根因） */
+  syncZoneGuide();
+  syncWarningText();
+  syncSizeRowOver();
+  /* 真出现违规状态 → 作废「上传时那条信息性提醒」：它已经被状态性提示顶替，
+     不能在移回区内之后还替它撑着气泡（撑着的就是用户看到的 12cm 残留文案）。
+     反之，全程合规时不动它 —— 上传后那声提醒仍照旧挂满 4.2 秒。 */
+  if(warnActive())warnInfoUntil=0;
+  syncWarningBubble();
+  canvas.requestRenderAll();
+}
+function syncWarningText(){
+  const pop=document.getElementById('warningPopover');
+  if(!pop)return;
+  const t=I18N[currentLang]||I18N.zh;
+  pop.textContent=(zoneBad&&t.zoneWarn)?t.zoneWarn:t.warning;
+}
+/* 上传时的初始尺寸：先按 logoMax 算。若「正中心落点 + 该尺寸」不能**完整落进**任何安全区，
+   就按比例往下收到能落进去为止（落点规则不变，仍固定画布正中心）。
+   ⛔ 判据与 logoInZones 同一份（obbInside）—— 收出来的尺寸必须**完整在框内**，
+      否则刚上传就会立刻弹「超出可定制范围」，等于把口径不一致暴露给用户。
+   区小到放不下时不改尺寸 —— 让它显示红色由用户自己调，比偷偷改尺寸可预期。 */
+function fitScaleToZones(imgW,imgH,maxW,maxH,cx,cy){
+  const zs=safeZonesOf();
+  if(!zs.length)return null;
+  const s0=Math.min(maxW/imgW,maxH/imgH);
+  const hit=s=>zs.some(z=>obbInside({cx:cx,cy:cy,w:imgW*s,h:imgH*s,ang:0},zoneRect(z)));
+  if(hit(s0))return s0;
+  for(let i=1;i<=20;i++){
+    const s=s0*(1-i/20*0.9);
+    if(hit(s))return s;
+  }
+  return s0;
+}
+/* ==== 安全区结束 ==== */
 /* 每个型号各自记住选中的配色 */
 const colorPick={};
 function currentColor(){
@@ -602,7 +981,60 @@ colorSelect.addEventListener('change',e=>{
 });
 /* WebP 体积只有 PNG 的四分之一左右，能明显缩短产品图加载时间；浏览器不支持时自动回退 PNG */
 const CAN_WEBP=(()=>{try{const c=document.createElement('canvas');c.width=c.height=1;return c.toDataURL('image/webp').indexOf('data:image/webp')===0;}catch(e){return false;}})();
-function modelSrc(c,forcePng){return (!forcePng&&CAN_WEBP&&c&&c.webp)?c.webp:(c?c.image:'');}
+/* ==== 本机图片仓（仅开发环境） ====
+   本地后台「新增型号」时把裁好的 PNG/WebP 存进 IndexedDB，key 就是线上同名路径
+   （如 mr_9041_bizblack_trim.png）。这里在启动时预载成 objectURL，
+   modelSrc() 优先命中 —— 于是「本地新增型号 → 前端出现产品图」这条绑定本地也能验。
+   ⛔ 只在开发环境启用；线上走同源静态资源，这条路径完全不参与。
+   ⛔ 必须做成「同步查表」：modelSrc() 是同步函数，而读 IndexedDB 是异步的，
+      所以只能启动时一次性预载（本地新增的图片通常只有几张，代价可忽略）。 */
+const ASSET_DB='mr_local_assets';
+const localAssetMap={};
+function localAssetsReady(){
+  if(!IS_LOCAL||!window.indexedDB)return Promise.resolve(0);
+  return new Promise(res=>{
+    let req;
+    try{req=indexedDB.open(ASSET_DB,1);}catch(e){return res(0);}
+    req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains('files'))db.createObjectStore('files');};
+    req.onerror=()=>res(0);
+    req.onsuccess=()=>{
+      const db=req.result;let cur;
+      try{cur=db.transaction('files','readonly').objectStore('files').openCursor();}catch(e){return res(0);}
+      let n=0;
+      cur.onsuccess=()=>{
+        const c=cur.result;
+        if(!c){res(n);return;}
+        try{if(c.value instanceof Blob)localAssetMap[c.key]=URL.createObjectURL(c.value);}catch(e){}
+        n++;c.continue();
+      };
+      cur.onerror=()=>res(n);
+    };
+  });
+}
+function localAssetsClear(){
+  if(!window.indexedDB)return Promise.resolve(0);
+  return new Promise(res=>{
+    let req;try{req=indexedDB.open(ASSET_DB,1);}catch(e){return res(0);}
+    req.onerror=()=>res(0);
+    req.onsuccess=()=>{
+      let tx;try{tx=req.result.transaction('files','readwrite');}catch(e){return res(0);}
+      tx.objectStore('files').clear();
+      tx.oncomplete=()=>res(1);tx.onerror=()=>res(0);tx.onabort=()=>res(0);
+    };
+  });
+}
+/* ⛔ 立刻开始预载，不要等到 DOMContentLoaded：让这趟 IndexedDB 往返与页面解析重叠。
+   放在 boot 里顺序 await 会把「读 models.json」推迟到 load 事件之后，
+   既拖慢首屏，也会让「加载期抓请求」这类断言抓不到 —— 表现为假红。 */
+const localAssetsPromise=localAssetsReady();
+function modelSrc(c,forcePng){
+  const want=(!forcePng&&CAN_WEBP&&c&&c.webp)?c.webp:(c?c.image:'');
+  if(!c||!want)return want;
+  /* 开发环境：本机图片仓里的图优先于同源静态资源（那是本地刚新增/覆盖的型号）；
+     仓里没有就照旧走相对路径（线上/同源素材完全不受影响）。 */
+  const alt=(want===c.webp)?c.image:c.webp;
+  return localAssetMap[want]||localAssetMap[alt]||want;
+}
 /* 型号下拉按 MODELS 动态生成：加型号只改 MODELS，不必再动 HTML */
 const modelSelect=document.getElementById('model');
 function renderModelSelect(){
@@ -629,6 +1061,8 @@ function applyView(){
   const t=disp/2-z*MODEL.canvasMm/2;
   canvas.setViewportTransform([z,0,0,z,t,t]);
   logoImgs.forEach(o=>o.set({cornerSize:Math.max(5,9/z),padding:2/z}));
+  /* 安全区描边宽度是按视口换算的，缩放/改窗口后必须跟着重算 */
+  syncZoneStroke();
   canvas.renderAll();
 }
 window.addEventListener('resize',applyView);
@@ -678,6 +1112,7 @@ function loadBag(attempt){
     const s=1/m.pxPerMm;
     img.set({left:m.canvasMm/2,top:m.canvasMm/2,originX:'center',originY:'center',scaleX:s,scaleY:s,selectable:false,evented:false});
     bagImg=img;canvas.add(img);canvas.sendToBack(img);canvas.renderAll();
+    renderSafeZones();
     syncBrandLogo();
     /* 首图就位后，空闲时把同型号其余配色 + 其它型号首图预热，切色/切型号即刻命中缓存 */
     preloadImages();
@@ -756,15 +1191,39 @@ function updateSizeReadout(){
   const rows=sizeRows();
   if(!rows.length){
     const b=document.createElement('b');b.id='logoSizeValue';b.textContent='—';list.appendChild(b);
+    syncSizeRowOver();
+    refreshZoneState();
     return;
   }
   rows.forEach((r,i)=>{
     const b=document.createElement('b');
     if(i===0)b.id='logoSizeValue';
     b.textContent=sizeRowText(i,r.s);
-    if(Math.max(r.s.w,r.s.h)>120)b.classList.add('is-over');
     list.appendChild(b);
   });
+  syncSizeRowOver();
+  refreshZoneState();
+}
+/* 「工厂做不了」的两种情形，全站只在这一处判定：
+   超过 12cm、或者配了安全区却没落进去。
+   画面上的尺寸读数（syncSizeRowOver）和导出图上的尺寸读数（drawSizeHudOn）都调它，
+   ⛔ 口径只能有一份 —— 导出的图是要发给工厂/客服的，两处判定不一致等于没提示。 */
+function rowOver(r,hasZone){
+  return Math.max(r.s.w,r.s.h)>120||(hasZone&&!logoInZones(r.o));
+}
+function sizeOvers(){
+  const hasZone=safeZonesOf().length>0;
+  return sizeRows().map(r=>rowOver(r,hasZone));
+}
+/* 只切换「尺寸行标红」这个 class，不重建 DOM。
+   ⛔ 拖动（object:moving）时每帧都会走到 refreshZoneState → 这里，
+   重建 innerHTML 会掉帧；所以本函数只管 class，绝不能再回头调 updateSizeReadout（会死循环）。 */
+function syncSizeRowOver(){
+  const list=document.getElementById('logoSizeList');
+  if(!list)return;
+  const overs=sizeOvers();
+  const bs=list.querySelectorAll('b');
+  for(let i=0;i<bs.length;i++)bs[i].classList.toggle('is-over',overs[i]===true);
 }
 
 function detectEdgeBackground(px,w,h){
@@ -825,7 +1284,12 @@ function addLogo(srcCanvas,keepWidthMm,opts){
     const cxMm=MODEL.canvasMm/2, cyMm=MODEL.canvasMm/2;
     let scale;
     if(keepWidthMm&&keepWidthMm>0){scale=keepWidthMm/img.width;}
-    else{scale=Math.min(z.wMm/img.width,z.hMm/img.height);}
+    else{
+      /* 有安全区时：若「正中心 + logoMax 尺寸」放不进任何区，按比例收到能放进去为止。
+         ⛔ 落点仍然固定画布正中心，只调初始尺寸 —— 否则一上传就是红的，用户还得自己缩。 */
+      const fit=fitScaleToZones(img.width,img.height,z.wMm,z.hMm,cxMm,cyMm);
+      scale=(fit!=null)?fit:Math.min(z.wMm/img.width,z.hMm/img.height);
+    }
     img.__meta={original:opts.original||null,demo:!!opts.demo,ver:0,
                 rmwhite:rmwhite.checked,invert:invert.checked,
                 tol:Number(tol.value),opa:Number(opa.value),rot:Number(rot.value)};
@@ -902,13 +1366,58 @@ const tol=document.getElementById('tol'),rmwhite=document.getElementById('rmwhit
 const opa=document.getElementById('opa'),rot=document.getElementById('rot');
 const sizeWarning=document.getElementById('sizeWarning');
 let warningTimer=null;
-function showSizeWarning(){
-  clearTimeout(warningTimer);
-  sizeWarning.classList.add('is-open');
-  warningTimer=setTimeout(()=>sizeWarning.classList.remove('is-open'),4200);
+/* 这个提示气泡有两种来源，必须分开管：
+     ① 上传第一张 LOGO 时的 12cm 提醒 —— 信息性，到点自己收（4.2s）；
+     ② 尺寸超 12cm / LOGO 越出安全区 —— **状态性**：问题还在就得一直看得见，
+        问题一消失立刻收回。
+   ⛔ 状态性绝不能做成「只在那一下弹出」的一次性事件（2026-09-18 用户报的两条都是它）：
+      · 拉大到超 12cm 但仍在安全区内时，状态**没有跳变**（zoneBad 一直是 false），
+        靠「合格→不合格那一下才弹」就永远不弹 → 用户看不到 12cm 提示。
+        MR_35 画布 307mm、安全区最宽 160mm，而红线是 120mm —— 这情形是家常便饭。
+      · 反过来，移回区内时若尺寸仍超 12cm，计时器没到点就把气泡留着不关，
+        文案却已被 syncWarningText() 换回 12cm 版 →「移回来还残留 12cm 提示」。
+   所以：② 改成每帧按当前状态同步显隐（拖动/缩放/旋转都会走到），只有 ① 走计时器。 */
+let warnInfoUntil=0;   /* 信息性提醒（上传第一张时告知 12cm 上限）的截止时刻 */
+let warningWasActive=false; /* 记住上一帧是否真违规；违规→合规时必须强制清掉任何信息性计时 */
+/* 当前是否真的存在该警告的状态：越界、或尺寸超 12cm。
+   ⛔ 与尺寸行标红共用 sizeOvers()，判据只能有一份。 */
+function warnActive(){
+  return !!zoneBad||sizeOvers().some(Boolean);
 }
-sizeWarning.addEventListener('mouseenter',()=>clearTimeout(warningTimer));
-sizeWarning.addEventListener('mouseleave',()=>{if(sizeWarning.classList.contains('is-open'))warningTimer=setTimeout(()=>sizeWarning.classList.remove('is-open'),900)});
+/* 状态性显隐：成立就开着、不成立立刻收。返回最终是否显示。
+   ⛔ 只要经历过「违规→合规」，就无条件作废上传时的 12cm 信息提醒；
+   否则气泡文案切回 12cm 后，会被旧计时继续撑着，形成用户看到的残留。 */
+function syncWarningBubble(){
+  const active=warnActive();
+  if(warningWasActive&&!active){
+    warnInfoUntil=0;
+    clearTimeout(warningTimer);
+  }
+  warningWasActive=active;
+  const show=active||Date.now()<warnInfoUntil;
+  sizeWarning.classList.toggle('is-open',show);
+  return show;
+}
+/* 信息性提醒：上传第一张 LOGO 时告知 12cm 上限，4.2 秒自收。
+   其间若真的有越界/超尺寸，syncWarningBubble() 会让它继续开着（状态优先）。 */
+function showSizeWarning(){
+  warnInfoUntil=Date.now()+4200;
+  clearTimeout(warningTimer);
+  warningTimer=setTimeout(()=>{warnInfoUntil=0;syncWarningBubble();},4200);
+  syncWarningBubble();
+}
+/* 鼠标悬停时不让「信息性提醒」自己溜走（状态性本来就一直开着，不受影响） */
+sizeWarning.addEventListener('mouseenter',()=>{
+  clearTimeout(warningTimer);
+  if(Date.now()<warnInfoUntil)warnInfoUntil=Date.now()+600000;
+});
+sizeWarning.addEventListener('mouseleave',()=>{
+  if(!sizeWarning.classList.contains('is-open'))return;
+  if(warnActive())return;
+  warnInfoUntil=Date.now()+900;
+  clearTimeout(warningTimer);
+  warningTimer=setTimeout(()=>{warnInfoUntil=0;syncWarningBubble();},900);
+});
 uploadBox.addEventListener('click',()=>{fileInput.value='';fileInput.click();});
 fileInput.addEventListener('change',e=>{
   const f=e.target.files[0];if(!f)return;
@@ -956,12 +1465,17 @@ function onLogoSelected(e){
 canvas.on('selection:created',onLogoSelected);
 canvas.on('selection:updated',onLogoSelected);
 canvas.on('object:scaling',e=>{const o=e.target;if(o&&o.__meta){const s=(o.scaleX+o.scaleY)/2;o.set({scaleX:s,scaleY:s});updateSizeReadout();}});
+/* 拖动过程中就实时判定安全区：出区立刻变红，不用等松手 */
+canvas.on('object:moving',e=>{const o=e.target;if(o&&o.__meta)refreshZoneState();});
 canvas.on('object:rotating',e=>{const o=e.target;if(o&&o.__meta){const snapped=Math.round(o.angle/5)*5;o.set('angle',snapped);o.__meta.rot=snapped;rot.value=Math.max(-180,Math.min(180,snapped));setRangeFill(rot);}});
 canvas.on('object:modified',e=>{const o=e.target;if(o&&o.__meta){const s=(o.scaleX+o.scaleY)/2;o.set({scaleX:s,scaleY:s});let a=Math.round(o.angle/5)*5%360;if(a>180)a-=360;if(a<-180)a+=360;o.set('angle',a);o.__meta.rot=a;rot.value=a;setRangeFill(rot);canvas.renderAll();updateSizeReadout();}});
 /* 键盘 Delete / Backspace 删除当前选中的 LOGO（教程打开时让位给教程自己的按键） */
 document.addEventListener('keydown',e=>{
   if(e.key!=='Delete'&&e.key!=='Backspace')return;
   if(tourOpen)return;
+  /* 导出成功弹窗开着时也让位：那时候用户是在读说明，不该顺手删掉 LOGO */
+  const exd=document.getElementById('exportDone');
+  if(exd&&!exd.hidden)return;
   const t=e.target;
   if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.tagName==='SELECT'||t.isContentEditable))return;
   const active=canvas.getActiveObject();
@@ -1408,7 +1922,8 @@ function drawSizeHudOn(ctx,cw,ch,k){
   ctx.font='400 '+fs+'px '+HUD_FONT;
   const lw=ctx.measureText(label).width;
   const texts=rows.map((r,i)=>sizeRowText(i,r.s));
-  const overs=rows.map(r=>Math.max(r.s.w,r.s.h)>120);
+  /* 两种「工厂做不了」都要标红，判定与画面上的尺寸行共用 sizeOvers()，不允许各写一份 */
+  const overs=sizeOvers();
   let maxTW=0;
   texts.forEach((s,i)=>{ctx.font=(overs[i]?900:400)+' '+fs+'px '+HUD_FONT;maxTW=Math.max(maxTW,ctx.measureText(s).width);});
   const padX=10*k,padY=4*k,gap=7*k;
@@ -1431,13 +1946,20 @@ function exportImage(){
   const savedZoom=viewZoom,savedBg=canvas.backgroundColor;
   viewZoom=DEFAULT_VIEW_ZOOM;applyView();
   canvas.backgroundColor='#ffffff';
+  /* ⛔ 引导层（安全区红框）绝不能进客户导出的图：
+     excludeFromExport 只管 toJSON / toSVG，toDataURL 不看它，只能在这里显式关 visible。
+     框平时就藏着（只在越界时露出来），所以导完要按导出前的原样恢复，不能一律设成显示。 */
+  const guideVis=zoneObjs.map(o=>o.visible);
+  zoneObjs.forEach(o=>o.set('visible',false));
   canvas.renderAll();
   let outUrl='';
   try{outUrl=canvas.toDataURL({format:'jpeg',quality:.94,multiplier:2});}
   finally{
+    zoneObjs.forEach((o,i)=>o.set('visible',guideVis[i]!==false));
     canvas.backgroundColor=savedBg||'';
     if(active)canvas.setActiveObject(active);
     viewZoom=savedZoom;applyView();
+    canvas.renderAll();
   }
   return outUrl;
 }
@@ -1479,6 +2001,35 @@ function showExportTip(msg){
   clearTimeout(showExportTip._t);
   showExportTip._t=setTimeout(()=>el.classList.remove('is-on'),4200);
 }
+/* ===== 导出成功弹窗 =====
+   客户导完图之后该做什么（把 JPG 效果图 + PDF/AI 源文件交给销售）原本页面里没有任何提示，
+   所以导出成功后必须弹一次。文案在 I18N.exportDone（三语）。
+   ⛔ 只喂本文件 I18N 表里的固定字符串（含 <em> 高亮标签），不掺任何用户输入。 */
+function applyExportDoneText(){
+  const t=I18N[currentLang]||I18N.zh,d=(t&&t.exportDone)||{};
+  const set=(id,v)=>{const el=document.getElementById(id);if(el&&v!=null)el.textContent=v;};
+  set('exportDoneTitle',d.title);set('exportDoneLead',d.lead);
+  set('exportDoneL1',d.l1);set('exportDoneOk',d.ok);
+  const l2=document.getElementById('exportDoneL2');
+  if(l2&&d.l2!=null)l2.innerHTML=d.l2;
+}
+function openExportDone(){
+  const el=document.getElementById('exportDone');
+  if(!el)return;
+  applyExportDoneText();
+  el.hidden=false;
+}
+function closeExportDone(){
+  const el=document.getElementById('exportDone');
+  if(el)el.hidden=true;
+}
+document.getElementById('exportDoneOk').addEventListener('click',closeExportDone);
+document.getElementById('exportDoneMask').addEventListener('click',closeExportDone);
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Escape')return;
+  const el=document.getElementById('exportDone');
+  if(el&&!el.hidden){e.preventDefault();closeExportDone();}
+});
 document.getElementById('export').addEventListener('click',()=>{
   const btn=document.getElementById('export');
   if(btn&&btn.disabled)return;
@@ -1486,8 +2037,11 @@ document.getElementById('export').addEventListener('click',()=>{
   const t=I18N[currentLang]||I18N.zh;
   exportWithHud().then(out=>{
     const cc=currentColor();
-    saveBlob(out,MODEL.id+(cc&&cc.label?'_'+cc.label:'')+'_LOGO预览.jpg');
-    showExportTip(t.exportOk||'图片已导出');
+    const exportSuffix={zh:'LOGO预览',en:'LOGO Preview',ru:'Предпросмотр логотипа'}[currentLang]||'LOGO Preview';
+    const exportColor=cc&&cc.label?colorName(cc.label):'';
+    saveBlob(out,MODEL.id+(exportColor?'_'+exportColor:'')+'_'+exportSuffix+'.jpg');
+    /* 成功 → 弹「导出成功」（下一步说明）；失败才用底部短提示 */
+    openExportDone();
   }).catch(e=>{
     console.error('export failed',e);
     showExportTip((t.exportFail||'导出失败，请重试')+'（'+e.message+'）');
