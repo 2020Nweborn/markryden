@@ -131,7 +131,7 @@
         所以这里**不要**写 ::-webkit-scrollbar —— 一旦写了就会被切成自定义细条，
         和设计稿对不上。图片少时由 overflow-x:auto 保证完全不出现滚动条。 */
   .uprow{display:flex;gap:14px;flex-wrap:nowrap;margin:16px 0 4px;
-    min-width:0;width:100%;max-width:100%;
+    min-width:0;width:100%;max-width:100%;flex-shrink:0;
     overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;
     padding-bottom:2px;scrollbar-width:auto;-ms-overflow-style:auto}
   .uprow>.upbox{flex:0 0 auto}
@@ -153,7 +153,10 @@
   .upbox.add .tip{font-size:13px;text-align:center;padding:0 22px;line-height:1.7;color:#8b9098}
   .upbox.add:hover .plus,.upbox.add:hover .tip{color:#141519}
   .dropzone.over .upbox.add{border-color:#141519;background:#f6f7f8}
-  .row{display:flex;gap:14px;align-items:stretch;flex-wrap:wrap}
+  /* ⛔ 右栏的这些块都是固定内容，一律 flex-shrink:0。
+     .card 是 flex column 且高度由 JS 写死，只要高度算少一点，flex 就会按比例压扁它们；
+     以前没有这道约束时，上传格被裁、56px 的胶囊按钮被压成 31px，页面既不报错也不提示。 */
+  .row{display:flex;gap:14px;align-items:stretch;flex-wrap:wrap;flex-shrink:0}
   /* 型号名称：前缀固定、只改后面数字 */
   .name-field{flex:1;min-width:180px;display:flex;align-items:center;background:#f4f5f6;
     border-radius:16px;height:64px;padding:0 24px;gap:2px}
@@ -171,7 +174,7 @@
   /* 进度条只出现在「提交中」弹窗里，所以默认不显示，由 .job-card 放开。 */
   .progress{display:none;height:8px;border-radius:999px;background:#ececee;margin:20px 0 18px;overflow:hidden}
   .progress i{display:block;height:100%;background:#141519;border-radius:999px;width:0;transition:width .3s}
-  .big-btn{width:100%;height:56px;border:0;border-radius:999px;background:#141519;color:#fff;
+  .big-btn{width:100%;height:56px;flex-shrink:0;border:0;border-radius:999px;background:#141519;color:#fff;
     font:600 15px/1 inherit;font-family:inherit;cursor:pointer;letter-spacing:.08em;margin-top:auto}
   .big-btn:hover{background:#2a2c31}
   .big-btn:disabled{opacity:.45;cursor:not-allowed}
@@ -180,7 +183,7 @@
   .big-btn.has-pending{background:#c8442a}
   .big-btn.has-pending:hover{background:#ad3a23}
   #pendingTip.warn{color:#c8442a;font-weight:600}
-  .hint{color:var(--tx2);font-size:12px;line-height:1.7}
+  .hint{color:var(--tx2);font-size:12px;line-height:1.7;flex-shrink:0}
   .link{color:var(--tx2);text-decoration:underline;cursor:pointer;background:none;border:0;font-size:12px;
     padding:0;font-family:inherit}
   /* 通用弹层 */
@@ -212,6 +215,10 @@
   .lp-stage>img:not(.lp-logo),.lp-stage>canvas{display:block;width:100%;height:auto}
   .lp-logo{position:absolute;cursor:grab;pointer-events:auto;width:auto;max-width:none}
   .lp-logo:active{cursor:grabbing}
+  /* 底图 404 时不许塌成一条灰线：给最小高度 + 居中说明（.stage-err 由 stageImgGuard 插入） */
+  .lp-stage.bad{min-height:150px}
+  .lp-stage .stage-err{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    text-align:center;padding:12px;font-size:12px;line-height:1.6;color:#c8442a;background:#fff;z-index:9;word-break:break-all}
   .lp-ctrl{flex:1;min-width:180px}
   .lp-ctrl label{display:block;font-size:12px;color:var(--tx2);margin:10px 0 4px}
   .lp-ctrl input[type=number]{width:100%;height:36px;border:1px solid var(--bd);border-radius:8px;padding:0 10px;font:inherit}
@@ -224,6 +231,26 @@
   .lp-none{font-size:12.5px;color:var(--tx2);line-height:1.65;margin:0 0 6px}
   .lp-none[hidden]{display:none}
   .lp-fields.off{opacity:.45;pointer-events:none}
+  /* 安全区（可定制范围）编辑面板 */
+  .zn-dim{position:absolute;background:rgba(20,21,25,.26);pointer-events:none;z-index:1}
+  .zn-zone{position:absolute;box-sizing:border-box;border:1.5px dashed #c0392b;background:rgba(192,57,43,.10);cursor:move;z-index:3}
+  .zn-zone.sel{border-style:solid;border-color:#141519;background:rgba(20,21,25,.12);z-index:5;box-shadow:0 0 0 2px rgba(255,255,255,.65)}
+  .zn-zone>span{position:absolute;left:3px;top:3px;font-size:10px;line-height:1.3;color:#fff;background:rgba(20,21,25,.62);padding:1px 4px;border-radius:3px;pointer-events:none;white-space:nowrap}
+  .zn-grip{position:absolute;right:-7px;bottom:-7px;width:14px;height:14px;background:#141519;border:2px solid #fff;border-radius:3px;cursor:nwse-resize;z-index:6;display:none}
+  .zn-zone.sel .zn-grip{display:block}
+  .zn-brand{position:absolute;border:1px dashed #7a7d85;pointer-events:none;z-index:2}
+  .zn-list{border:1px solid var(--bd);border-radius:8px;max-height:132px;overflow:auto;margin-bottom:4px}
+  .zn-row{display:flex;align-items:center;gap:8px;padding:6px 8px;font-size:12.5px;cursor:pointer;border-bottom:1px solid #f0f1f3}
+  .zn-row:last-child{border-bottom:0}
+  .zn-row.sel{background:#f1f2f4}
+  .zn-row i{flex:1;font-style:normal}
+  .zn-row b{font-weight:500;font-size:11.5px;color:var(--tx2)}
+  .zn-flag{font-size:11.5px;line-height:1.6;margin:8px 0 0}
+  .zn-flag.bad{color:#c0392b}
+  .zn-flag[hidden]{display:none}
+  /* 型号卡上的「安全区」按钮：已经配过安全区的型号用红底标出来，一眼能看出哪些还没画 */
+  .mini-dark.zn-on{background:#c0392b}
+  .mini-dark.zn-on:hover{background:#a93226}
   .ghost-btn:disabled{opacity:.45;cursor:not-allowed}
   .ghost-btn{background:#fff;color:var(--tx);border:1px solid var(--bd);border-radius:10px;height:40px;padding:0 16px;font:inherit;cursor:pointer}
   .ghost-btn:hover{border-color:#141519}
@@ -239,6 +266,12 @@
   .job-card .progress{display:block;margin:0 0 14px}
   .job-card .log{display:block;max-height:200px}
   .job-card .hint{margin:14px 0 0}
+  /* 常驻环境条：顶栏里的一行小字，只做说明与排障，不参与任何交互 */
+  .env-chip{margin-left:14px;max-width:calc(100% - 260px);overflow:hidden;text-overflow:ellipsis;
+    white-space:nowrap;font-size:12px;line-height:1.5;letter-spacing:.02em;padding:5px 12px;border-radius:8px;
+    background:#f2f3f5;color:#4a4d55;border:1px solid #e3e4e8}
+  .env-chip.dev{background:#fff6e6;color:#8a5a12;border-color:#f0dcb4}
+  .env-chip.prod{background:#eaf5ee;color:#1e6b41;border-color:#c9e6d6}
 </style>
 </head>
 <body>
@@ -263,6 +296,7 @@
 <div id="main" hidden>
   <header class="topbar">
     <img class="brand" src="logo.svg" alt="MARK RYDEN">
+    <span class="env-chip" id="envChip" hidden></span>
     <div class="topbar-right">
       <button class="gh-btn" id="btnToken"><span class="dot"></span><span id="ghText">连接GitHub</span></button>
       <button class="logout-btn" id="btnLogout">退出登录</button>
@@ -300,6 +334,19 @@
     </section>
   </div>
 </div>
+
+<!-- 本机草稿角标（仅本地出现；线上永远 hidden）
+     固定定位、不进文档流，所以不会动到任何既有布局与断言。
+     在 #main 之外：登录页也看得到，方便确认「上次本地改的那版还在不在」。 -->
+<style id="mr-draft-badge-css">
+.draft-badge{position:fixed;left:12px;bottom:46px;z-index:2147483000;display:flex;align-items:center;gap:7px;
+  padding:6px 13px;border:0;border-radius:999px;background:rgba(198,132,26,.95);color:#fff;cursor:pointer;
+  font:12px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",Arial,sans-serif;
+  letter-spacing:.02em;box-shadow:0 2px 10px rgba(0,0,0,.22)}
+.draft-badge i{width:7px;height:7px;border-radius:50%;background:#fff;flex:0 0 auto}
+.draft-badge u{text-decoration:underline;text-underline-offset:2px}
+</style>
+<button class="draft-badge" id="btnDraft" type="button" hidden><i></i><span id="draftText"></span></button>
 
 <!-- 修改图片弹窗 -->
 <div class="overlay" id="imgPanel" hidden>
@@ -347,6 +394,39 @@
   </div>
 </div>
 
+<!-- 安全区（可定制范围）编辑面板 -->
+<div class="overlay" id="zonePanel" hidden>
+  <div class="lp-card">
+    <h3 id="znTitle">安全区（可定制范围）</h3>
+    <div class="lp-stage-wrap">
+      <div style="flex:0 0 320px">
+        <div class="lp-stage" id="znStage" style="width:320px"></div>
+        <p class="lp-pos" id="znPos"></p>
+        <p class="hint">框内是可以定制的范围。拖框体移动、拖右下角改大小。<br>
+          客户 LOGO 只要与任一安全区有重叠就算合格，超出会变红提示但不拦。</p>
+      </div>
+      <div class="lp-ctrl">
+        <button class="dark-btn lp-add" id="znAdd">＋ 添加安全区</button>
+        <p class="lp-none" id="znNone">这个型号还没有安全区，客户 LOGO 可以放在画布任意位置。点上面的按钮开始画。</p>
+        <div class="lp-fields" id="znFields">
+          <div class="zn-list" id="znList"></div>
+          <label>左边距 X（mm）</label><input type="number" id="znX" step="1" min="0">
+          <label>上边距 Y（mm）</label><input type="number" id="znY" step="1" min="0">
+          <label>宽度（mm）</label><input type="number" id="znW" step="1" min="1">
+          <label>高度（mm）</label><input type="number" id="znH" step="1" min="1">
+        </div>
+        <p class="zn-flag" id="znFlag" hidden></p>
+        <div class="lp-btns">
+          <button class="ghost-btn" id="znFill" style="flex:1">铺满画布</button>
+          <button class="ghost-btn warn" id="znDel" style="flex:1">删除这个区</button>
+          <button class="ghost-btn" id="znCancel" style="flex:1">取消</button>
+          <button class="dark-btn" id="znSave" style="flex:1">保存安全区</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- token 弹层 -->
 <div class="overlay" id="tokenPanel" hidden>
   <div class="tp-card">
@@ -385,6 +465,10 @@ var SUB='test-assets/', CFG='models.test.json';
 function inSandbox(p){return p===CFG||String(p).indexOf(SUB)===0;}
 
 var RAW='https://raw.githubusercontent.com/'+OWNER+'/'+REPO+'/'+BRANCH+'/'+DIR+'/models.test.json';
+/* 任意素材的 raw 前缀：本地同源取不到时回源它。
+   为什么用 raw 而不是 contents API：本机到 github 的 API 响应对大图会中途掐断
+   （500KB PNG 变 0.7MB base64 时高发），且要烧匿名额度；raw 不 base64、不占额度。 */
+var RAW_DIR='https://raw.githubusercontent.com/'+OWNER+'/'+REPO+'/'+BRANCH+'/'+DIR+'/';
 var API='https://api.github.com/repos/'+OWNER+'/'+REPO+'/contents/'+DIR+'/';
 var PAD_MM=6.0, WEBP_Q=0.92, MAX_LOGO_MM=60, DEFAULT_LOGO_LEN=80, DEFAULT_LOGO_ROT=90;
 var ACC_HASH='6201eb4dccc956cc4fa3a78dca0c2888177ec52efd48f125df214f046eb43138'; /* sha256('mark') */
@@ -405,6 +489,113 @@ var LW='mr_cfg_lastwrite:'+CFG;
 function lwGet(){try{return JSON.parse(localStorage.getItem(LW)||'null');}catch(e){return null;}}
 function lwSave(cfg){try{localStorage.setItem(LW,JSON.stringify({t:Date.now(),updatedAt:String((cfg&&cfg.updatedAt)||''),cfg:cfg}));}catch(e){}}
 function lwDrop(){try{localStorage.removeItem(LW);}catch(e){}}
+
+/* ========== 本机草稿（只在本地开发时用） ==========
+   ⛔ 为什么要有：本地是 `python -m http.server`，没有后端、写不了磁盘；这个后台唯一的
+      写回通道就是 GitHub contents 接口。于是本地「后台改一版 → 前端看效果」这条闭环
+      是断的：本地画完安全区只能先连 GitHub，而连上就等于已经发到线上测试版了。
+      三级门禁的第①级（本地）因此没法真正走完。
+   做法：开发环境下把整份配置另存一份进 localStorage，前端在开发环境下优先读它。
+        ⛔ 开发环境保存**一律**写草稿，**一个 GitHub 请求都不发** ——
+           与「有没有连 GitHub」无关。以前这条判定带着 `!token()`，
+           于是只要本机浏览器里存过 token，本地删改就会去写线上：写成功 = 直接
+           跳到第②级；写失败 = 内存里的删改全丢，刷新即回退（用户报的正是这个）。
+           推线上测试版是独立动作（用线上测试版后台，或走发布脚本），不从开发环境偷偷做。
+   边界（都很要紧）：
+    ⛔ 只在开发环境生效。只有线上部署域（github.io）判为线上 —— 永远不读、不写草稿，
+       否则线上会拿本机草稿把线上配置盖掉，这是事故级。
+    ⛔ 草稿不许静默：左下角常驻角标 + 每次保存都明说「未上传线上」。
+       否则用户会以为线上已经更新了。
+    ⛔ 草稿只在本地兜底，不改上面那条「api → 同源 → raw」的线上读取顺序；
+       草稿存在时直接用它，不再发那三个请求（本地看的就是本机这一版）。
+    ⛔ 图片（test-assets/）本地同样写不了，草稿只管配置本身；
+       草稿里引用的图仍是线上/本地文件里已有的那些。 */
+var BUILD='2026-09-18a';
+/* ⛔ 判定规则（2026-09-17 第二次修正，别改回「hostname 是不是 localhost」）：
+   旧规则只认 localhost / 127.* / 私网 IP / file:，结果**本地预览一旦不是这些 host 就判成线上**
+   （IDE 内置预览、代理域名、容器 host、about:srcdoc…），草稿通道整个失效 ——
+   表现就是「本地改完保存，刷新又变回去」，和连了 GitHub 时一模一样。
+   新规则反过来定：**只有真正的线上部署域（github.io）才算线上**，其它一律是开发环境。
+   这样任何开发预览形态都天然拿到草稿通道，而线上部署域永远不读也不写草稿
+   （线上拿本机草稿盖掉线上配置 = 事故级，这条底线不变）。 */
+var PROD_HOST=/(^|\.)github\.io$/i;
+/* ⛔ 仅供验证脚本使用的开关：`evaluateOnNewDocument` 里预置 `window.__MR_FORCE_ONLINE=true`，
+   就能让整页按「线上」跑（保存真的写 GitHub）。
+   为什么必须有：`verify-admin-del.js` / `verify-zones.js` 这些套件跑在 `127.0.0.1` 上，
+   而 127.0.0.1 在新判定里是开发环境 → 保存只会落草稿、不发 PUT，
+   于是「删除即提交」「写回内容正确」这类断言全部失去意义。
+   ⛔ URL 上没有任何入口，只能由页面外部注入 —— 正常访问打不开，线上更不可能被误开。 */
+var IS_LOCAL=!(PROD_HOST.test(String(location.hostname||'')))&&(window.__MR_FORCE_ONLINE!==true);
+/* ⛔⛔ 写回入口清单（2026-09-18 全量审计，**新增任何写回路径都必须过一遍这张表**）：
+     每一条都必须在最前面判 `if(IS_LOCAL)` 并落本机草稿，**不许带 `&&!token()`**。
+       #1 publish()        「确认提交上传」（型号新增/覆盖） → localPublishUpload() / saveLocalDraft()
+       #2 publishConfig()  纯配置提交（改色名 / 改型号名）   → saveLocalDraft()
+       #3 autoCommit(what) 删型号 / 删颜色 / 清品牌LOGO / 保存安全区 → saveLocalDraft()
+       #4 lpSave           品牌LOGO「保存定位」              ← 2026-09-18 补的漏
+       #5 ipSave           「修改图片」弹窗的「确认提交上传」  ← 2026-09-18 补的漏
+     为什么专门写下来：#4 / #5 是同一类漏 —— 判定环境那段写对了，但新增写回路径时
+     忘了套 `if(IS_LOCAL)`，于是本机只要存过 token 就直接打 GitHub contents。
+     用户看到的是「保存失败：Bad credentials」，而**真正的问题是发错了地方**，
+     更坏的情况是写成功 —— 那就等于从开发环境偷偷跳过了第②级线上测试版。 */
+var DK='mr_cfg_draft:'+CFG;
+function dkGet(){try{return JSON.parse(localStorage.getItem(DK)||'null');}catch(e){return null;}}
+/* ⛔ 返回布尔：写不进去（隐私模式、配额满、被策略禁用）必须让调用方知道并报出来，
+   否则又变成「保存像是成功了、刷新却回退，且查无原因」。 */
+function dkSave(cfg){
+  try{
+    localStorage.setItem(DK,JSON.stringify({t:Date.now(),updatedAt:String((cfg&&cfg.updatedAt)||''),cfg:cfg}));
+    return true;
+  }catch(e){return false;}
+}
+function dkDrop(){
+  try{localStorage.removeItem(DK);}catch(e){}
+  /* 图片仓与草稿是同一份本机数据的两半：只清草稿会留下再也引用不到的图片，
+     下次新增同型号时又会被旧图覆盖，排查起来像是「图不对」的玄学 bug。 */
+  try{idbClearFiles();}catch(e){}
+}
+/* 草稿时间戳（mm-dd hh:mm），角标与提示里都带上 —— 光说「有草稿」没法判断是哪一版 */
+function draftStamp(){
+  var d=dkGet(),t=d&&d.t?new Date(d.t):null;
+  if(!t||isNaN(t.getTime()))return '';
+  var p=function(n){return (n<10?'0':'')+n;};
+  return p(t.getMonth()+1)+'-'+p(t.getDate())+' '+p(t.getHours())+':'+p(t.getMinutes());
+}
+function syncDraftChip(){
+  var b=$('btnDraft');
+  if(!b)return;
+  var d=IS_LOCAL?dkGet():null;      /* ⛔ 同上：线上永远不显示草稿角标 */
+  var on=!!(d&&d.cfg)&&!$('main').hidden;
+  b.hidden=!on;
+  if(on)$('draftText').textContent='本机草稿 '+draftStamp()+'（未上传线上）· 点此清除';
+}
+/* 常驻环境条：把「当前走的哪条通道、上次保存到底成没成」直接摆在页面上。
+   ⛔ 为什么必须有：这一轮连着两次出现「用户说删了没生效，但页面什么也没说」，
+      只能靠猜。有了这一行，环境判定 / token 干扰 / 写盘失败 / 页面是不是旧缓存
+      （BUILD 号）一眼可辨，不用再来回猜。 */
+var lastRead='还没读';
+var lastWrite='—';
+function syncEnvChip(){
+  var el=$('envChip');
+  if(!el)return;
+  if($('main').hidden){el.hidden=true;return;}
+  var d=IS_LOCAL?dkGet():null;      /* ⛔ 同上：线上连草稿是否存在都不显示 */
+  var n=Object.keys(state.models||{}).length;
+  var long=(IS_LOCAL?'开发环境 · 保存只落本机草稿、不推线上':'线上（github.io）· 保存会写 GitHub')
+    +' ｜ 读：'+lastRead
+    +' ｜ 写：'+lastWrite
+    +' ｜ 型号 '+n+' ｜ '+CFG
+    +' ｜ 草稿 '+(d&&d.cfg?draftStamp()+'（未上传线上，可在左下角清除）':'无')
+    +' ｜ 版本 '+BUILD;
+  el.hidden=false;
+  el.className='env-chip'+(IS_LOCAL?' dev':' prod');
+  el.title=long;                    /* 悬停看全文（顶栏一行放不下时会被省略号截断） */
+  el.textContent=(IS_LOCAL?'开发环境（保存不推线上）':'线上 github.io（保存写 GitHub）')
+    +' ｜ 读 '+lastRead
+    +' ｜ 写 '+lastWrite
+    +' ｜ 型号 '+n
+    +' ｜ 草稿 '+(d&&d.cfg?draftStamp()+' 未传':'无')
+    +' ｜ '+BUILD;
+}
 var lastSrc='api';   /* 最近一次读取的来源；enter() 靠它决定要不要用成功提示盖掉警告 */
 var state={models:{},dirty:false,puts:[],dels:[],pendingCopy:[],blocked:[],busy:false};
 var draft={model:'',items:[],editKey:'',geo:null,brandLogo:null};
@@ -500,6 +691,25 @@ function b64ToText(b64){
    ⛔ 光靠顺序不够用：实测出现过「刚写回、api 仍返回上一版」，所以再加一道 updatedAt 防线 ——
    读回来的版本比本机刚写回的还旧，就判定读到的是缓存副本，直接采用本机快照。 */
 function loadModels(){
+  /* ⛔ 本地有草稿就直接用它，不发那三个请求 —— 本地要看的就是「本机刚存的那一版」，
+     这正是三级门禁第①级要验的东西。
+     ⛔ 前置的 IS_LOCAL 不能省：dkGet() 自己不判环境，少了它，只要线上那台机器的
+        localStorage 里恰好有同名键，线上后台就会被本机草稿接管 —— 事故级。
+        （草稿只在本地写，所以线上正常也读不到；但这条防线必须显式写着。） */
+  var dk=IS_LOCAL?dkGet():null;
+  if(dk&&dk.cfg&&dk.cfg.models){
+    lastSrc='本机草稿';
+    lastRead='本机草稿 '+draftStamp();
+    state.models=dk.cfg.models;
+    state.dirty=false;state.puts=[];state.dels=[];state.pendingCopy=[];state.blocked=[];
+    draft={model:'',items:[],editKey:'',geo:null,brandLogo:null};
+    $('newModel').value='';
+    $('upTitle').textContent='新增型号与图片';
+    renderList();renderPreviews();refreshPending();syncDraftChip();
+    /* ⛔ 不许静默：必须说清「这是本机草稿、没上传线上」，并给出回到线上版的办法 */
+    toastMsg('本地草稿模式：当前是 '+draftStamp()+' 存的本机草稿（未上传线上）。点左下角角标可清掉它、读回线上配置。');
+    return Promise.resolve(state.models);
+  }
   var src='api';
   return fetch(API+CFG+'?t='+Date.now(),{cache:'no-store'}).then(function(r){
     if(!r.ok)throw new Error('api 读不到 '+CFG);
@@ -530,12 +740,13 @@ function loadModels(){
       }
     }
     lastSrc=src;      /* ⛔ 必须记在守卫之后：守卫会改写 src，记早了等于没记 */
+    lastRead=src+' '+(j&&j.updatedAt?String(j.updatedAt).slice(5,16).replace('T',' '):'');
     state.models=(j&&j.models)||{};
     state.dirty=false;state.puts=[];state.dels=[];state.pendingCopy=[];state.blocked=[];
     draft={model:'',items:[],editKey:'',geo:null,brandLogo:null};
     $('newModel').value='';
     $('upTitle').textContent='新增型号与图片';
-    renderList();renderPreviews();refreshPending();
+    renderList();renderPreviews();refreshPending();syncDraftChip();
     /* ⛔ 降级读取必须说出来。以前这里是静默 fallback：api 一旦读不到就悄悄换 CDN 缓存副本，
        用户看到的是「刚删掉的型号刷新又回来了」，却完全无从归因。 */
     if(src==='本机刚写回的版本')
@@ -556,7 +767,7 @@ function renderList(){
   var kw=($('search').value||'').trim().toLowerCase();
   var box=$('list');
   var keys=Object.keys(state.models).filter(function(k){return !kw||k.toLowerCase().indexOf(kw)>=0;});
-  if(!keys.length){box.innerHTML='<p class="empty-tip">'+(kw?'没有匹配的型号。':'线上还没有型号，先在右侧新增。')+'</p>';syncCardHeight();return;}
+  if(!keys.length){box.innerHTML='<p class="empty-tip">'+(kw?'没有匹配的型号。':'线上还没有型号，先在右侧新增。')+'</p>';syncCardHeight();syncEnvChip();return;}
   box.innerHTML=keys.map(function(k){
     var m=state.models[k]||{};
     var cols=(m.colors||[]).map(function(c,i){
@@ -569,6 +780,7 @@ function renderList(){
           '<button class="icon-btn del" data-act="mdel" data-m="'+esc(k)+'" title="删除型号">'+ICON_DEL+'</button></span>'+
         '<button class="mini-dark" data-act="mimg" data-m="'+esc(k)+'">'+ICON_EDIT+'修改</button>'+
         '<button class="mini-dark" data-act="mlogo" data-m="'+esc(k)+'">品牌LOGO定位</button>'+
+        '<button class="mini-dark'+(modelZones(k).length?' zn-on':'')+'" data-act="mzone" data-m="'+esc(k)+'">安全区'+(modelZones(k).length?' '+modelZones(k).length:'')+'</button>'+
       '</div>'+
       '<div class="m-colors">'+cols+
         '<button class="add-c" data-act="mimg" data-m="'+esc(k)+'" title="添加颜色">＋</button>'+
@@ -577,6 +789,7 @@ function renderList(){
   }).join('');
   markOverflow();
   syncCardHeight();
+  syncEnvChip();
 }
 /* 颜色行只有真的放不下才出现横向滚动条：逐个量 scrollWidth 与 clientWidth。
    写完 innerHTML 立刻量拿不到正确值（字体还没算完），放到下一帧再测一次。 */
@@ -615,14 +828,29 @@ function syncListHeight(){
 function syncCardHeight(){
   var cards=document.querySelectorAll('.cols .card');
   if(cards.length<2)return;
+  /* ⛔ 隐藏状态下 offsetHeight 一律是 0，写进 --card-h 会让卡片永远停在 min-height 地板。
+     退出登录后窗口 resize 也会走到这里，所以这道守卫不能省。 */
+  if($('main').hidden)return;
   cards.forEach(function(c){c.style.setProperty('--card-h','auto');});
   syncListHeight();
+  /* ⛔ 测量前必须保证右栏的「＋」上传格已经生成。
+     本函数是由 renderList() 调用的，而 renderPreviews() 排在它后面 —— 型号少的时候，
+     量高度的这一刻右栏还没有上传格（整整少掉 266px），于是 --card-h 被写小、
+     卡片掉到 min-height:420px 地板，接着 .upbox(266px) 被 .uprow(overflow-y:hidden)
+     裁成 ~146px、.big-btn(56px) 被压成 31px，按钮正好压在上传格上。
+     用户看到的就是「这个板块高度不对 / 按钮压住上传格」。 */
+  var pv=$('previews');
+  if(pv&&!pv.querySelector('.upbox'))renderPreviews();
   /* 先把左右两栏的高度差异量出来，再统一取较大的那个。 */
   var natural=0;
   cards.forEach(function(c){natural=Math.max(natural,c.offsetHeight);});
-  /* 但不能无限长高：最多占视口的一部分，超出的部分让左栏型号列表自己滚。 */
+  /* 但不能无限长高：最多占视口的一部分，超出的部分让左栏型号列表自己滚。
+     ⛔ 这个上限只能压左栏（左栏列表自己有滚动条），不能压右栏：
+        右栏没有内部滚动，它的内容高度就是硬下限，压矮它 = 把上传格裁掉。 */
+  var dz=document.querySelector('.dropzone');
+  var rightNat=dz?dz.offsetHeight:0;
   var cap=Math.max(560,window.innerHeight-170);
-  var want=Math.min(natural,cap);
+  var want=Math.max(rightNat,Math.min(natural,cap));
   cards.forEach(function(c){c.style.setProperty('--card-h',want+'px');});
   /* 卡片被压到 cap 之后左栏列表的可用高度会变，再按实际剩余空间收敛一次，
      保证滚动条出现在列表内部、并且露出的正好是 3 张卡。 */
@@ -654,6 +882,7 @@ $('list').addEventListener('click',function(e){
   if(!m)return;
   if(act==='mimg'){openImgPanel(k);}
   else if(act==='mlogo'){openLogoPanel(k);}
+  else if(act==='mzone'){openZonePanel(k);}
   else if(act==='medit'){
     var nv=prompt('新的型号名（例如 9031SJ）：',k.replace(/^MR_/,''));
     if(!nv)return;
@@ -708,10 +937,15 @@ function stageDel(path){
   if(state.dels.indexOf(path)<0)state.dels.push(path);
 }
 function blockedTip(){
-  if(!state.blocked.length)return '';
+  /* 本地还留着一份「未上传」的本机草稿时，刚推上线这版比草稿新 —— 必须说出来。
+     否则用户回到本地前端会看到旧草稿（左下角橙色角标），以为这次推送没生效。 */
+  var draftTip=(IS_LOCAL&&dkGet())
+    ? '\n\n另外：本机还留着一份未上传的本机草稿（'+draftStamp()+'），它比刚推的这版旧。\n回到本地前端会看到那份草稿（左下角有橙色角标），点角标清除即可看到这次推的版本。'
+    : '';
+  if(!state.blocked.length)return draftTip;
   return '\n\n注意：其中 '+state.blocked.length+' 个文件属于正式版素材，测试版受保护、不会删除：\n'+
     state.blocked.slice(0,6).map(function(p){return '  · '+p;}).join('\n')+
-    (state.blocked.length>6?('\n  … 共 '+state.blocked.length+' 个'):'');
+    (state.blocked.length>6?('\n  … 共 '+state.blocked.length+' 个'):'')+draftTip;
 }
 
 /* ========== 上传与裁切 ========== */
@@ -901,8 +1135,10 @@ function fetchExistingColors(key){
   var m=state.models[key];
   if(!m)return Promise.resolve([]);
   return Promise.all((m.colors||[]).map(function(c){
-    return ghFile(c.image).then(function(f){
-      return readImage('data:image/png;base64,'+f.content).then(function(it){
+    /* 数据源由 colorSource() 决定：本地读本机图片仓/同源文件，线上读 GitHub contents。
+       ⛔ 本地若仍走 GitHub，会拿回线上的**旧图** —— 方框按旧图重算，用户接着上传就被裁歪。 */
+    return colorSource(c).then(function(src){
+      return readImage(src).then(function(it){
         return {label:c.label||c.key,canvas:it.canvas,W:it.W,H:it.H,bbox:bboxOf(it.canvas),url:it.url,old:c};
       });
     }).catch(function(e){
@@ -917,7 +1153,7 @@ var ip={key:'',items:[],loading:false};
 function openImgPanel(k){
   ip.key=k;ip.items=[];ip.loading=true;
   $('ipTitle').textContent='修改图片 · '+k;
-  $('ipSub').textContent='正在读取线上现有配色…';
+  $('ipSub').textContent='正在读取现有配色…';
   $('ipPreviews').innerHTML='<p class="empty-tip">加载中…</p>';
   $('imgPanel').hidden=false;
   var m=state.models[k];
@@ -993,17 +1229,21 @@ function packUpload(items,model,keepColors,opt){
 
   var key='MR_'+model,lower=model.toLowerCase();
   var prev=state.models[key]||null;
-  /* 两个字段必须在后台「什么都不做」时原样继承，否则等于每次上传图片都把它们抹掉：
+  /* 三个字段必须在后台「什么都不做」时原样继承，否则等于每次上传图片都把它们抹掉：
      · brandLogo —— 品牌 LOGO 落点。新型号取定位面板暂存值；覆盖已有型号时若没重新定位则保留原值。
      · logoMax  —— 用户可上传 LOGO 的尺寸上限。原本每个型号不同（如 9100 是 120×80），
                    早前这里写死 MAX_LOGO_MM(60×60)，导致只要从后台上传一次图片，
-                   该型号的上限就被永久改成 60×60。 */
+                   该型号的上限就被永久改成 60×60。
+     · safeZones —— 可定制范围。用「修改」重传图片是很日常的操作，
+                   丢了它等于安全区每次改图都要重画一遍。 */
   var keepLogo=opt.brandLogo||(prev&&prev.brandLogo)||null;
   var keepLogoMax=(prev&&prev.logoMax)||{wMm:MAX_LOGO_MM,hMm:MAX_LOGO_MM};
+  var keepZones=(prev&&Array.isArray(prev.safeZones))?prev.safeZones:[];
   var out={key:key,model:{id:key,pxPerMm:g.px,canvasMm:Math.round(g.side/g.px*10)/10,
     logoMax:{wMm:Number(keepLogoMax.wMm)||MAX_LOGO_MM,hMm:Number(keepLogoMax.hMm)||MAX_LOGO_MM},
     colors:[]},files:[],keepColors:keepColors||[]};
   if(keepLogo)out.model.brandLogo=keepLogo;
+  if(keepZones.length)out.model.safeZones=keepZones;
   return Promise.all(items.map(function(it){
     var cv=cropTo(it.canvas,g.cx,g.cy,g.side);
     var base='test-assets/'+'mr_'+lower+'_'+fileSlug(it.label)+'_trim';
@@ -1021,6 +1261,190 @@ function buildUpload(){
   var model=normModel($('newModel').value||draft.model);
   if(!model)return Promise.reject(new Error('请填写型号名称'));
   return packUpload(draft.items,model,[],{geo:g,brandLogo:draft.brandLogo});
+}
+
+/* ========== 本机图片仓（仅开发环境 / 第①级本地） ==========
+   ⛔ 为什么必须有：本机草稿（localStorage）只装得下配置、装不下图片，
+      于是「新增型号」在本地根本做不了 —— 纯新增图片不计入 pendingCount()，
+      publish() 一路落到最后那句 toast，用户点「确认提交上传」只看到一行小灰字，像没反应。
+   ⛔ 而「图片写不进浏览器」这个前提是错的：IndexedDB 存 Blob 是浏览器原生能力。
+   做法：本地沿用**同一套裁切管线** packUpload（与线上逐字节同源），产出线上同名的
+      test-assets/*.png|.webp，写进本机图片仓（key = 线上同名路径）；配置照旧写本机草稿。
+      前端在开发环境启动时把图片仓预载成 objectURL，modelSrc() 优先命中
+      → 「本地新增型号 → 前端跟着出现产品图」这条绑定在本地就能完整验证。
+   ⛔ 全部关在 IS_LOCAL 分支内：线上走的 ghPut / models.test.json 一个字节都不经过这里。 */
+var ASSET_DB='mr_local_assets';
+function idbOpen(){
+  return new Promise(function(res,rej){
+    if(!window.indexedDB)return rej(new Error('这个浏览器不支持 IndexedDB，本机存不了图片'));
+    var req;
+    try{req=indexedDB.open(ASSET_DB,1);}catch(e){return rej(e);}
+    req.onupgradeneeded=function(){var db=req.result;if(!db.objectStoreNames.contains('files'))db.createObjectStore('files');};
+    req.onerror=function(){rej(req.error||new Error('打不开本机图片仓'));};
+    req.onsuccess=function(){res(req.result);};
+  });
+}
+function idbPutFiles(pairs){
+  return idbOpen().then(function(db){
+    return new Promise(function(res,rej){
+      var tx,st;
+      try{tx=db.transaction('files','readwrite');st=tx.objectStore('files');}catch(e){return rej(e);}
+      pairs.forEach(function(p){st.put(p.blob,p.path);});
+      tx.oncomplete=function(){res(pairs.length);};
+      tx.onerror=function(){rej(tx.error||new Error('写入本机图片仓失败'));};
+      tx.onabort=function(){rej(tx.error||new Error('写入本机图片仓被中止（多半是空间不足）'));};
+    });
+  });
+}
+function idbClearFiles(){
+  return idbOpen().then(function(db){
+    return new Promise(function(res){
+      var tx;
+      try{tx=db.transaction('files','readwrite');}catch(e){return res(0);}
+      tx.objectStore('files').clear();
+      tx.oncomplete=function(){res(1);};
+      tx.onerror=function(){res(0);};
+      tx.onabort=function(){res(0);};
+    });
+  }).catch(function(){return 0;});
+}
+/* ==== 本机图片仓：读取侧（仅开发环境） ====
+   ⛔ 后台自己也会处于「本地重新上传过图」的状态：新图只落进图片仓（IDB），磁盘上没有。
+      弹窗若照配置路径直接取文件 → 404 → <img> 高度塌成 16px → 整个左侧视图被压扁成一条
+      （2026-09-17 用户报「安全区 / 品牌LOGO定位弹窗左边视图高度被压缩」的根因）。
+      前端 test.html 早就有同款预载（localAssetsReady / modelSrc），后台缺这一层。
+   做法与前端逐条对齐：解析期就异步预载成 objectURL 表，取图时同步查表，
+   查不到就原样返回原路径 —— 线上/同源素材完全不受影响。 */
+var adminAssetMap={};
+var adminAssetsPromise=(function(){
+  if(!IS_LOCAL||!window.indexedDB)return Promise.resolve(0);
+  return idbOpen().then(function(db){
+    return new Promise(function(res){
+      var cur;
+      try{cur=db.transaction('files','readonly').objectStore('files').openCursor();}catch(e){return res(0);}
+      var n=0;
+      cur.onsuccess=function(){
+        var c=cur.result;
+        if(!c){res(n);return;}
+        try{if(c.value instanceof Blob)adminAssetMap[c.key]=URL.createObjectURL(c.value);}catch(e){}
+        n++;c.continue();
+      };
+      cur.onerror=function(){res(n);};
+    });
+  }).catch(function(){return 0;});
+})();
+function adminAssetUrl(p){
+  if(!p||!IS_LOCAL)return p;
+  if(adminAssetMap[p])return adminAssetMap[p];
+  /* png / webp 互为兄弟文件：只有一边在仓里也认（与前端 modelSrc 同一策略） */
+  var alt=/\.webp$/i.test(p)?p.replace(/\.webp$/i,'.png'):p.replace(/\.png$/i,'.webp');
+  return adminAssetMap[alt]||p;
+}
+/* 底图取不到时的可见兜底：塌成一条灰线是静默失败，必须说出原因。
+   （最小高度保证提示看得见 —— 否则 16px 高的 stage 里任何文字都显示不出来）
+   after：弹窗原本就用 onload/onerror 重量尺寸，这里接管后回调它，别把原有行为吃掉。 */
+function stageImgGuard(stage,img,path,after){
+  if(!stage||!img)return;
+  var triedRaw=false;
+  img.onerror=function(){
+    /* 本地多一级兜底：同源取不到（例如图是在**线上测试版**上传的、本地磁盘没有）
+       → 回源线上 raw 再试一次。⛔ 少了这一级就会 404 塌成一条灰线（静默失败）。 */
+    if(IS_LOCAL&&!triedRaw&&/^https?:$/.test(location.protocol)){
+      triedRaw=true;
+      img.src=RAW_DIR+String(path).replace(/^\.?\//,'');
+      return;
+    }
+    stage.classList.add('bad');
+    if(!stage.querySelector('.stage-err')){
+      var d=document.createElement('div');
+      d.className='stage-err';
+      d.textContent='产品图没加载出来，请重试：'+path;
+      stage.appendChild(d);
+    }
+    if(after)after();
+  };
+  img.onload=function(){
+    stage.classList.remove('bad');
+    var d=stage.querySelector('.stage-err');
+    if(d&&d.parentNode)d.parentNode.removeChild(d);
+    if(after)after();
+  };
+}
+/* 取某张配色的原图数据：本地优先本机图片仓（本地刚上传的图只在那里），
+   其次同源静态文件；线上照旧走 GitHub contents。 */
+function colorSource(c){
+  if(!IS_LOCAL)return ghFile(c.image).then(function(f){return 'data:image/png;base64,'+f.content;});
+  var one=function(u){
+    return fetch(u,{cache:'no-store'}).then(function(r){
+      if(!r.ok)throw new Error('HTTP '+r.status+' '+u);
+      return r.blob();
+    });
+  };
+  var u=adminAssetUrl(c.image);
+  if(u.indexOf('blob:')===0)return one(u);   /* 命中本机图片仓，没有回源的必要 */
+  /* 同源没有 → 回源线上 raw（与 stageImgGuard 同一策略：图可能是线上测试版传的） */
+  return one(u).catch(function(){return one(RAW_DIR+String(c.image).replace(/^\.?\//,''));});
+}
+/* 本地「新增型号 / 覆盖型号」：图片落本机图片仓，配置落本机草稿。
+   与线上分支共用 packUpload 与合并规则，所以「本地测出来的效果」就是「线上会得到的效果」。 */
+var localBusy=false;    /* ⛔ 不能用 state.busy：saveLocalDraft() 第一道守卫就是它，
+                           先置起来会让草稿直接不写、却又被下面的成功提示盖住（假成功）。 */
+
+/* 本地落盘（本机图片仓 + 本机草稿）—— 三个入口共用这一份：
+     · 「确认提交上传」（localPublishUpload，新增 / 覆盖型号）
+     · 「修改图片」弹窗的「确认提交上传」（ipSave）
+     · 将来任何新的「会产出图片」的写回入口
+   ⛔ 不要各写一遍：三份实现必然漂移，本项目已经吃过「两份实现不一致」的亏
+      （线上 json 任务里的字段合并就是被漏过一次，直接把 brandLogo/safeZones 抹了）。
+   返回 {ok:true,key,files} = 真的写进去了；{ok:false,reason} = 没写。 */
+function localCommitUpload(up){
+  return idbPutFiles(up.files.map(function(f){return {path:f.path,blob:f.blob};})).then(function(n){
+    /* 与线上 json 任务同一套合并：以新配置为基准，用旧配置补齐本次没动的字段，
+       否则覆盖已有型号会把 brandLogo / logoMax / safeZones 整段抹掉（历史事故）。 */
+    var old=state.models[up.key];
+    if(old)Object.keys(old).forEach(function(f){if(up.model[f]===undefined)up.model[f]=old[f];});
+    state.models[up.key]=up.model;
+    (up.keepColors||[]).forEach(function(c){
+      if(!state.models[up.key].colors.some(function(x){return x.key===c.key;}))state.models[up.key].colors.push(c);
+    });
+    /* 纯新增图片本来不计入 pendingCount()，这里明确标脏，否则 saveLocalDraft()
+       会以「还没有任何改动」直接返回 —— 草稿一个字都不写，等于白传。 */
+    state.dirty=true;
+    return saveLocalDraft('型号 '+up.key+'（'+n+' 个图片文件）').then(function(r){
+      /* ⛔ 只有真的写进草稿（'draft'）才允许报成功；saveLocalDraft 自己已经说清了
+         没写的原因，调用方再盖一句「已存到本机」就变成假成功。 */
+      return r==='draft'?{ok:true,key:up.key,files:n}:{ok:false,reason:r};
+    });
+  });
+}
+
+function localPublishUpload(){
+  if(localBusy){toastMsg('上一次本机保存还在进行中，请稍候…');return Promise.resolve('busy');}
+  var g=calcDraft();
+  if(!draft.items.length){toastMsg('请先放几张颜色图');return Promise.resolve('noimg');}
+  if(!g){toastMsg('图片宽度不一致，同一个型号必须用同样宽度的图');return Promise.resolve('badgeo');}
+  if(!requireModelName())return Promise.resolve('noname');
+  localBusy=true;$('btnPublish').disabled=true;
+  return buildUpload().then(function(up){
+    if(state.models[up.key]&&!confirm('型号 '+up.key+' 已存在，覆盖它的配色？'))return 'cancel';
+    return localCommitUpload(up).then(function(r){
+      if(!r.ok)return r.reason;
+      draft.items.forEach(function(it){if(it&&it.revoke){try{it.revoke();}catch(e){}}});
+      draft.items=[];draft.model='';
+      var nm=$('newModel');if(nm)nm.value='';
+      renderPreviews();renderList();
+      toastMsg('已存到本机（'+draftStamp()+'）：型号 '+r.key+' 进了本机草稿，'+
+        r.files+' 个图片文件进了本机图片仓。刷新前端页面就能看到产品图。');
+      return 'local';
+    });
+  }).catch(function(e){
+    refreshPending();
+    alert('本机保存中断：'+((e&&e.message)||e)+'\n配置与图片都没有写进去，修好后可以重试。');
+    return 'error';
+  }).then(function(r){
+    localBusy=false;$('btnPublish').disabled=false;
+    return r;
+  });
 }
 
 /* ========== 发布 ========== */
@@ -1196,6 +1620,22 @@ function publish(){
   /* ⛔ 不能静默 return：以前 busy 卡住时点提交毫无反应、也不报错，
      用户看到的就是「点了提交但什么都没发生」。 */
   if(state.busy){toastMsg('上一次提交还在进行中，请稍候…');return;}
+  /* 开发环境 → 一律存本机草稿，与有没有连 GitHub 无关。
+     ⛔ 以前这里直接弹 token 面板，等于「本地要先连 GitHub 才能保存」，
+     而连上 GitHub 就已经是发到线上测试版了 —— 第①级本地验收根本走不通。
+     后来改成 `IS_LOCAL&&!token()`：只要本机存过 token，本地保存又会去写线上，
+     写失败就把删改全丢了（表象与改之前一样）。
+     ⛔ 「图片写不进浏览器」是错的 —— IndexedDB 能存 Blob。图片现在落本机图片仓，
+     配置落本机草稿，所以本地也能完整走「新增型号」这条路（见 localPublishUpload）。 */
+  if(IS_LOCAL){
+    /* ⛔ 「图片写不进浏览器、本地只存配置」这个前提是错的（IndexedDB 能存 Blob）。
+       纯新增图片时 pendingCount()=0，以前一路落到最后那句 toast —— 用户点了提交
+       只看到一行小灰字，新增型号在本地根本做不了。现在有图片就走本机图片仓。 */
+    if(draft.items.length)return localPublishUpload();
+    if(pendingCount())return saveLocalDraft('配置');
+    toastMsg('还没有任何改动');
+    return;
+  }
   if(!token()){openTokenPanel();alert('还没有连接 GitHub，请先连接');return;}
   /* ⛔ 右侧栏没有待传图片时必须走「纯配置提交」。
      以前这里无条件 buildUpload()，会以「请先放几张颜色图」软失败 ——
@@ -1241,17 +1681,22 @@ function publish(){
    渲染与待发布计数照旧刷新，页面表现不变。 */
 function afterWrite(){state.puts=[];renderList();renderPreviews();refreshPending();return 'ok';}
 function publishConfig(){
+  /* ⛔ 开发环境无条件走草稿：不许因为「碰巧存过 token」就把本地删改直接推到线上。
+     写线上是第②级的动作，要么用线上测试版后台、要么走发布脚本，不从开发环境偷偷做。 */
+  if(IS_LOCAL)return saveLocalDraft('配置');
   if(!pendingCount()){toastMsg('还没有任何改动');return Promise.resolve('nochange');}
   state.busy=true;$('btnPublish').disabled=true;
   return runJobs(buildConfigJobs(),{title:'正在提交配置到 GitHub'}).then(function(){
     state.busy=false;$('btnPublish').disabled=false;
     state.dels=[];state.pendingCopy=[];state.dirty=false;
     renderPreviews();
+    lastWrite='已推送 GitHub '+draftStamp();
     alert('发布完成！\n前端页面约 30–60 秒后会自动显示新内容。'+blockedTip());
     return afterWrite();
   }).catch(function(e){
     state.busy=false;$('btnPublish').disabled=false;
-    refreshPending();
+    lastWrite='推送失败：'+((e&&e.message)||e);
+    refreshPending();syncEnvChip();
     alert('发布中断：'+((e&&e.message)||e)+'\n已提交的部分不会回滚，修好后可重新发布。');
     return 'fail';
   });
@@ -1261,6 +1706,11 @@ function publishConfig(){
    实际上一个字都没写回 GitHub，刷新自然全长回来。
    所以：确认后直接写回，一步到位。返回 Promise，调用方可据此决定是否刷新界面。 */
 function autoCommit(what){
+  /* ⛔ 本地草稿模式同样要守住「确认即提交」这条红线：
+     本地也不能只改内存 + 标脏，否则刷新就回退，用户会以为删不掉。
+     ⛔ 而且必须无条件走草稿（不带 `!token()`）—— 见 saveLocalDraft 上方那段：
+       带上 token 判定时，本机存过 token 的用户在本地删型号会去写线上，写失败就刷新回退。 */
+  if(IS_LOCAL)return saveLocalDraft(what);
   if(!token()){
     openTokenPanel();
     toastMsg(what+'已记在页面上，但还没写回线上 —— 先连接 GitHub，再点右上角提交');
@@ -1268,6 +1718,365 @@ function autoCommit(what){
   }
   return publishConfig();
 }
+/* 把当前配置存进本机草稿（完全不碰线上）。语义与 publishConfig() 对齐，只是落点换成本地浏览器。
+   ⛔ 「写完不回头读」照旧：存完直接复用内存里的 state.models，不再 loadModels()。 */
+function saveLocalDraft(what){
+  /* ⛔ 以前这里 `if(state.busy)return Promise.resolve('busy')` —— 完全静默。
+     一旦 busy 被卡住（runJobs 抛同步异常就会），用户点删除、点保存全都「没反应」，
+     刷新自然回退，而且页面上一个字都不提示原因。这类静默分支一律不许留。 */
+  if(state.busy){toastMsg('上一次提交还在进行中，这次改动没有保存 —— 请稍候再操作一次');return Promise.resolve('busy');}
+  if(!pendingCount()){toastMsg('还没有任何改动');return Promise.resolve('nochange');}
+  var wrote=dkSave({updatedAt:new Date().toISOString(),models:state.models});
+  if(!wrote){
+    /* 写不进 localStorage（隐私模式 / 配额满）时必须大声说，否则又变成「刷新就回退」且查无原因 */
+    alert('本机草稿写入失败：浏览器拒绝写入 localStorage（可能是隐私模式或存储已满）。\n'+
+      '这次改动只留在页面上，刷新就会丢。建议改用线上测试版后台。');
+    lastWrite='草稿写入失败';
+    syncEnvChip();
+    return Promise.resolve('fail');
+  }
+  lastWrite='已存本机草稿 '+draftStamp()+'（未上传线上）';
+  var imgLeft=state.dels.length+state.pendingCopy.length;
+  state.dirty=false;state.puts=[];state.dels=[];state.pendingCopy=[];
+  afterWrite();      /* 清 puts / 重渲染 / 刷新待发布计数（它会重写 #pendingTip，所以提示必须放在它后面） */
+  syncDraftChip();syncEnvChip();
+  toastMsg('已存到本机草稿（'+draftStamp()+'）：'+(what||'配置')+
+    '。仅本机浏览器可见、未上传线上；刷新前端页面即可看到。'+
+    (imgLeft?('另有 '+imgLeft+' 项线上图片删除/改名没有执行（本地只动本机图片仓，线上文件不动）。'):''));
+  return Promise.resolve('draft');
+}
+window.__mrLocalDraft={isLocal:function(){return IS_LOCAL;},get:dkGet,save:dkSave,drop:dkDrop,key:DK};
+
+/* ========== 安全区（可定制范围） ==========
+   每个型号可配 0~N 个轴对齐矩形安全区，单位 mm、画布左上为原点，
+   与 brandLogo 同一坐标系，存在配置里的 safeZones 数组：
+     "safeZones":[{"xMm":86,"yMm":120,"wMm":180,"hMm":140}, ...]
+   · 不配 / 空数组 = 不限制（没配过的型号行为完全不变，向后兼容）
+   · 客户 LOGO 与任一安全区有重叠即算合格（2026-09-17 用户定的宽松规则）
+   · 区外做视觉淡化 + 超界变红提示，不阻断拖动、不阻断导出
+   为什么要有：LOGO 落到包体做不了的位置（缝线、拉链、边缘），工厂就没办法定制。
+   ⛔ 删除单个区 / 清空一律「确认即提交」（站在红线第 1 条这一侧）：
+      只改内存 + 标脏会让用户以为删了、刷新又回来 —— 历史事故就是这个。
+      新增与改尺寸走「保存安全区」，与「改色名/改型号名」同类。 */
+var ZN_MIN=5;                                    /* 安全区最小边长（mm） */
+var zp={key:'',mm:0,zones:[],sel:-1,srcEl:null,brand:null};
+function zoneNorm(z,mm){
+  if(!z)return null;
+  var x=Number(z.xMm),y=Number(z.yMm),w=Number(z.wMm),h=Number(z.hMm);
+  if(!isFinite(x)||!isFinite(y)||!(w>0)||!(h>0))return null;
+  x=Math.max(0,Math.min(mm,x));y=Math.max(0,Math.min(mm,y));
+  w=Math.min(w,mm-x);h=Math.min(h,mm-y);
+  if(!(w>0)||!(h>0))return null;
+  return {xMm:x,yMm:y,wMm:w,hMm:h};
+}
+function zoneRound(z,mm){
+  var o=zoneNorm(z,mm);if(!o)return null;
+  var r=function(v){return Math.round(v*10)/10;};
+  return {xMm:r(o.xMm),yMm:r(o.yMm),wMm:r(o.wMm),hMm:r(o.hMm)};
+}
+/* 读某型号的合法安全区列表（型号卡按钮、面板、前端都用同一套归一化规则） */
+function modelZones(key){
+  var m=state.models[key];
+  if(!m||!Array.isArray(m.safeZones))return [];
+  var mm=Number(m.canvasMm)||0;
+  if(!(mm>0))return [];
+  return m.safeZones.map(function(z){return zoneNorm(z,mm);}).filter(Boolean);
+}
+/* 写回某型号的安全区列表；空列表直接删字段，不往配置里留空数组 */
+function setModelZones(key,list){
+  var m=state.models[key];if(!m)return false;
+  var mm=Number(m.canvasMm)||0;
+  var clean=(list||[]).map(function(z){return zoneRound(z,mm);}).filter(Boolean);
+  if(clean.length)m.safeZones=clean;else delete m.safeZones;
+  return true;
+}
+/* 两个有向矩形是否相交（分离轴定理，4 条轴都要测）：
+   必须做全轴，只测一边的轴会把「其实分开」判成相交，
+   而我们的规则是「有重叠才算合格」—— 误判成相交等于放行了不该放行的 LOGO。 */
+function obbHit(a,b){
+  var A=a.ang*Math.PI/180,B=b.ang*Math.PI/180;
+  var ax=[Math.cos(A),Math.sin(A)],ay=[-Math.sin(A),Math.cos(A)];
+  var bx=[Math.cos(B),Math.sin(B)],by=[-Math.sin(B),Math.cos(B)];
+  var dx=b.cx-a.cx,dy=b.cy-a.cy;
+  var axes=[ax,ay,bx,by];
+  for(var i=0;i<axes.length;i++){
+    var L=axes[i];
+    var d=Math.abs(dx*L[0]+dy*L[1]);
+    var ra=(a.w/2)*Math.abs(ax[0]*L[0]+ax[1]*L[1])+(a.h/2)*Math.abs(ay[0]*L[0]+ay[1]*L[1]);
+    var rb=(b.w/2)*Math.abs(bx[0]*L[0]+bx[1]*L[1])+(b.h/2)*Math.abs(by[0]*L[0]+by[1]*L[1]);
+    if(d>ra+rb)return false;
+  }
+  return true;
+}
+function zoneBoxOf(z){return {cx:z.xMm+z.wMm/2,cy:z.yMm+z.hMm/2,w:z.wMm,h:z.hMm,ang:0};}
+function brandObb(){
+  if(!zp.brand||!(zp.brand.lenMm>0))return null;
+  var ar=BRAND_ASPECT||14.076;
+  return {cx:zp.brand.cxMm,cy:zp.brand.cyMm,w:zp.brand.lenMm,h:zp.brand.lenMm/ar,ang:zp.brand.rot||0};
+}
+function brandInZones(){
+  var o=brandObb();if(!o)return true;
+  return zp.zones.some(function(z){return obbHit(o,zoneBoxOf(z));});
+}
+function znSel(){return (zp.sel>=0&&zp.sel<zp.zones.length)?zp.zones[zp.sel]:null;}
+/* stage 里 1mm 对应多少 px：底图是 width:100% 撑满 stage，用它的实测宽度换算 */
+function znPx(){
+  var st=$('znStage');
+  var w=(zp.srcEl&&zp.srcEl.getBoundingClientRect().width)||0;
+  if(!(w>1))w=(st&&st.clientWidth)||320;
+  return w/(zp.mm||1);
+}
+function znUniq(a){
+  a=a.map(function(v){return Math.round(v*1000)/1000;}).sort(function(x,y){return x-y;});
+  var out=[];
+  a.forEach(function(v){if(!out.length||v-out[out.length-1]>0.01)out.push(v);});
+  return out;
+}
+/* 重画 stage 上的覆盖层：区外淡化 + 品牌LOGO轮廓 + 各区框。
+   底图（stage 里的 <img>）保持不动，只替换三类覆盖元素。 */
+function renderZoneStage(){
+  var st=$('znStage');if(!st||!(zp.mm>0))return;
+  Array.prototype.forEach.call(st.querySelectorAll('.zn-dim,.zn-zone,.zn-brand'),function(n){
+    if(n.parentNode)n.parentNode.removeChild(n);
+  });
+  var k=znPx(),W=zp.mm*k,zs=zp.zones,i,j;
+  /* 区外淡化 = 画布减去所有区的并集。网格分解精确切，避免多层半透明叠加变黑 */
+  if(zs.length){
+    var xs=[0,W],ys=[0,W];
+    zs.forEach(function(z){xs.push(z.xMm*k,(z.xMm+z.wMm)*k);ys.push(z.yMm*k,(z.yMm+z.hMm)*k);});
+    xs=znUniq(xs.map(function(v){return Math.max(0,Math.min(W,v));}));
+    ys=znUniq(ys.map(function(v){return Math.max(0,Math.min(W,v));}));
+    for(i=0;i<xs.length-1;i++){
+      for(j=0;j<ys.length-1;j++){
+        var x0=xs[i],x1=xs[i+1],y0=ys[j],y1=ys[j+1];
+        var mx=(x0+x1)/2,my=(y0+y1)/2;
+        var inside=zs.some(function(z){
+          return mx>=z.xMm*k&&mx<=(z.xMm+z.wMm)*k&&my>=z.yMm*k&&my<=(z.yMm+z.hMm)*k;
+        });
+        if(inside)continue;
+        var d=document.createElement('div');d.className='zn-dim';
+        d.style.left=x0+'px';d.style.top=y0+'px';
+        d.style.width=(x1-x0)+'px';d.style.height=(y1-y0)+'px';
+        st.appendChild(d);
+      }
+    }
+  }
+  /* 品牌LOGO 位置：只读参考，让用户直接看出它有没有落在安全区里 */
+  if(zp.brand&&zp.brand.lenMm>0){
+    var ar=BRAND_ASPECT||14.076,hMm=zp.brand.lenMm/ar,wMm=zp.brand.lenMm;
+    var rad=(zp.brand.rot||0)*Math.PI/180;
+    var hx=Math.abs(wMm*Math.cos(rad))+Math.abs(hMm*Math.sin(rad));
+    var hy=Math.abs(wMm*Math.sin(rad))+Math.abs(hMm*Math.cos(rad));
+    var bl=document.createElement('div');bl.className='zn-brand';
+    bl.style.left=((zp.brand.cxMm-hx/2)*k)+'px';bl.style.top=((zp.brand.cyMm-hy/2)*k)+'px';
+    bl.style.width=(hx*k)+'px';bl.style.height=(hy*k)+'px';
+    bl.title='品牌LOGO 当前位置（只读参考）';
+    st.appendChild(bl);
+  }
+  zs.forEach(function(z,idx){
+    var el=document.createElement('div');
+    el.className='zn-zone'+(idx===zp.sel?' sel':'');
+    el.setAttribute('data-zi',String(idx));
+    el.style.left=(z.xMm*k)+'px';el.style.top=(z.yMm*k)+'px';
+    el.style.width=(z.wMm*k)+'px';el.style.height=(z.hMm*k)+'px';
+    var lb=document.createElement('span');
+    lb.textContent='安全区 '+(idx+1)+' · '+Math.round(z.wMm)+'×'+Math.round(z.hMm)+'mm';
+    el.appendChild(lb);
+    var gp=document.createElement('div');gp.className='zn-grip';el.appendChild(gp);
+    st.appendChild(el);
+  });
+}
+function renderZonePanel(){
+  var list=$('znList'),none=$('znNone'),fields=$('znFields'),flag=$('znFlag');
+  var has=zp.zones.length>0;
+  if(none)none.hidden=has;
+  if(fields)fields.classList.toggle('off',!has);
+  ['znX','znY','znW','znH','znFill','znDel'].forEach(function(id){
+    var el=$(id);if(el)el.disabled=!has;
+  });
+  if(list){
+    list.innerHTML=zp.zones.map(function(z,i){
+      return '<div class="zn-row'+(i===zp.sel?' sel':'')+'" data-zi="'+i+'">'+
+        '<i>安全区 '+(i+1)+'</i><b>'+Math.round(z.wMm)+' × '+Math.round(z.hMm)+' mm</b></div>';
+    }).join('');
+  }
+  var z=znSel();
+  if(z){
+    $('znX').value=Math.round(z.xMm*10)/10;$('znY').value=Math.round(z.yMm*10)/10;
+    $('znW').value=Math.round(z.wMm*10)/10;$('znH').value=Math.round(z.hMm*10)/10;
+  }
+  var pos=$('znPos');
+  if(pos){
+    pos.textContent=has
+      ? ('共 '+zp.zones.length+' 个安全区，当前第 '+(zp.sel+1)+' 个（画布 '+Math.round(zp.mm*10)/10+'mm）')
+      : ('还没有安全区，客户 LOGO 不受位置限制（画布 '+Math.round(zp.mm*10)/10+'mm）');
+  }
+  if(flag){
+    if(has&&brandObb()){
+      var ok=brandInZones();
+      flag.hidden=false;
+      flag.className='zn-flag'+(ok?'':' bad');
+      flag.textContent=ok
+        ?'品牌LOGO 落在安全区内，可以定制。'
+        :'提醒：品牌LOGO 不在任何安全区内，工厂可能无法定制。';
+    }else{flag.hidden=true;flag.textContent='';}
+  }
+  renderZoneStage();
+}
+function openZonePanel(key){
+  var m=state.models[key];if(!m)return;
+  var c0=(m.colors||[])[0];
+  if(!c0){alert('该型号还没有图片，先上传图片再画安全区');return;}
+  var mm=Number(m.canvasMm)||0;
+  if(!(mm>0)){alert('该型号缺少画布尺寸，无法编辑安全区');return;}
+  zp.key=key;zp.mm=mm;
+  zp.zones=modelZones(key).map(function(z){return {xMm:z.xMm,yMm:z.yMm,wMm:z.wMm,hMm:z.hMm};});
+  zp.sel=zp.zones.length?0:-1;
+  var b=m.brandLogo||null;
+  zp.brand=b?{cxMm:Number(b.cxMm)||0,cyMm:Number(b.cyMm)||0,
+              lenMm:Number(b.lenMm)||0,rot:Number(b.rot)||0}:null;
+  $('znTitle').textContent='安全区（可定制范围） · '+key;
+  $('zonePanel').hidden=false;
+  var st=$('znStage');
+  st.innerHTML='';
+  zp.srcEl=document.createElement('img');
+  st.appendChild(zp.srcEl);
+  /* ⛔ 底图路径必须先经「本机图片仓」解析再挂上：本地重新上传过的图只存在仓里，
+     照配置路径直接取必然 404 → img 塌成 16px → 左侧视图被压扁成一条灰线
+     （2026-09-17 用户报的就是这个）。解码完再量一次：stage 宽度由它决定。 */
+  var again=function(){if($('zonePanel').hidden)return;renderZonePanel();};
+  stageImgGuard(st,zp.srcEl,c0.image,again);
+  var attach=function(){
+    if(!zp.srcEl)return;
+    zp.srcEl.src=adminAssetUrl(c0.image);
+    if(zp.srcEl.complete&&zp.srcEl.naturalWidth)setTimeout(again,0);
+  };
+  /* ⛔ 线上/线上测试端（IS_LOCAL=false）保持「同步挂载」，时序与改前完全一致；
+      只有本地才等图片仓预载表就绪（那时挂的是 objectURL）。 */
+  if(IS_LOCAL)adminAssetsPromise.then(function(){if(!$('zonePanel').hidden)attach();});
+  else attach();
+  renderZonePanel();
+  setTimeout(again,900);
+}
+/* 面板内拖动：框体移动 / 右下角改尺寸。坐标一律夹在画布内，不允许出现负边距 */
+function bindZoneDrag(){
+  var st=$('znStage'),mode='',zi=-1,sx=0,sy=0,oz=null;
+  function zoneIdxAt(el){
+    while(el&&el!==st){
+      if(el.classList&&el.classList.contains('zn-zone'))return parseInt(el.getAttribute('data-zi'),10);
+      el=el.parentNode;
+    }
+    return -1;
+  }
+  st.addEventListener('pointerdown',function(e){
+    var i=zoneIdxAt(e.target);
+    if(!(i>=0&&i<zp.zones.length))return;
+    zp.sel=i;renderZonePanel();
+    mode=(e.target.classList&&e.target.classList.contains('zn-grip'))?'size':'move';
+    zi=i;sx=e.clientX;sy=e.clientY;
+    oz={xMm:zp.zones[i].xMm,yMm:zp.zones[i].yMm,wMm:zp.zones[i].wMm,hMm:zp.zones[i].hMm};
+    try{st.setPointerCapture(e.pointerId);}catch(err){}
+    e.preventDefault();
+  });
+  st.addEventListener('pointermove',function(e){
+    if(!mode||!(zi>=0&&zi<zp.zones.length))return;
+    var k=znPx(),z=zp.zones[zi];
+    var dx=(e.clientX-sx)/k,dy=(e.clientY-sy)/k;
+    if(mode==='move'){
+      z.xMm=Math.max(0,Math.min(zp.mm-oz.wMm,oz.xMm+dx));
+      z.yMm=Math.max(0,Math.min(zp.mm-oz.hMm,oz.yMm+dy));
+    }else{
+      z.wMm=Math.max(ZN_MIN,Math.min(zp.mm-oz.xMm,oz.wMm+dx));
+      z.hMm=Math.max(ZN_MIN,Math.min(zp.mm-oz.yMm,oz.hMm+dy));
+    }
+    renderZonePanel();
+  });
+  var up=function(){mode='';zi=-1;};
+  st.addEventListener('pointerup',up);
+  st.addEventListener('pointercancel',up);
+}
+bindZoneDrag();
+$('znList').addEventListener('click',function(e){
+  var el=e.target;
+  while(el&&el!==this){
+    if(el.getAttribute&&el.getAttribute('data-zi')!==null){
+      var i=parseInt(el.getAttribute('data-zi'),10);
+      if(i>=0&&i<zp.zones.length){zp.sel=i;renderZonePanel();}
+      return;
+    }
+    el=el.parentNode;
+  }
+});
+['znX','znY','znW','znH'].forEach(function(id){
+  var zbT=null;
+  /* apply(write)：把输入框的数值夹进画布后写进选中区。
+     write=true 时才把被夹住的值回写到输入框。
+     ⛔ 不能一打字就回写：用户想输 30，第一个「3」会被 min 夹成 5，越打越乱。
+        所以打字期间只夹状态（矩形始终合法），停手 400ms 或离开输入框再回写，
+        避免出现「框里 807 / 实际 307」这种静默不一致。 */
+  function zbApply(write){
+    var z=znSel();if(!z)return;
+    var raw=parseFloat($(id).value);if(!isFinite(raw))return;
+    var v;
+    if(id==='znX'){z.xMm=v=Math.max(0,Math.min(zp.mm-z.wMm,raw));}
+    else if(id==='znY'){z.yMm=v=Math.max(0,Math.min(zp.mm-z.hMm,raw));}
+    else if(id==='znW'){z.wMm=v=Math.max(ZN_MIN,Math.min(zp.mm-z.xMm,raw));}
+    else {z.hMm=v=Math.max(ZN_MIN,Math.min(zp.mm-z.yMm,raw));}
+    renderZoneStage();
+    if(write&&Math.abs(v-raw)>1e-6)$(id).value=Math.round(v*10)/10;
+  }
+  $(id).addEventListener('input',function(){
+    clearTimeout(zbT);zbApply(false);zbT=setTimeout(function(){zbApply(true);},400);
+  });
+  $(id).addEventListener('change',function(){clearTimeout(zbT);zbApply(true);});
+  $(id).addEventListener('blur',function(){clearTimeout(zbT);zbApply(true);});
+});
+$('znAdd').addEventListener('click',function(){
+  /* 新区默认取画布短边的 55%、居中 —— 大多数包的可定制面就在中间，
+     起点合理比精确更重要，用户拖一下就到位。 */
+  var side=Math.max(ZN_MIN,Math.round(zp.mm*0.55));
+  var off=Math.round((zp.mm-side)/2);
+  zp.zones.push({xMm:off,yMm:off,wMm:side,hMm:side});
+  zp.sel=zp.zones.length-1;
+  renderZonePanel();
+});
+$('znFill').addEventListener('click',function(){
+  var z=znSel();if(!z)return;
+  z.xMm=0;z.yMm=0;z.wMm=zp.mm;z.hMm=zp.mm;
+  renderZonePanel();
+});
+$('znCancel').addEventListener('click',function(){$('zonePanel').hidden=true;});
+/* ⛔ 删除 / 清空 → 确认即提交。只改内存 + 标脏的历史教训见文件顶部红线第 1 条。 */
+function commitZones(what){
+  if(!setModelZones(zp.key,zp.zones))return Promise.resolve('missing');
+  state.dirty=true;renderList();refreshPending();
+  var p=$('zonePanel');if(p)p.hidden=true;
+  return autoCommit(what).then(function(r){
+    if(r==='ok')toastMsg(what+'，已同步到线上');
+    return r;
+  });
+}
+$('znDel').addEventListener('click',function(){
+  var z=znSel();
+  if(!z){toastMsg('先在左边选中一个安全区');return;}
+  var no=zp.sel+1;
+  if(!confirm('删除「安全区 '+no+'」？\n\n确认后会立即同步到线上，这块不再算作可定制范围。'))return;
+  zp.zones.splice(zp.sel,1);
+  zp.sel=zp.zones.length?Math.max(0,zp.sel-1):-1;
+  renderZonePanel();
+  commitZones('删除型号 '+zp.key+' 的安全区 '+no);
+});
+/* 保存：与「改色名 / 改型号名」同类，用户可能连着拖好几次，所以保留显式提交 */
+$('znSave').addEventListener('click',function(){
+  if(!zp.key||!state.models[zp.key]){alert('型号不存在');return;}
+  if(!setModelZones(zp.key,zp.zones)){alert('型号不存在');return;}
+  state.dirty=true;renderList();refreshPending();
+  $('zonePanel').hidden=true;
+  toastMsg('型号 '+zp.key+' 的安全区已记录，正在同步到线上…');
+  autoCommit('保存型号 '+zp.key+' 的安全区').then(function(r){
+    if(r==='ok')toastMsg('型号 '+zp.key+' 的安全区已同步到线上');
+  });
+});
 
 /* ========== 品牌 LOGO 手动定位 ========== */
 var BRAND_SVG=null, BRAND_ASPECT=1578/112.09;
@@ -1305,7 +2114,11 @@ function openLogoPanel(key){
     mm=m.canvasMm;
     var c0=(m.colors||[])[0];
     if(!c0){alert('该型号还没有图片');return;}
-    srcPromise=Promise.resolve(c0.image);
+    /* 与安全区面板同一套：本地重新上传过的图只在本机图片仓里，照配置路径取会 404。
+       线上/线上测试端走同源静态文件，保持原样（Promise.resolve），时序不变。 */
+    srcPromise=IS_LOCAL
+      ? adminAssetsPromise.then(function(){return adminAssetUrl(c0.image);})
+      : Promise.resolve(c0.image);
     have=m.brandLogo||null;
   }
   lpAdded=!!have;
@@ -1339,8 +2152,9 @@ function openLogoPanel(key){
        不能预设 stage 宽度：底图有 padding、边框，且尺寸要等解码后才定。 */
     return new Promise(function(res){
       var done=function(){res();};
+      stageImgGuard(stage,lp.srcEl,src,done);
       if(lp.srcEl.complete&&lp.srcEl.naturalWidth)setTimeout(done,0);
-      else{lp.srcEl.onload=done;lp.srcEl.onerror=done;setTimeout(done,1500);}
+      else setTimeout(done,1500);
     });
   }).then(function(){
     var w=lp.srcEl?lp.srcEl.getBoundingClientRect().width:0;
@@ -1455,6 +2269,12 @@ $('lpSave').addEventListener('click',function(){
   m.brandLogo=pos;
   state.dirty=true;renderList();refreshPending();
   $('logoPanel').hidden=true;
+  /* ⛔ 开发环境无条件落本机草稿（红线：本地保存一律不进线上）。
+     这是第 4 个写回入口，2026-09-18 之前没有这段 —— 本机存过 token 的用户
+     点「保存定位」会直接打 GitHub contents，token 失效/过期就是
+     「保存失败：Bad credentials」，看着像定位功能坏了，其实是发错了地方。
+     ⛔ 不许写成 `IS_LOCAL&&!token()`：那等于「碰巧存过 token 就绕过第①级」。 */
+  if(IS_LOCAL)return saveLocalDraft('品牌LOGO定位（'+lp.key+'）');
   if(!token()){toastMsg('LOGO 定位已记录，连接 GitHub 后再点「确认提交上传」');return;}
   var up={key:lp.key,model:m,files:[],keepColors:[]};
   state.busy=true;
@@ -1476,6 +2296,17 @@ function openTokenPanel(){
   if(!token())$('token').focus();
 }
 $('btnToken').addEventListener('click',openTokenPanel);
+/* 清除本机草稿：草稿只在本机浏览器里，删了不可恢复，所以要确认一次。
+   清完重新读配置 —— 这时才会去读线上那份（api → 同源 → raw）。 */
+$('btnDraft').addEventListener('click',function(){
+  if(!confirm('清除本机草稿？\n\n清掉后本页与前端都会回到线上配置（'+CFG+'）。\n草稿只存在本机浏览器里，且没有别的备份，删了不可恢复。'))return;
+  dkDrop();
+  syncDraftChip();          /* ⛔ 必须先撤角标：loadModels 成功时不一定会再走到这里 */
+  lastWrite='（已清除草稿）';
+  syncEnvChip();
+  toastMsg('本机草稿已清除，正在读回线上配置…');
+  loadModels().catch(function(e){toastMsg('读回线上配置失败：'+((e&&e.message)||e));});
+});
 $('tpCancel').addEventListener('click',function(){$('tokenPanel').hidden=true;});
 $('tpSave').addEventListener('click',function(){
   var v=($('token').value||'').trim();
@@ -1521,10 +2352,15 @@ function enter(){
   $('gate').style.display='none';
   $('main').hidden=false;
   setGhChip();
+  syncDraftChip();
+  syncEnvChip();
   loadModels().then(function(){
     /* ⛔ 读取降级时不能拿「已读取线上配置」把警告盖掉：loadModels() 已经说清读到的是哪一版，
        这里再补一句成功提示等于把警告抹掉，用户就永远看不到「读到的是缓存旧版」。 */
     if(lastSrc!=='api')return;
+    /* ⛔ 开发环境不许提示「去连 GitHub」：本地改动的落点就是本机草稿+本机图片仓，
+       连 GitHub 是「发到线上测试版」的动作 —— 按提示连上去，等于把本地验证绕过去了。 */
+    if(IS_LOCAL){toastMsg('已读取线上配置（只读）。本地改动只落本机，不用连 GitHub。');return;}
     toastMsg('已读取线上配置'+(token()?'':'，发布前请先点右上角连接 GitHub'));
   }).catch(function(e){
     $('list').innerHTML='<p class="empty-tip">读取失败：'+esc(e.message)+'</p>';
@@ -1560,7 +2396,12 @@ $('btnDiscard').addEventListener('click',function(){
   if(!confirm('放弃所有未发布的改动？'))return;
   loadModels().then(function(){toastMsg('已放弃改动');});
 });
-function toastMsg(s){$('pendingTip').textContent=s;}
+function toastMsg(s){
+  $('pendingTip').textContent=s;
+  /* 这行提示的长短会改变 .hint 的行数、从而改变右栏的内容高度；
+     卡片高度是按内容算死的，不重算就会把上传格压扁（守卫写在 syncCardHeight 内部）。 */
+  syncCardHeight();
+}
 
 /* ========== 修改图片弹窗 ========== */
 $('ipFile').addEventListener('change',function(e){ipAddFiles(e.target.files);$('ipFile').value='';});
@@ -1570,7 +2411,9 @@ $('ipCancel').addEventListener('click',function(){
 });
 $('ipSave').addEventListener('click',function(){
   if(ip.loading){alert('还在读取线上配色，稍等一下');return;}
-  if(!token()){openTokenPanel();alert('还没有连接 GitHub，请先连接');return;}
+  /* ⛔ 开发环境不需要 token（下面落本机图片仓 + 本机草稿），线上才要求先连 GitHub。
+     以前这里无条件要 token —— 本地点「确认提交上传」先弹连接层。 */
+  if(!IS_LOCAL&&!token()){openTokenPanel();alert('还没有连接 GitHub，请先连接');return;}
   var key=ip.key,m=state.models[key];
   if(!m)return;
   /* 只要新增/改名过的颜色才需要重传；纯改名不改图的情况也走这里（同名会重裁） */
@@ -1583,17 +2426,37 @@ $('ipSave').addEventListener('click',function(){
   var keep=(m.colors||[]).filter(function(c){
     return !changed.some(function(it){return it.old===c;});
   });
+  var restore=function(){$('ipSave').disabled=false;$('ipSave').textContent='确认提交上传';};
   $('ipSave').disabled=true;$('ipSave').textContent='提交中…';
+  /* ⛔ 开发环境落本机，与「新增型号」共用 localCommitUpload（裁切管线同源）。
+     这段 2026-09-18 之前不存在：本地点「确认提交上传」会直接打 GitHub contents，
+     token 一失效就是「提交中断：Bad credentials」。 */
+  if(IS_LOCAL){
+    return packUpload(changed,model,keep,{brandLogo:m.brandLogo}).then(function(up){
+      return localCommitUpload(up);
+    }).then(function(r){
+      restore();
+      if(!r.ok)return r;
+      $('imgPanel').hidden=true;ip.items=[];
+      toastMsg('已存到本机（'+draftStamp()+'）：'+r.key+' 的 '+r.files+
+        ' 个图片文件进了本机图片仓，配置进了本机草稿。刷新前端页面即可看到。');
+      return r;
+    }).catch(function(e){
+      restore();refreshPending();
+      alert('本机保存中断：'+((e&&e.message)||e));
+      return 'error';
+    });
+  }
   packUpload(changed,model,keep,{brandLogo:m.brandLogo}).then(function(up){
     return runJobs(buildJobs(up,{skipGlobalEdits:true}),
       {title:'正在提交到 GitHub'});
   }).then(function(){
-    $('ipSave').disabled=false;$('ipSave').textContent='确认提交上传';
+    restore();
     $('imgPanel').hidden=true;ip.items=[];
     alert('已提交！前端页面约 30–60 秒后会自动显示新内容。');
     return afterWrite();
   }).catch(function(e){
-    $('ipSave').disabled=false;$('ipSave').textContent='确认提交上传';
+    restore();
     alert('提交中断：'+((e&&e.message)||e));
   });
 });
