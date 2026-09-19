@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-19T05:28:33.857Z",
+  "updatedAt": "2026-09-19T05:29:29.362Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -272,8 +272,8 @@
     },
     "MR_3101": {
       "id": "MR_3101",
-      "pxPerMm": 2,
-      "canvasMm": 271,
+      "pxPerMm": 1.5,
+      "canvasMm": 271.3,
       "logoMax": {
         "wMm": 60,
         "hMm": 60
