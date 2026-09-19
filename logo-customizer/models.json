@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-19T05:24:30.194Z",
+  "updatedAt": "2026-09-19T05:28:00.304Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -269,6 +269,23 @@
         "rot": 90,
         "color": "#a6a7ac"
       }
+    },
+    "MR_3101": {
+      "id": "MR_3101",
+      "pxPerMm": 2,
+      "canvasMm": 271,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_3101_bizblack_trim.png",
+          "webp": "mr_3101_bizblack_trim.webp"
+        }
+      ]
     }
   }
 }
