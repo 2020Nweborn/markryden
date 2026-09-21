@@ -76,7 +76,34 @@
   .panel{width:404px;min-height:578px;align-self:stretch;display:flex;flex-direction:column;padding:27px 30px 20px;background:#fff;border-radius:14px}
   .top-grid,.middle-grid,.adjust-grid{display:grid;grid-template-columns:148px 148px;column-gap:37px}
   .field-title{font-size:15px;line-height:20px;font-weight:700;margin:0 0 9px}
-  select{display:block;width:148px;height:34px;border:1px solid #dcdcdc;border-radius:2px;color:#222;font-size:14px;padding:0 36px 0 12px;outline:none;appearance:none;-webkit-appearance:none;background-color:#fff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.25 6 6.25 11 1.25' fill='none' stroke='%23222' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:10px 7px}
+  select,.msel-input{display:block;width:148px;height:34px;border:1px solid #dcdcdc;border-radius:2px;color:#222;font-size:14px;padding:0 36px 0 12px;outline:none;appearance:none;-webkit-appearance:none;background-color:#fff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.25 6 6.25 11 1.25' fill='none' stroke='%23222' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:10px 7px}
+  /* 型号下拉加搜索：可见的是搜索框，原生 select 透明盖在下面当「真值来源」。 */
+  .msel{position:relative;width:148px}
+  .msel>select{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;pointer-events:none;z-index:2}
+  .msel .msel-input{width:100%;font-family:inherit;cursor:pointer}
+  .msel .msel-input::placeholder{color:#aaa}
+  .msel.is-open .msel-input{border-color:#111}
+  .msel .msel-input:disabled{color:#bbb;background-color:#fafafa;cursor:not-allowed}
+  /* 面板 = 钉在第一条的搜索行 + 最多 5 项的滚动列表（2026-09-21 设计稿）。
+     ⛔ 搜索行**不能**放进滚动容器里 —— 那样它会跟着列表一起滚走。 */
+  .msel-list{position:absolute;left:0;top:100%;margin-top:6px;width:100%;background:#fff;border:1px solid #e3e3e3;box-shadow:0 10px 26px rgba(0,0,0,.13);z-index:60}
+  .msel-list[hidden]{display:none}
+  .msel-head{display:flex;align-items:center;gap:8px;height:34px;padding:0 12px;background:#f5f5f5}
+  .msel-lens{flex:0 0 auto;display:block;width:13px;height:13px}
+  .msel-head input{flex:1 1 auto;min-width:0;height:100%;margin:0;padding:0;border:0;background:transparent;font-family:inherit;font-size:14px;line-height:1;color:#222;outline:none}
+  /* 5 项封顶：第 6 项起滚动（1200px 断点下 40px/项 → 200px） */
+  .msel-scroll{max-height:160px;overflow-y:auto;overscroll-behavior:contain}
+  .msel-scroll::-webkit-scrollbar{width:6px}
+  .msel-scroll::-webkit-scrollbar-track{background:transparent}
+  .msel-scroll::-webkit-scrollbar-thumb{background:#d6d6d6}
+  .msel-opt{position:relative;height:32px;line-height:32px;padding:0 12px;font-size:14px;color:#444;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+  /* 项与项之间的分隔线：伪元素，不占高度、左右各缩进 12px（设计稿） */
+  .msel-opt+.msel-opt:before{content:"";position:absolute;left:12px;right:12px;top:0;height:1px;background:#ededed}
+  .msel-opt b{color:#111;font-weight:700}
+  .msel-opt.is-cur{color:#111;font-weight:700}
+  .msel-opt.is-hi{background:#f2f2f2}
+  .msel-none{height:32px;line-height:32px;padding:0 12px;font-size:13px;color:#999}
+
   .middle-grid{margin-top:31px}
   .upload{position:relative;width:148px;height:95px;border:1px solid #dedede;border-radius:2px;background:#fff;cursor:pointer;text-align:center;overflow:hidden}
   .upload:before{content:"";position:absolute;z-index:0;inset:0;background:#111;clip-path:polygon(0 100%,0 100%,0 100%);transition:clip-path .34s cubic-bezier(.22,.61,.36,1)}
@@ -103,6 +130,17 @@
   .range-hint{font-size:8px;line-height:1.45;color:#aaa;white-space:normal;overflow-wrap:anywhere;margin-top:9px;transform-origin:left top}
   .adjust-grid{margin-top:22px}
   .adjust-grid .field-title{margin-bottom:15px}
+  /* 「去除LOGO内部颜色」：横跨面板的一条勾选卡片（2026-09-21 设计稿） */
+  .inner-row{margin-top:22px}
+  .inner-chip{display:flex;align-items:center;justify-content:space-between;gap:10px;height:34px;padding:0 12px;border:1px solid #e2e2e2;border-radius:2px;cursor:pointer}
+  .inner-chip>span{font-size:11px;color:#222}
+  .inner-chip input{appearance:none;flex:0 0 13px;width:13px;height:13px;margin:0;border-radius:2px;border:1px solid #222;background:#fff;position:relative}
+  .inner-chip input:checked{background:#171717}
+  .inner-chip input:checked:after{content:"";position:absolute;left:3px;top:1px;width:4px;height:7px;border:solid #fff;border-width:0 1.5px 1.5px 0;transform:rotate(45deg)}
+  .inner-chip input:disabled{border-color:#d2d2d2}
+  .inner-chip input:disabled:checked{background:#c9c9c9}
+  .inner-chip.is-off{cursor:default}
+  .inner-chip.is-off>span{color:#b4b4b4}
   .size-grid{display:none}
   .size-card{background:#fafafa;border:1px solid #ededed;border-radius:2px;padding:9px 11px}
   .size-label{font-size:11px;color:#888;margin-bottom:3px}
@@ -169,7 +207,14 @@
     .panel{width:500px;min-height:704px;padding:34px 38px 25px;border-radius:18px}
     .top-grid,.middle-grid,.adjust-grid{grid-template-columns:188px 188px;column-gap:48px}
     .field-title{font-size:18px;line-height:24px;margin-bottom:11px}
-    select{width:188px;height:42px;font-size:16px;padding-left:14px;padding-right:42px;background-position:right 15px center;background-size:11px 8px}
+    select,.msel-input{width:188px;height:42px;font-size:16px;padding-left:14px;padding-right:42px;background-position:right 15px center;background-size:11px 8px}
+    .msel{width:188px}
+    .msel-head{height:42px;padding:0 14px;gap:10px}
+    .msel-lens{width:16px;height:16px}
+    .msel-head input{font-size:16px}
+    .msel-scroll{max-height:200px}
+    .msel-opt{height:40px;line-height:40px;font-size:16px;padding:0 14px}
+    .msel-opt+.msel-opt:before{left:14px;right:14px}
     .middle-grid{margin-top:38px}
     .upload{width:188px;height:118px;grid-template-rows:31px 1fr 39px}
     .up-plus{top:16px;width:26px;height:26px;font-size:20px;line-height:1;padding-bottom:1px}
@@ -185,6 +230,11 @@
     .range-hint{font-size:11px;line-height:1.5;margin-top:10px;white-space:normal;width:205px}
     .adjust-grid{margin-top:29px}
     .adjust-grid .field-title{margin-bottom:18px}
+    .inner-row{margin-top:29px}
+    .inner-chip{height:42px;padding:0 14px}
+    .inner-chip>span{font-size:13px}
+    .inner-chip input{flex:0 0 15px;width:15px;height:15px}
+    .inner-chip input:checked:after{left:4px;top:1px;width:4px;height:8px}
     .actions{margin-top:auto}
     .btn{width:424px;height:57px;font-size:18px}
     .btn+.btn{margin-top:14px}
@@ -206,6 +256,7 @@
     .panel{width:100%;min-width:0;height:auto}
     .top-grid,.middle-grid,.adjust-grid{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:24px}
     select,input[type=range]{width:100%}
+    .msel{width:100%}
     .upload{width:100%}
     .range-hint{max-width:100%}
     .process-options{flex-wrap:nowrap;gap:3px}
@@ -308,7 +359,17 @@
     <div class="top-grid" data-page-node-id="So4Dtxl1a4hWa5d4IMA85c">
       <div data-page-node-id="3gNYqaMTFljlZvRaIvetAN">
         <div class="field-title" id="labelModel">产品型号</div>
-        <select id="model" data-page-node-id="hMpMcuCAHjI68KZRfubiqG"></select>
+        <div class="msel" id="modelBox">
+          <select id="model" data-page-node-id="hMpMcuCAHjI68KZRfubiqG" tabindex="-1" aria-hidden="true"></select>
+          <input class="msel-input" id="modelSearch" type="text" role="combobox" aria-expanded="false" aria-controls="modelList" aria-autocomplete="list" aria-labelledby="labelModel" autocomplete="off" autocapitalize="off" spellcheck="false">
+          <div class="msel-list" id="modelList" hidden>
+            <div class="msel-head">
+              <svg class="msel-lens" viewBox="0 0 16 16" aria-hidden="true"><circle cx="6.9" cy="6.9" r="5.1" fill="none" stroke="#111" stroke-width="1.5"/><path d="M10.7 10.7 14.6 14.6" fill="none" stroke="#111" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <input id="modelSearchIn" type="text" autocomplete="off" autocapitalize="off" spellcheck="false">
+            </div>
+            <div class="msel-scroll" id="modelScroll" role="listbox" aria-labelledby="labelModel"></div>
+          </div>
+        </div>
       </div>
       <div data-page-node-id="jN1HEVxsUVuiorhIy04EUv">
         <div class="field-title" id="labelColor">颜色选择</div>
@@ -347,6 +408,10 @@
         <div class="field-title" id="labelRotation">360°旋转调节</div>
         <input type="range" id="rot" class="dark" min="-180" max="180" step="5" value="0" data-page-node-id="sNyPbC8C6NAX1FNshuNZpI">
       </div>
+    </div>
+
+    <div class="inner-row">
+      <label class="inner-chip" id="innerChip" for="innerColor"><span id="labelInnerColor">去除LOGO内部颜色</span><input type="checkbox" id="innerColor" checked></label>
     </div>
 
     <div class="actions" data-page-node-id="KF8E2tUeEqQOnfv9UX5E65">
@@ -399,9 +464,9 @@
 
 <script>
 const I18N = {
-  zh:{name:'中文',htmlLang:'zh-CN',title:'MARK RYDEN · LOGO 定制预览',stageAria:'背包 LOGO 预览画布',settingsAria:'LOGO 定制设置',warningAria:'查看 LOGO 尺寸提醒',warning:'LOGO长宽不要超过12×12cm，超过后可能会导致无法定制！',stageTip:'拉动 LOGO 画布四角可缩放大小',model:'产品型号',color:'颜色选择',black:'商务黑',upload:'上传LOGO',uploadHint:'上传透明 PNG 最佳，直接可用；<br>带有背景颜色的 JPG 将自动去除背景',addMore:'继续添加 LOGO',slotsFull:'已达 3 个上限，再添加会替换最早的 LOGO',process:'LOGO处理',removeBg:'去除背景',invert:'颜色反向',tolerance:'LOGO边缘擦除',toleranceHint:'拖动滑块，边缘清除越彻底',opacity:'透明度调节',rotation:'360°旋转调节',reset:'初始化（清除已上传LOGO）',export:'导出JPG图片',exportOk:'图片已导出，请查看下载文件',exportFail:'导出失败，请重试',exportDone:{title:'导出成功',lead:'提交以下文件给销售客服完成定制服务',l1:'① 成功导出的JPG效果图;',l2:'② <em>PDF</em> 或者 <em>AI</em> 格式的LOGO文件。',ok:'确定'},imageFail:'产品图加载失败，请检查网络后刷新重试',note:'注：遇到问题请联系与您对接的销售或者客服人员',sizeTitle:'LOGO 参考尺寸',brandLogo:'显示品牌LOGO',brandLogoHide:'隐藏品牌LOGO',fit:'适合大小',guide:'查看教程',zoneWarn:'LOGO 没有完整落在可定制范围（红色虚线框）内，工厂可能无法定制！请把 LOGO 完整移进框内。',guideUI:{step:'步骤',back:'上一步',next:'下一步',done:'我知道了',skip:'跳过'}},
-  en:{name:'English',htmlLang:'en',title:'MARK RYDEN · Custom Logo Preview',stageAria:'Backpack logo preview canvas',settingsAria:'Logo customization settings',warningAria:'View logo size notice',warning:'The logo must not exceed 12 × 12 cm in width or height. Larger logos may not be customizable.',stageTip:'Drag the corner handles to resize the logo',model:'Product Model',color:'Color',black:'Business Black',upload:'Upload Logo',uploadHint:'Transparent PNG is recommended and ready to use;<br>backgrounds in JPG files will be removed automatically',addMore:'Add another logo',slotsFull:'Limit of 3 reached — adding more replaces the earliest logo',process:'Logo Processing',removeBg:'Remove BG',invert:'Invert Color',tolerance:'Logo Edge Cleanup',toleranceHint:'Drag the slider to remove more of the background edge',opacity:'Opacity',rotation:'360° Rotation',reset:'Reset (remove uploaded logo)',export:'Export JPG',exportOk:'Image exported, please check your downloads',exportFail:'Export failed, please try again',exportDone:{title:'Export Successful',lead:'Submit the files below to your sales representative to complete the customization',l1:'① The exported JPG preview;',l2:'② The LOGO file in <em>PDF</em> or <em>AI</em> format.',ok:'OK'},imageFail:'The product image failed to load. Please check your connection and refresh.',note:'Note: If you encounter any issues, please contact your sales representative or customer service.',sizeTitle:'Reference logo size',brandLogo:'Show brand logo',brandLogoHide:'Hide brand logo',fit:'Fit to Size',guide:'View Guide',zoneWarn:'The logo does not fit entirely inside the customizable area (red dashed frame) and may not be producible. Please move the whole logo inside the frame.',guideUI:{step:'Step',back:'Back',next:'Next',done:'Got it',skip:'Skip'}},
-  ru:{name:'Русский',htmlLang:'ru',title:'MARK RYDEN · Предпросмотр логотипа',stageAria:'Область предпросмотра логотипа на рюкзаке',settingsAria:'Настройки логотипа',warningAria:'Показать ограничение размера логотипа',warning:'Ширина и высота логотипа не должны превышать 12 × 12 см. Превышение размера может сделать нанесение невозможным.',stageTip:'Потяните за углы рамки, чтобы изменить размер логотипа',model:'Модель товара',color:'Цвет',black:'Деловой чёрный',upload:'Загрузить логотип',uploadHint:'Рекомендуется прозрачный PNG;<br>фон изображения JPG удаляется автоматически',addMore:'Добавить ещё логотип',slotsFull:'Достигнут лимит 3 — новое заменит самое раннее',process:'Обработка логотипа',removeBg:'Удалить фон',invert:'Инверсия',tolerance:'Очистка краёв логотипа',toleranceHint:'Перемещайте ползунок для более тщательной очистки краёв',opacity:'Прозрачность',rotation:'Поворот 360°',reset:'Сбросить (удалить логотип)',export:'Экспорт JPG',exportOk:'Изображение экспортировано, проверьте загрузки',exportFail:'Не удалось экспортировать, попробуйте ещё раз',exportDone:{title:'Экспорт выполнен',lead:'Отправьте указанные ниже файлы вашему менеджеру для завершения нанесения',l1:'① Экспортированное изображение JPG;',l2:'② Файл логотипа в формате <em>PDF</em> или <em>AI</em>.',ok:'ОК'},imageFail:'Не удалось загрузить изображение товара. Проверьте соединение и обновите страницу.',note:'Примечание: при возникновении вопросов обратитесь к вашему менеджеру или в службу поддержки.',sizeTitle:'Ориентировочный размер логотипа',brandLogo:'Показать логотип',brandLogoHide:'Скрыть логотип',fit:'По размеру',guide:'Инструкция',zoneWarn:'Логотип не помещается целиком в области нанесения (красная пунктирная рамка) — нанесение может быть невозможно. Переместите логотип целиком внутрь рамки.',guideUI:{step:'Шаг',back:'Назад',next:'Далее',done:'Понятно',skip:'Пропустить'}}
+  zh:{name:'中文',htmlLang:'zh-CN',title:'MARK RYDEN · LOGO 定制预览',stageAria:'背包 LOGO 预览画布',settingsAria:'LOGO 定制设置',warningAria:'查看 LOGO 尺寸提醒',warning:'LOGO长宽不要超过12×12cm，超过后可能会导致无法定制！',stageTip:'拉动 LOGO 画布四角可缩放大小',model:'产品型号',color:'颜色选择',modelSearch:'输入型号搜索',modelNoMatch:'没有匹配的型号',black:'商务黑',upload:'上传LOGO',uploadHint:'上传透明 PNG 最佳，直接可用；<br>带有背景颜色的 JPG 将自动去除背景',addMore:'继续添加 LOGO',slotsFull:'已达 3 个上限，再添加会替换最早的 LOGO',process:'LOGO处理',removeBg:'去除背景',invert:'颜色反向',tolerance:'LOGO边缘擦除',toleranceHint:'拖动滑块，边缘清除越彻底',opacity:'透明度调节',innerColor:'去除LOGO内部颜色',rotation:'360°旋转调节',reset:'初始化（清除已上传LOGO）',export:'导出JPG图片',exportOk:'图片已导出，请查看下载文件',exportFail:'导出失败，请重试',exportDone:{title:'导出成功',lead:'提交以下文件给销售客服完成定制服务',l1:'① 成功导出的JPG效果图;',l2:'② <em>PDF</em> 或者 <em>AI</em> 格式的LOGO文件。',ok:'确定'},imageFail:'产品图加载失败，请检查网络后刷新重试',note:'注：遇到问题请联系与您对接的销售或者客服人员',sizeTitle:'LOGO 参考尺寸',brandLogo:'显示品牌LOGO',brandLogoHide:'隐藏品牌LOGO',fit:'适合大小',guide:'查看教程',zoneWarn:'LOGO 没有完整落在可定制范围（红色虚线框）内，工厂可能无法定制！请把 LOGO 完整移进框内。',guideUI:{step:'步骤',back:'上一步',next:'下一步',done:'我知道了',skip:'跳过'}},
+  en:{name:'English',htmlLang:'en',title:'MARK RYDEN · Custom Logo Preview',stageAria:'Backpack logo preview canvas',settingsAria:'Logo customization settings',warningAria:'View logo size notice',warning:'The logo must not exceed 12 × 12 cm in width or height. Larger logos may not be customizable.',stageTip:'Drag the corner handles to resize the logo',model:'Product Model',color:'Color',modelSearch:'Search model',modelNoMatch:'No matching model',black:'Business Black',upload:'Upload Logo',uploadHint:'Transparent PNG is recommended and ready to use;<br>backgrounds in JPG files will be removed automatically',addMore:'Add another logo',slotsFull:'Limit of 3 reached — adding more replaces the earliest logo',process:'Logo Processing',removeBg:'Remove BG',invert:'Invert Color',tolerance:'Logo Edge Cleanup',toleranceHint:'Drag the slider to remove more of the background edge',opacity:'Opacity',innerColor:'Remove colour inside logo',rotation:'360° Rotation',reset:'Reset (remove uploaded logo)',export:'Export JPG',exportOk:'Image exported, please check your downloads',exportFail:'Export failed, please try again',exportDone:{title:'Export Successful',lead:'Submit the files below to your sales representative to complete the customization',l1:'① The exported JPG preview;',l2:'② The LOGO file in <em>PDF</em> or <em>AI</em> format.',ok:'OK'},imageFail:'The product image failed to load. Please check your connection and refresh.',note:'Note: If you encounter any issues, please contact your sales representative or customer service.',sizeTitle:'Reference logo size',brandLogo:'Show brand logo',brandLogoHide:'Hide brand logo',fit:'Fit to Size',guide:'View Guide',zoneWarn:'The logo does not fit entirely inside the customizable area (red dashed frame) and may not be producible. Please move the whole logo inside the frame.',guideUI:{step:'Step',back:'Back',next:'Next',done:'Got it',skip:'Skip'}},
+  ru:{name:'Русский',htmlLang:'ru',title:'MARK RYDEN · Предпросмотр логотипа',stageAria:'Область предпросмотра логотипа на рюкзаке',settingsAria:'Настройки логотипа',warningAria:'Показать ограничение размера логотипа',warning:'Ширина и высота логотипа не должны превышать 12 × 12 см. Превышение размера может сделать нанесение невозможным.',stageTip:'Потяните за углы рамки, чтобы изменить размер логотипа',model:'Модель товара',color:'Цвет',modelSearch:'Поиск модели',modelNoMatch:'Модель не найдена',black:'Деловой чёрный',upload:'Загрузить логотип',uploadHint:'Рекомендуется прозрачный PNG;<br>фон изображения JPG удаляется автоматически',addMore:'Добавить ещё логотип',slotsFull:'Достигнут лимит 3 — новое заменит самое раннее',process:'Обработка логотипа',removeBg:'Удалить фон',invert:'Инверсия',tolerance:'Очистка краёв логотипа',toleranceHint:'Перемещайте ползунок для более тщательной очистки краёв',opacity:'Прозрачность',innerColor:'Удалить цвет внутри логотипа',rotation:'Поворот 360°',reset:'Сбросить (удалить логотип)',export:'Экспорт JPG',exportOk:'Изображение экспортировано, проверьте загрузки',exportFail:'Не удалось экспортировать, попробуйте ещё раз',exportDone:{title:'Экспорт выполнен',lead:'Отправьте указанные ниже файлы вашему менеджеру для завершения нанесения',l1:'① Экспортированное изображение JPG;',l2:'② Файл логотипа в формате <em>PDF</em> или <em>AI</em>.',ok:'ОК'},imageFail:'Не удалось загрузить изображение товара. Проверьте соединение и обновите страницу.',note:'Примечание: при возникновении вопросов обратитесь к вашему менеджеру или в службу поддержки.',sizeTitle:'Ориентировочный размер логотипа',brandLogo:'Показать логотип',brandLogoHide:'Скрыть логотип',fit:'По размеру',guide:'Инструкция',zoneWarn:'Логотип не помещается целиком в области нанесения (красная пунктирная рамка) — нанесение может быть невозможно. Переместите логотип целиком внутрь рамки.',guideUI:{step:'Шаг',back:'Назад',next:'Далее',done:'Понятно',skip:'Пропустить'}}
 };
 let currentLang='zh';
 /* 语言自动判定：只有中国大陆显示中文，其他地区一律英文 */
@@ -434,10 +499,13 @@ function setLanguage(code,remember){
   /* 警告文案有两种：超过 12cm、以及超出安全区。哪种成立显示哪种，由 syncWarningText 决定 */
   syncWarningText();
   document.getElementById('labelModel').textContent=t.model;document.getElementById('labelColor').textContent=t.color;
+  var _msEl=document.getElementById('modelSearch');if(_msEl)_msEl.placeholder=t.modelSearch||'';
   renderColorSelect();document.getElementById('labelUpload').textContent=t.upload;
   document.getElementById('labelProcess').textContent=t.process;document.getElementById('labelRemoveBg').textContent=t.removeBg;
   document.getElementById('labelInvert').textContent=t.invert;document.getElementById('labelTolerance').textContent=t.tolerance;
   document.getElementById('toleranceHint').textContent=t.toleranceHint;document.getElementById('labelOpacity').textContent=t.opacity;
+  document.getElementById('labelInnerColor').textContent=t.innerColor;
+  var _msIn=document.getElementById('modelSearchIn');if(_msIn)_msIn.setAttribute('aria-label',t.modelSearch||'');
   document.getElementById('labelRotation').textContent=t.rotation;document.getElementById('reset').textContent=t.reset;
   document.getElementById('export').textContent=t.export;document.getElementById('supportNote').textContent=t.note;
   document.getElementById('labelSize').textContent=t.sizeTitle;
@@ -601,6 +669,7 @@ function applyRemoteModels(j){
     if(!MODELS[want])want=keys[0];
     modelSelect.value=want;
     MODEL=MODELS[want];
+    msSyncFromSelect();
     renderColorSelect();
     loadBag();applyView();updateSizeReadout();syncBrandLogo();
     return true;
@@ -621,6 +690,8 @@ function showNoModels(){
      都可能被窗口 resize、切语言之类的事件再叫一次，直接置 null 会散点报错。 */
   MODEL={id:'',name:'',canvasMm:1,pxPerMm:1,colors:[]};
   try{modelSelect.innerHTML='';modelSelect.disabled=true;}catch(e){}
+  if(modelSearch)modelSearch.disabled=true;
+  msCloseList();
   try{colorSelect.innerHTML='';colorSelect.disabled=true;}catch(e){}
   const el=document.getElementById('mrNoModels');
   if(el)el.hidden=false;
@@ -632,6 +703,8 @@ function hideNoModels(){
   if(!noModels)return;
   noModels=false;
   try{modelSelect.disabled=false;colorSelect.disabled=false;}catch(e){}
+  if(modelSearch)modelSearch.disabled=false;
+  msSyncFromSelect();
 }
 /* ==== 本机草稿（只在本地开发时用） ====
    ⛔ 为什么要有：本地起静态服务时没有后端能写磁盘，后台唯一的写回通道是 GitHub，
@@ -1038,7 +1111,30 @@ function modelSrc(c,forcePng){
 }
 /* 型号下拉按 MODELS 动态生成：加型号只改 MODELS，不必再动 HTML */
 const modelSelect=document.getElementById('model');
+/* 演示用型号（只为「验得出滚动」而存在）：
+   线上只有 5 个型号，永远看不到第 6 项起的滚动条，所以本地补 5 个假型号凑到 10 个。
+   ⛔ 只写进内存（MODELS 对象）—— 不碰 models.json、不写本机草稿、线上一个字节都不会有；
+      几何与配色直接复用第 1 个真型号，点开照样有图、不会裂。名字带 DEMO，一眼可辨。 */
+/* ⛔ 只在 URL 显式带 ?demo=1 时才注入 —— 不做成「本地就自动注入」：
+   verify-localdraft / verify-test-pages 这些回归脚本是拿 `#model option` 的**集合**
+   跟配置比对的，凭空多出 5 项会让它们整片假红。要看滚动效果就显式加参数。 */
+function msDemoWanted(){
+  try{return /(^|[?&])demo=1(&|$)/.test(location.search);}catch(e){return false;}
+}
+function msInjectDemoModels(){
+  if(!msDemoWanted())return false;
+  const keys=Object.keys(MODELS);
+  if(keys.length>=6||!keys.length)return false;
+  const base=MODELS[keys[0]];
+  for(let i=1;i<=5;i++){
+    const id='MR_DEMO_0'+i;
+    MODELS[id]={id:id,demo:true,pxPerMm:base.pxPerMm,canvasMm:base.canvasMm,
+      logoMax:base.logoMax,colors:base.colors.slice()};
+  }
+  return true;
+}
 function renderModelSelect(){
+  msInjectDemoModels();
   modelSelect.innerHTML='';
   Object.keys(MODELS).forEach(k=>{
     const o=document.createElement('option');
@@ -1046,6 +1142,192 @@ function renderModelSelect(){
     modelSelect.appendChild(o);
   });
   modelSelect.value=MODEL.id;
+  msSyncFromSelect();
+}
+/* ==== 型号下拉加搜索（2026-09-21） ====
+   用户报：型号多了以后，下拉里很难快速找到要的型号。
+   ⛔ 原生 select 不许删、不许改语义 —— 它仍是「真值来源」，且 #model 的 change 监听、
+      tour 聚光、以及所有验证脚本（page.select('#model') / '#model option'）都挂在它上面。
+   做法：select 留在 DOM 里（透明覆盖、pointer-events:none），上面叠一个可输入的搜索框 +
+      自绘列表面板；选中项写回 select 并派发原生 change，其余链路完全不用动。 */
+const modelBox=document.getElementById('modelBox');
+const modelSearch=document.getElementById('modelSearch');
+const modelList=document.getElementById('modelList');
+const modelScroll=document.getElementById('modelScroll');
+const modelSearchIn=document.getElementById('modelSearchIn');
+let msOpen=false,msHi=-1,msItems=[],msQuery='';
+/* 灰底高亮（.is-hi）只在用户**按过方向键**之后才出现。
+   2026-09-21 用户要求：展开那一刻「当前型号」只加粗、不要灰底。
+   ⛔ 直接删掉 .is-hi 会连键盘导航的可见反馈一起删掉 —— 所以留一个「方向键动过没」的开关。 */
+let msKb=false;
+function msAll(){return Array.prototype.map.call(modelSelect.options,o=>o.value);}
+/* 大小写不敏感的子串匹配：输 '21' 能命中 MR_21，输 'mr' 也能 */
+function msHit(k){return k.toLowerCase().indexOf(msQuery.trim().toLowerCase())>=0;}
+/* 查询词只有一份（msQuery），两个输入框按各自角色显示：
+   · 顶部框：有查询词就显示查询词，没有就回到当前型号
+     （设计稿：展开那一刻上面那条仍是型号名，面板里的搜索框才是空的）
+   · 面板搜索框：只显示查询词本身 */
+function msSetQuery(v,src){
+  msQuery=v||'';
+  if(modelSearchIn&&src!==modelSearchIn)modelSearchIn.value=msQuery;
+  if(modelSearch&&src!==modelSearch)modelSearch.value=msQuery||modelSelect.value;
+}
+function msRender(){
+  if(!modelScroll)return;
+  const q=msQuery.trim().toLowerCase(),cur=modelSelect.value;
+  msItems=q?msAll().filter(msHit):msAll();
+  if(msHi>=msItems.length)msHi=msItems.length-1;
+  modelScroll.innerHTML='';
+  if(!msItems.length){
+    const d=document.createElement('div');
+    d.className='msel-none';
+    d.textContent=(I18N[currentLang]||I18N.zh).modelNoMatch||'';
+    modelScroll.appendChild(d);
+    return;
+  }
+  msItems.forEach((k,i)=>{
+    const d=document.createElement('div');
+    d.className='msel-opt'+(k===cur?' is-cur':'')+((msKb&&i===msHi)?' is-hi':'');
+    d.setAttribute('role','option');
+    d.setAttribute('aria-selected',k===cur?'true':'false');
+    d.dataset.v=k;
+    /* 命中的那一段加粗。⛔ 用 DOM 拼，不用 innerHTML（型号名来自后台配置，不拼 HTML）。 */
+    const at=q?k.toLowerCase().indexOf(q):-1;
+    if(at>=0){
+      d.appendChild(document.createTextNode(k.slice(0,at)));
+      const b=document.createElement('b');b.textContent=k.slice(at,at+q.length);d.appendChild(b);
+      d.appendChild(document.createTextNode(k.slice(at+q.length)));
+    }else{d.textContent=k;}
+    modelScroll.appendChild(d);
+  });
+}
+function msScrollHi(){
+  if(!modelScroll)return;
+  /* 键盘高亮优先；还没按过方向键时（展开那一刻）就滚到「当前型号」——
+     长列表里用户得先看见自己当前选的是哪个，但那时它**不带灰底**。 */
+  const el=modelScroll.querySelector('.is-hi')||modelScroll.querySelector('.is-cur');
+  if(el&&el.scrollIntoView)el.scrollIntoView({block:'nearest'});
+  else modelScroll.scrollTop=0;        /* 两者都没有（过滤后当前型号不在结果里）→ 回到顶部 */
+}
+function msOpenPanel(){
+  if(!modelBox||!modelSearch||!modelList||modelSelect.disabled)return false;
+  msOpen=true;                          /* 展开时**不过滤**，先把全部型号摆出来 */
+  msSetQuery('',null);                 /* 面板里的搜索框从空开始；顶部框回到型号名 */
+  msHi=Math.max(0,msAll().indexOf(modelSelect.value));
+  msKb=false;                          /* 刚展开：不带灰底，当前型号只加粗 */
+  modelBox.classList.add('is-open');
+  modelSearch.setAttribute('aria-expanded','true');
+  modelList.hidden=false;
+  msRender();
+  return true;
+}
+function msOpenList(from){
+  if(!msOpenPanel())return;
+  msScrollHi();
+  const el=from||modelSearch;
+  /* 顶部框聚焦即全选：想搜就直接打字，不必先手动删掉型号名。
+     包一层 setTimeout —— 鼠标点击的 mouseup 会把刚建立的选区清掉。
+     面板里的搜索框本来就是空的，focus 即可。 */
+  setTimeout(()=>{try{if(el===modelSearch)el.select();else el.focus();}catch(e){}},0);
+}
+function msCloseList(restore){
+  if(!modelBox||!modelSearch||!modelList)return;
+  if(!msOpen)return;
+  msOpen=false;msHi=-1;msQuery='';msKb=false;
+  modelBox.classList.remove('is-open');
+  modelSearch.setAttribute('aria-expanded','false');
+  /* ⛔ 面板一关，里面的搜索框就不可见了 —— 焦点要是还停在它上面，就成了「焦点留在 hidden
+     元素上」：Tab 顺序乱、它自己也不可点。这里只 blur，**不能** focus 顶部框，
+     因为 focus 会立刻触发 msOpenList 把面板又打开。 */
+  if(modelSearchIn&&document.activeElement===modelSearchIn)modelSearchIn.blur();
+  modelList.hidden=true;
+  if(modelSearchIn)modelSearchIn.value='';
+  if(restore!==false)modelSearch.value=modelSelect.value;   /* 丢掉过滤词，恢复成当前型号 */
+}
+/* 回车选谁？—— 由于展开时不再有灰底高亮，这里不能照搬 msHi（那会选中一个**看不见**的项）。
+   没按过方向键时：有过滤词 → 第一条命中项（用户输入就是奔着它去的）；
+                   没过滤词 → 当前型号（= 什么都不切，跟以前点开就回车的手感一致）。 */
+function msEnterPick(){
+  if(msKb&&msHi>=0&&msItems[msHi])return msItems[msHi];
+  return msQuery.trim()?(msItems[0]||modelSelect.value):modelSelect.value;
+}
+function msPick(v){
+  if(!modelBox||!modelSearch||!modelList)return;
+  const ok=!!MODELS[v];
+  msCloseList();
+  if(!ok)return;
+  if(modelSelect.value!==v){
+    modelSelect.value=v;
+    modelSelect.dispatchEvent(new Event('change',{bubbles:true}));   /* 复用既有 change 链路 */
+  }
+  modelSearch.value=modelSelect.value;
+}
+/* 型号被外部改动（page.select / 后台草稿刷新 / 切语言重渲染）后把输入框拉回与真值一致 */
+function msSyncFromSelect(){if(modelSearch&&!msOpen)modelSearch.value=modelSelect.value;}
+/* ⛔ 用属性劫持，而不是在每个 modelSelect.value= 后面补一次调用 ——
+   2026-09-21 首轮就吃了这个亏：renderModelSelect() 先跑（那会儿 MODEL 还是内置兜底的
+   MR_9100、不在配置里），select.value 被置空，随后 applyRemoteModels() 修正了 select
+   却没人同步输入框，结果是「输入框空白、点开却有全部型号」。
+   劫持后任何赋值路径都自动同步，写回点再增多也不会漏。 */
+try{
+  const msDesc=Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value');
+  if(msDesc&&msDesc.set){
+    Object.defineProperty(modelSelect,'value',{
+      configurable:true,
+      get(){return msDesc.get.call(this);},
+      set(v){msDesc.set.call(this,v);msSyncFromSelect();}
+    });
+  }
+}catch(e){}
+
+/* ==== 两个输入框，一套行为（2026-09-21 第二版） ====
+   顶部框：折叠态显示当前型号，点开即全选，直接打字就能搜（老路径，验证脚本都走它）。
+   面板搜索框：展开后出现在列表第一行（设计稿），滚动时始终钉在最上面。
+   ⛔ 状态只有一份（msQuery），用哪个输入框打字都行 —— 不要各写一套过滤逻辑。 */
+function msBindInput(el){
+  if(!el)return;
+  el.addEventListener('focus',()=>{if(!msOpen)msOpenList(el);});
+  /* ⛔ 只挂 focus 是不够的：按 Esc 收起后输入框**仍然是聚焦状态**，
+     用户再点一下输入框不会触发 focus 事件 —— 面板就再也打不开了（实测过）。
+     补一个 click；已经展开时不动它（用户可能只是想移动光标或接着改过滤词）。 */
+  el.addEventListener('click',()=>{if(!msOpen)msOpenList(el);});
+  el.addEventListener('input',()=>{
+    msSetQuery(el.value,el);
+    if(!msOpen)msOpenPanel();
+    /* 换了查询词就是**一新的结果集**：旧序号上的灰底高亮不再有意义（还会滚偏列表，
+       把第一条裁掉半截）。清掉 → 列表干净、停在顶部；回车选谁由 msEnterPick 决定。 */
+    msKb=false;msHi=0;
+    msRender();msScrollHi();
+  });
+  el.addEventListener('keydown',e=>{
+    if(e.key==='ArrowDown'||e.key==='ArrowUp'){
+      e.preventDefault();
+      if(!msOpen){msOpenList(el);return;}
+      if(!msItems.length)return;
+      msKb=true;                       /* 按过方向键才出现灰底高亮 */
+      msHi=(msHi+(e.key==='ArrowDown'?1:-1)+msItems.length)%msItems.length;
+      msRender();msScrollHi();
+    }else if(e.key==='Enter'){
+      if(msOpen&&msItems.length){e.preventDefault();msPick(msEnterPick());}
+    }else if(e.key==='Escape'){
+      /* ⛔ 必须挡住冒泡 —— 页面其他地方也用 Esc：关语言菜单、关教程、关导出弹窗 */
+      if(msOpen){e.preventDefault();e.stopPropagation();msCloseList();}
+    }else if(e.key==='Tab'){
+      msCloseList();
+    }
+  });
+}
+if(modelSearch&&modelList&&modelBox){
+  msBindInput(modelSearch);
+  msBindInput(modelSearchIn);
+  /* mousedown + preventDefault：让 input 不失焦，面板才不会在点击落地前先被关掉 */
+  modelList.addEventListener('mousedown',e=>{
+    const it=e.target&&e.target.closest?e.target.closest('.msel-opt'):null;
+    if(!it)return;
+    e.preventDefault();
+    msPick(it.dataset.v);
+  });
+  document.addEventListener('click',e=>{if(msOpen&&!modelBox.contains(e.target))msCloseList();});
 }
 let MODEL = MODELS.MR_9100 || MODELS[Object.keys(MODELS)[0]];
 let viewZoom = DEFAULT_VIEW_ZOOM;
@@ -1240,7 +1522,7 @@ function detectEdgeBackground(px,w,h){
   samples.forEach(c=>{if((c[0]>>4)===br&&(c[1]>>4)===bg&&(c[2]>>4)===bb){r+=c[0];g+=c[1];b+=c[2];n++}});
   return [r/n,g/n,b/n];
 }
-function processLogo(imgEl,tolerance,removeBackground,invert){
+function processLogo(imgEl,tolerance,removeBackground,invert,keepInner){
   const oc=document.createElement('canvas');
   oc.width=imgEl.naturalWidth||imgEl.width;oc.height=imgEl.naturalHeight||imgEl.height;
   const ctx=oc.getContext('2d',{willReadFrequently:true});ctx.drawImage(imgEl,0,0,oc.width,oc.height);
@@ -1250,8 +1532,40 @@ function processLogo(imgEl,tolerance,removeBackground,invert){
     if(bg){
       const hard=4+Number(tolerance)*1.45;
       const soft=hard+18+Number(tolerance)*0.35;
+      /* 「保留 LOGO 内部颜色」（开关未勾选）时，只清理**与图像边界连通**的背景：
+         从四条边做一次漫水填充，被字形包住的封闭区域（R 的孔、O 的内圈）原样留着。
+         ⛔ 连通阈值取 soft —— 用 hard 的话，软边那一圈会被判成「内部」留下来，形成灰边。
+         ⛔ alpha=0 的像素视为可通过 —— 否则透明 PNG 的背景整片断开，软边清理直接失效。 */
+      let outer=null;
+      if(keepInner){
+        outer=new Uint8Array(w*h);
+        let stack=new Uint32Array(Math.min(w*h,1<<16)),sp=0;
+        const nearBg=p=>{
+          const q=p*4;
+          if(px[q+3]===0)return true;
+          const dr=px[q]-bg[0],dg=px[q+1]-bg[1],db=px[q+2]-bg[2];
+          return (dr*dr+dg*dg+db*db)<soft*soft;
+        };
+        const push=p=>{
+          if(outer[p]||!nearBg(p))return;
+          outer[p]=1;
+          if(sp>=stack.length){const ns=new Uint32Array(stack.length*2);ns.set(stack);stack=ns;}
+          stack[sp++]=p;
+        };
+        for(let x=0;x<w;x++){push(x);push((h-1)*w+x);}
+        for(let y=0;y<h;y++){push(y*w);push(y*w+w-1);}
+        while(sp>0){
+          const p=stack[--sp],x=p%w;
+          if(x>0)push(p-1);
+          if(x<w-1)push(p+1);
+          if(p>=w)push(p-w);
+          if(p<w*(h-1))push(p+w);
+        }
+      }
       for(let i=0;i<px.length;i+=4){
         if(px[i+3]===0)continue;
+        /* 保留内部：没和边界连上的像素（封闭区域）一律不动 */
+        if(outer&&!outer[i>>2])continue;
         const dr=px[i]-bg[0],dg=px[i+1]-bg[1],db=px[i+2]-bg[2];
         const distance=Math.sqrt(dr*dr+dg*dg+db*db);
         if(distance<=hard){
@@ -1266,14 +1580,16 @@ function processLogo(imgEl,tolerance,removeBackground,invert){
   if(invert){for(let i=0;i<px.length;i+=4){if(px[i+3]){px[i]=255-px[i];px[i+1]=255-px[i+1];px[i+2]=255-px[i+2]}}}
   ctx.putImageData(data,0,0);return oc;
 }
-function processedFrom(original,tolVal,rmBg,inv){
+function processedFrom(original,tolVal,rmBg,inv,keepInner){
   if(!original)return null;
-  const processed=processLogo(original,tolVal,rmBg,inv);
+  const processed=processLogo(original,tolVal,rmBg,inv,keepInner);
   return trimToContent(processed,2)||processed;
 }
 function displayCanvasFor(o){
   const m=o&&o.__meta;
-  return m&&m.original?processedFrom(m.original,m.tol,m.rmwhite,m.invert):null;
+  /* ⛔ 判据写成 m.rmInner===false 而不是 !m.rmInner：
+     漏字段的老 LOGO（undefined）必须按「默认扣掉内部」走，不能反过来。 */
+  return m&&m.original?processedFrom(m.original,m.tol,m.rmwhite,m.invert,m.rmInner===false):null;
 }
 function displayCanvas(){return displayCanvasFor(curLogo());}
 /* 追加一张 LOGO；满 3 个后自动顶掉最早上传的那张 */
@@ -1292,7 +1608,7 @@ function addLogo(srcCanvas,keepWidthMm,opts){
       scale=(fit!=null)?fit:Math.min(z.wMm/img.width,z.hMm/img.height);
     }
     img.__meta={original:opts.original||null,demo:!!opts.demo,ver:0,
-                rmwhite:rmwhite.checked,invert:invert.checked,
+                rmwhite:rmwhite.checked,invert:invert.checked,rmInner:innerColor.checked,
                 tol:Number(tol.value),opa:Number(opa.value),rot:Number(rot.value)};
     img.set({left:cxMm,top:cyMm,originX:'center',originY:'center',scaleX:scale,scaleY:scale,lockUniScaling:true,lockScalingFlip:true,transparentCorners:false,cornerColor:'#fff',cornerStrokeColor:'#222',borderColor:'#222',cornerSize:9,padding:2,opacity:img.__meta.opa/100,angle:img.__meta.rot});
     img.setControlsVisibility({mt:false,mb:false,ml:false,mr:false});
@@ -1342,6 +1658,7 @@ function refreshUploadBox(){
 function syncSlidersFromLogo(o){
   const m=o&&o.__meta;if(!m)return;
   rmwhite.checked=!!m.rmwhite;invert.checked=!!m.invert;
+  innerColor.checked=m.rmInner!==false;syncInnerChip();
   tol.value=m.tol;opa.value=m.opa;rot.value=m.rot;
   [opa,rot,tol].forEach(setRangeFill);
 }
@@ -1364,6 +1681,14 @@ function reprocess(){
 const uploadBox=document.getElementById('uploadBox');
 const fileInput=document.getElementById('file');
 const tol=document.getElementById('tol'),rmwhite=document.getElementById('rmwhite'),invert=document.getElementById('invert');
+const innerColor=document.getElementById('innerColor');
+/* 「去除LOGO内部颜色」与「去除背景」联动：不去背景时内部本来就保留，开关置灰。 */
+function syncInnerChip(){
+  const chip=document.getElementById('innerChip');
+  const off=!(rmwhite&&rmwhite.checked);
+  if(innerColor)innerColor.disabled=off;
+  if(chip)chip.classList.toggle('is-off',off);
+}
 const opa=document.getElementById('opa'),rot=document.getElementById('rot');
 const sizeWarning=document.getElementById('sizeWarning');
 let warningTimer=null;
@@ -1427,9 +1752,9 @@ fileInput.addEventListener('change',e=>{
     const img=new Image();
     img.onload=()=>{
       /* 每张新 LOGO 都从干净参数开始（去背景开、擦边 0、透明 100、旋转 0） */
-      rmwhite.checked=true;invert.checked=false;opa.value=100;rot.value=0;tol.value=0;
+      rmwhite.checked=true;invert.checked=false;innerColor.checked=true;opa.value=100;rot.value=0;tol.value=0;syncInnerChip();
       [opa,rot,tol].forEach(setRangeFill);
-      const shown=processedFrom(img,0,true,false);
+      const shown=processedFrom(img,0,true,false,!innerColor.checked);
       if(!shown)return;
       const first=logoImgs.length===0;
       /* 缩略图与「继续添加 LOGO (n/3)」文案统一由 addLogo → refreshUploadBox 维护 */
@@ -1444,7 +1769,9 @@ fileInput.addEventListener('change',e=>{
 let tolTimer=null;
 /* 滑杆只作用于「当前选中的 LOGO」，并把参数记回它自己的 __meta */
 function activeMeta(){const o=curLogo();return o&&o.__meta?o.__meta:null;}
-rmwhite.addEventListener('change',()=>{const m=activeMeta();if(m)m.rmwhite=rmwhite.checked;reprocess();});
+rmwhite.addEventListener('change',()=>{const m=activeMeta();if(m)m.rmwhite=rmwhite.checked;syncInnerChip();reprocess();});
+/* 每张 LOGO 各记一份：勾着=内部同色一起扣（默认），取消=内部封闭区域保留 */
+innerColor.addEventListener('change',()=>{const m=activeMeta();if(m)m.rmInner=innerColor.checked;reprocess();});
 invert.addEventListener('change',()=>{const m=activeMeta();if(m)m.invert=invert.checked;reprocess();});
 tol.addEventListener('input',()=>{
   clearTimeout(tolTimer);
@@ -1504,7 +1831,7 @@ setRangeFill(zoomSlider);
 const TOUR_KEY='markryden-logo-guide';
 const DEMO_LOGO='demo_logo.png';
 const TOUR_STEPS=[
-  {sel:['#labelModel','#model'],pad:8,
+  {sel:['#labelModel','#modelBox'],pad:8,
    title:{zh:'产品型号',en:'Product Model',ru:'Модель товара'},
    body:{zh:'先选择要定制的产品型号，画布里的产品图会跟着一起切换。',en:'Choose the product model you want to customize — the product image on the canvas switches with it.',ru:'Сначала выберите модель товара — изображение на холсте изменится автоматически.'}},
   {sel:['#labelUpload','#uploadBox'],pad:8,peek:true,
@@ -1820,9 +2147,9 @@ function loadDemoLogo(){
     const img=new Image();
     img.onload=()=>{
       try{
-        rmwhite.checked=true;invert.checked=false;opa.value=100;rot.value=0;tol.value=0;
+        rmwhite.checked=true;invert.checked=false;innerColor.checked=true;opa.value=100;rot.value=0;tol.value=0;syncInnerChip();
         [opa,rot,tol].forEach(setRangeFill);
-        const shown=processedFrom(img,0,true,false);
+        const shown=processedFrom(img,0,true,false,!innerColor.checked);
         if(!shown){finish(false);return;}
         demoSource=img;
         /* 演示图单独标记，关闭教程时只删掉这一张，不动用户自己上传的 LOGO */
@@ -1882,7 +2209,7 @@ function resetAll(){
   logoImgs=[];demoLogo=null;demoSource=null;
   canvas.discardActiveObject();
   fileInput.value='';
-  rmwhite.checked=true;invert.checked=false;opa.value=100;rot.value=0;tol.value=0;
+  rmwhite.checked=true;invert.checked=false;innerColor.checked=true;opa.value=100;rot.value=0;tol.value=0;syncInnerChip();
   [opa,rot,tol].forEach(setRangeFill);
   setViewZoom(DEFAULT_VIEW_ZOOM);
   canvas.renderAll();updateSizeReadout();refreshUploadBox();
@@ -1898,6 +2225,7 @@ document.getElementById('brandToggle').addEventListener('click',()=>{
 document.getElementById('model').addEventListener('change',e=>{
   const m=MODELS[e.target.value];if(!m)return;
   MODEL=m;
+  msSyncFromSelect();
   renderColorSelect();
   /* 切换型号保留已上传的 LOGO：物理尺寸不变，重新落到新画布正中心 */
   const c=m.canvasMm/2;
