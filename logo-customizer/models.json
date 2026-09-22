@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-19T05:30:53.020Z",
+  "updatedAt": "2026-09-22T03:01:44.139Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -301,6 +301,23 @@
         "rot": -1,
         "color": "#828282"
       }
+    },
+    "MR_9366": {
+      "id": "MR_9366",
+      "pxPerMm": 1,
+      "canvasMm": 482,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "citygreen",
+          "label": "城际绿",
+          "image": "mr_9366_citygreen_trim.png",
+          "webp": "mr_9366_citygreen_trim.webp"
+        }
+      ]
     }
   }
 }
