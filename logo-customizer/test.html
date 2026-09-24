@@ -66,6 +66,57 @@
   .no-models[hidden]{display:none}
   .no-models span{display:block;font-weight:400;font-size:12px;color:#8b9098}
   .size-hud b{font-weight:400;color:#8a8a8a;font-size:11px}
+  /* ===== LOGO 改颜色浮层（2026-09-23 设计稿三态）=====
+     态A：选中 LOGO → 选框正下方一颗白色胶囊「修改颜色」
+     态B：点开 → 露出色相条（指针默认最左＝红色，拖动实时变色），按钮变「输入色值」
+     态C：点「输入色值」→ 换成 [格式下拉][色值][确定]
+     ⛔ 元素一律带 [hidden]{display:none} 兜底：只写 display:flex 会盖掉 UA 的 [hidden] 规则。 */
+  .tint-bar{position:absolute;z-index:9;left:0;top:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:12px;width:min(94%,540px)}
+  .tint-bar[hidden]{display:none}
+  .tint-hue{position:relative;width:100%;height:38px;border-radius:999px;cursor:pointer;touch-action:none;background:linear-gradient(to right,#f00 0%,#ff0 16.7%,#0f0 33.3%,#0ff 50%,#00f 66.7%,#f0f 83.3%,#f00 100%);box-shadow:0 2px 10px rgba(0,0,0,.10)}
+  .tint-hue[hidden]{display:none}
+  .tint-hue:focus-visible{outline:2px solid #111;outline-offset:5px}
+  .tint-hue-thumb{position:absolute;top:-13px;left:0;width:20px;height:calc(100% + 26px);border:3px solid #111;border-radius:4px;box-sizing:border-box;background:transparent;pointer-events:none}
+  .tint-actions{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+  .tint-pill{height:46px;padding:0 26px;border:0;border-radius:999px;background:#fff;color:#222;font-size:15px;font-family:inherit;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.10);white-space:nowrap}
+  .tint-pill[hidden]{display:none}
+  .tint-pill:hover{background:#fbfbfb}
+  .tint-pill-dark{background:#333;color:#fff;padding:0 30px}
+  .tint-pill-dark:hover{background:#232323}
+  .tint-entry{display:flex;align-items:center;gap:12px}
+  .tint-entry[hidden]{display:none}
+  .tint-format{position:relative;display:inline-flex;align-items:center;height:46px;border-radius:999px;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.10)}
+  .tint-format select{display:block;appearance:none;-webkit-appearance:none;width:168px;height:46px;padding:0 34px 0 20px;border:0;border-radius:999px;background-color:transparent;background-image:none;color:#222;font-size:14px;font-family:inherit;outline:none;cursor:pointer}
+  .tint-format:after{content:"";position:absolute;right:17px;width:8px;height:8px;border-right:1.6px solid #222;border-bottom:1.6px solid #222;transform:translateY(-3px) rotate(45deg);pointer-events:none}
+  .tint-value{width:176px;height:46px;padding:0 18px;border:0;border-radius:999px;background:#fff;color:#222;font-size:14px;font-family:inherit;outline:none;box-shadow:0 2px 10px rgba(0,0,0,.10)}
+  .tint-value[hidden]{display:none}
+  /* CMYK：固定 C M Y K 四个字母 + 各自填数字（用户 2026-09-23 定的形态，⛔ 不要退回「逗号分隔一串」） */
+  .tint-cmyk{display:inline-flex;align-items:center;gap:6px;height:46px;padding:0 15px;border-radius:999px;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.10)}
+  .tint-cmyk[hidden]{display:none}
+  .tint-cmyk label{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:700;color:#222;letter-spacing:0}
+  .tint-cmyk input{width:40px;height:28px;padding:0 2px;border:1px solid #e0e0e0;border-radius:6px;background:#fafafa;color:#222;font-family:inherit;font-size:13px;text-align:center;outline:none}
+  .tint-cmyk input:focus{border-color:#111;background:#fff}
+  .tint-cmyk.is-bad input{border-color:#d94a3d;background:#fff5f4}
+  .tint-hint{font-size:12px;line-height:1.5;color:#d94a3d;text-align:center;max-width:100%}
+  .tint-hint[hidden]{display:none}
+  .tint-value.is-bad{box-shadow:0 0 0 2px #d94a3d}
+  .tint-value:disabled{color:#b4b4b4;cursor:default}
+  @media (max-width:700px){
+    .tint-hue{height:32px}
+    .tint-hue-thumb{width:16px;top:-11px;height:calc(100% + 22px);border-width:2.5px}
+    .tint-actions{gap:9px}
+    .tint-pill{height:40px;padding:0 18px;font-size:13px}
+    .tint-pill-dark{padding:0 20px}
+    .tint-format,.tint-format select{height:40px}
+    .tint-format select{width:118px;padding:0 28px 0 14px;font-size:12px}
+    .tint-format:after{right:13px}
+    .tint-value{width:112px;height:40px;padding:0 12px;font-size:12px}
+    .tint-entry{flex-wrap:wrap;justify-content:center;gap:8px}
+    .tint-cmyk{height:40px;padding:0 11px;gap:4px}
+    .tint-cmyk label{font-size:12px;gap:3px}
+    .tint-cmyk input{width:26px;height:24px;font-size:12px}
+    .tint-hint{font-size:11px}
+  }
   .size-hud b.is-over{color:#c0392b;font-weight:900}
   .warning-trigger{width:32px;height:32px;padding:0;border:0;background:transparent;display:block;cursor:help}
   .warning-trigger img{display:block;width:32px;height:32px}
@@ -342,6 +393,34 @@
       <div class="size-hud" id="sizeHud"><span id="labelSize">LOGO 参考尺寸</span><span class="size-list" id="logoSizeList"><b id="logoSizeValue">—</b></span></div>
       <div class="stage-notice" id="stageNotice" hidden><span></span></div>
       <div class="no-models" id="mrNoModels" hidden>当前没有型号<span>后台已把型号全部删除，请先在后台新增型号</span></div>
+      <div class="tint-bar" id="tintBar" hidden>
+        <div class="tint-hue" id="tintHue" role="slider" tabindex="0" aria-label="色相" aria-valuemin="0" aria-valuemax="360" aria-valuenow="0" hidden>
+          <div class="tint-hue-thumb" id="tintThumb"></div>
+        </div>
+        <div class="tint-actions">
+          <button class="tint-pill" id="tintToggle" type="button" aria-expanded="false">修改颜色</button>
+          <div class="tint-entry" id="tintEntry" hidden>
+            <span class="tint-format">
+              <select id="tintFormat" aria-label="色值格式">
+                <option value="hex">HEX</option>
+                <option value="rgb">RGB</option>
+                <option value="cmyk" id="tintFmtCmyk">CMYK（近似）</option>
+                <option value="pantone" id="tintFmtPantone">PANTONE（近似）</option>
+              </select>
+            </span>
+            <input class="tint-value" id="tintValue" type="text" autocomplete="off" spellcheck="false" aria-label="色值">
+            <span class="tint-cmyk" id="tintCmykRow" hidden>
+              <label>C<input id="tintC" type="text" inputmode="numeric" maxlength="3" autocomplete="off" aria-label="C"></label>
+              <label>M<input id="tintM" type="text" inputmode="numeric" maxlength="3" autocomplete="off" aria-label="M"></label>
+              <label>Y<input id="tintY" type="text" inputmode="numeric" maxlength="3" autocomplete="off" aria-label="Y"></label>
+              <label>K<input id="tintK" type="text" inputmode="numeric" maxlength="3" autocomplete="off" aria-label="K"></label>
+            </span>
+            <button class="tint-pill tint-pill-dark" id="tintApply" type="button">确定</button>
+          </div>
+          <button class="tint-pill" id="tintReset" type="button" hidden>恢复初始颜色</button>
+        </div>
+        <div class="tint-hint" id="tintHint" hidden></div>
+      </div>
     </div>
     <div class="zoom-bar">
       <button class="zoom-fit" id="zoomFit" type="button">适合大小</button>
@@ -464,9 +543,9 @@
 
 <script>
 const I18N = {
-  zh:{name:'中文',htmlLang:'zh-CN',title:'MARK RYDEN · LOGO 定制预览',stageAria:'背包 LOGO 预览画布',settingsAria:'LOGO 定制设置',warningAria:'查看 LOGO 尺寸提醒',warning:'LOGO长宽不要超过12×12cm，超过后可能会导致无法定制！',stageTip:'拉动 LOGO 画布四角可缩放大小',model:'产品型号',color:'颜色选择',modelSearch:'输入型号搜索',modelNoMatch:'没有匹配的型号',black:'商务黑',upload:'上传LOGO',uploadHint:'上传透明 PNG 最佳，直接可用；<br>带有背景颜色的 JPG 将自动去除背景',addMore:'继续添加 LOGO',slotsFull:'已达 3 个上限，再添加会替换最早的 LOGO',process:'LOGO处理',removeBg:'去除背景',invert:'颜色反向',tolerance:'LOGO边缘擦除',toleranceHint:'拖动滑块，边缘清除越彻底',opacity:'透明度调节',innerColor:'去除LOGO内部颜色',rotation:'360°旋转调节',reset:'初始化（清除已上传LOGO）',export:'导出JPG图片',exportOk:'图片已导出，请查看下载文件',exportFail:'导出失败，请重试',exportDone:{title:'导出成功',lead:'提交以下文件给销售客服完成定制服务',l1:'① 成功导出的JPG效果图;',l2:'② <em>PDF</em> 或者 <em>AI</em> 格式的LOGO文件。',ok:'确定'},imageFail:'产品图加载失败，请检查网络后刷新重试',note:'注：遇到问题请联系与您对接的销售或者客服人员',sizeTitle:'LOGO 参考尺寸',brandLogo:'显示品牌LOGO',brandLogoHide:'隐藏品牌LOGO',fit:'适合大小',guide:'查看教程',zoneWarn:'LOGO 没有完整落在可定制范围（红色虚线框）内，工厂可能无法定制！请把 LOGO 完整移进框内。',guideUI:{step:'步骤',back:'上一步',next:'下一步',done:'我知道了',skip:'跳过'}},
-  en:{name:'English',htmlLang:'en',title:'MARK RYDEN · Custom Logo Preview',stageAria:'Backpack logo preview canvas',settingsAria:'Logo customization settings',warningAria:'View logo size notice',warning:'The logo must not exceed 12 × 12 cm in width or height. Larger logos may not be customizable.',stageTip:'Drag the corner handles to resize the logo',model:'Product Model',color:'Color',modelSearch:'Search model',modelNoMatch:'No matching model',black:'Business Black',upload:'Upload Logo',uploadHint:'Transparent PNG is recommended and ready to use;<br>backgrounds in JPG files will be removed automatically',addMore:'Add another logo',slotsFull:'Limit of 3 reached — adding more replaces the earliest logo',process:'Logo Processing',removeBg:'Remove BG',invert:'Invert Color',tolerance:'Logo Edge Cleanup',toleranceHint:'Drag the slider to remove more of the background edge',opacity:'Opacity',innerColor:'Remove colour inside logo',rotation:'360° Rotation',reset:'Reset (remove uploaded logo)',export:'Export JPG',exportOk:'Image exported, please check your downloads',exportFail:'Export failed, please try again',exportDone:{title:'Export Successful',lead:'Submit the files below to your sales representative to complete the customization',l1:'① The exported JPG preview;',l2:'② The LOGO file in <em>PDF</em> or <em>AI</em> format.',ok:'OK'},imageFail:'The product image failed to load. Please check your connection and refresh.',note:'Note: If you encounter any issues, please contact your sales representative or customer service.',sizeTitle:'Reference logo size',brandLogo:'Show brand logo',brandLogoHide:'Hide brand logo',fit:'Fit to Size',guide:'View Guide',zoneWarn:'The logo does not fit entirely inside the customizable area (red dashed frame) and may not be producible. Please move the whole logo inside the frame.',guideUI:{step:'Step',back:'Back',next:'Next',done:'Got it',skip:'Skip'}},
-  ru:{name:'Русский',htmlLang:'ru',title:'MARK RYDEN · Предпросмотр логотипа',stageAria:'Область предпросмотра логотипа на рюкзаке',settingsAria:'Настройки логотипа',warningAria:'Показать ограничение размера логотипа',warning:'Ширина и высота логотипа не должны превышать 12 × 12 см. Превышение размера может сделать нанесение невозможным.',stageTip:'Потяните за углы рамки, чтобы изменить размер логотипа',model:'Модель товара',color:'Цвет',modelSearch:'Поиск модели',modelNoMatch:'Модель не найдена',black:'Деловой чёрный',upload:'Загрузить логотип',uploadHint:'Рекомендуется прозрачный PNG;<br>фон изображения JPG удаляется автоматически',addMore:'Добавить ещё логотип',slotsFull:'Достигнут лимит 3 — новое заменит самое раннее',process:'Обработка логотипа',removeBg:'Удалить фон',invert:'Инверсия',tolerance:'Очистка краёв логотипа',toleranceHint:'Перемещайте ползунок для более тщательной очистки краёв',opacity:'Прозрачность',innerColor:'Удалить цвет внутри логотипа',rotation:'Поворот 360°',reset:'Сбросить (удалить логотип)',export:'Экспорт JPG',exportOk:'Изображение экспортировано, проверьте загрузки',exportFail:'Не удалось экспортировать, попробуйте ещё раз',exportDone:{title:'Экспорт выполнен',lead:'Отправьте указанные ниже файлы вашему менеджеру для завершения нанесения',l1:'① Экспортированное изображение JPG;',l2:'② Файл логотипа в формате <em>PDF</em> или <em>AI</em>.',ok:'ОК'},imageFail:'Не удалось загрузить изображение товара. Проверьте соединение и обновите страницу.',note:'Примечание: при возникновении вопросов обратитесь к вашему менеджеру или в службу поддержки.',sizeTitle:'Ориентировочный размер логотипа',brandLogo:'Показать логотип',brandLogoHide:'Скрыть логотип',fit:'По размеру',guide:'Инструкция',zoneWarn:'Логотип не помещается целиком в области нанесения (красная пунктирная рамка) — нанесение может быть невозможно. Переместите логотип целиком внутрь рамки.',guideUI:{step:'Шаг',back:'Назад',next:'Далее',done:'Понятно',skip:'Пропустить'}}
+  zh:{name:'中文',htmlLang:'zh-CN',title:'MARK RYDEN · LOGO 定制预览',stageAria:'背包 LOGO 预览画布',settingsAria:'LOGO 定制设置',warningAria:'查看 LOGO 尺寸提醒',warning:'LOGO长宽不要超过12×12cm，超过后可能会导致无法定制！',stageTip:'拉动 LOGO 画布四角可缩放大小',model:'产品型号',color:'颜色选择',modelSearch:'输入型号搜索',modelNoMatch:'没有匹配的型号',black:'商务黑',upload:'上传LOGO',uploadHint:'上传透明 PNG 最佳，直接可用；<br>带有背景颜色的 JPG 将自动去除背景',addMore:'继续添加 LOGO',slotsFull:'已达 3 个上限，再添加会替换最早的 LOGO',process:'LOGO处理',removeBg:'去除背景',invert:'颜色反向',tolerance:'LOGO边缘擦除',toleranceHint:'拖动滑块，边缘清除越彻底',opacity:'透明度调节',innerColor:'去除LOGO内部颜色',rotation:'360°旋转调节',reset:'初始化（清除已上传LOGO）',export:'导出JPG图片',exportOk:'图片已导出，请查看下载文件',exportFail:'导出失败，请重试',exportDone:{title:'导出成功',lead:'提交以下文件给销售客服完成定制服务',l1:'① 成功导出的JPG效果图;',l2:'② <em>PDF</em> 或者 <em>AI</em> 格式的LOGO文件。',ok:'确定'},imageFail:'产品图加载失败，请检查网络后刷新重试',note:'注：遇到问题请联系与您对接的销售或者客服人员',sizeTitle:'LOGO 参考尺寸',brandLogo:'显示品牌LOGO',brandLogoHide:'隐藏品牌LOGO',fit:'适合大小',guide:'查看教程',zoneWarn:'LOGO 没有完整落在可定制范围（红色虚线框）内，工厂可能无法定制！请把 LOGO 完整移进框内。',tintChange:'修改颜色',tintInput:'输入色值',tintHue:'色相',tintApply:'确定',tintCmyk:'CMYK（近似）',tintPantone:'PANTONE（近似）',tintReset:'恢复初始颜色',tintBad:'色值无效或色号未收录，请检查后重试（支持 HEX / RGB / CMYK / PANTONE）',guideUI:{step:'步骤',back:'上一步',next:'下一步',done:'我知道了',skip:'跳过'}},
+  en:{name:'English',htmlLang:'en',title:'MARK RYDEN · Custom Logo Preview',stageAria:'Backpack logo preview canvas',settingsAria:'Logo customization settings',warningAria:'View logo size notice',warning:'The logo must not exceed 12 × 12 cm in width or height. Larger logos may not be customizable.',stageTip:'Drag the corner handles to resize the logo',model:'Product Model',color:'Color',modelSearch:'Search model',modelNoMatch:'No matching model',black:'Business Black',upload:'Upload Logo',uploadHint:'Transparent PNG is recommended and ready to use;<br>backgrounds in JPG files will be removed automatically',addMore:'Add another logo',slotsFull:'Limit of 3 reached — adding more replaces the earliest logo',process:'Logo Processing',removeBg:'Remove BG',invert:'Invert Color',tolerance:'Logo Edge Cleanup',toleranceHint:'Drag the slider to remove more of the background edge',opacity:'Opacity',innerColor:'Remove colour inside logo',rotation:'360° Rotation',reset:'Reset (remove uploaded logo)',export:'Export JPG',exportOk:'Image exported, please check your downloads',exportFail:'Export failed, please try again',exportDone:{title:'Export Successful',lead:'Submit the files below to your sales representative to complete the customization',l1:'① The exported JPG preview;',l2:'② The LOGO file in <em>PDF</em> or <em>AI</em> format.',ok:'OK'},imageFail:'The product image failed to load. Please check your connection and refresh.',note:'Note: If you encounter any issues, please contact your sales representative or customer service.',sizeTitle:'Reference logo size',brandLogo:'Show brand logo',brandLogoHide:'Hide brand logo',fit:'Fit to Size',guide:'View Guide',zoneWarn:'The logo does not fit entirely inside the customizable area (red dashed frame) and may not be producible. Please move the whole logo inside the frame.',tintChange:'Change colour',tintInput:'Enter colour',tintHue:'Hue',tintApply:'OK',tintCmyk:'CMYK (approx.)',tintPantone:'PANTONE (approx.)',tintReset:'Reset colour',tintBad:'Invalid value or colour not found — please check (HEX / RGB / CMYK / PANTONE)',guideUI:{step:'Step',back:'Back',next:'Next',done:'Got it',skip:'Skip'}},
+  ru:{name:'Русский',htmlLang:'ru',title:'MARK RYDEN · Предпросмотр логотипа',stageAria:'Область предпросмотра логотипа на рюкзаке',settingsAria:'Настройки логотипа',warningAria:'Показать ограничение размера логотипа',warning:'Ширина и высота логотипа не должны превышать 12 × 12 см. Превышение размера может сделать нанесение невозможным.',stageTip:'Потяните за углы рамки, чтобы изменить размер логотипа',model:'Модель товара',color:'Цвет',modelSearch:'Поиск модели',modelNoMatch:'Модель не найдена',black:'Деловой чёрный',upload:'Загрузить логотип',uploadHint:'Рекомендуется прозрачный PNG;<br>фон изображения JPG удаляется автоматически',addMore:'Добавить ещё логотип',slotsFull:'Достигнут лимит 3 — новое заменит самое раннее',process:'Обработка логотипа',removeBg:'Удалить фон',invert:'Инверсия',tolerance:'Очистка краёв логотипа',toleranceHint:'Перемещайте ползунок для более тщательной очистки краёв',opacity:'Прозрачность',innerColor:'Удалить цвет внутри логотипа',rotation:'Поворот 360°',reset:'Сбросить (удалить логотип)',export:'Экспорт JPG',exportOk:'Изображение экспортировано, проверьте загрузки',exportFail:'Не удалось экспортировать, попробуйте ещё раз',exportDone:{title:'Экспорт выполнен',lead:'Отправьте указанные ниже файлы вашему менеджеру для завершения нанесения',l1:'① Экспортированное изображение JPG;',l2:'② Файл логотипа в формате <em>PDF</em> или <em>AI</em>.',ok:'ОК'},imageFail:'Не удалось загрузить изображение товара. Проверьте соединение и обновите страницу.',note:'Примечание: при возникновении вопросов обратитесь к вашему менеджеру или в службу поддержки.',sizeTitle:'Ориентировочный размер логотипа',brandLogo:'Показать логотип',brandLogoHide:'Скрыть логотип',fit:'По размеру',guide:'Инструкция',zoneWarn:'Логотип не помещается целиком в области нанесения (красная пунктирная рамка) — нанесение может быть невозможно. Переместите логотип целиком внутрь рамки.',tintChange:'Изменить цвет',tintInput:'Ввести цвет',tintHue:'Оттенок',tintApply:'ОК',tintCmyk:'CMYK (прибл.)',tintPantone:'PANTONE (прибл.)',tintReset:'Сбросить цвет',tintBad:'Неверное значение или цвет не найден — проверьте (HEX / RGB / CMYK / PANTONE)',guideUI:{step:'Шаг',back:'Назад',next:'Далее',done:'Понятно',skip:'Пропустить'}}
 };
 let currentLang='zh';
 /* 语言自动判定：只有中国大陆显示中文，其他地区一律英文 */
@@ -518,6 +597,7 @@ function setLanguage(code,remember){
      真正的字由 syncBrandToggleText() 按当前状态决定。 */
   syncBrandToggleText();
   updateSizeReadout();
+  syncTintText();
   if(tourOpen)renderTourStep();
   refreshUploadBox();
   const noticeEl=document.getElementById('stageNotice');
@@ -1346,6 +1426,8 @@ function applyView(){
   logoImgs.forEach(o=>o.set({cornerSize:Math.max(5,9/z),padding:2/z}));
   /* 安全区描边宽度是按视口换算的，缩放/改窗口后必须跟着重算 */
   syncZoneStroke();
+  /* 画布缩放/改窗口后浮层要跟着重新定位（脚本末尾才建元素，早期调用忽略即可） */
+  try{syncTintBarPosition();}catch(e){}
   canvas.renderAll();
 }
 window.addEventListener('resize',applyView);
@@ -1527,6 +1609,8 @@ function processLogo(imgEl,tolerance,removeBackground,invert,keepInner){
   oc.width=imgEl.naturalWidth||imgEl.width;oc.height=imgEl.naturalHeight||imgEl.height;
   const ctx=oc.getContext('2d',{willReadFrequently:true});ctx.drawImage(imgEl,0,0,oc.width,oc.height);
   const data=ctx.getImageData(0,0,oc.width,oc.height),px=data.data,w=oc.width,h=oc.height;
+  /* 改颜色时要避开「保留内部」救下来的封闭区，这里把掩码算出来带出去（见 oc.__keepMask） */
+  let keepMask=null;
   if(removeBackground){
     const bg=detectEdgeBackground(px,w,h);
     if(bg){
@@ -1561,6 +1645,11 @@ function processLogo(imgEl,tolerance,removeBackground,invert,keepInner){
           if(p>=w)push(p-w);
           if(p<w*(h-1))push(p+w);
         }
+        /* keepMask = 「没和边界连通」且「属于背景色系」的像素 = 被包住的封闭区（R 的孔、O 的内圈）。
+           改颜色时这些像素必须原样留着，否则「保留内部」当场失效。
+           ⛔ 墨迹像素虽然也不在 outer 里，但它们不是背景色系 → keepMask 为 0 → 照常染色。 */
+        keepMask=new Uint8Array(w*h);
+        for(let p=0;p<w*h;p++){if(!outer[p]&&nearBg(p))keepMask[p]=1;}
       }
       for(let i=0;i<px.length;i+=4){
         if(px[i+3]===0)continue;
@@ -1578,18 +1667,77 @@ function processLogo(imgEl,tolerance,removeBackground,invert,keepInner){
     }
   }
   if(invert){for(let i=0;i<px.length;i+=4){if(px[i+3]){px[i]=255-px[i];px[i+1]=255-px[i+1];px[i+2]=255-px[i+2]}}}
-  ctx.putImageData(data,0,0);return oc;
+  ctx.putImageData(data,0,0);
+  oc.__keepMask=keepMask;
+  return oc;
 }
 function processedFrom(original,tolVal,rmBg,inv,keepInner){
   if(!original)return null;
   const processed=processLogo(original,tolVal,rmBg,inv,keepInner);
   return trimToContent(processed,2)||processed;
 }
-function displayCanvasFor(o){
-  const m=o&&o.__meta;
+/* 「去背景 + 反向 + 裁空白」的结果按参数缓存到 __meta.__tintBase。
+   拖色相条时每帧都重跑的话，光是漫水填充就够卡；染色不改变 alpha，
+   所以裁切框也只算一次，每帧只在一张很小的成品图上重刷颜色。 */
+function cropCanvas(src,r){
+  const out=document.createElement('canvas');out.width=r.w;out.height=r.h;
+  out.getContext('2d').drawImage(src,r.x,r.y,r.w,r.h,0,0,r.w,r.h);
+  return out;
+}
+function cropMask(mask,w0,r){
+  if(!mask)return null;
+  const out=new Uint8Array(r.w*r.h);
+  for(let y=0;y<r.h;y++){for(let x=0;x<r.w;x++){out[y*r.w+x]=mask[(r.y+y)*w0+r.x+x];}}
+  return out;
+}
+/* 与 trimToContent 同一口径地算裁切框（pad 默认 2） */
+function contentRect(srcCanvas,pad){
+  const w=srcCanvas.width,h=srcCanvas.height;
+  const px=srcCanvas.getContext('2d',{willReadFrequently:true}).getImageData(0,0,w,h).data;
+  let minX=w,minY=h,maxX=-1,maxY=-1;
+  for(let y=0;y<h;y++){const row=y*w;for(let x=0;x<w;x++){if(px[(row+x)*4+3]>16){if(x<minX)minX=x;if(x>maxX)maxX=x;if(y<minY)minY=y;if(y>maxY)maxY=y;}}}
+  if(maxX<0)return null;
+  const p=(pad==null?2:pad);
+  minX=Math.max(0,minX-p);minY=Math.max(0,minY-p);
+  maxX=Math.min(w-1,maxX+p);maxY=Math.min(h-1,maxY+p);
+  const nw=maxX-minX+1,nh=maxY-minY+1;
+  if(nw>=w&&nh>=h)return null;
+  return {x:minX,y:minY,w:nw,h:nh};
+}
+function baseFor(m){
   /* ⛔ 判据写成 m.rmInner===false 而不是 !m.rmInner：
      漏字段的老 LOGO（undefined）必须按「默认扣掉内部」走，不能反过来。 */
-  return m&&m.original?processedFrom(m.original,m.tol,m.rmwhite,m.invert,m.rmInner===false):null;
+  const key=[m.tol,m.rmwhite,m.invert,m.rmInner===false].join('|');
+  if(m.__tintBase&&m.__tintKey===key)return m.__tintBase;
+  const rawCanvas=processLogo(m.original,m.tol,m.rmwhite,m.invert,m.rmInner===false);
+  const mask=rawCanvas.__keepMask||null;
+  const rect=contentRect(rawCanvas,2);
+  m.__tintBase=rect?cropCanvas(rawCanvas,rect):rawCanvas;
+  m.__keepMask=rect?cropMask(mask,rawCanvas.width,rect):mask;
+  m.__tintKey=key;
+  return m.__tintBase;
+}
+/* 染色：只改 RGB，alpha 原样不动 → 软边不会毛；keepMask 命中的封闭区跳过 */
+function tintCanvas(base,keepMask,rgb){
+  const out=document.createElement('canvas');
+  out.width=base.width;out.height=base.height;
+  const ctx=out.getContext('2d',{willReadFrequently:true});
+  ctx.drawImage(base,0,0);
+  const data=ctx.getImageData(0,0,out.width,out.height),px=data.data;
+  const r=rgb[0],g=rgb[1],b=rgb[2];
+  for(let i=0,p=0;i<px.length;i+=4,p++){
+    if(px[i+3]===0)continue;
+    if(keepMask&&keepMask[p])continue;
+    px[i]=r;px[i+1]=g;px[i+2]=b;
+  }
+  ctx.putImageData(data,0,0);
+  return out;
+}
+function displayCanvasFor(o){
+  const m=o&&o.__meta;
+  if(!m||!m.original)return null;
+  const base=baseFor(m);
+  return (m.tint==null)?base:tintCanvas(base,m.__keepMask,m.tint);
 }
 function displayCanvas(){return displayCanvasFor(curLogo());}
 /* 追加一张 LOGO；满 3 个后自动顶掉最早上传的那张 */
@@ -1609,7 +1757,7 @@ function addLogo(srcCanvas,keepWidthMm,opts){
     }
     img.__meta={original:opts.original||null,demo:!!opts.demo,ver:0,
                 rmwhite:rmwhite.checked,invert:invert.checked,rmInner:innerColor.checked,
-                tol:Number(tol.value),opa:Number(opa.value),rot:Number(rot.value)};
+                tol:Number(tol.value),opa:Number(opa.value),rot:Number(rot.value),tint:null};
     img.set({left:cxMm,top:cyMm,originX:'center',originY:'center',scaleX:scale,scaleY:scale,lockUniScaling:true,lockScalingFlip:true,transparentCorners:false,cornerColor:'#fff',cornerStrokeColor:'#222',borderColor:'#222',cornerSize:9,padding:2,opacity:img.__meta.opa/100,angle:img.__meta.rot});
     img.setControlsVisibility({mt:false,mb:false,ml:false,mr:false});
     while(logoImgs.length>=MAX_LOGO)removeLogo(logoImgs[0],true);
@@ -1661,6 +1809,7 @@ function syncSlidersFromLogo(o){
   innerColor.checked=m.rmInner!==false;syncInnerChip();
   tol.value=m.tol;opa.value=m.opa;rot.value=m.rot;
   [opa,rot,tol].forEach(setRangeFill);
+  syncTintUI(o);
 }
 /* 重新处理「当前选中的 LOGO」（每张 LOGO 各记一份处理参数，互不影响） */
 function reprocess(){
@@ -1786,17 +1935,22 @@ rot.addEventListener('input',()=>{
   o.set('angle',Number(rot.value));o.__meta.rot=Number(rot.value);canvas.renderAll();
 });
 /* 选中另一张 LOGO 时，滑杆自动切到它自己的参数 */
+let tintObj=null;
 function onLogoSelected(e){
   const o=e.selected&&e.selected[0];
   if(o&&o.__meta)syncSlidersFromLogo(o);
+  /* 换选另一张 LOGO 时把改颜色浮层收回态A；同一张就保留当前状态（拖动中不能被自己打断） */
+  if(o!==tintObj){tintObj=o||null;tintOpen=false;tintEntryOn=false;}
+  syncTintUI(o);
 }
 canvas.on('selection:created',onLogoSelected);
 canvas.on('selection:updated',onLogoSelected);
-canvas.on('object:scaling',e=>{const o=e.target;if(o&&o.__meta){const s=(o.scaleX+o.scaleY)/2;o.set({scaleX:s,scaleY:s});updateSizeReadout();}});
+canvas.on('selection:cleared',()=>{tintObj=null;tintOpen=false;tintEntryOn=false;syncTintUI(null);});
+canvas.on('object:scaling',e=>{const o=e.target;if(o&&o.__meta){const s=(o.scaleX+o.scaleY)/2;o.set({scaleX:s,scaleY:s});updateSizeReadout();syncTintBarPosition();}});
 /* 拖动过程中就实时判定安全区：出区立刻变红，不用等松手 */
-canvas.on('object:moving',e=>{const o=e.target;if(o&&o.__meta)refreshZoneState();});
+canvas.on('object:moving',e=>{const o=e.target;if(o&&o.__meta){refreshZoneState();syncTintBarPosition();}});
 canvas.on('object:rotating',e=>{const o=e.target;if(o&&o.__meta){const snapped=Math.round(o.angle/5)*5;o.set('angle',snapped);o.__meta.rot=snapped;rot.value=Math.max(-180,Math.min(180,snapped));setRangeFill(rot);}});
-canvas.on('object:modified',e=>{const o=e.target;if(o&&o.__meta){const s=(o.scaleX+o.scaleY)/2;o.set({scaleX:s,scaleY:s});let a=Math.round(o.angle/5)*5%360;if(a>180)a-=360;if(a<-180)a+=360;o.set('angle',a);o.__meta.rot=a;rot.value=a;setRangeFill(rot);canvas.renderAll();updateSizeReadout();}});
+canvas.on('object:modified',e=>{const o=e.target;if(o&&o.__meta){syncTintBarPosition();const s=(o.scaleX+o.scaleY)/2;o.set({scaleX:s,scaleY:s});let a=Math.round(o.angle/5)*5%360;if(a>180)a-=360;if(a<-180)a+=360;o.set('angle',a);o.__meta.rot=a;rot.value=a;setRangeFill(rot);canvas.renderAll();updateSizeReadout();}});
 /* 键盘 Delete / Backspace 删除当前选中的 LOGO（教程打开时让位给教程自己的按键） */
 document.addEventListener('keydown',e=>{
   if(e.key!=='Delete'&&e.key!=='Backspace')return;
@@ -1826,6 +1980,1157 @@ document.getElementById('zoomFit').addEventListener('click',()=>{
   setViewZoom(DEFAULT_VIEW_ZOOM*MODEL.canvasMm/pw);
 });
 setRangeFill(zoomSlider);
+
+/* ===================== LOGO 改颜色（2026-09-23 设计稿） =====================
+   设计稿三态：选中 LOGO → 选框下方「修改颜色」胶囊 → 点开出色相条（指针默认最左＝红色，
+   拖动实时变色）→ 点「输入色值」换成 [格式下拉][色值][确定]。
+
+   ⛔ 这里是「整体染色」，不是「色相旋转」：设计稿里黑色 LOGO 拖成黄色 —— 黑色没有色相，
+   做色相旋转根本不会变色。所以 target 直接取色相的 RGB，把墨迹像素整片刷成它。
+   ⛔ 但被「保留内部」救下来的封闭区（R 的孔 / O 的内圈）不能刷 —— 见 processLogo 的 __keepMask。
+
+   每张 LOGO 各记一份（__meta.tint = [r,g,b] 或 null），切选自动跟随，与其它滑杆一致。 */
+let tintOpen=false, tintEntryOn=false, tintRaf=0, tintDragging=false;
+const tintBar=document.getElementById('tintBar');
+const tintHue=document.getElementById('tintHue');
+const tintThumb=document.getElementById('tintThumb');
+const tintToggle=document.getElementById('tintToggle');
+const tintEntry=document.getElementById('tintEntry');
+const tintFormat=document.getElementById('tintFormat');
+const tintValue=document.getElementById('tintValue');
+const tintApply=document.getElementById('tintApply');
+const tintReset=document.getElementById('tintReset');
+const tintHint=document.getElementById('tintHint');
+const tintCmykRow=document.getElementById('tintCmykRow');
+const tintCm={c:document.getElementById('tintC'),m:document.getElementById('tintM'),y:document.getElementById('tintY'),k:document.getElementById('tintK')};
+const TINT_CM_KEYS=['c','m','y','k'];
+
+function tintMeta(){const o=curLogo();return o&&o.__meta?o.__meta:null;}
+function tintActive(){const o=canvas.getActiveObject();return o&&o.__meta?o:null;}
+
+/* ---- 色相 → RGB。色相条与 LOGO 用同一个函数，保证「条上是什么色，LOGO 就是什么色」 ---- */
+function hueRgb(h){
+  const n=((h%360)+360)%360/60, c=255, x=c*(1-Math.abs(n%2-1));
+  let r=0,g=0,b=0;
+  if(n<1){r=c;g=x;}
+  else if(n<2){r=x;g=c;}
+  else if(n<3){g=c;b=x;}
+  else if(n<4){g=x;b=c;}
+  else if(n<5){r=x;b=c;}
+  else{r=c;b=x;}
+  return [Math.round(r),Math.round(g),Math.round(b)];
+}
+function rgbHue(r,g,b){
+  const mx=Math.max(r,g,b)/255,mn=Math.min(r,g,b)/255,d=mx-mn;
+  if(d<1e-6)return null;
+  let h;
+  if(mx===r/255)h=((g-b)/255/d)%6;
+  else if(mx===g/255)h=((b-r)/255/d)+2;
+  else h=((r-g)/255/d)+4;
+  h*=60;if(h<0)h+=360;
+  return Math.round(h);
+}
+function rgbHex(r,g,b){
+  const f=v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).toUpperCase().padStart(2,'0');
+  return '#'+f(r)+f(g)+f(b);
+}
+function hexRgb(hex){
+  const m=/^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(String(hex||'').trim());
+  if(!m)return null;
+  let h=m[1];
+  if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+  return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];
+}
+/* ⚠️ CMYK 与 PANTONE 都是**近似**：浏览器是 sRGB 屏幕色，CMYK→RGB 没有唯一解
+   （取决于 ICC 配置 / 纸张 / 油墨），PANTONE 是商业授权色库、没有免费官方对照表。
+   这里只做选色参考，不做印刷级换算。 */
+function rgbCmyk(rgb){
+  const r=rgb[0]/255,g=rgb[1]/255,b=rgb[2]/255;
+  const k=1-Math.max(r,g,b);
+  if(k>=1)return [0,0,0,100];
+  const f=v=>(1-v-k)/(1-k)*100;
+  return [f(r),f(g),f(b),k*100];
+}
+function cmykRgb(c,m,y,k){
+  return [255*(1-c/100)*(1-k/100),255*(1-m/100)*(1-k/100),255*(1-y/100)*(1-k/100)];
+}
+/* PANTONE Solid Coated 常用色的**近似**对照（非官方值，仅供选色参考）。
+   键统一写成「色号 + 空格 + C」，输入 286 / 286C / PANTONE 286 C 都能命中。 */
+const PANTONE_APPROX={
+  /* 社区近似库：PANTONE Solid Coated 真实 Lab 值 -> sRGB（来源 Pradeepvina/unofficial-pantone-solid-coated-2024-v5 / ajesma Pantoner，
+     共 3224 色；⛔ 非官方、屏幕近似色，以打样为准 */
+  '072 C':'#10069F', '100 C':'#FFE966', '101 C':'#FFEA4F', '102 C':'#FFE119',
+  '103 C':'#CBA80F', '104 C':'#B5960E', '105 C':'#907B2B', '106 C':'#FFE54D',
+  '107 C':'#FFE12D', '108 C':'#FFDC1C', '109 C':'#FFD013', '110 C':'#E1AB11',
+  '111 C':'#AF890C', '112 C':'#A28319', '113 C':'#FFDE54', '114 C':'#FFDD45',
+  '115 C':'#FFD92B', '116 C':'#FFCC15', '117 C':'#D0960A', '118 C':'#B28408',
+  '119 C':'#8D7426', '120 C':'#FFDC68', '121 C':'#FFD85C', '122 C':'#FFD045',
+  '123 C':'#FFC431', '124 C':'#F0A80D', '125 C':'#BA8409', '126 C':'#9F7517',
+  '127 C':'#FCDE70', '128 C':'#FBD451', '129 C':'#F9CD42', '130 C':'#F8A90E',
+  '131 C':'#D1890A', '132 C':'#A57308', '133 C':'#6E561C', '134 C':'#FFD374',
+  '135 C':'#FFC75B', '136 C':'#FFBF43', '137 C':'#FFA30B', '138 C':'#E27B06',
+  '139 C':'#B26C07', '140 C':'#76531F', '141 C':'#F8C861', '142 C':'#F7BD4C',
+  '143 C':'#F8B53A', '144 C':'#F38C0D', '145 C':'#D47F08', '146 C':'#AC6F16',
+  '147 C':'#765D2D', '148 C':'#FFCA8B', '149 C':'#FFC17E', '150 C':'#FFB25C',
+  '151 C':'#FF8107', '152 C':'#EA7105', '153 C':'#C36A19', '154 C':'#9D5A1C',
+  '155 C':'#F2CFA0', '156 C':'#F1BD7E', '157 C':'#F0A257', '158 C':'#EE7724',
+  '159 C':'#D06118', '160 C':'#A3561D', '161 C':'#633E22', '162 C':'#FFBFA3',
+  '163 C':'#FF9D6E', '164 C':'#FF8043', '165 C':'#FF6A22', '166 C':'#E65206',
+  '167 C':'#C2521E', '168 C':'#773B1E', '169 C':'#FFB3AA', '170 C':'#FF8875',
+  '171 C':'#FF5E3A', '172 C':'#FF4817', '173 C':'#D24720', '174 C':'#983822',
+  '175 C':'#6C342A', '176 C':'#FFB1BC', '177 C':'#FF828C', '178 C':'#FF5B5E',
+  '179 C':'#E43D32', '180 C':'#BF3C35', '181 C':'#81322E', '182 C':'#FABBCD',
+  '183 C':'#FE9DB3', '184 C':'#F65374', '185 C':'#E80E2B', '186 C':'#CD182F',
+  '187 C':'#A91E2F', '188 C':'#782430', '189 C':'#F7A4BB', '190 C':'#F7779A',
+  '191 C':'#F1436E', '192 C':'#E51247', '193 C':'#C2173E', '194 C':'#9C2842',
+  '195 C':'#7A3041', '196 C':'#EEC8CE', '197 C':'#E69CAE', '198 C':'#E24A62',
+  '199 C':'#D90A32', '200 C':'#BC0F2E', '201 C':'#9F2636', '202 C':'#882934',
+  '203 C':'#EBB5CC', '204 C':'#E681A7', '205 C':'#E0497B', '206 C':'#D00838',
+  '207 C':'#A70433', '208 C':'#872141', '209 C':'#71293F', '210 C':'#F7A2C9',
+  '211 C':'#F380B6', '212 C':'#F05399', '213 C':'#E52479', '214 C':'#CF1E6B',
+  '215 C':'#AB1A58', '216 C':'#7B2346', '217 C':'#E6BED9', '218 C':'#E471B3',
+  '219 C':'#D92483', '220 C':'#A70C51', '221 C':'#910A46', '222 C':'#6A1F44',
+  '223 C':'#EC99D0', '224 C':'#E971BC', '225 C':'#DF2695', '226 C':'#CE106D',
+  '227 C':'#A90B60', '228 C':'#8A1558', '229 C':'#662345', '230 C':'#F3A7D7',
+  '231 C':'#EF7BC8', '232 C':'#E743AB', '233 C':'#C5147E', '234 C':'#A20D68',
+  '235 C':'#831055', '236 C':'#EFA8DC', '237 C':'#E888CF', '238 C':'#DF61C0',
+  '239 C':'#D844B1', '240 C':'#C2319B', '241 C':'#AB1E83', '242 C':'#7E2660',
+  '243 C':'#E5B9E3', '244 C':'#E29CDC', '245 C':'#D882D3', '246 C':'#C32FB2',
+  '247 C':'#B624A3', '248 C':'#A02291', '249 C':'#802C6E', '250 C':'#E6BCE6',
+  '251 C':'#D79CDF', '252 C':'#C467CF', '253 C':'#A627AB', '254 C':'#922495',
+  '255 C':'#6E276C', '256 C':'#D2C0DF', '257 C':'#C2A3D1', '258 C':'#874B9A',
+  '259 C':'#672377', '260 C':'#612967', '261 C':'#5A2B5F', '262 C':'#4D2A4F',
+  '263 C':'#D2C7E8', '264 C':'#B9A8E2', '265 C':'#8468CE', '266 C':'#6341BC',
+  '267 C':'#502B9D', '268 C':'#4D3185', '269 C':'#4A306F', '270 C':'#ACB4DE',
+  '271 C':'#8C98D4', '272 C':'#6575C1', '273 C':'#12175F', '274 C':'#131852',
+  '275 C':'#171A49', '276 C':'#1E1D35', '277 C':'#A2CCE9', '278 C':'#7CBAE9',
+  '279 C':'#0093DF', '280 C':'#002368', '281 C':'#00235D', '282 C':'#001F43',
+  '283 C':'#87C2EB', '284 C':'#58AEE4', '285 C':'#0076CE', '286 C':'#0036A0',
+  '287 C':'#003387', '288 C':'#003073', '289 C':'#002340', '290 C':'#B2DBEE',
+  '291 C':'#92CBEA', '292 C':'#52B5EA', '293 C':'#0042A6', '294 C':'#00326D',
+  '295 C':'#002A56', '296 C':'#001C2D', '297 C':'#5FC5E8', '298 C':'#00B7E7',
+  '299 C':'#00A3E0', '300 C':'#0060B6', '301 C':'#004E88', '302 C':'#003C5C',
+  '303 C':'#002A39', '304 C':'#92DAE8', '305 C':'#3FCBEA', '306 C':'#00B6E2',
+  '307 C':'#006DA7', '308 C':'#00587C', '309 C':'#003B49', '310 C':'#55D1E3',
+  '311 C':'#00C4DF', '312 C':'#00A8CD', '313 C':'#0093BD', '314 C':'#0080A5',
+  '315 C':'#006980', '316 C':'#004852', '317 C':'#AEE4E5', '318 C':'#7FDBE0',
+  '319 C':'#00CDD5', '320 C':'#009CA8', '321 C':'#008E97', '322 C':'#007579',
+  '323 C':'#005F62', '324 C':'#97DBD7', '325 C':'#5CCCCB', '326 C':'#00B1AB',
+  '327 C':'#008778', '328 C':'#007368', '329 C':'#006860', '330 C':'#00534B',
+  '331 C':'#A2E7DB', '332 C':'#88E2D0', '333 C':'#31DAC2', '334 C':'#009977',
+  '335 C':'#00795F', '336 C':'#006650', '337 C':'#8CD5BC', '338 C':'#6BCDB3',
+  '339 C':'#00B38A', '340 C':'#119661', '341 C':'#007A55', '342 C':'#006748',
+  '343 C':'#135842', '344 C':'#A3DCB5', '345 C':'#93D5AD', '346 C':'#73CA9A',
+  '347 C':'#1D9A48', '348 C':'#17833E', '349 C':'#106A3A', '350 C':'#2E5335',
+  '351 C':'#A4E6BC', '352 C':'#92E3B2', '353 C':'#82DFA7', '354 C':'#28B247',
+  '355 C':'#21973D', '356 C':'#177B37', '357 C':'#245835', '358 C':'#B2DB93',
+  '359 C':'#A7D786', '360 C':'#77C04D', '361 C':'#50B02F', '362 C':'#5C9E34',
+  '363 C':'#538D2E', '364 C':'#4F752A', '365 C':'#C8E18C', '366 C':'#BDDD7C',
+  '367 C':'#ACD461', '368 C':'#82BC28', '369 C':'#6FA517', '370 C':'#6A8C20',
+  '371 C':'#566123', '372 C':'#D9EB90', '373 C':'#D5E984', '374 C':'#CDE56F',
+  '375 C':'#A0D513', '376 C':'#8FBD14', '377 C':'#80980D', '378 C':'#5D6220',
+  '379 C':'#E9E56B', '380 C':'#E5E348', '381 C':'#D8DC1C', '382 C':'#CCD518',
+  '383 C':'#ADAB11', '384 C':'#99910C', '385 C':'#7C7024', '386 C':'#F1EA6E',
+  '387 C':'#EDE83C', '388 C':'#E9E62E', '389 C':'#DBDF1C', '390 C':'#BEBC13',
+  '391 C':'#A29511', '392 C':'#887A0C', '393 C':'#F8EB77', '394 C':'#F7E940',
+  '395 C':'#F4E726', '396 C':'#E9DF17', '397 C':'#C8B815', '398 C':'#B4A10F',
+  '399 C':'#A6900E', '400 C':'#C5C0B8', '401 C':'#AFABA2', '402 C':'#9E9890',
+  '403 C':'#8C857C', '404 C':'#786E64', '405 C':'#696259', '406 C':'#C4BDB9',
+  '407 C':'#B1A6A1', '408 C':'#968C87', '409 C':'#867975', '410 C':'#766764',
+  '411 C':'#5E524D', '412 C':'#383130', '413 C':'#B9BDB4', '414 C':'#A7AA9F',
+  '415 C':'#929489', '416 C':'#7E8074', '417 C':'#64675D', '418 C':'#52534A',
+  '419 C':'#1F2221', '420 C':'#C6CAC7', '421 C':'#B0B4B1', '422 C':'#9BA2A4',
+  '423 C':'#868D8F', '424 C':'#707272', '425 C':'#515959', '426 C':'#25282B',
+  '427 C':'#CED2D5', '428 C':'#C0C8CC', '429 C':'#A0AAAE', '430 C':'#7B8890',
+  '431 C':'#586871', '432 C':'#2F4049', '433 C':'#19252F', '434 C':'#CEC4C6',
+  '435 C':'#BFB3B6', '436 C':'#AB9A9E', '437 C':'#7B656B', '438 C':'#584446',
+  '439 C':'#453536', '440 C':'#392E2E', '441 C':'#BCC6C3', '442 C':'#A2ADAD',
+  '443 C':'#929D9E', '444 C':'#6D7C7E', '445 C':'#4D5659', '446 C':'#3D4342',
+  '447 C':'#373A38', '448 C':'#4C412B', '449 C':'#534529', '450 C':'#5D4B26',
+  '451 C':'#9F9361', '452 C':'#B3A97F', '453 C':'#BFBA98', '454 C':'#CCC7AA',
+  '455 C':'#6B5A26', '456 C':'#A58C2C', '457 C':'#BF9D22', '458 C':'#E0C55A',
+  '459 C':'#E4CB66', '460 C':'#EAD781', '461 C':'#ECDD98', '462 C':'#60462E',
+  '463 C':'#754F28', '464 C':'#8E5A2B', '465 C':'#BE985D', '466 C':'#C9A977',
+  '467 C':'#D6BB8C', '468 C':'#DECAA3', '469 C':'#6A3E22', '470 C':'#A85B2C',
+  '471 C':'#B96228', '472 C':'#E89D6D', '473 C':'#F3BF9B', '474 C':'#F3C6A8',
+  '475 C':'#F6D0B4', '476 C':'#4F352A', '477 C':'#613B2B', '478 C':'#72412A',
+  '479 C':'#AC7F65', '480 C':'#C5A993', '481 C':'#D5BCAB', '482 C':'#DEC8B8',
+  '483 C':'#663025', '484 C':'#9C3324', '485 C':'#DC2919', '486 C':'#EA927B',
+  '487 C':'#EEA897', '488 C':'#EEBBAB', '489 C':'#ECC3B2', '490 C':'#5C2A2B',
+  '491 C':'#803235', '492 C':'#903236', '493 C':'#DF879B', '494 C':'#E9A3B1',
+  '495 C':'#F2BFCB', '496 C':'#F1C7CE', '497 C':'#52302E', '498 C':'#6A3935',
+  '499 C':'#7B3E39', '500 C':'#C78792', '501 C':'#DBA5AE', '502 C':'#E7BBC3',
+  '503 C':'#EAC6C8', '504 C':'#592B34', '505 C':'#702F41', '506 C':'#833650',
+  '507 C':'#D493AC', '508 C':'#E3A9BB', '509 C':'#E6B3C3', '510 C':'#EABECC',
+  '511 C':'#612E51', '512 C':'#803579', '513 C':'#90378F', '514 C':'#D18DC8',
+  '515 C':'#E1AFD8', '516 C':'#E4BEDE', '517 C':'#E9C8E1', '518 C':'#49314A',
+  '519 C':'#55335F', '520 C':'#5F326D', '521 C':'#A07FB2', '522 C':'#B69DC6',
+  '523 C':'#C4B2D1', '524 C':'#D5C4DA', '525 C':'#532F61', '526 C':'#683289',
+  '527 C':'#7838A7', '528 C':'#AD81D1', '529 C':'#C3A5DE', '530 C':'#D2BBE5',
+  '531 C':'#DDC7E5', '532 C':'#19202A', '533 C':'#1A2A44', '534 C':'#02375D',
+  '535 C':'#88A0BC', '536 C':'#9EB3CA', '537 C':'#B7C9D7', '538 C':'#C2D1DC',
+  '539 C':'#00283D', '540 C':'#003257', '541 C':'#003D6F', '542 C':'#6FB0D5',
+  '543 C':'#9CCAE4', '544 C':'#B8D6E8', '545 C':'#C1DBE8', '546 C':'#002A32',
+  '547 C':'#00323D', '548 C':'#003E4E', '549 C':'#61A5B9', '550 C':'#87B8C9',
+  '551 C':'#9FC8D3', '552 C':'#B6D4DD', '553 C':'#294633', '554 C':'#1E5D43',
+  '555 C':'#287252', '556 C':'#6DA187', '557 C':'#85AF9C', '558 C':'#99BEAC',
+  '559 C':'#ABC8B7', '560 C':'#1D3D35', '561 C':'#00594E', '562 C':'#007064',
+  '563 C':'#6ABCB0', '564 C':'#81C9BC', '565 C':'#9FD4CA', '566 C':'#B6DCD4',
+  '567 C':'#154036', '568 C':'#006B5D', '569 C':'#00816F', '570 C':'#66C9B9',
+  '571 C':'#97DCD0', '572 C':'#A2E0D5', '573 C':'#B3E4D9', '574 C':'#515C31',
+  '575 C':'#6B813B', '576 C':'#7F9D4D', '577 C':'#ACC483', '578 C':'#BBCD99',
+  '579 C':'#BFD09E', '581 C':'#665C22', '582 C':'#948B1A', '583 C':'#C0BE1D',
+  '584 C':'#DBD65B', '585 C':'#E4DE75', '586 C':'#E6E17B', '587 C':'#E9E38E',
+  '600 C':'#F5EA9F', '601 C':'#F3E792', '602 C':'#F6E87D', '603 C':'#F4DE51',
+  '604 C':'#F2D82D', '605 C':'#EBCB12', '606 C':'#D5B412', '607 C':'#F0E49D',
+  '608 C':'#EEDE88', '609 C':'#EFDE7C', '610 C':'#ECD55A', '611 C':'#DEC72E',
+  '612 C':'#CBB012', '613 C':'#BA9B12', '614 C':'#E0D59B', '615 C':'#DCD090',
+  '616 C':'#D4C787', '617 C':'#C7B664', '618 C':'#B19E40', '619 C':'#A5902F',
+  '620 C':'#907B1E', '621 C':'#CEE1D9', '622 C':'#B5CBC4', '623 C':'#9ABAAF',
+  '624 C':'#769E90', '625 C':'#4F8073', '626 C':'#255C4D', '627 C':'#11312D',
+  '628 C':'#B5DFE6', '629 C':'#95D3DF', '630 C':'#6FC5D5', '631 C':'#21B3CA',
+  '632 C':'#0094B2', '633 C':'#007597', '634 C':'#006084', '635 C':'#9EDBE9',
+  '636 C':'#81D6E8', '637 C':'#2FC3E0', '638 C':'#00B1D9', '639 C':'#0096C7',
+  '640 C':'#0084BC', '641 C':'#0068A0', '642 C':'#CDDCE7', '643 C':'#C3D7E5',
+  '644 C':'#96B7D2', '645 C':'#73A3C6', '646 C':'#4E8AB4', '647 C':'#006293',
+  '648 C':'#003060', '649 C':'#D7E1E9', '650 C':'#C9D9E6', '651 C':'#A2BCD6',
+  '652 C':'#759DBF', '653 C':'#116396', '654 C':'#003C6F', '655 C':'#002755',
+  '656 C':'#DDE7ED', '657 C':'#C2D7EB', '658 C':'#ABCAE7', '659 C':'#6CA5DB',
+  '660 C':'#0082CB', '661 C':'#003995', '662 C':'#001E70', '663 C':'#E4E1E8',
+  '664 C':'#DFDBE4', '665 C':'#C4BED2', '666 C':'#9E94B3', '667 C':'#756A91',
+  '668 C':'#5B4D7A', '669 C':'#382B56', '670 C':'#E8D5E2', '671 C':'#E6BED9',
+  '672 C':'#DEA1CA', '673 C':'#D688B9', '674 C':'#C35999', '675 C':'#AD2A74',
+  '676 C':'#940850', '677 C':'#E3CFDA', '678 C':'#E2C8D8', '679 C':'#DCBED2',
+  '680 C':'#C898B6', '681 C':'#AC6D95', '682 C':'#964976', '683 C':'#7C2A56',
+  '684 C':'#E3C7D5', '685 C':'#DDB6CB', '686 C':'#CDA1B9', '687 C':'#BB86A5',
+  '688 C':'#A6658B', '689 C':'#873D68', '690 C':'#612243', '691 C':'#E7CFD1',
+  '692 C':'#E2BDC3', '693 C':'#D6A3AC', '694 C':'#C48590', '695 C':'#B56C7B',
+  '696 C':'#9A4A59', '697 C':'#893C46', '698 C':'#F4D6D9', '699 C':'#F3C2CD',
+  '700 C':'#F1ACB8', '701 C':'#E7879A', '702 C':'#D25E75', '703 C':'#B83B4B',
+  '704 C':'#A02D30', '705 C':'#F5DDE1', '706 C':'#F4CDD6', '707 C':'#F6B5C5',
+  '708 C':'#F992A7', '709 C':'#F2637C', '710 C':'#E44254', '711 C':'#CE2E2F',
+  '712 C':'#FFC99E', '713 C':'#FFBD89', '714 C':'#FFAB64', '715 C':'#FB8C31',
+  '716 C':'#EF7709', '717 C':'#DA5E06', '718 C':'#C14E00', '719 C':'#F1C7A4',
+  '720 C':'#EAB78C', '721 C':'#E2A46F', '722 C':'#CB8343', '723 C':'#B66927',
+  '724 C':'#964D12', '725 C':'#81411A', '726 C':'#E3C0A2', '727 C':'#DBB490',
+  '728 C':'#D1A279', '729 C':'#B78050', '730 C':'#A0642D', '731 C':'#7A4113',
+  '732 C':'#623411', '801 C':'#009CCC', '802 C':'#58D535', '803 C':'#FFE817',
+  '804 C':'#FFAA51', '805 C':'#FF7477', '806 C':'#FC45B4', '807 C':'#E631C0',
+  '808 C':'#00B698', '809 C':'#ECE532', '810 C':'#FFD43A', '811 C':'#FF8F6D',
+  '812 C':'#FF63A3', '813 C':'#F84DC3', '814 C':'#7C6ED6', '871 C':'#867550',
+  '872 C':'#87724E', '873 C':'#896D4B', '874 C':'#8D6F4E', '875 C':'#89664F',
+  '876 C':'#8D644E', '877 C':'#8A8F91', '901 C':'#00AAD9', '902 C':'#98E975',
+  '903 C':'#FFF270', '904 C':'#FFCD8C', '905 C':'#FE9EA8', '906 C':'#FC7FD6',
+  '907 C':'#EE6DDA', '908 C':'#00B0DC', '909 C':'#B0ED8E', '910 C':'#FFF28E',
+  '911 C':'#FFD9A5', '912 C':'#FFADB8', '913 C':'#FA94DC', '914 C':'#F184E1',
+  '915 C':'#00BDE4', '916 C':'#BEEDA5', '917 C':'#FDF3A5', '918 C':'#FFE0B6',
+  '919 C':'#FFC1C9', '920 C':'#FCAFE3', '921 C':'#F3A4E6', '922 C':'#00C1A6',
+  '923 C':'#F5F06C', '924 C':'#FFE676', '925 C':'#FFAC94', '926 C':'#FE87BC',
+  '927 C':'#F97BDA', '928 C':'#8B7CDB', '929 C':'#1FC9B0', '930 C':'#F6F389',
+  '931 C':'#FFE987', '932 C':'#FFBBA6', '933 C':'#FF9ECB', '934 C':'#F890E0',
+  '935 C':'#A094E0', '936 C':'#69D6C6', '937 C':'#F6F5A8', '938 C':'#FFEDA8',
+  '939 C':'#FFCFBE', '940 C':'#FEB7DE', '941 C':'#F7ABE8', '942 C':'#B9AFE7',
+  'White':'#FFFFFF', '1205 C':'#FEE090', '1215 C':'#FFD776', '1225 C':'#FFC748',
+  '1235 C':'#FFB824', '1245 C':'#CB901A', '1255 C':'#B28423', '1265 C':'#8B6A28',
+  '1345 C':'#FFCF88', '1355 C':'#FFC671', '1365 C':'#FFB34C', '1375 C':'#FF9D22',
+  '1385 C':'#D97806', '1395 C':'#9B5F19', '1405 C':'#714E20', '1485 C':'#FFAD64',
+  '1495 C':'#FF9020', '1505 C':'#FF6800', '1525 C':'#BB4802', '1535 C':'#95450E',
+  '1545 C':'#663919', '1555 C':'#FFB992', '1565 C':'#FFA06B', '1575 C':'#FF8033',
+  '1585 C':'#FF6B15', '1595 C':'#DC6119', '1605 C':'#AA5624', '1615 C':'#8F4823',
+  '1625 C':'#FFA48B', '1635 C':'#FF8E6F', '1645 C':'#FF6B3E', '1655 C':'#FF4E00',
+  '1665 C':'#E04505', '1675 C':'#AD441E', '1685 C':'#843A1E', '1765 C':'#FFA5B4',
+  '1767 C':'#FBAFBF', '1775 C':'#FF8EA2', '1777 C':'#FD647D', '1785 C':'#FB485F',
+  '1787 C':'#F6384C', '1788 C':'#EF2837', '1795 C':'#D62830', '1797 C':'#CE363C',
+  '1805 C':'#B22A2F', '1807 C':'#A7373B', '1815 C':'#7D2529', '1817 C':'#663337',
+  '1895 C':'#F6B8D0', '1905 C':'#F59CBB', '1915 C':'#F15080', '1925 C':'#E10A4D',
+  '1935 C':'#C6073D', '1945 C':'#A7113D', '1955 C':'#8D183A', '2001 C':'#FCE49A',
+  '2002 C':'#FEE17D', '2003 C':'#FFE16A', '2004 C':'#FFDC7D', '2005 C':'#FFD783',
+  '2006 C':'#F0BC52', '2007 C':'#E5A52B', '2008 C':'#F4C171', '2009 C':'#F4B563',
+  '2010 C':'#FFAF14', '2011 C':'#F29A35', '2012 C':'#F49509', '2013 C':'#FF9909',
+  '2014 C':'#BB6F01', '2015 C':'#FCCFAA', '2016 C':'#FFB575', '2017 C':'#FCAC6F',
+  '2018 C':'#FF7705', '2019 C':'#DC6C06', '2020 C':'#C05402', '2021 C':'#A14A18',
+  '2022 C':'#FCAA8E', '2023 C':'#FF9471', '2024 C':'#FD7F58', '2025 C':'#FF8A3E',
+  '2026 C':'#F8633D', '2027 C':'#EF533F', '2028 C':'#EE3801', '2029 C':'#F38280',
+  '2030 C':'#DD7974', '2031 C':'#D96A66', '2032 C':'#D35B57', '2033 C':'#C94845',
+  '2034 C':'#E83F3C', '2035 C':'#DA0F1A', '2036 C':'#F8BFD7', '2037 C':'#F198C8',
+  '2038 C':'#ED61A1', '2039 C':'#E63D87', '2040 C':'#DD195B', '2041 C':'#A22550',
+  '2042 C':'#702A3F', '2043 C':'#E9C5D3', '2044 C':'#E493B5', '2045 C':'#DC75A0',
+  '2046 C':'#CD598A', '2047 C':'#A74770', '2048 C':'#963C64', '2049 C':'#852F4D',
+  '2050 C':'#ECD7E6', '2051 C':'#DBC3D1', '2052 C':'#C5A1B6', '2053 C':'#B0809D',
+  '2054 C':'#9D728B', '2055 C':'#8F5E79', '2056 C':'#7D4965', '2057 C':'#CE95B8',
+  '2058 C':'#B787AD', '2059 C':'#B67CA2', '2060 C':'#C76DA8', '2061 C':'#AB5489',
+  '2062 C':'#B2488D', '2063 C':'#A4347C', '2064 C':'#DDA4D6', '2065 C':'#D9A9DC',
+  '2066 C':'#CE91D3', '2067 C':'#B96CC1', '2068 C':'#AB54B7', '2069 C':'#9E40AA',
+  '2070 C':'#882195', '2071 C':'#C3B5DE', '2072 C':'#B198D4', '2073 C':'#A997D4',
+  '2074 C':'#8C6CBF', '2075 C':'#8069BD', '2076 C':'#7B5CB5', '2077 C':'#5F43A3',
+  '2078 C':'#B29FBB', '2079 C':'#967DA4', '2080 C':'#9375AB', '2081 C':'#80609A',
+  '2082 C':'#724F91', '2083 C':'#8A63C8', '2084 C':'#743BB2', '2085 C':'#D9CDE6',
+  '2086 C':'#998ECD', '2087 C':'#917FD5', '2088 C':'#745FC6', '2089 C':'#604CBB',
+  '2090 C':'#533DB4', '2091 C':'#341CA0', '2092 C':'#B0ACD7', '2093 C':'#A39BC4',
+  '2094 C':'#8781AE', '2095 C':'#6D66B1', '2096 C':'#5851A4', '2097 C':'#5049BC',
+  '2098 C':'#2B2BA9', '2099 C':'#ADA3C9', '2100 C':'#9A92CA', '2101 C':'#7D77CF',
+  '2102 C':'#565BAF', '2103 C':'#474DA8', '2104 C':'#353B9B', '2105 C':'#27257E',
+  '2106 C':'#ABB6CE', '2107 C':'#8999BA', '2108 C':'#7181A8', '2109 C':'#5E6F99',
+  '2110 C':'#53628E', '2111 C':'#394F7E', '2112 C':'#272167', '2113 C':'#9CB0E3',
+  '2114 C':'#758DC6', '2115 C':'#617ABB', '2116 C':'#4E6BB2', '2117 C':'#2D4B9B',
+  '2118 C':'#233778', '2119 C':'#1E2F63', '2120 C':'#B8CAE9', '2121 C':'#82ACD9',
+  '2122 C':'#92AFE4', '2123 C':'#6794DB', '2124 C':'#5B7ED4', '2125 C':'#2F64C8',
+  '2126 C':'#003EB2', '2127 C':'#B4C9E0', '2128 C':'#8EB7E6', '2129 C':'#418FDC',
+  '2130 C':'#357AD3', '2131 C':'#005DBE', '2132 C':'#005AC1', '2133 C':'#005AA6',
+  '2134 C':'#89A5CE', '2135 C':'#698DBF', '2136 C':'#7B95B8', '2137 C':'#6281A9',
+  '2138 C':'#5D7793', '2139 C':'#3D6895', '2140 C':'#265582', '2141 C':'#7FBDE7',
+  '2142 C':'#71AEE4', '2143 C':'#0688CB', '2144 C':'#0069B7', '2145 C':'#0052A8',
+  '2146 C':'#003A90', '2147 C':'#002978', '2148 C':'#5493B3', '2149 C':'#3C83AA',
+  '2150 C':'#19759D', '2151 C':'#006CA2', '2152 C':'#006690', '2153 C':'#00587E',
+  '2154 C':'#004982', '2155 C':'#98B8CC', '2156 C':'#83A8C3', '2157 C':'#6D95B3',
+  '2158 C':'#5181A5', '2159 C':'#41779C', '2160 C':'#316B92', '2161 C':'#0B5A81',
+  '2162 C':'#9CA7B4', '2163 C':'#819CAF', '2164 C':'#7894A9', '2165 C':'#628398',
+  '2166 C':'#4F748D', '2167 C':'#4A6F88', '2168 C':'#164A5D', '2169 C':'#76B0D1',
+  '2170 C':'#4F9BC6', '2171 C':'#1AA2E1', '2172 C':'#007ED1', '2173 C':'#0085D3',
+  '2174 C':'#0078CD', '2175 C':'#006DC6', '2176 C':'#A1B7C1', '2177 C':'#7BA1AE',
+  '2178 C':'#658F9D', '2179 C':'#4A7B8C', '2180 C':'#356D7E', '2181 C':'#205C6B',
+  '2182 C':'#024B5D', '2183 C':'#0093BD', '2184 C':'#0085D3', '2185 C':'#0077A5',
+  '2186 C':'#004A87', '2187 C':'#004776', '2188 C':'#004369', '2189 C':'#003349',
+  '2190 C':'#39B8E6', '2191 C':'#00A4E1', '2192 C':'#0091D9', '2193 C':'#0091D9',
+  '2194 C':'#0088D6', '2195 C':'#0079CD', '2196 C':'#006AAF', '2197 C':'#63D3E8',
+  '2198 C':'#24CAE4', '2199 C':'#00BADC', '2200 C':'#00A9C6', '2201 C':'#00AED6',
+  '2202 C':'#00A6DF', '2203 C':'#0088AF', '2204 C':'#A8CDD7', '2205 C':'#81B3C4',
+  '2206 C':'#709FB3', '2207 C':'#5D9CB2', '2208 C':'#4989A3', '2209 C':'#3F87A0',
+  '2210 C':'#005073', '2211 C':'#699BA6', '2212 C':'#488592', '2213 C':'#29727B',
+  '2214 C':'#226F7A', '2215 C':'#255664', '2216 C':'#284E5A', '2217 C':'#003C42',
+  '2218 C':'#6BB0BE', '2219 C':'#4FA4B4', '2220 C':'#3997A8', '2221 C':'#068B9E',
+  '2222 C':'#008398', '2223 C':'#00768D', '2224 C':'#006C82', '2225 C':'#6CD6E3',
+  '2226 C':'#1DCBDA', '2227 C':'#4BBDCA', '2228 C':'#00A6BF', '2229 C':'#009EB7',
+  '2230 C':'#008DA2', '2231 C':'#007C92', '2232 C':'#6BB1B5', '2233 C':'#50A8B0',
+  '2234 C':'#43A0A7', '2235 C':'#08959E', '2236 C':'#0A919E', '2237 C':'#00858E',
+  '2238 C':'#006976', '2239 C':'#00D0B7', '2240 C':'#00C1A2', '2241 C':'#57A395',
+  '2242 C':'#01A578', '2243 C':'#00957C', '2244 C':'#12806F', '2245 C':'#0D8556',
+  '2246 C':'#A8D6BE', '2247 C':'#77BF9A', '2248 C':'#73B790', '2249 C':'#5DAA83',
+  '2250 C':'#0AB176', '2251 C':'#10AB6F', '2252 C':'#1FA64D', '2253 C':'#BFEACA',
+  '2254 C':'#ADDDB3', '2255 C':'#8AD197', '2256 C':'#5CC273', '2257 C':'#22AC52',
+  '2258 C':'#1B8425', '2259 C':'#147026', '2260 C':'#B5CDAE', '2261 C':'#9CB993',
+  '2262 C':'#8DAB89', '2263 C':'#769770', '2264 C':'#6E9662', '2265 C':'#5D7D52',
+  '2266 C':'#375628', '2267 C':'#9EDF99', '2268 C':'#7ED87E', '2269 C':'#85CA6E',
+  '2270 C':'#3FC650', '2271 C':'#2DB937', '2272 C':'#24981D', '2273 C':'#297129',
+  '2274 C':'#D0DCB3', '2275 C':'#C9DC97', '2276 C':'#8FA750', '2277 C':'#5F9522',
+  '2278 C':'#588025', '2279 C':'#627D2C', '2280 C':'#506921', '2281 C':'#DFE99F',
+  '2282 C':'#CCE797', '2283 C':'#B0E164', '2284 C':'#BBD681', '2285 C':'#9DD84E',
+  '2286 C':'#85C915', '2287 C':'#6AC315', '2288 C':'#D1E37C', '2289 C':'#CDD97D',
+  '2290 C':'#B5DA28', '2291 C':'#B1D41B', '2292 C':'#9DC71D', '2293 C':'#96C213',
+  '2294 C':'#80A90D', '2295 C':'#E7EB8B', '2296 C':'#DFE868', '2297 C':'#C9DD20',
+  '2298 C':'#BDDB59', '2299 C':'#ADD139', '2300 C':'#B0C244', '2301 C':'#99AD21',
+  '2302 C':'#B5B866', '2303 C':'#A5B258', '2304 C':'#A6AB4F', '2305 C':'#A5A612',
+  '2306 C':'#868C28', '2307 C':'#6E6E17', '2308 C':'#61541F', '2309 C':'#E9CDB4',
+  '2310 C':'#DABFA8', '2311 C':'#CEA686', '2312 C':'#B89B82', '2313 C':'#C69369',
+  '2314 C':'#AD7545', '2315 C':'#954A12', '2316 C':'#BD9A7B', '2317 C':'#B8865E',
+  '2318 C':'#A6744A', '2319 C':'#8F5D31', '2320 C':'#744826', '2321 C':'#705039',
+  '2322 C':'#4F3625', '2323 C':'#B7B199', '2324 C':'#B6A385', '2325 C':'#A29175',
+  '2326 C':'#8D7C60', '2327 C':'#847959', '2328 C':'#7B684B', '2329 C':'#69573B',
+  '2330 C':'#CECCC8', '2331 C':'#ADA7A7', '2332 C':'#8A8985', '2333 C':'#736F6C',
+  '2334 C':'#6A6462', '2335 C':'#5F4F47', '2336 C':'#4E4B48', '2337 C':'#FAC1B9',
+  '2338 C':'#E0A59E', '2339 C':'#F09592', '2340 C':'#CE6F76', '2341 C':'#B56D6F',
+  '2342 C':'#B55C64', '2343 C':'#A85767', '2344 C':'#F37F6F', '2345 C':'#FF6F6A',
+  '2346 C':'#FF5B6A', '2347 C':'#E50900', '2348 C':'#E7554D', '2349 C':'#CE3803',
+  '2350 C':'#B12319', '2351 C':'#B97DB3', '2352 C':'#B267A6', '2353 C':'#BB51A5',
+  '2354 C':'#90528D', '2355 C':'#83107A', '2356 C':'#6E0A62', '2357 C':'#611644',
+  '2358 C':'#A9A4AF', '2359 C':'#7C7486', '2360 C':'#777B90', '2361 C':'#6A718D',
+  '2362 C':'#686C84', '2363 C':'#5E5F76', '2364 C':'#635B6D', '2365 C':'#E9BBE2',
+  '2366 C':'#546FCD', '2367 C':'#364FB1', '2368 C':'#2B4DBE', '2369 C':'#0044B7',
+  '2370 C':'#002E94', '2371 C':'#0C148E', '2372 C':'#022278', '2373 C':'#6A84A0',
+  '2374 C':'#456080', '2375 C':'#DF7ACD', '2376 C':'#495B71', '2377 C':'#22556F',
+  '2378 C':'#304B68', '2379 C':'#364658', '2380 C':'#21344A', '2381 C':'#4296DE',
+  '2382 C':'#008BD7', '2383 C':'#0077B1', '2384 C':'#0063A0', '2385 C':'#D03FB2',
+  '2386 C':'#006BC4', '2387 C':'#0066C9', '2388 C':'#0053B3', '2389 C':'#37A1C8',
+  '2390 C':'#007CAB', '2391 C':'#0080A7', '2392 C':'#006885', '2393 C':'#0092CB',
+  '2394 C':'#008CCD', '2395 C':'#C215A0', '2396 C':'#009AB4', '2397 C':'#00B6BF',
+  '2398 C':'#00BAB6', '2399 C':'#00ACA0', '2400 C':'#00AF96', '2401 C':'#2AA79A',
+  '2402 C':'#009E87', '2403 C':'#00897C', '2404 C':'#A5B99D', '2405 C':'#AD128D',
+  '2406 C':'#819D87', '2407 C':'#6C8E76', '2408 C':'#497A55', '2409 C':'#4E644A',
+  '2410 C':'#455A3F', '2411 C':'#1F4324', '2412 C':'#4CD599', '2413 C':'#34B792',
+  '2414 C':'#17BD82', '2415 C':'#9D0F7E', '2416 C':'#13B177', '2417 C':'#289B6B',
+  '2418 C':'#148640', '2419 C':'#017C5B', '2420 C':'#28C462', '2421 C':'#42B511',
+  '2422 C':'#25A731', '2423 C':'#27AA1F', '2424 C':'#399D0C', '2425 C':'#800D66',
+  '2426 C':'#208C1B', '2427 C':'#125F20', '2428 C':'#E2882F', '2429 C':'#C65E1D',
+  '2430 C':'#DAA27A', '2431 C':'#E49357', '2432 C':'#E18B5A', '2433 C':'#DF7B50',
+  '2434 C':'#E77960', '2435 C':'#C3705B', '2436 C':'#B8543E', '2437 C':'#F8C0A2',
+  '2438 C':'#E5A184', '2439 C':'#C68674', '2440 C':'#B6938C', '2441 C':'#A76E5E',
+  '2442 C':'#A16157', '2443 C':'#903A21', '2444 C':'#DFA59C', '2445 C':'#DE898E',
+  '2446 C':'#D1878E', '2447 C':'#B06F78', '2448 C':'#DD6354', '2449 C':'#472428',
+  '2450 C':'#D84987', '2451 C':'#B64470', '2452 C':'#C43B70', '2453 C':'#B699C5',
+  '2454 C':'#007FA3', '2455 C':'#92BFB5', '2456 C':'#259C8A', '2457 C':'#8BAA9A',
+  '2458 C':'#689883', '2459 C':'#54AD94', '2460 C':'#66B0AB', '2461 C':'#149593',
+  '2462 C':'#588D85', '2463 C':'#597571', '2464 C':'#7EBD72', '2465 C':'#276E32',
+  '2466 C':'#24504D', '2467 C':'#B9916D', '2468 C':'#9A694D', '2469 C':'#91573C',
+  '2470 C':'#9C7E61', '2471 C':'#A68878', '2472 C':'#62422C', '2473 C':'#C2B9BD',
+  '2474 C':'#AFA098', '2475 C':'#A38882', '2476 C':'#826D6B', '2477 C':'#715856',
+  '2478 C':'#4A363C', '2479 C':'#403530', '2562 C':'#D0ABE5', '2563 C':'#C5A5D7',
+  '2567 C':'#BDA3DB', '2572 C':'#C08DDA', '2573 C':'#B487CE', '2577 C':'#A27ECC',
+  '2582 C':'#A355C8', '2583 C':'#9960B3', '2587 C':'#774AAF', '2592 C':'#902FB5',
+  '2593 C':'#7E379C', '2597 C':'#51148B', '2602 C':'#7D239E', '2603 C':'#6A2883',
+  '2607 C':'#441178', '2612 C':'#702982', '2613 C':'#612476', '2617 C':'#3C1066',
+  '2622 C':'#613365', '2623 C':'#5A2468', '2627 C':'#361454', '2635 C':'#BFB6E2',
+  '2645 C':'#A298DC', '2655 C':'#8A79D3', '2665 C':'#6E59C6', '2685 C':'#1E0B72',
+  '2695 C':'#271C48', '2705 C':'#9EA8E3', '2706 C':'#C8D5EB', '2707 C':'#BDD8EE',
+  '2708 C':'#B0CCEA', '2715 C':'#7B85D7', '2716 C':'#96AEE2', '2717 C':'#9FC8F0',
+  '2718 C':'#3B89DA', '2725 C':'#505EC6', '2726 C':'#0D60C7', '2727 C':'#0083E3',
+  '2728 C':'#004BBA', '2735 C':'#000E8A', '2736 C':'#002CAD', '2738 C':'#00128D',
+  '2745 C':'#060970', '2746 C':'#00238F', '2747 C':'#001E72', '2748 C':'#001E73',
+  '2755 C':'#0D1262', '2756 C':'#00236E', '2757 C':'#002263', '2758 C':'#002263',
+  '2765 C':'#151847', '2766 C':'#001D4E', '2767 C':'#00294B', '2768 C':'#001F4B',
+  '2905 C':'#80C8E8', '2915 C':'#4AB6E6', '2925 C':'#009DDE', '2935 C':'#0059B6',
+  '2945 C':'#004E96', '2955 C':'#003864', '2965 C':'#00253D', '2975 C':'#90D7EB',
+  '2985 C':'#41C5E8', '2995 C':'#00AAE0', '3005 C':'#0079C8', '3015 C':'#00639B',
+  '3025 C':'#005073', '3035 C':'#004054', '3105 C':'#56D2DF', '3115 C':'#00C1D5',
+  '3125 C':'#00ACC7', '3135 C':'#008FAA', '3145 C':'#00798C', '3155 C':'#006473',
+  '3165 C':'#005059', '3242 C':'#66DBD7', '3245 C':'#76E1D3', '3248 C':'#69CCB8',
+  '3252 C':'#00D1CB', '3255 C':'#07D5C6', '3258 C':'#41C4B3', '3262 C':'#00C0B5',
+  '3265 C':'#00C7B3', '3268 C':'#00A98F', '3272 C':'#00A39A', '3275 C':'#00B29B',
+  '3278 C':'#009C78', '3282 C':'#008679', '3285 C':'#009581', '3288 C':'#008265',
+  '3292 C':'#005B52', '3295 C':'#007664', '3298 C':'#006C54', '3302 C':'#004B46',
+  '3305 C':'#004E42', '3308 C':'#00473A', '3375 C':'#7AE2C0', '3385 C':'#46D7AF',
+  '3395 C':'#12C389', '3405 C':'#18AE68', '3415 C':'#0E774A', '3425 C':'#026142',
+  '3435 C':'#124634', '3500 C':'#136D33', '3501 C':'#57AC15', '3506 C':'#0063AD',
+  '3507 C':'#BACF18', '3508 C':'#617732', '3514 C':'#FEB70F', '3515 C':'#580D7C',
+  '3516 C':'#DF3610', '3517 C':'#C30816', '3519 C':'#E2A7AE', '3520 C':'#AB7CC3',
+  '3522 C':'#1B8935', '3523 C':'#732E33', '3524 C':'#292A53', '3526 C':'#79959E',
+  '3527 C':'#D1459C', '3529 C':'#33A629', '3533 C':'#62DAC7', '3534 C':'#00B2A2',
+  '3535 C':'#2B0F84', '3536 C':'#137534', '3537 C':'#05481F', '3538 C':'#0098D6',
+  '3539 C':'#489B31', '3541 C':'#00939E', '3542 C':'#18187B', '3543 C':'#9B90D1',
+  '3544 C':'#E2B8A9', '3545 C':'#00BDE2', '3546 C':'#D10C1B', '3547 C':'#CB901A',
+  '3551 C':'#00A6C6', '3553 C':'#006FB4', '3555 C':'#48257B', '3556 C':'#F03C32',
+  '3557 C':'#007D81', '3558 C':'#869DD3', '3559 C':'#8855A9', '3560 C':'#00A398',
+  '3561 C':'#83C217', '3564 C':'#F36A03', '3566 C':'#3D2D73', '3568 C':'#F0CADC',
+  '3570 C':'#BCD516', '3572 C':'#FF9EA2', '3574 C':'#544880', '3575 C':'#8B74C3',
+  '3577 C':'#82BADE', '3581 C':'#00336E', '3582 C':'#D176A8', '3583 C':'#442483',
+  '3584 C':'#134180', '3588 C':'#FF942A', '3590 C':'#1F59A1', '3591 C':'#00287C',
+  '3593 C':'#936FB6', '3595 C':'#EFBFD6', '3596 C':'#E1BA8D', '3597 C':'#003976',
+  '3599 C':'#DDC086', '3935 C':'#FCEB63', '3945 C':'#FBE417', '3955 C':'#F8DE19',
+  '3965 C':'#F6DA1A', '3975 C':'#C0A40F', '3985 C':'#A0870B', '3995 C':'#6A5B22',
+  '4001 C':'#EFDCA0', '4002 C':'#E3C684', '4003 C':'#D7C99A', '4004 C':'#CEB77A',
+  '4005 C':'#C5AE7D', '4006 C':'#BDA272', '4007 C':'#B0955F', '4008 C':'#FBB028',
+  '4009 C':'#F49C4A', '4010 C':'#EB6A12', '4011 C':'#E4774F', '4012 C':'#ED723E',
+  '4013 C':'#CF6B2A', '4014 C':'#BB6949', '4015 C':'#D9C767', '4016 C':'#DDC040',
+  '4017 C':'#E6B843', '4018 C':'#D7B24B', '4019 C':'#C7A850', '4020 C':'#C59F12',
+  '4021 C':'#B49237', '4022 C':'#D4B480', '4023 C':'#D8B46B', '4024 C':'#D7AD68',
+  '4025 C':'#DBA04A', '4026 C':'#C28C3F', '4027 C':'#936322', '4028 C':'#835F2A',
+  '4029 C':'#ECCDA5', '4030 C':'#F3C9AE', '4031 C':'#EBCBBB', '4032 C':'#F7CBC0',
+  '4033 C':'#F9BBAA', '4034 C':'#CC9474', '4035 C':'#C99674', '4036 C':'#C19A97',
+  '4037 C':'#B57D77', '4038 C':'#B37369', '4039 C':'#AF6960', '4040 C':'#986C67',
+  '4041 C':'#805D57', '4042 C':'#795D53', '4043 C':'#E1C4AE', '4044 C':'#C5A18A',
+  '4045 C':'#BB9684', '4046 C':'#B29681', '4047 C':'#AE8D76', '4048 C':'#A5826A',
+  '4049 C':'#988370', '4050 C':'#DBAC96', '4051 C':'#E18979', '4052 C':'#DB8878',
+  '4053 C':'#D17D6B', '4054 C':'#AB543E', '4055 C':'#A85547', '4056 C':'#875047',
+  '4057 C':'#E4675C', '4058 C':'#E74D55', '4059 C':'#C53241', '4060 C':'#C03942',
+  '4061 C':'#BF6460', '4062 C':'#A94545', '4063 C':'#9D4234', '4064 C':'#EAB3BA',
+  '4065 C':'#E4AEB1', '4066 C':'#EBA09B', '4067 C':'#EAA09F', '4068 C':'#E79194',
+  '4069 C':'#C95161', '4070 C':'#B63D50', '4071 C':'#CF8A9F', '4072 C':'#E07D9B',
+  '4073 C':'#C94972', '4074 C':'#7D1E4A', '4075 C':'#813751', '4076 C':'#81445A',
+  '4077 C':'#834856', '4078 C':'#E4C3D6', '4079 C':'#CBA9C4', '4080 C':'#CCB0CB',
+  '4081 C':'#AC90A9', '4082 C':'#A4668F', '4083 C':'#825C93', '4084 C':'#6D3E61',
+  '4085 C':'#C8B8AF', '4086 C':'#BBA6A8', '4087 C':'#B79E97', '4088 C':'#A88A81',
+  '4089 C':'#A28C88', '4090 C':'#917369', '4091 C':'#7B5F5E', '4092 C':'#C9A8B5',
+  '4093 C':'#AF9195', '4094 C':'#916A77', '4095 C':'#895B6A', '4096 C':'#784B4E',
+  '4097 C':'#734D51', '4098 C':'#66463E', '4099 C':'#AC8484', '4100 C':'#7E4F50',
+  '4101 C':'#632428', '4102 C':'#561D24', '4103 C':'#51252F', '4104 C':'#543C3E',
+  '4105 C':'#673F34', '4106 C':'#C4AAB3', '4107 C':'#A992A3', '4108 C':'#A38697',
+  '4109 C':'#9E7A8B', '4110 C':'#8A6F81', '4111 C':'#7D596C', '4112 C':'#8B6D73',
+  '4113 C':'#A28E92', '4114 C':'#9B8D92', '4115 C':'#927F82', '4116 C':'#998484',
+  '4117 C':'#6F6475', '4118 C':'#423A4E', '4119 C':'#3D3A44', '4120 C':'#B3ACD1',
+  '4121 C':'#958EB6', '4122 C':'#6E6EB1', '4123 C':'#A2A8BC', '4124 C':'#8B92B1',
+  '4125 C':'#5A5D77', '4126 C':'#4C4164', '4127 C':'#7A8196', '4128 C':'#6A7284',
+  '4129 C':'#647180', '4130 C':'#4E5A6D', '4131 C':'#434C5C', '4132 C':'#383B4A',
+  '4133 C':'#383B47', '4134 C':'#9FA3AF', '4135 C':'#74859C', '4136 C':'#5E6F81',
+  '4137 C':'#415F77', '4138 C':'#476273', '4139 C':'#4A5B6D', '4140 C':'#353C47',
+  '4141 C':'#3364A2', '4142 C':'#2F5181', '4143 C':'#3B556F', '4144 C':'#343C5C',
+  '4145 C':'#2A344F', '4146 C':'#151F37', '4147 C':'#212342', '4148 C':'#5796B0',
+  '4149 C':'#83ABC6', '4150 C':'#3B7EB8', '4151 C':'#006AAF', '4152 C':'#005494',
+  '4153 C':'#004F89', '4154 C':'#004375', '4155 C':'#B8CACE', '4156 C':'#93C0CC',
+  '4157 C':'#5AAFC3', '4158 C':'#247E96', '4159 C':'#005782', '4160 C':'#004960',
+  '4161 C':'#294B59', '4162 C':'#A7D2C5', '4163 C':'#8DCABA', '4164 C':'#0A8074',
+  '4165 C':'#166A61', '4166 C':'#3C7673', '4167 C':'#2D655F', '4168 C':'#1E4645',
+  '4169 C':'#B4C8C1', '4170 C':'#A2BEBC', '4171 C':'#99B9B8', '4172 C':'#80B2AB',
+  '4173 C':'#7EC5C1', '4174 C':'#7EC1C2', '4175 C':'#8EBBC3', '4176 C':'#C6CEC2',
+  '4177 C':'#B9BDAE', '4178 C':'#A8AE99', '4179 C':'#98A582', '4180 C':'#909980',
+  '4181 C':'#748671', '4182 C':'#6A7867', '4183 C':'#B8C1B7', '4184 C':'#99AA9E',
+  '4185 C':'#86A49C', '4186 C':'#658E89', '4187 C':'#647C7A', '4188 C':'#3F5C5C',
+  '4189 C':'#124B53', '4190 C':'#A8B4A5', '4191 C':'#92A59D', '4192 C':'#839588',
+  '4193 C':'#61685C', '4194 C':'#556462', '4195 C':'#636667', '4196 C':'#43555A',
+  '4197 C':'#8A9D91', '4198 C':'#6A7E72', '4199 C':'#586A5F', '4200 C':'#5A6C63',
+  '4201 C':'#4F695E', '4202 C':'#384D47', '4203 C':'#2A4840', '4204 C':'#C3D2AA',
+  '4205 C':'#ABC088', '4206 C':'#91AE83', '4207 C':'#7FA27A', '4208 C':'#3D7054',
+  '4209 C':'#38594D', '4210 C':'#2F4F44', '4211 C':'#D4D997', '4212 C':'#8EAB43',
+  '4213 C':'#6F8E36', '4214 C':'#5E7956', '4215 C':'#557041', '4216 C':'#405725',
+  '4217 C':'#4D5D24', '4218 C':'#B0B69F', '4219 C':'#A6AB98', '4220 C':'#888A79',
+  '4221 C':'#7E7E62', '4222 C':'#757663', '4223 C':'#636853', '4224 C':'#3F4A38',
+  '4225 C':'#8D8271', '4226 C':'#868267', '4227 C':'#6C6952', '4228 C':'#5A553E',
+  '4229 C':'#5E5D4C', '4230 C':'#5A544D', '4231 C':'#645E50', '4232 C':'#DBCD16',
+  '4233 C':'#C7BC13', '4234 C':'#C1C05E', '4235 C':'#B3B07E', '4236 C':'#C7BE6E',
+  '4237 C':'#B0A463', '4238 C':'#918A54', '4239 C':'#C9C4B3', '4240 C':'#CBBDA4',
+  '4241 C':'#BEAC8A', '4242 C':'#8B7751', '4243 C':'#866A50', '4244 C':'#7F6951',
+  '4245 C':'#5C5141', '4246 C':'#CCC3AA', '4247 C':'#D4C1AA', '4248 C':'#D8C3A9',
+  '4249 C':'#C5AD8C', '4250 C':'#BEA889', '4251 C':'#BBA37B', '4252 C':'#B9A286',
+  '4253 C':'#BCA48E', '4254 C':'#C19972', '4255 C':'#AF9878', '4256 C':'#AD9173',
+  '4257 C':'#947C6F', '4258 C':'#6E5D59', '4259 C':'#302923', '4260 C':'#D0A992',
+  '4261 C':'#A26E47', '4262 C':'#AB714F', '4263 C':'#B06F4C', '4264 C':'#B07255',
+  '4265 C':'#9D644A', '4266 C':'#9F603C', '4267 C':'#C1B0A3', '4268 C':'#B59F8E',
+  '4269 C':'#AC9178', '4270 C':'#978671', '4271 C':'#907A6C', '4272 C':'#816B61',
+  '4273 C':'#4F4746', '4274 C':'#AFB7BB', '4275 C':'#ABAFAC', '4276 C':'#9C9EA1',
+  '4277 C':'#8D8A91', '4278 C':'#7E7E84', '4279 C':'#5A5358', '4280 C':'#222A37',
+  '4281 C':'#B0B0B0', '4282 C':'#ADAAAB', '4283 C':'#A7A2A3', '4284 C':'#706B75',
+  '4285 C':'#67616A', '4286 C':'#5C555E', '4287 C':'#454142', '4288 C':'#B6BDB6',
+  '4289 C':'#989898', '4290 C':'#8F8A8B', '4291 C':'#746E6E', '4292 C':'#726E71',
+  '4293 C':'#625C65', '4294 C':'#545155', '4485 C':'#624D26', '4495 C':'#8F7733',
+  '4505 C':'#9C8445', '4515 C':'#B8A46C', '4525 C':'#CBB785', '4535 C':'#D2C395',
+  '4545 C':'#D9CCA1', '4625 C':'#512B1C', '4635 C':'#986038', '4645 C':'#AE7B5C',
+  '4655 C':'#C19477', '4665 C':'#CFA688', '4675 C':'#DDBEA8', '4685 C':'#E3C7AE',
+  '4695 C':'#5B3329', '4705 C':'#7F4D3C', '4715 C':'#986A57', '4725 C':'#B18B79',
+  '4735 C':'#C1A293', '4745 C':'#CBB4A7', '4755 C':'#D7C3B6', '4975 C':'#402123',
+  '4985 C':'#894D52', '4995 C':'#9B626A', '5005 C':'#B07F83', '5015 C':'#CDA4A9',
+  '5025 C':'#DDB8BC', '5035 C':'#DEC3C4', '5115 C':'#4E2C45', '5125 C':'#663E5E',
+  '5135 C':'#7B5573', '5145 C':'#987793', '5155 C':'#BCA4B6', '5165 C':'#D2C2D0',
+  '5175 C':'#D7C8D2', '5185 C':'#483242', '5195 C':'#64445B', '5205 C':'#83637B',
+  '5215 C':'#AA95A6', '5225 C':'#C4B1BD', '5235 C':'#CFBFC7', '5245 C':'#D9CBD3',
+  '5255 C':'#191B35', '5265 C':'#3A3A5F', '5275 C':'#525477', '5285 C':'#8989A5',
+  '5295 C':'#B0B2C5', '5305 C':'#C4C6D3', '5315 C':'#D5D7DF', '5395 C':'#021E2B',
+  '5405 C':'#48758B', '5415 C':'#537F96', '5425 C':'#7498AB', '5435 C':'#A4BCCB',
+  '5445 C':'#B2CAD5', '5455 C':'#BDCFD9', '5463 C':'#02282D', '5467 C':'#16332F',
+  '5473 C':'#005F66', '5477 C':'#3D5D58', '5483 C':'#45858E', '5487 C':'#5D7A77',
+  '5493 C':'#7BA8AC', '5497 C':'#7F9896', '5503 C':'#92B7BD', '5507 C':'#9AB0AD',
+  '5513 C':'#A7C7CA', '5517 C':'#B2C1BE', '5523 C':'#B6D1D1', '5527 C':'#BACAC6',
+  '5535 C':'#183129', '5545 C':'#40685D', '5555 C':'#5C7E71', '5565 C':'#7B9D92',
+  '5575 C':'#91ACA2', '5585 C':'#A7BEB3', '5595 C':'#BFCDC1', '5605 C':'#22372C',
+  '5615 C':'#5F7563', '5625 C':'#6F8472', '5635 C':'#93A597', '5645 C':'#A2B2A4',
+  '5655 C':'#B2BFB2', '5665 C':'#B9C4B7', '5743 C':'#404828', '5747 C':'#41451F',
+  '5753 C':'#5F673B', '5757 C':'#747230', '5763 C':'#777A4E', '5767 C':'#8F8F4D',
+  '5773 C':'#8A8F66', '5777 C':'#A4A46A', '5783 C':'#A4A985', '5787 C':'#BBBC8C',
+  '5793 C':'#B6B997', '5797 C':'#C9C99F', '5803 C':'#C4C6A8', '5807 C':'#D1D1AD',
+  '5815 C':'#575124', '5825 C':'#8A7F3D', '5835 C':'#A69959', '5845 C':'#B3A970',
+  '5855 C':'#C2BA87', '5865 C':'#CFC898', '5875 C':'#D4CD9F', '6001 C':'#ECD388',
+  '6002 C':'#F0CA77', '6003 C':'#E6B851', '6004 C':'#E5AD39', '6005 C':'#E3A624',
+  '6006 C':'#D49821', '6007 C':'#BE7A2C', '6008 C':'#BF9D7C', '6009 C':'#B28C66',
+  '6010 C':'#A67F56', '6011 C':'#A07649', '6012 C':'#895F33', '6013 C':'#7B5029',
+  '6014 C':'#69502E', '6015 C':'#F3B38A', '6016 C':'#FB9C64', '6017 C':'#FF914B',
+  '6018 C':'#FA8234', '6019 C':'#F16B0E', '6020 C':'#E65904', '6021 C':'#DD5B1A',
+  '6022 C':'#F4C0B6', '6023 C':'#EEB3A2', '6024 C':'#E79785', '6025 C':'#DE836D',
+  '6026 C':'#D8755C', '6027 C':'#C6623F', '6028 C':'#BA5C3F', '6029 C':'#D2B1B2',
+  '6030 C':'#C79F9B', '6031 C':'#B98F87', '6032 C':'#B2837A', '6033 C':'#AA786B',
+  '6034 C':'#A36C5C', '6035 C':'#975F4E', '6036 C':'#BD8F9A', '6037 C':'#AD7880',
+  '6038 C':'#A2676F', '6039 C':'#95565E', '6040 C':'#884649', '6041 C':'#7D3D3E',
+  '6042 C':'#622E2F', '6043 C':'#F491A1', '6044 C':'#F18692', '6045 C':'#ED7B87',
+  '6046 C':'#E86D72', '6047 C':'#D44F48', '6048 C':'#D34F4F', '6049 C':'#C14632',
+  '6050 C':'#F9A9D1', '6051 C':'#FC86AF', '6052 C':'#E97297', '6053 C':'#F8618A',
+  '6054 C':'#DD5782', '6055 C':'#D44668', '6056 C':'#CC3C5A', '6057 C':'#D261A4',
+  '6058 C':'#C85094', '6059 C':'#C24689', '6060 C':'#BD4080', '6061 C':'#B53777',
+  '6062 C':'#B33370', '6063 C':'#A32F5F', '6064 C':'#CDB0C9', '6065 C':'#C89CB4',
+  '6066 C':'#C090A9', '6067 C':'#B3829D', '6068 C':'#AA7791', '6069 C':'#9A657E',
+  '6070 C':'#9A657E', '6071 C':'#91799B', '6072 C':'#725477', '6073 C':'#634668',
+  '6074 C':'#5F4160', '6075 C':'#553955', '6076 C':'#472C44', '6077 C':'#392936',
+  '6078 C':'#B996D0', '6079 C':'#AE7FC2', '6080 C':'#9C6CB2', '6081 C':'#9762AE',
+  '6082 C':'#8A529C', '6083 C':'#7C428E', '6084 C':'#703A80', '6085 C':'#C3CFEC',
+  '6086 C':'#A5B6DA', '6087 C':'#98A8D0', '6088 C':'#8498C6', '6089 C':'#708BC3',
+  '6090 C':'#6076AD', '6091 C':'#45629D', '6092 C':'#8391C8', '6093 C':'#788AC3',
+  '6094 C':'#6C7CB9', '6095 C':'#6174B6', '6096 C':'#5062A6', '6097 C':'#3B539B',
+  '6098 C':'#2F478E', '6099 C':'#81A8DF', '6100 C':'#6C92CA', '6101 C':'#5582C4',
+  '6102 C':'#4B78B7', '6103 C':'#255497', '6104 C':'#003E8A', '6105 C':'#003B83',
+  '6106 C':'#AFC0D6', '6107 C':'#A1B5D0', '6108 C':'#87A3C0', '6109 C':'#6E8FB0',
+  '6110 C':'#6989AA', '6111 C':'#587A9C', '6112 C':'#2E5E80', '6113 C':'#65899A',
+  '6114 C':'#608192', '6115 C':'#537483', '6116 C':'#456878', '6117 C':'#3F616F',
+  '6118 C':'#2E464D', '6119 C':'#2B3E44', '6120 C':'#00A5D6', '6121 C':'#009ED1',
+  '6122 C':'#008CC6', '6123 C':'#0087C2', '6124 C':'#007EBA', '6125 C':'#0076AC',
+  '6126 C':'#00609D', '6127 C':'#4FB2CD', '6128 C':'#0AA4BE', '6129 C':'#0095B1',
+  '6130 C':'#0087A0', '6131 C':'#00738C', '6132 C':'#007B9A', '6133 C':'#006682',
+  '6134 C':'#77CBD5', '6135 C':'#6BBAC3', '6136 C':'#3CA7AD', '6137 C':'#259DA0',
+  '6138 C':'#009195', '6139 C':'#008689', '6140 C':'#007D7F', '6141 C':'#80CFC7',
+  '6142 C':'#5FC1AF', '6143 C':'#13AF94', '6144 C':'#00A483', '6145 C':'#009671',
+  '6146 C':'#048B62', '6147 C':'#0D7F55', '6148 C':'#CFE2EE', '6149 C':'#BAD7DE',
+  '6150 C':'#9EC9CA', '6151 C':'#7AB9B8', '6152 C':'#5DA295', '6153 C':'#448B79',
+  '6154 C':'#24785C', '6155 C':'#6DA697', '6156 C':'#5A9782', '6157 C':'#478B72',
+  '6158 C':'#337F62', '6159 C':'#107157', '6160 C':'#115E41', '6161 C':'#144B38',
+  '6162 C':'#3FAB7C', '6163 C':'#0FA26D', '6164 C':'#0E9F68', '6165 C':'#129457',
+  '6166 C':'#168B4B', '6167 C':'#10753C', '6168 C':'#137743', '6169 C':'#76BB80',
+  '6170 C':'#6BB076', '6171 C':'#5FA564', '6172 C':'#55945B', '6173 C':'#358743',
+  '6174 C':'#317E40', '6175 C':'#377240', '6176 C':'#9BC2A8', '6177 C':'#86AF91',
+  '6178 C':'#72A47D', '6179 C':'#5D956A', '6180 C':'#4C895C', '6181 C':'#448151',
+  '6182 C':'#387444', '6183 C':'#7A8874', '6184 C':'#6F816B', '6185 C':'#64745B',
+  '6186 C':'#56654D', '6187 C':'#505E46', '6188 C':'#45523A', '6189 C':'#2D3D31',
+  '6190 C':'#E8ECBE', '6191 C':'#E9E9A9', '6192 C':'#D9E17C', '6193 C':'#CFD746',
+  '6194 C':'#BECA1A', '6195 C':'#A0B213', '6196 C':'#9DAF13', '6197 C':'#D8DBD6',
+  '6198 C':'#C7CBC2', '6199 C':'#BABDAD', '6200 C':'#B6B7A4', '6201 C':'#A1A289',
+  '6202 C':'#96987B', '6203 C':'#919070', '6204 C':'#A8A393', '6205 C':'#98907A',
+  '6206 C':'#918871', '6207 C':'#898169', '6208 C':'#7A6F55', '6209 C':'#6B6349',
+  '6210 C':'#605A3E', '6211 C':'#89959C', '6212 C':'#79868C', '6213 C':'#70787E',
+  '6214 C':'#697174', '6215 C':'#5E676A', '6216 C':'#505354', '6217 C':'#464A47',
+  '6218 C':'#919FAE', '6219 C':'#7E919D', '6220 C':'#74838F', '6221 C':'#687A84',
+  '6222 C':'#5E707A', '6223 C':'#4C5E6A', '6224 C':'#42555F', '7401 C':'#FAE4A8',
+  '7402 C':'#F0D89B', '7403 C':'#F4D487', '7404 C':'#FEDB44', '7405 C':'#FBCD1A',
+  '7406 C':'#F8C210', '7407 C':'#CEA154', '7408 C':'#FCBC0C', '7409 C':'#F6B228',
+  '7410 C':'#FFAE78', '7411 C':'#EDA85F', '7412 C':'#D78135', '7413 C':'#E08534',
+  '7414 C':'#C66D1C', '7415 C':'#E7BAAA', '7416 C':'#E86A54', '7417 C':'#E24F38',
+  '7418 C':'#CD555B', '7419 C':'#B24B5B', '7420 C':'#9E2542', '7421 C':'#671F33',
+  '7422 C':'#F5CDD4', '7423 C':'#E16487', '7424 C':'#E34986', '7425 C':'#B52755',
+  '7426 C':'#A5183E', '7427 C':'#9A1F2F', '7428 C':'#6C2D40', '7429 C':'#E2BCCC',
+  '7430 C':'#DBA8BE', '7431 C':'#C881A0', '7432 C':'#B55E7E', '7433 C':'#A73D65',
+  '7434 C':'#9A3558', '7435 C':'#892A54', '7436 C':'#EBDBE9', '7437 C':'#CAB0D1',
+  '7438 C':'#D0A0D7', '7439 C':'#AD89B8', '7440 C':'#9F79A7', '7441 C':'#955FBF',
+  '7442 C':'#8B43BD', '7443 C':'#DADCEA', '7444 C':'#B3BADE', '7445 C':'#A3A3C4',
+  '7446 C':'#7F87C9', '7447 C':'#564878', '7448 C':'#48384B', '7449 C':'#41293C',
+  '7450 C':'#B8C5DA', '7451 C':'#7AACE4', '7452 C':'#6F96DC', '7453 C':'#6CA8E0',
+  '7454 C':'#5090B4', '7455 C':'#005FAF', '7456 C':'#5071B4', '7457 C':'#B6DEE8',
+  '7458 C':'#68B3CA', '7459 C':'#2897B3', '7460 C':'#0087BE', '7461 C':'#007EBA',
+  '7462 C':'#00568C', '7463 C':'#002B4A', '7464 C':'#9DD0C9', '7465 C':'#3BC1AE',
+  '7466 C':'#00B0B9', '7467 C':'#00A4AE', '7468 C':'#00759A', '7469 C':'#005F85',
+  '7470 C':'#005C72', '7471 C':'#76DDD4', '7472 C':'#56B8B2', '7473 C':'#16998B',
+  '7474 C':'#007781', '7475 C':'#427B7D', '7476 C':'#005258', '7477 C':'#1A4D5A',
+  '7478 C':'#9DE3C0', '7479 C':'#31CF7E', '7480 C':'#20BD71', '7481 C':'#21B554',
+  '7482 C':'#1A9D50', '7483 C':'#295C39', '7484 C':'#00573E', '7485 C':'#D2DFBD',
+  '7486 C':'#C0E297', '7487 C':'#97DB69', '7488 C':'#85D551', '7489 C':'#7AA851',
+  '7490 C':'#75994C', '7491 C':'#808641', '7492 C':'#C5CC82', '7493 C':'#BEC694',
+  '7494 C':'#9EAE89', '7495 C':'#949840', '7496 C':'#7E8722', '7497 C':'#7A7259',
+  '7498 C':'#5D6238', '7499 C':'#F3E5B2', '7500 C':'#E2D0A8', '7501 C':'#DBC79E',
+  '7502 C':'#D2B88C', '7503 C':'#AB9A69', '7504 C':'#96795E', '7505 C':'#856042',
+  '7506 C':'#F1DAB3', '7507 C':'#FFD19C', '7508 C':'#E6B982', '7509 C':'#DAA363',
+  '7510 C':'#C9883F', '7511 C':'#BB772A', '7512 C':'#A9641D', '7513 C':'#E4B7A9',
+  '7514 C':'#D7A287', '7515 C':'#C78B69', '7516 C':'#9C552C', '7517 C':'#894420',
+  '7518 C':'#6F5048', '7519 C':'#604C3F', '7520 C':'#ECBFB2', '7521 C':'#C29B83',
+  '7522 C':'#B66B55', '7523 C':'#AE5E59', '7524 C':'#A8554A', '7525 C':'#9B694E',
+  '7526 C':'#8C381B', '7527 C':'#D5D2C4', '7528 C':'#C5BAAF', '7529 C':'#B5A99D',
+  '7530 C':'#A39383', '7531 C':'#796855', '7532 C':'#645140', '7533 C':'#493829',
+  '7534 C':'#D0CCBF', '7535 C':'#B7B09C', '7536 C':'#A7A08B', '7537 C':'#A9ACA4',
+  '7538 C':'#939B8F', '7539 C':'#8F918B', '7540 C':'#494E54', '7541 C':'#D7E1E3',
+  '7542 C':'#A2BEC3', '7543 C':'#97A5AF', '7544 C':'#728695', '7545 C':'#3D5665',
+  '7546 C':'#1E3846', '7547 C':'#0E1F2B', '7548 C':'#FFC511', '7549 C':'#FFB40A',
+  '7550 C':'#D68F07', '7551 C':'#B87D06', '7552 C':'#76531F', '7553 C':'#5B4523',
+  '7554 C':'#4D3D2B', '7555 C':'#D89F1D', '7556 C':'#BD8B24', '7557 C':'#A27B25',
+  '7558 C':'#997027', '7559 C':'#936A2C', '7560 C':'#806430', '7561 C':'#705F37',
+  '7562 C':'#C09A62', '7563 C':'#DB9931', '7564 C':'#E1890C', '7565 C':'#D17827',
+  '7566 C':'#B06335', '7567 C':'#8A5430', '7568 C':'#795035', '7569 C':'#DD872A',
+  '7570 C':'#D9842F', '7571 C':'#CC7E34', '7572 C':'#BA7335', '7573 C':'#AB662D',
+  '7574 C':'#A06837', '7575 C':'#865D32', '7576 C':'#E08852', '7577 C':'#E47D3D',
+  '7578 C':'#E16C32', '7579 C':'#DF5929', '7580 C':'#C25230', '7581 C':'#894B34',
+  '7582 C':'#684939', '7583 C':'#C7622D', '7584 C':'#BE5A28', '7585 C':'#B25D37',
+  '7586 C':'#A05330', '7587 C':'#954C2F', '7588 C':'#7D4E35', '7589 C':'#5C4739',
+  '7590 C':'#D5B59E', '7591 C':'#C37D59', '7592 C':'#B55633', '7593 C':'#9E412C',
+  '7594 C':'#803C2E', '7595 C':'#6B3D2F', '7596 C':'#5D3C31', '7597 C':'#D64325',
+  '7598 C':'#C1482A', '7599 C':'#B43D25', '7600 C':'#8F3E2C', '7601 C':'#85422C',
+  '7602 C':'#7D4A33', '7603 C':'#694231', '7604 C':'#E5D7D6', '7605 C':'#E2BBB3',
+  '7606 C':'#D8958C', '7607 C':'#C56E62', '7608 C':'#A5493D', '7609 C':'#843D34',
+  '7610 C':'#6A3533', '7611 C':'#DFBCB2', '7612 C':'#CC9A8F', '7613 C':'#BD8A7E',
+  '7614 C':'#A78076', '7615 C':'#886864', '7616 C':'#6A4E4D', '7617 C':'#583D3F',
+  '7618 C':'#C86E4F', '7619 C':'#C04D36', '7620 C':'#BA342D', '7621 C':'#AF262A',
+  '7622 C':'#94282D', '7623 C':'#8C2B2C', '7624 C':'#82302E', '7625 C':'#E3533E',
+  '7626 C':'#CA3626', '7627 C':'#AA2E2B', '7628 C':'#A02D2B', '7629 C':'#703535',
+  '7630 C':'#633130', '7631 C':'#582C2E', '7632 C':'#D6C9CC', '7633 C':'#C2A4A8',
+  '7634 C':'#C06983', '7635 C':'#C73A63', '7636 C':'#BD224B', '7637 C':'#943248',
+  '7638 C':'#7D2E40', '7639 C':'#936D74', '7640 C':'#944155', '7641 C':'#8D2D48',
+  '7642 C':'#732F4B', '7643 C':'#673046', '7644 C':'#582E42', '7645 C':'#502C3A',
+  '7646 C':'#A37088', '7647 C':'#A83F71', '7648 C':'#992466', '7649 C':'#891E61',
+  '7650 C':'#712458', '7651 C':'#672C5B', '7652 C':'#5B2951', '7653 C':'#938896',
+  '7654 C':'#9D789C', '7655 C':'#9D5C93', '7656 C':'#8A3C7E', '7657 C':'#6B2D61',
+  '7658 C':'#693764', '7659 C':'#5D3854', '7660 C':'#9794A6', '7661 C':'#8B7097',
+  '7662 C':'#754481', '7663 C':'#66347A', '7664 C':'#60377A', '7665 C':'#5C386F',
+  '7666 C':'#594E62', '7667 C':'#647EA1', '7668 C':'#5D71A3', '7669 C':'#58629C',
+  '7670 C':'#4A5594', '7671 C':'#454A8B', '7672 C':'#424283', '7673 C':'#485586',
+  '7674 C':'#7F8DB4', '7675 C':'#7782AD', '7676 C':'#6C669F', '7677 C':'#685393',
+  '7678 C':'#5E498D', '7679 C':'#4C3F82', '7680 C':'#493377', '7681 C':'#88A9CB',
+  '7682 C':'#5987B7', '7683 C':'#276EAA', '7684 C':'#125F9B', '7685 C':'#005798',
+  '7686 C':'#005190', '7687 C':'#00458E', '7688 C':'#1B98C9', '7689 C':'#0092C2',
+  '7690 C':'#0077A9', '7691 C':'#006398', '7692 C':'#005787', '7693 C':'#004A77',
+  '7694 C':'#004369', '7695 C':'#74A8BC', '7696 C':'#5C99AE', '7697 C':'#4387A0',
+  '7698 C':'#36748E', '7699 C':'#236883', '7700 C':'#005C7C', '7701 C':'#005877',
+  '7702 C':'#2FA8C5', '7703 C':'#009DBC', '7704 C':'#0086AC', '7705 C':'#007095',
+  '7706 C':'#006A90', '7707 C':'#00637E', '7708 C':'#00566E', '7709 C':'#5AB3BC',
+  '7710 C':'#00A7B6', '7711 C':'#0098A9', '7712 C':'#00849B', '7713 C':'#007F8C',
+  '7714 C':'#007781', '7715 C':'#00646C', '7716 C':'#009790', '7717 C':'#00867E',
+  '7718 C':'#007875', '7719 C':'#006D6A', '7720 C':'#00635B', '7721 C':'#005D5E',
+  '7722 C':'#005352', '7723 C':'#51A587', '7724 C':'#00966E', '7725 C':'#068554',
+  '7726 C':'#0A7A4D', '7727 C':'#086F47', '7728 C':'#006745', '7729 C':'#005945',
+  '7730 C':'#4E9562', '7731 C':'#2C874A', '7732 C':'#0E7B42', '7733 C':'#0B6F42',
+  '7734 C':'#286243', '7735 C':'#38573C', '7736 C':'#375442', '7737 C':'#72A43D',
+  '7738 C':'#53A244', '7739 C':'#3C9B46', '7740 C':'#428F41', '7741 C':'#488842',
+  '7742 C':'#4E7740', '7743 C':'#48693F', '7744 C':'#C0BB1E', '7745 C':'#B3AC29',
+  '7746 C':'#9E9933', '7747 C':'#8D8D34', '7748 C':'#807F36', '7749 C':'#757138',
+  '7750 C':'#666538', '7751 C':'#D0B44D', '7752 C':'#D5B029', '7753 C':'#C59E22',
+  '7754 C':'#A4852C', '7755 C':'#8B7530', '7756 C':'#736535', '7757 C':'#6A5E35',
+  '7758 C':'#DBC114', '7759 C':'#CBB00C', '7760 C':'#96832D', '7761 C':'#78713A',
+  '7762 C':'#5F643A', '7763 C':'#5B5B3C', '7764 C':'#555435', '7765 C':'#C3B22A',
+  '7766 C':'#BCA924', '7767 C':'#B09B2F', '7768 C':'#937D36', '7769 C':'#736136',
+  '7770 C':'#655839', '7771 C':'#4F4935', '8001 C':'#8B8B8B', '8002 C':'#8B827B',
+  '8003 C':'#8B7F75', '8004 C':'#897A68', '8005 C':'#89735E', '8006 C':'#897056',
+  '8020 C':'#9B887A', '8021 C':'#A28273', '8022 C':'#AB7559', '8023 C':'#AD6443',
+  '8024 C':'#AF5B2F', '8025 C':'#A95124', '8040 C':'#94908D', '8041 C':'#9C847D',
+  '8042 C':'#9F7C71', '8043 C':'#A56F62', '8044 C':'#A75F49', '8045 C':'#A3593F',
+  '8060 C':'#978791', '8061 C':'#9C7B84', '8062 C':'#9F6F7B', '8063 C':'#A5616D',
+  '8064 C':'#A05C63', '8065 C':'#9E5656', '8080 C':'#938896', '8081 C':'#997390',
+  '8082 C':'#9A6389', '8083 C':'#9D5084', '8084 C':'#A43D75', '8085 C':'#A23064',
+  '8100 C':'#907D97', '8101 C':'#906E93', '8102 C':'#906292', '8103 C':'#8D4F8E',
+  '8104 C':'#923A7C', '8105 C':'#8F306B', '8120 C':'#8E8999', '8121 C':'#8C7F98',
+  '8122 C':'#866E94', '8123 C':'#845B93', '8124 C':'#894F85', '8125 C':'#844776',
+  '8140 C':'#847D97', '8141 C':'#7B7295', '8142 C':'#746199', '8143 C':'#6B5196',
+  '8144 C':'#6F5081', '8145 C':'#6B4877', '8160 C':'#888B99', '8161 C':'#7A8099',
+  '8162 C':'#5F649A', '8163 C':'#53589C', '8164 C':'#4F4D92', '8165 C':'#4B4588',
+  '8180 C':'#82909A', '8181 C':'#61829F', '8182 C':'#44739E', '8183 C':'#1D64A1',
+  '8184 C':'#005B94', '8185 C':'#004E82', '8200 C':'#73909C', '8201 C':'#62899B',
+  '8202 C':'#48839F', '8203 C':'#027BA2', '8204 C':'#2C758C', '8205 C':'#296E81',
+  '8220 C':'#6E8E9A', '8221 C':'#5B8A9D', '8222 C':'#3B88A0', '8223 C':'#0082A1',
+  '8224 C':'#00768E', '8225 C':'#006C7D', '8240 C':'#839497', '8241 C':'#608E97',
+  '8242 C':'#488D9B', '8243 C':'#0E889C', '8244 C':'#307F85', '8245 C':'#2E7A7A',
+  '8260 C':'#779094', '8261 C':'#648D92', '8262 C':'#4A888C', '8263 C':'#238385',
+  '8264 C':'#1F7976', '8265 C':'#0B6D63', '8280 C':'#7C9695', '8281 C':'#6E9593',
+  '8282 C':'#589692', '8283 C':'#38978D', '8284 C':'#528F7E', '8285 C':'#4A8B72',
+  '8300 C':'#82988E', '8301 C':'#749585', '8302 C':'#67957D', '8303 C':'#569671',
+  '8304 C':'#628E69', '8305 C':'#5B835A', '8320 C':'#8B968F', '8321 C':'#839778',
+  '8322 C':'#7D996D', '8323 C':'#71995D', '8324 C':'#7A9457', '8325 C':'#768B4B',
+  '8340 C':'#91967E', '8341 C':'#8E9771', '8342 C':'#919B62', '8343 C':'#8C9A50',
+  '8344 C':'#8B9439', '8345 C':'#8B8E28', '8360 C':'#96987B', '8361 C':'#9A9869',
+  '8362 C':'#A19A59', '8363 C':'#AA9C44', '8364 C':'#A69343', '8365 C':'#A48C36',
+  '8380 C':'#959487', '8381 C':'#979178', '8382 C':'#9F8F6A', '8383 C':'#A78D5E',
+  '8384 C':'#AA8240', '8385 C':'#A87C35', '8400 C':'#868686', '8401 C':'#7D7F7D',
+  '8402 C':'#6F6F6F', '8403 C':'#5F5E5D', '8404 C':'#544F4B', '8405 C':'#4C4541',
+  '8420 C':'#8F8D90', '8421 C':'#828183', '8422 C':'#747170', '8423 C':'#65605F',
+  '8424 C':'#635451', '8425 C':'#5D4C47', '8440 C':'#988486', '8441 C':'#9F7B7A',
+  '8442 C':'#A46E6F', '8443 C':'#AB6361', '8444 C':'#AF544B', '8445 C':'#AE4C41',
+  '8460 C':'#8D8A91', '8461 C':'#847C85', '8462 C':'#80737E', '8463 C':'#786573',
+  '8464 C':'#714D5C', '8465 C':'#704A55', '8480 C':'#3B6677', '8481 C':'#496176',
+  '8482 C':'#22556F', '8483 C':'#004569', '8484 C':'#00537D', '8485 C':'#005F8D',
+  '8500 C':'#728280', '8501 C':'#58796B', '8502 C':'#406168', '8503 C':'#283C43',
+  '8504 C':'#274E5D', '8505 C':'#305865', '8520 C':'#79755B', '8521 C':'#505444',
+  '8522 C':'#3E4A40', '8523 C':'#2D3C36', '8524 C':'#2F4949', '8525 C':'#355053',
+  '8540 C':'#854B52', '8541 C':'#6E4146', '8542 C':'#643038', '8543 C':'#5B3043',
+  '8544 C':'#613B53', '8545 C':'#603E57', '8560 C':'#7A4B3B', '8561 C':'#774443',
+  '8562 C':'#723B43', '8563 C':'#73433E', '8564 C':'#774C49', '8565 C':'#764F52',
+  '8580 C':'#986B3E', '8581 C':'#865932', '8582 C':'#7E522B', '8583 C':'#6F441E',
+  '8584 C':'#6E4729', '8585 C':'#714D32', '8600 C':'#5A5654', '8601 C':'#4C4542',
+  '8602 C':'#3B3B3E', '8603 C':'#2B303C', '8604 C':'#2F3A49', '8605 C':'#334454',
+  '8620 C':'#765C40', '8621 C':'#634B39', '8622 C':'#514232', '8623 C':'#423A32',
+  '8624 C':'#423D36', '8625 C':'#46413C', '8640 C':'#A17B30', '8641 C':'#AD8525',
+  '8642 C':'#B08811', '8643 C':'#B28806', '8644 C':'#B0901C', '8645 C':'#AA922D',
+  '8660 C':'#937933', '8661 C':'#8C7C21', '8662 C':'#8B801D', '8663 C':'#858616',
+  '8664 C':'#8B8E28', '8665 C':'#8A913A', '8680 C':'#7C723D', '8681 C':'#7C7A34',
+  '8682 C':'#71802F', '8683 C':'#678628', '8684 C':'#648635', '8685 C':'#658C42',
+  '8700 C':'#73744E', '8701 C':'#697841', '8702 C':'#5D7E42', '8703 C':'#477F3F',
+  '8704 C':'#4A874F', '8705 C':'#4E8C5B', '8720 C':'#4E6D56', '8721 C':'#557557',
+  '8722 C':'#3B7355', '8723 C':'#1E8160', '8724 C':'#29886E', '8725 C':'#2D8D78',
+  '8740 C':'#42685F', '8741 C':'#2B6955', '8742 C':'#2C6B60', '8743 C':'#006B69',
+  '8744 C':'#007277', '8745 C':'#007781', '8760 C':'#196362', '8761 C':'#005F69',
+  '8762 C':'#1D5D67', '8763 C':'#00546C', '8764 C':'#00607D', '8765 C':'#006786',
+  '8780 C':'#363B5F', '8781 C':'#31435E', '8782 C':'#213872', '8783 C':'#00376D',
+  '8784 C':'#07467C', '8785 C':'#0F4F88', '8800 C':'#563759', '8801 C':'#4E3961',
+  '8802 C':'#3E2D64', '8803 C':'#492C62', '8804 C':'#4D376F', '8805 C':'#4F3F7A',
+  '8820 C':'#873F5D', '8821 C':'#81305D', '8822 C':'#693765', '8823 C':'#5D2864',
+  '8824 C':'#623777', '8825 C':'#603A80', '8840 C':'#903E56', '8841 C':'#8E3055',
+  '8842 C':'#8D225A', '8843 C':'#7F1E5F', '8844 C':'#802C6E', '8845 C':'#7B3A76',
+  '8860 C':'#974541', '8861 C':'#933E48', '8862 C':'#962F48', '8863 C':'#97203F',
+  '8864 C':'#922B51', '8865 C':'#8F385F', '8880 C':'#954F4E', '8881 C':'#9C4454',
+  '8882 C':'#A8385E', '8883 C':'#AC3741', '8884 C':'#A43E4C', '8885 C':'#A14556',
+  '8900 C':'#A6533A', '8901 C':'#BA523E', '8902 C':'#B8524F', '8903 C':'#BE474A',
+  '8904 C':'#BC4E58', '8905 C':'#B6535C', '8920 C':'#A35D42', '8921 C':'#B45329',
+  '8922 C':'#B94F0F', '8923 C':'#BC4C22', '8924 C':'#B8502D', '8925 C':'#B15438',
+  '8940 C':'#A8642E', '8941 C':'#AC5E1D', '8942 C':'#B35A0C', '8943 C':'#BF5A05',
+  '8944 C':'#BA5E17', '8945 C':'#B3612D', '8960 C':'#A17030', '8961 C':'#AA671F',
+  '8962 C':'#B16C06', '8963 C':'#B86305', '8964 C':'#B26720', '8965 C':'#AD6D31',
+  '9020 C':'#EFEDC8', '9021 C':'#F1E9E7', '9022 C':'#EDE6EA', '9023 C':'#E9E4EB',
+  '9040 C':'#DAEBEF', '9041 C':'#DFEBE6', '9042 C':'#E3EAE6', '9043 C':'#E6E6DF',
+  '9044 C':'#C5E3E2', '9045 C':'#C7DFDD', '9060 C':'#F1EFD9', '9061 C':'#F1E9EB',
+  '9062 C':'#E3EDEB', '9063 C':'#E7F0EA', '9064 C':'#F1F2E1', '9080 C':'#E3E3DD',
+  '9081 C':'#E0DCD5', '9082 C':'#D0CCC3', '9083 C':'#CBC9C0', '9084 C':'#ACA89F',
+  '9100 C':'#E7E9E2', '9101 C':'#E1E3DD', '9102 C':'#D8DBD6', '9103 C':'#D5D8D3',
+  '9120 C':'#F6F0BA', '9121 C':'#F7F0B2', '9122 C':'#E9E4BA', '9123 C':'#DED8B9',
+  '9140 C':'#F5EECD', '9141 C':'#F6EFC5', '9142 C':'#E9E3C6', '9143 C':'#E7E0C5',
+  '9160 C':'#F5E4BF', '9161 C':'#EBDBBB', '9162 C':'#E4D9C3', '9163 C':'#D8CEB8',
+  '9180 C':'#F6E6CF', '9181 C':'#F5E3C9', '9182 C':'#ECDECB', '9183 C':'#E6D8C7',
+  '9184 C':'#EEE4D0', '9185 C':'#EDE1CF', '9186 C':'#DFD2C3', '9200 C':'#F7E2CF',
+  '9201 C':'#F5E2CD', '9202 C':'#EDDDCD', '9203 C':'#E5D5C4', '9220 C':'#F3DFCE',
+  '9221 C':'#ECD6C5', '9222 C':'#E7D3C8', '9223 C':'#E0D2C7', '9224 C':'#F3EADE',
+  '9225 C':'#F1E7D9', '9226 C':'#ECE4DA', '9240 C':'#F3E5E1', '9241 C':'#EDDCD8',
+  '9242 C':'#E9D6CF', '9243 C':'#DFCEC8', '9244 C':'#F2E9E3', '9260 C':'#F3DEDB',
+  '9261 C':'#EFD7D5', '9262 C':'#E8D6D4', '9263 C':'#E4D0CB', '9280 C':'#F3E1E2',
+  '9281 C':'#F2DEDF', '9282 C':'#EFDBDC', '9283 C':'#E8D9D9', '9284 C':'#F8C8CF',
+  '9285 C':'#EFEAE5', '9286 C':'#F7E0E0', '9300 C':'#F4DDE3', '9301 C':'#ECDBE2',
+  '9302 C':'#E8CED5', '9303 C':'#E7D2D7', '9320 C':'#F0DEE8', '9321 C':'#E9D4E0',
+  '9322 C':'#E7D1DF', '9323 C':'#E0CCD7', '9324 C':'#EFC9E6', '9340 C':'#E5DDE9',
+  '9341 C':'#DED7E5', '9342 C':'#DCD4E2', '9343 C':'#DCD0E2', '9344 C':'#CDB8E6',
+  '9345 C':'#EDEAEB', '9360 C':'#DAD8EB', '9361 C':'#DBD4E8', '9362 C':'#D9D5E4',
+  '9363 C':'#D0C9DD', '9380 C':'#DDE3EE', '9381 C':'#CFDBEB', '9382 C':'#C6D2E8',
+  '9383 C':'#CDD5E3', '9384 C':'#D7E1ED', '9385 C':'#CCD5E1', '9400 C':'#D3E2ED',
+  '9401 C':'#D1E2EE', '9402 C':'#D2E2E9', '9403 C':'#C9D9E6', '9420 C':'#CFE2EE',
+  '9421 C':'#CBE0EA', '9422 C':'#C7DAE6', '9423 C':'#BCD2DD', '9424 C':'#BFE3E8',
+  '9440 C':'#BBE0EA', '9441 C':'#BAE0EC', '9442 C':'#B8DDE8', '9443 C':'#B6D7E0',
+  '9460 C':'#D2EDF1', '9461 C':'#B9E1E7', '9462 C':'#B3DCE1', '9463 C':'#B9DADF',
+  '9464 C':'#96DDED', '9480 C':'#C4EAE9', '9481 C':'#C3EAEB', '9482 C':'#BFE3E8',
+  '9483 C':'#C2DCDA', '9500 C':'#B9E8E8', '9501 C':'#B6DFDC', '9502 C':'#C8E2E0',
+  '9503 C':'#C8DFDB', '9504 C':'#C2D9D8', '9520 C':'#D7F1E9', '9521 C':'#D2E7E2',
+  '9522 C':'#D5E6E0', '9523 C':'#D4E3DD', '9524 C':'#AEECDF', '9525 C':'#E7F0E6',
+  '9540 C':'#DDEFE5', '9541 C':'#DDEBE4', '9542 C':'#CDDBCD', '9543 C':'#C6D6C8',
+  '9544 C':'#E7F1DC', '9560 C':'#E1EFDD', '9561 C':'#D7E7D3', '9562 C':'#D8E3D0',
+  '9563 C':'#D4DDCC', '9580 C':'#E5EFCE', '9581 C':'#E2E8D0', '9582 C':'#D9DCC9',
+  '9583 C':'#CFD4BD', '9584 C':'#DCE2CC', '9585 C':'#D8DCC7', '9600 C':'#E7EBC9',
+  '9601 C':'#E6E7CC', '9602 C':'#DBDCBF', '9603 C':'#DAD8C2', 'Pink C':'#D52E97',
+  '10101 C':'#D4D4D4', '10102 C':'#C2C8C6', '10103 C':'#B9BCBB', '10104 C':'#ADB1B4',
+  '10105 C':'#ABAEAF', '10106 C':'#B0AA77', '10107 C':'#B1AB64', '10108 C':'#B5AB53',
+  '10109 C':'#B7AA41', '10110 C':'#BDA92A', '10111 C':'#C8B112', '10112 C':'#ACAA8A',
+  '10113 C':'#AEA76F', '10114 C':'#B1A85E', '10115 C':'#B7A64E', '10116 C':'#BCA53A',
+  '10117 C':'#C1A425', '10118 C':'#B0A36F', '10119 C':'#B8A25E', '10120 C':'#BB9D4C',
+  '10121 C':'#BD9938', '10122 C':'#C69627', '10123 C':'#CD930B', '10124 C':'#B0A378',
+  '10125 C':'#AE9D64', '10126 C':'#AE9652', '10127 C':'#B29246', '10128 C':'#B88C35',
+  '10129 C':'#BF852A', '10130 C':'#B28F71', '10131 C':'#B3855D', '10132 C':'#B47D4E',
+  '10133 C':'#AE713B', '10134 C':'#AD6931', '10135 C':'#A96021', '10136 C':'#AE9B89',
+  '10137 C':'#B18F75', '10138 C':'#AF8260', '10139 C':'#AC794E', '10140 C':'#AD7143',
+  '10141 C':'#A56534', '10142 C':'#B88D6C', '10143 C':'#BD845B', '10144 C':'#C27B49',
+  '10145 C':'#C7743A', '10146 C':'#C96A29', '10147 C':'#CD6318', '10148 C':'#BA877B',
+  '10149 C':'#BD7B6B', '10150 C':'#C06D58', '10151 C':'#C26448', '10152 C':'#C85B39',
+  '10153 C':'#CC532C', '10154 C':'#AE9691', '10155 C':'#B2877C', '10156 C':'#B3776D',
+  '10157 C':'#B0695B', '10158 C':'#B15C4E', '10159 C':'#B45143', '10160 C':'#B87E8F',
+  '10161 C':'#BC7082', '10162 C':'#BE6276', '10163 C':'#BF5565', '10164 C':'#C34D59',
+  '10165 C':'#C94249', '10166 C':'#B27C95', '10167 C':'#B26C8B', '10168 C':'#B55E7C',
+  '10169 C':'#B34D71', '10170 C':'#B54164', '10171 C':'#B93156', '10172 C':'#A37D9C',
+  '10173 C':'#A26E95', '10174 C':'#A4628C', '10175 C':'#A15284', '10176 C':'#A7457A',
+  '10177 C':'#AC3670', '10178 C':'#AE8CA4', '10179 C':'#AD7D9D', '10180 C':'#AC7197',
+  '10181 C':'#AD6590', '10182 C':'#AF5788', '10183 C':'#B54880', '10184 C':'#AA91AA',
+  '10185 C':'#AA85A8', '10186 C':'#A976A1', '10187 C':'#AA699C', '10188 C':'#AF5D99',
+  '10189 C':'#AE5093', '10190 C':'#9D96A0', '10191 C':'#948894', '10192 C':'#8C7987',
+  '10193 C':'#836B7B', '10194 C':'#755C6F', '10195 C':'#6D4E5F', '10196 C':'#A091A8',
+  '10197 C':'#9F7F9E', '10198 C':'#9B6D96', '10199 C':'#945D8B', '10200 C':'#964F85',
+  '10201 C':'#914179', '10202 C':'#9A80A1', '10203 C':'#926D95', '10204 C':'#8C618C',
+  '10205 C':'#835283', '10206 C':'#81477D', '10207 C':'#793772', '10208 C':'#9F8DA8',
+  '10209 C':'#9A7CA4', '10210 C':'#936F9E', '10211 C':'#8F619B', '10212 C':'#8C5796',
+  '10213 C':'#834690', '10214 C':'#8C7DA5', '10215 C':'#7F6EA3', '10216 C':'#72619E',
+  '10217 C':'#664F97', '10218 C':'#5A4192', '10219 C':'#4C3088', '10220 C':'#9693AB',
+  '10221 C':'#8F87A6', '10222 C':'#847CA2', '10223 C':'#7B70A1', '10224 C':'#73649E',
+  '10225 C':'#6A599A', '10226 C':'#9394AD', '10227 C':'#8889A7', '10228 C':'#8280A6',
+  '10229 C':'#7373A1', '10230 C':'#68689D', '10231 C':'#585B9A', '10232 C':'#7E82A3',
+  '10233 C':'#6E759C', '10234 C':'#616495', '10235 C':'#53578E', '10236 C':'#494A88',
+  '10237 C':'#4B4F8B', '10238 C':'#838AA9', '10239 C':'#757FAC', '10240 C':'#6070A4',
+  '10241 C':'#52639F', '10242 C':'#41559E', '10243 C':'#304897', '10244 C':'#6587A9',
+  '10245 C':'#507AA8', '10246 C':'#346BA4', '10247 C':'#1B5E9D', '10248 C':'#005199',
+  '10249 C':'#004494', '10250 C':'#8D9DAE', '10251 C':'#7C93AC', '10252 C':'#6886AB',
+  '10253 C':'#5A7BA9', '10254 C':'#436FA6', '10255 C':'#2D62A2', '10256 C':'#7594AC',
+  '10257 C':'#658AAC', '10258 C':'#4F80AC', '10259 C':'#3977A8', '10260 C':'#1D6CA9',
+  '10261 C':'#0060A5', '10262 C':'#889CA5', '10263 C':'#738D9A', '10264 C':'#5C7E91',
+  '10265 C':'#4C7286', '10266 C':'#3A667E', '10267 C':'#255B71', '10268 C':'#6D9AAD',
+  '10269 C':'#5291AD', '10270 C':'#3D89AD', '10271 C':'#0980A9', '10272 C':'#0079AB',
+  '10273 C':'#006EA9', '10274 C':'#6EA0AF', '10275 C':'#549AB0', '10276 C':'#3494AE',
+  '10277 C':'#008EAD', '10278 C':'#0089AF', '10279 C':'#0085B3', '10280 C':'#779FA6',
+  '10281 C':'#6196A1', '10282 C':'#49909C', '10283 C':'#2F8A98', '10284 C':'#00818F',
+  '10285 C':'#00798A', '10286 C':'#74A3A7', '10287 C':'#61A0A5', '10288 C':'#409EA5',
+  '10289 C':'#149AA1', '10290 C':'#00969D', '10291 C':'#009197', '10292 C':'#7BA9A5',
+  '10293 C':'#67A6A0', '10294 C':'#52A39A', '10295 C':'#32A193', '10296 C':'#00A08F',
+  '10297 C':'#009E88', '10298 C':'#86A289', '10299 C':'#769D7C', '10300 C':'#689971',
+  '10301 C':'#599665', '10302 C':'#469058', '10303 C':'#2B8A4D', '10304 C':'#8EA484',
+  '10305 C':'#83A174', '10306 C':'#769E68', '10307 C':'#68975B', '10308 C':'#5A9450',
+  '10309 C':'#499141', '10310 C':'#96A195', '10311 C':'#869582', '10312 C':'#7A8E77',
+  '10313 C':'#6D8267', '10314 C':'#61785A', '10315 C':'#556F50', '10316 C':'#99A980',
+  '10317 C':'#92A86F', '10318 C':'#85A560', '10319 C':'#7EA452', '10320 C':'#75A646',
+  '10321 C':'#67A335', '10322 C':'#A8AC79', '10323 C':'#A2A863', '10324 C':'#A2A955',
+  '10325 C':'#9CA744', '10326 C':'#96A633', '10327 C':'#94AA21', '10328 C':'#999E7D',
+  '10329 C':'#8E986C', '10330 C':'#848E5B', '10331 C':'#7C8650', '10332 C':'#727F43',
+  '10333 C':'#677636', '10334 C':'#9D9985', '10335 C':'#969176', '10336 C':'#8F8665',
+  '10337 C':'#867C58', '10338 C':'#7E754C', '10339 C':'#756B3D', '10340 C':'#A1947F',
+  '10341 C':'#9E8F71', '10342 C':'#96845E', '10343 C':'#8E7A51', '10344 C':'#887243',
+  '10345 C':'#7E6836', '10346 C':'#A8967E', '10347 C':'#A28A6B', '10348 C':'#9E815F',
+  '10349 C':'#987A4F', '10350 C':'#927144', '10351 C':'#8B6A37', '10352 C':'#AB9F90',
+  '10353 C':'#A89278', '10354 C':'#A68966', '10355 C':'#A38058', '10356 C':'#9C7849',
+  '10357 C':'#946D3C', '10358 C':'#A68F7B', '10359 C':'#A0876B', '10360 C':'#9B7B5C',
+  '10361 C':'#92714D', '10362 C':'#86643E', '10363 C':'#7E5A31', '10364 C':'#AA9888',
+  '10365 C':'#A7886F', '10366 C':'#A37C5C', '10367 C':'#9C704E', '10368 C':'#96643F',
+  '10369 C':'#8E5933', '10370 C':'#A39A92', '10371 C':'#98897A', '10372 C':'#927E6D',
+  '10373 C':'#866D5B', '10374 C':'#7B604F', '10375 C':'#715742', '10376 C':'#948983',
+  '10377 C':'#8A7C74', '10378 C':'#826E63', '10379 C':'#796459', '10380 C':'#6F5A4D',
+  '10381 C':'#614C3F', '10382 C':'#938F92', '10383 C':'#837D80', '10384 C':'#766D71',
+  '10385 C':'#675F62', '10386 C':'#575152', '10387 C':'#4B4244', '10388 C':'#8A9296',
+  '10389 C':'#778085', '10390 C':'#687176', '10391 C':'#5A6267', '10392 C':'#4C5459',
+  '10393 C':'#40484D', '10394 C':'#7D7C7A', '10395 C':'#6E6D6A', '10396 C':'#5F5B59',
+  '10397 C':'#514D4A', '10398 C':'#433F3D', '10399 C':'#353533', '10401 C':'#D08A25',
+  '10402 C':'#C48E4F', '10403 C':'#AD8856', '10404 C':'#AF916C', '10405 C':'#B09774',
+  '10406 C':'#B69C7D', '10407 C':'#B5A083', '10408 C':'#B49279', '10409 C':'#A67661',
+  '10410 C':'#A06C68', '10411 C':'#B78480', '10413 C':'#C64B4D', '10414 C':'#BD2A5B',
+  '10415 C':'#B34244', '10416 C':'#AC2A2E', '10417 C':'#B23034', '10418 C':'#8D3634',
+  '10419 C':'#BD8185', '10420 C':'#AE7B8A', '10421 C':'#9F4872', '10422 C':'#853566',
+  '10423 C':'#8B4E83', '10424 C':'#6D2969', '10425 C':'#255292', '10426 C':'#274777',
+  '10427 C':'#003F7F', '10428 C':'#3A3C86', '10429 C':'#3A2F70', '10430 C':'#383061',
+  '10431 C':'#7FA1AB', '10432 C':'#587C8B', '10433 C':'#007598', '10434 C':'#006084',
+  '10435 C':'#6F7883', '10436 C':'#666E73', '10437 C':'#4D735E', '10438 C':'#53976A',
+  '10439 C':'#42947D', '10440 C':'#008890', '10441 C':'#006773', '10442 C':'#375D62',
+  '10443 C':'#B7887D', '10444 C':'#997A77', '10445 C':'#997D7A', '10446 C':'#9C8A87',
+  '10447 C':'#8B7E7E', '10448 C':'#948F91', '10449 C':'#B4BAB5', '10450 C':'#ACAEAE',
+  '10451 C':'#737573', '10452 C':'#636667', '10453 C':'#535B5E', '10454 C':'#4B4B4B',
+  'Black C':'#2D2927', 'Green C':'#00AA84', 'Purple C':'#B331B8', 'Violet C':'#281399',
+  'Yellow C':'#FFDC15', 'Black 2 C':'#322E20', 'Black 3 C':'#202821', 'Black 4 C':'#32281F',
+  'Black 5 C':'#3E2C2E', 'Black 6 C':'#0D191F', 'Black 7 C':'#3E3B35', 'Red 032 C':'#F33641',
+  'Blue 072 C':'#00159E', 'Warm Red C':'#FB4439', 'Blue 0821 C':'#00A3E0', 'Dark Blue C':'#002A9C',
+  'Bright Red C':'#FB3C22', 'Orange 021 C':'#FF5303', 'Rubine Red C':'#D01058', 'Yellow 012 C':'#FFD510',
+  'Cool Gray 1 C':'#D8DADA', 'Cool Gray 2 C':'#D0D2D0', 'Cool Gray 3 C':'#C8CAC7', 'Cool Gray 4 C':'#BBBBBB',
+  'Cool Gray 5 C':'#B1B4B3', 'Cool Gray 6 C':'#A5A9AC', 'Cool Gray 7 C':'#95999C', 'Cool Gray 8 C':'#888C8F',
+  'Cool Gray 9 C':'#73787C', 'Reflex Blue C':'#001D8A', 'Warm Gray 1 C':'#DAD3CD', 'Warm Gray 2 C':'#CAC3BA',
+  'Warm Gray 3 C':'#BFB8B0', 'Warm Gray 4 C':'#B4ADA5', 'Warm Gray 5 C':'#ACA59D', 'Warm Gray 6 C':'#A59C95',
+  'Warm Gray 7 C':'#968C84', 'Warm Gray 8 C':'#8D8279', 'Warm Gray 9 C':'#82786E', 'Cool Gray 10 C':'#5F676A',
+  'Cool Gray 11 C':'#51585C', 'Process Blue C':'#0086C9', 'Warm Gray 10 C':'#786E64', 'Warm Gray 11 C':'#6D6158',
+  'Medium Purple C':'#3E0E8C', 'Rhodamine Red C':'#DF1598', 'Process Yellow C':'#FEDD00', 'Medium Cool Gray C':'#7C7F83'
+};;
+/* ⛔ 查表一律走「大写索引」：原来 pantoneKey() 把输入转成大写，而本表键是混合大小写，
+   于是 Black C / Process Blue C / Reflex Blue C / Cool Gray 9 C 这类**永远查不到**
+   （用户 2026-09-23 报「输 PANTONE 没变化」的真 bug）。两边都归一到大写即可。 */
+const PANTONE_RGB=(function(){
+  const o={};
+  for(const k in PANTONE_APPROX)o[k.toUpperCase()]=PANTONE_APPROX[k];
+  return o;
+})();
+function pantoneKey(v){
+  let t=String(v||'').toUpperCase().replace(/PANTONE|PMS/g,' ').replace(/\s+/g,' ').trim();
+  if(/^\d{2,4}$/.test(t))t=t+' C';
+  t=t.replace(/^(\d{2,4})\s*C$/, '$1 C');
+  return t;
+}
+function pantoneRgb(v){
+  const k=pantoneKey(v);
+  let hex=PANTONE_RGB[k];
+  /* 具名色号允许省略尾缀：Reflex Blue → Reflex Blue C；White 本身就是键 */
+  if(!hex&&/[A-Z]/.test(k)&&!/ C$/.test(k))hex=PANTONE_RGB[k+' C'];
+  if(!hex&&/ C$/.test(k))hex=PANTONE_RGB[k.replace(/ C$/,'')];
+  return hex?hexRgb(hex):null;
+}
+
+/* ---- 应用染色 ---- */
+function setTint(rgb,instant){
+  const m=tintMeta();if(!m)return;
+  m.tint=rgb?[rgb[0],rgb[1],rgb[2]]:null;
+  paintTintUI(m);
+  if(instant)reprocess();else scheduleTint();
+}
+function scheduleTint(){
+  if(tintRaf)return;
+  tintRaf=requestAnimationFrame(()=>{tintRaf=0;reprocess();});
+}
+function paintTintUI(m){
+  const rgb=(m&&m.tint)||null;
+  const h=rgb?(rgbHue(rgb[0],rgb[1],rgb[2])||0):0;
+  const w=tintHue.clientWidth,tw=tintThumb.offsetWidth||20;
+  if(w>tw)tintThumb.style.left=Math.round(h/360*(w-tw))+'px';
+  tintHue.setAttribute('aria-valuenow',String(h));
+  tintHue.setAttribute('aria-valuetext',rgb?rgbHex(rgb[0],rgb[1],rgb[2]):'');
+  syncTintReset(m);
+}
+/* ⛔ 「恢复初始颜色」的显隐必须挂在 paintTintUI 上 —— 它同时被 setTint（拖色相条）
+   和 syncTintUI 调用。只写在 syncTintUI 里的话，用色相条改完颜色按钮不回来（专项 C18 抓到的）。 */
+function syncTintReset(m){
+  if(!tintReset)return;
+  const a=tintActive();
+  const has=!!(a&&a.__meta&&a.__meta.original);
+  tintReset.hidden=!(has&&tintOpen&&!tintEntryOn&&m&&m.tint);
+}
+/* ---- 浮层显隐与定位 ---- */
+function syncTintUI(o){
+  if(!tintBar)return;
+  const a=tintActive();
+  const has=!!(a&&a.__meta&&a.__meta.original);
+  tintBar.hidden=!has;
+  if(!has){tintOpen=false;tintEntryOn=false;}
+  tintHue.hidden=!tintOpen;
+  tintEntry.hidden=!tintEntryOn;
+  tintToggle.hidden=tintEntryOn;
+  tintToggle.setAttribute('aria-expanded',String(tintOpen));
+  const m=has?a.__meta:null;
+  if(!has)setTintBad(false);   /* 显隐交给 paintTintUI → syncTintReset() */
+  paintTintUI(m);
+  syncTintText();
+  syncTintBarPosition();
+}
+function syncTintText(){
+  const t=I18N[currentLang]||I18N.zh;
+  if(tintToggle)tintToggle.textContent=tintOpen?(t.tintInput||''):(t.tintChange||'');
+  const c=document.getElementById('tintFmtCmyk'),p=document.getElementById('tintFmtPantone');
+  if(c)c.textContent=t.tintCmyk||'CMYK';if(p)p.textContent=t.tintPantone||'PANTONE';
+  if(tintReset)tintReset.textContent=t.tintReset||'';
+  if(tintHint&&!tintHint.hidden)tintHint.textContent=t.tintBad||'';
+  if(tintApply)tintApply.textContent=t.tintApply||'OK';
+  if(tintHue)tintHue.setAttribute('aria-label',t.tintHue||'');
+  if(tintFormat)tintFormat.setAttribute('aria-label',t.tintHue||'');
+  if(tintValue)tintValue.setAttribute('aria-label',t.tintInput||'');
+}
+/* 浮层跟在「选中 LOGO 的选框」正下方（设计稿），越界就夹住不让它跑到画布外 */
+function stageGeom(){
+  const disp=stageDisplayWidth();
+  const z=disp/MODEL.canvasMm*viewZoom;
+  return {z:z,t:disp/2-z*MODEL.canvasMm/2};
+}
+function tintBarPlace(){
+  const o=tintActive();
+  if(!o||!o.__meta||!tintBar||tintBar.hidden)return null;
+  const g=stageGeom();
+  const w=o.width*o.scaleX,h=o.height*o.scaleY;
+  const rad=(o.angle||0)*Math.PI/180;
+  const bw=Math.abs(w*Math.cos(rad))+Math.abs(h*Math.sin(rad));
+  const bh=Math.abs(w*Math.sin(rad))+Math.abs(h*Math.cos(rad));
+  const sx=v=>g.z*v+g.t;
+  return {cx:sx(o.left),bottom:sx(o.top+bh/2)};
+}
+function syncTintBarPosition(){
+  const view=document.getElementById('stageView');
+  if(!view||!tintBar||tintBar.hidden)return;
+  const p=tintBarPlace();
+  if(!p)return;
+  const vw=view.clientWidth,vh=view.clientHeight;
+  const bw=tintBar.offsetWidth||220,bh=tintBar.offsetHeight||46;
+  const left=Math.max(bw/2+8,Math.min(vw-bw/2-8,p.cx));
+  let top=p.bottom+16;
+  if(top+bh>vh-8)top=Math.max(8,vh-bh-8);
+  tintBar.style.left=Math.round(left)+'px';
+  tintBar.style.top=Math.round(top)+'px';
+}
+/* ---- 色相条拖动（pointer 事件：鼠标/触摸/手写笔一套） ---- */
+function tintHueFromEvent(e){
+  const r=tintHue.getBoundingClientRect();
+  const tw=tintThumb.offsetWidth||20;
+  const inner=Math.max(1,r.width-tw);
+  let pct=(e.clientX-r.left-tw/2)/inner;
+  pct=Math.max(0,Math.min(1,pct));
+  return Math.round(pct*360);
+}
+tintHue.addEventListener('pointerdown',e=>{
+  if(!tintOpen)return;
+  tintDragging=true;
+  try{tintHue.setPointerCapture(e.pointerId);}catch(err){}
+  setTint(hueRgb(tintHueFromEvent(e)));
+  e.preventDefault();
+});
+tintHue.addEventListener('pointermove',e=>{if(tintDragging)setTint(hueRgb(tintHueFromEvent(e)));});
+const tintHueEnd=e=>{tintDragging=false;try{tintHue.releasePointerCapture(e.pointerId);}catch(err){}};
+tintHue.addEventListener('pointerup',tintHueEnd);
+tintHue.addEventListener('pointercancel',tintHueEnd);
+tintHue.addEventListener('keydown',e=>{
+  const m=tintMeta();if(!m)return;
+  const cur=m.tint?(rgbHue(m.tint[0],m.tint[1],m.tint[2])||0):0;
+  let d=0;
+  if(e.key==='ArrowLeft'||e.key==='ArrowDown')d=-2;
+  else if(e.key==='ArrowRight'||e.key==='ArrowUp')d=2;
+  else if(e.key==='Home'){e.preventDefault();setTint(hueRgb(0));return;}
+  else if(e.key==='End'){e.preventDefault();setTint(hueRgb(359));return;}
+  if(!d)return;
+  e.preventDefault();setTint(hueRgb(cur+d));
+});
+/* ---- 「修改颜色 / 输入色值」按钮 ---- */
+tintToggle.addEventListener('click',()=>{
+  const m=tintMeta();if(!m)return;
+  if(!tintOpen){
+    tintOpen=true;tintEntryOn=false;
+    /* 设计稿：色相条默认从最左边的红色开始 → 一打开就把 LOGO 刷成红，之后拖动实时变 */
+    if(m.tint==null)m.tint=hueRgb(0);
+    syncTintUI(curLogo());
+    reprocess();
+    return;
+  }
+  tintEntryOn=true;
+  tintFormat.value='hex';
+  syncTintValue();
+  syncTintUI(curLogo());
+  tintValue.focus();
+});
+/* ---- 态C：格式 + 色值 + 确定 ---- */
+function syncTintValue(){
+  const f=tintFormat.value,m=tintMeta();
+  setTintBad(false);
+  const rgb=(m&&m.tint)?m.tint:hueRgb(0);
+  const r0=Math.round(rgb[0]),g0=Math.round(rgb[1]),b0=Math.round(rgb[2]);
+  const isCmyk=(f==='cmyk');
+  /* CMYK 自带四个字母输入格（用户 2026-09-23 定的形态），其余格式用单框 */
+  if(tintCmykRow)tintCmykRow.hidden=!isCmyk;
+  if(tintValue)tintValue.hidden=isCmyk;
+  if(isCmyk){
+    const q=rgbCmyk(rgb).map(v=>Math.round(v));
+    TINT_CM_KEYS.forEach((k,i)=>{tintCm[k].value=String(q[i]);});
+    return;
+  }
+  tintValue.disabled=false;
+  if(f==='hex'){tintValue.placeholder='#666666';tintValue.value=rgbHex(rgb[0],rgb[1],rgb[2]);}
+  /* ⛔ RGB 的占位要写两种写法：用户 2026-09-23 明确要在这一项里直接填 `#666666` */
+  else if(f==='rgb'){tintValue.placeholder='#666666 / '+r0+','+g0+','+b0;tintValue.value=r0+','+g0+','+b0;}
+  else{tintValue.placeholder='186 C / Black C';tintValue.value='';}
+}
+/* 解析输入 —— ⛔ **格式无关**：不论当前下拉选的是哪种，都依次认
+   HEX / CMYK 四格 / RGB / CMYK 串 / PANTONE 色号。
+   原因：用户常在「RGB」里直接填 `#666666`、在别处填 `286 C`；
+   按所选格式死卡会把这类输入判成错的，表现成「**填了没反应**」（用户 2026-09-23 实报）。
+   ⛔ 解析失败必须返回 null（→ 输入框标红 + 提示文案、颜色不动），
+   ⛔ 绝不能返回 {rgb:null} —— 那个形状的意思是「恢复原色」，会把打错的色值当撤销用。 */
+function parseTintEntry(){
+  if(tintFormat.value==='cmyk'){
+    const q=TINT_CM_KEYS.map(k=>String(tintCm[k].value||'').trim());
+    if(q.some(v=>v===''))return null;
+    const n=q.map(Number);
+    if(!n.every(v=>isFinite(v)&&v>=0&&v<=100))return null;
+    return {rgb:cmykRgb(n[0],n[1],n[2],n[3])};
+  }
+  const v=String(tintValue.value||'').trim();
+  if(!v)return null;
+  /* ⛔ 三位简写只在**带 #** 时认（#666）：裸的 `286` 是 PANTONE 色号，
+     把它当成 #228866（绿）会让「PANTONE 填了没反应」换个样子继续存在（专项 C9 抓到的）。 */
+  let hexLoose=null;
+  if(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(v))hexLoose=hexRgb(v);
+  else if(/^[0-9a-f]{6}$/i.test(v))hexLoose=hexRgb(v);          /* 6 位不带 # 也认：666666 */
+  let cmykStr=null;
+  const cm=/(?:^|[^A-Z])C\s*([\d.]+)\W+M\s*([\d.]+)\W+Y\s*([\d.]+)\W+K\s*([\d.]+)/i.exec(v);
+  if(cm){
+    const n=[+cm[1],+cm[2],+cm[3],+cm[4]];
+    if(n.every(x=>isFinite(x)&&x>=0&&x<=100))cmykStr=cmykRgb(n[0],n[1],n[2],n[3]);
+  }
+  const p=v.split(/[^0-9.]+/).filter(x=>x!=='').map(Number);
+  const numerical=p.length>=3&&p.every(n=>isFinite(n));
+  const asRgb=(numerical&&p.length<=3)?p.slice(0,3):null;
+  const asCmykQuad=(numerical&&p.length>=4&&p.slice(0,4).every(x=>x>=0&&x<=100))
+    ?cmykRgb(p[0],p[1],p[2],p[3]):null;
+  const asPant=pantoneRgb(v);
+  /* **用户选的那一项优先**，失败再依次兜底 —— 既尊重下拉，又不会因为「格式选错」判成非法 */
+  const order=(tintFormat.value==='pantone')
+    ?[asPant,hexLoose,cmykStr,asCmykQuad,asRgb]
+    :[hexLoose,cmykStr,asCmykQuad,asRgb,asPant];
+  for(let i=0;i<order.length;i++)if(order[i])return {rgb:order[i]};
+  return null;
+}
+/* 解析失败的统一反馈：框标红 + **明确文案**（只标红用户只会觉得「没反应」） */
+function setTintBad(on){
+  const t=I18N[currentLang]||I18N.zh;
+  if(tintValue)tintValue.classList.toggle('is-bad',!!on);
+  if(tintCmykRow)tintCmykRow.classList.toggle('is-bad',!!on);
+  if(tintHint){tintHint.hidden=!on;if(on)tintHint.textContent=t.tintBad||'';}
+}
+function applyTintEntry(){
+  const m=tintMeta();if(!m)return;
+  const r=parseTintEntry();
+  if(!r){setTintBad(true);return;}
+  setTintBad(false);
+  m.tint=r.rgb?[r.rgb[0],r.rgb[1],r.rgb[2]]:null;
+  tintEntryOn=false;
+  syncTintUI(curLogo());
+  reprocess();
+}
+/* 「恢复初始颜色」—— 用户 2026-09-23：下拉里的「恢复原色」藏太深，做成按钮放到输入色值下方 */
+function resetTint(){
+  const m=tintMeta();if(!m)return;
+  m.tint=null;
+  setTintBad(false);
+  syncTintUI(curLogo());
+  reprocess();
+}
+tintFormat.addEventListener('change',syncTintValue);
+tintValue.addEventListener('input',()=>setTintBad(false));
+TINT_CM_KEYS.forEach(k=>{
+  tintCm[k].addEventListener('input',()=>setTintBad(false));
+  tintCm[k].addEventListener('keydown',e=>{
+    if(e.key==='Enter'){e.preventDefault();applyTintEntry();}
+    else if(e.key==='Escape'){e.preventDefault();tintEntryOn=false;syncTintUI(curLogo());}
+  });
+});
+tintValue.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){e.preventDefault();applyTintEntry();}
+  else if(e.key==='Escape'){e.preventDefault();tintEntryOn=false;syncTintUI(curLogo());}
+});
+tintApply.addEventListener('click',applyTintEntry);
+if(tintReset)tintReset.addEventListener('click',resetTint);
+/* 色相条渐变与 hueRgb() 同源生成，保证条上的颜色和 LOGO 上的颜色一致 */
+if(tintHue){
+  tintHue.style.background='linear-gradient(to right,#f00 0%,#ff0 16.7%,#0f0 33.3%,#0ff 50%,#00f 66.7%,#f0f 83.3%,#f00 100%)';
+  /* 设计稿里条与浮层同宽；stageView 尺寸要等布局，下一帧再量一次指针位置 */
+  requestAnimationFrame(()=>{try{syncTintUI(canvas.getActiveObject());}catch(e){}});
+}
 
 /* ===================== 查看教程：聚光灯引导 ===================== */
 const TOUR_KEY='markryden-logo-guide';
@@ -2211,6 +3516,7 @@ function resetAll(){
   fileInput.value='';
   rmwhite.checked=true;invert.checked=false;innerColor.checked=true;opa.value=100;rot.value=0;tol.value=0;syncInnerChip();
   [opa,rot,tol].forEach(setRangeFill);
+  tintOpen=false;tintEntryOn=false;tintObj=null;syncTintUI(null);
   setViewZoom(DEFAULT_VIEW_ZOOM);
   canvas.renderAll();updateSizeReadout();refreshUploadBox();
 }
