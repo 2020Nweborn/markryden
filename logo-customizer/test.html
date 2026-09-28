@@ -118,10 +118,13 @@
     .tint-hint{font-size:11px}
   }
   .size-hud b.is-over{color:#c0392b;font-weight:900}
-  .warning-trigger{width:32px;height:32px;padding:0;border:0;background:transparent;display:block;cursor:help}
+  .warning-trigger{width:32px;height:32px;padding:0;border:0;background:transparent;display:block;cursor:pointer}
   .warning-trigger img{display:block;width:32px;height:32px}
-  .warning-popover{position:absolute;top:43px;right:0;width:300px;min-height:58px;padding:17px 18px;border-radius:14px;background:#fff;color:#111;box-shadow:0 8px 28px rgba(0,0,0,.14);font-size:15px;font-weight:700;line-height:24px;text-align:center;white-space:normal;opacity:0;visibility:hidden;transform:translateY(-5px);transition:none;pointer-events:none}
+  .warning-popover{position:absolute;top:43px;right:0;width:300px;min-height:132px;padding:17px 18px 14px;border-radius:14px;background:#fff;color:#111;box-shadow:0 8px 28px rgba(0,0,0,.14);text-align:left;white-space:normal;opacity:0;visibility:hidden;transform:translateY(-5px);transition:none;pointer-events:none}
   .warning-popover:before{content:"";position:absolute;right:10px;top:-8px;width:16px;height:16px;background:#fff;transform:rotate(45deg);border-radius:2px 0 0 0}
+  .warning-title{font-size:15px;font-weight:800;line-height:24px}
+  .warning-body{margin-top:5px;font-size:13px;font-weight:400;line-height:20px;color:#333}
+  .warning-confirm{display:block;margin:12px 0 0 auto;min-width:64px;height:30px;padding:0 14px;border:0;border-radius:999px;background:#1938d7;color:#fff;font:13px/30px inherit;cursor:pointer}
   .size-warning.is-open .warning-popover{opacity:1;visibility:visible;transform:translateY(0);transition:opacity .18s ease,transform .18s ease;pointer-events:auto}
 
   .panel{width:404px;min-height:578px;align-self:stretch;display:flex;flex-direction:column;padding:27px 30px 20px;background:#fff;border-radius:14px}
@@ -253,7 +256,10 @@
     .brand-toggle{left:22px;top:22px;font-size:15px;gap:8px;padding:10px 16px}
     .brand-toggle .bdot{width:9px;height:9px}
     .warning-trigger,.warning-trigger img{width:40px;height:40px}
-    .warning-popover{top:54px;width:338px;min-height:72px;padding:21px 22px;border-radius:18px;font-size:18px;line-height:28px}
+    .warning-popover{top:54px;width:338px;min-height:152px;padding:21px 22px 18px;border-radius:18px}
+    .warning-title{font-size:18px;line-height:28px}
+    .warning-body{margin-top:7px;font-size:16px;line-height:25px}
+    .warning-confirm{margin-top:16px;height:36px;padding:0 18px;font-size:16px;line-height:36px}
     .warning-popover:before{right:12px;top:-9px;width:18px;height:18px}
     .panel{width:500px;min-height:704px;padding:34px 38px 25px;border-radius:18px}
     .top-grid,.middle-grid,.adjust-grid{grid-template-columns:188px 188px;column-gap:48px}
@@ -388,7 +394,11 @@
         <button class="warning-trigger" id="warningTrigger" type="button" aria-label="查看 LOGO 尺寸提醒" aria-describedby="warningPopover">
           <img src="warning.svg" alt="">
         </button>
-        <div class="warning-popover" id="warningPopover" role="tooltip">请注意，LOGO超过12cm，无法定制！</div>
+        <div class="warning-popover" id="warningPopover" role="dialog" aria-labelledby="warningTitle" aria-describedby="warningBody">
+          <div class="warning-title" id="warningTitle">LOGO 超出安全区</div>
+          <div class="warning-body" id="warningBody">请将 LOGO 完整移入红色虚线框内，否则可能无法正常定制。</div>
+          <button class="warning-confirm" id="warningConfirm" type="button">确认</button>
+        </div>
       </div>
       <div class="size-hud" id="sizeHud"><span id="labelSize">LOGO 参考尺寸</span><span class="size-list" id="logoSizeList"><b id="logoSizeValue">—</b></span></div>
       <div class="stage-notice" id="stageNotice" hidden><span></span></div>
@@ -543,9 +553,9 @@
 
 <script>
 const I18N = {
-  zh:{name:'中文',htmlLang:'zh-CN',title:'MARK RYDEN · LOGO 定制预览',stageAria:'背包 LOGO 预览画布',settingsAria:'LOGO 定制设置',warningAria:'查看 LOGO 尺寸提醒',warning:'LOGO长宽不要超过12×12cm，超过后可能会导致无法定制！',stageTip:'拉动 LOGO 画布四角可缩放大小',model:'产品型号',color:'颜色选择',modelSearch:'输入型号搜索',modelNoMatch:'没有匹配的型号',black:'商务黑',upload:'上传LOGO',uploadHint:'上传透明 PNG 最佳，直接可用；<br>带有背景颜色的 JPG 将自动去除背景',addMore:'继续添加 LOGO',slotsFull:'已达 3 个上限，再添加会替换最早的 LOGO',process:'LOGO处理',removeBg:'去除背景',invert:'颜色反向',tolerance:'LOGO边缘擦除',toleranceHint:'拖动滑块，边缘清除越彻底',opacity:'透明度调节',innerColor:'去除LOGO内部颜色',rotation:'360°旋转调节',reset:'初始化（清除已上传LOGO）',export:'导出JPG图片',exportOk:'图片已导出，请查看下载文件',exportFail:'导出失败，请重试',exportDone:{title:'导出成功',lead:'提交以下文件给销售客服完成定制服务',l1:'① 成功导出的JPG效果图;',l2:'② <em>PDF</em> 或者 <em>AI</em> 格式的LOGO文件。',ok:'确定'},imageFail:'产品图加载失败，请检查网络后刷新重试',note:'注：遇到问题请联系与您对接的销售或者客服人员',sizeTitle:'LOGO 参考尺寸',brandLogo:'显示品牌LOGO',brandLogoHide:'隐藏品牌LOGO',fit:'适合大小',guide:'查看教程',zoneWarn:'LOGO 没有完整落在可定制范围（红色虚线框）内，工厂可能无法定制！请把 LOGO 完整移进框内。',tintChange:'修改颜色',tintInput:'输入色值',tintHue:'色相',tintApply:'确定',tintCmyk:'CMYK（近似）',tintPantone:'PANTONE（近似）',tintReset:'恢复初始颜色',tintBad:'色值无效或色号未收录，请检查后重试（支持 HEX / RGB / CMYK / PANTONE）',guideUI:{step:'步骤',back:'上一步',next:'下一步',done:'我知道了',skip:'跳过'}},
-  en:{name:'English',htmlLang:'en',title:'MARK RYDEN · Custom Logo Preview',stageAria:'Backpack logo preview canvas',settingsAria:'Logo customization settings',warningAria:'View logo size notice',warning:'The logo must not exceed 12 × 12 cm in width or height. Larger logos may not be customizable.',stageTip:'Drag the corner handles to resize the logo',model:'Product Model',color:'Color',modelSearch:'Search model',modelNoMatch:'No matching model',black:'Business Black',upload:'Upload Logo',uploadHint:'Transparent PNG is recommended and ready to use;<br>backgrounds in JPG files will be removed automatically',addMore:'Add another logo',slotsFull:'Limit of 3 reached — adding more replaces the earliest logo',process:'Logo Processing',removeBg:'Remove BG',invert:'Invert Color',tolerance:'Logo Edge Cleanup',toleranceHint:'Drag the slider to remove more of the background edge',opacity:'Opacity',innerColor:'Remove colour inside logo',rotation:'360° Rotation',reset:'Reset (remove uploaded logo)',export:'Export JPG',exportOk:'Image exported, please check your downloads',exportFail:'Export failed, please try again',exportDone:{title:'Export Successful',lead:'Submit the files below to your sales representative to complete the customization',l1:'① The exported JPG preview;',l2:'② The LOGO file in <em>PDF</em> or <em>AI</em> format.',ok:'OK'},imageFail:'The product image failed to load. Please check your connection and refresh.',note:'Note: If you encounter any issues, please contact your sales representative or customer service.',sizeTitle:'Reference logo size',brandLogo:'Show brand logo',brandLogoHide:'Hide brand logo',fit:'Fit to Size',guide:'View Guide',zoneWarn:'The logo does not fit entirely inside the customizable area (red dashed frame) and may not be producible. Please move the whole logo inside the frame.',tintChange:'Change colour',tintInput:'Enter colour',tintHue:'Hue',tintApply:'OK',tintCmyk:'CMYK (approx.)',tintPantone:'PANTONE (approx.)',tintReset:'Reset colour',tintBad:'Invalid value or colour not found — please check (HEX / RGB / CMYK / PANTONE)',guideUI:{step:'Step',back:'Back',next:'Next',done:'Got it',skip:'Skip'}},
-  ru:{name:'Русский',htmlLang:'ru',title:'MARK RYDEN · Предпросмотр логотипа',stageAria:'Область предпросмотра логотипа на рюкзаке',settingsAria:'Настройки логотипа',warningAria:'Показать ограничение размера логотипа',warning:'Ширина и высота логотипа не должны превышать 12 × 12 см. Превышение размера может сделать нанесение невозможным.',stageTip:'Потяните за углы рамки, чтобы изменить размер логотипа',model:'Модель товара',color:'Цвет',modelSearch:'Поиск модели',modelNoMatch:'Модель не найдена',black:'Деловой чёрный',upload:'Загрузить логотип',uploadHint:'Рекомендуется прозрачный PNG;<br>фон изображения JPG удаляется автоматически',addMore:'Добавить ещё логотип',slotsFull:'Достигнут лимит 3 — новое заменит самое раннее',process:'Обработка логотипа',removeBg:'Удалить фон',invert:'Инверсия',tolerance:'Очистка краёв логотипа',toleranceHint:'Перемещайте ползунок для более тщательной очистки краёв',opacity:'Прозрачность',innerColor:'Удалить цвет внутри логотипа',rotation:'Поворот 360°',reset:'Сбросить (удалить логотип)',export:'Экспорт JPG',exportOk:'Изображение экспортировано, проверьте загрузки',exportFail:'Не удалось экспортировать, попробуйте ещё раз',exportDone:{title:'Экспорт выполнен',lead:'Отправьте указанные ниже файлы вашему менеджеру для завершения нанесения',l1:'① Экспортированное изображение JPG;',l2:'② Файл логотипа в формате <em>PDF</em> или <em>AI</em>.',ok:'ОК'},imageFail:'Не удалось загрузить изображение товара. Проверьте соединение и обновите страницу.',note:'Примечание: при возникновении вопросов обратитесь к вашему менеджеру или в службу поддержки.',sizeTitle:'Ориентировочный размер логотипа',brandLogo:'Показать логотип',brandLogoHide:'Скрыть логотип',fit:'По размеру',guide:'Инструкция',zoneWarn:'Логотип не помещается целиком в области нанесения (красная пунктирная рамка) — нанесение может быть невозможно. Переместите логотип целиком внутрь рамки.',tintChange:'Изменить цвет',tintInput:'Ввести цвет',tintHue:'Оттенок',tintApply:'ОК',tintCmyk:'CMYK (прибл.)',tintPantone:'PANTONE (прибл.)',tintReset:'Сбросить цвет',tintBad:'Неверное значение или цвет не найден — проверьте (HEX / RGB / CMYK / PANTONE)',guideUI:{step:'Шаг',back:'Назад',next:'Далее',done:'Понятно',skip:'Пропустить'}}
+  zh:{name:'中文',htmlLang:'zh-CN',title:'MARK RYDEN · LOGO 定制预览',stageAria:'背包 LOGO 预览画布',settingsAria:'LOGO 定制设置',warningAria:'查看 LOGO 尺寸提醒',warningTitle:'LOGO 超出安全区',warningBody:'请将 LOGO 完整移入红色虚线框内，否则可能无法正常定制。',warningSizeTitle:'LOGO 尺寸超出限制',warningSizeBody:'LOGO 的宽度或高度不能超过 12 × 12cm，否则可能无法正常定制。',warningConfirm:'确认',warning:'LOGO长宽不要超过12×12cm，超过后可能会导致无法定制！',stageTip:'拉动 LOGO 画布四角可缩放大小',model:'产品型号',color:'颜色选择',modelSearch:'输入型号搜索',modelNoMatch:'没有匹配的型号',black:'商务黑',upload:'上传LOGO',uploadHint:'上传透明 PNG 最佳，直接可用；<br>带有背景颜色的 JPG 将自动去除背景',addMore:'继续添加 LOGO',slotsFull:'已达 3 个上限，再添加会替换最早的 LOGO',process:'LOGO处理',removeBg:'去除背景',invert:'颜色反向',tolerance:'LOGO边缘擦除',toleranceHint:'拖动滑块，边缘清除越彻底',opacity:'透明度调节',innerColor:'去除LOGO内部颜色',rotation:'360°旋转调节',reset:'初始化（清除已上传LOGO）',export:'导出JPG图片',exportOk:'图片已导出，请查看下载文件',exportFail:'导出失败，请重试',exportDone:{title:'导出成功',lead:'提交以下文件给销售客服完成定制服务',l1:'① 成功导出的JPG效果图;',l2:'② <em>PDF</em> 或者 <em>AI</em> 格式的LOGO文件。',ok:'确定'},imageFail:'产品图加载失败，请检查网络后刷新重试',note:'注：遇到问题请联系与您对接的销售或者客服人员',sizeTitle:'LOGO 参考尺寸',brandLogo:'显示品牌LOGO',brandLogoHide:'隐藏品牌LOGO',fit:'适合大小',guide:'查看教程',zoneWarn:'请将 LOGO 完整移入红色虚线框内，否则可能无法正常定制。',tintChange:'修改颜色',tintInput:'输入色值',tintHue:'色相',tintApply:'确定',tintCmyk:'CMYK（近似）',tintPantone:'PANTONE（近似）',tintReset:'恢复初始颜色',tintBad:'色值无效或色号未收录，请检查后重试（支持 HEX / RGB / CMYK / PANTONE）',guideUI:{step:'步骤',back:'上一步',next:'下一步',done:'我知道了',skip:'跳过'}},
+  en:{name:'English',htmlLang:'en',title:'MARK RYDEN · Custom Logo Preview',stageAria:'Backpack logo preview canvas',settingsAria:'Logo customization settings',warningAria:'View logo size notice',warningTitle:'Logo exceeds the safe area',warningBody:'Move the logo fully inside the red dashed frame or it may not be customizable.',warningSizeTitle:'Logo size exceeds the limit',warningSizeBody:'The logo width or height must not exceed 12 × 12 cm or it may not be customizable.',warningConfirm:'OK',warning:'The logo must not exceed 12 × 12 cm in width or height. Larger logos may not be customizable.',stageTip:'Drag the corner handles to resize the logo',model:'Product Model',color:'Color',modelSearch:'Search model',modelNoMatch:'No matching model',black:'Business Black',upload:'Upload Logo',uploadHint:'Transparent PNG is recommended and ready to use;<br>backgrounds in JPG files will be removed automatically',addMore:'Add another logo',slotsFull:'Limit of 3 reached — adding more replaces the earliest logo',process:'Logo Processing',removeBg:'Remove BG',invert:'Invert Color',tolerance:'Logo Edge Cleanup',toleranceHint:'Drag the slider to remove more of the background edge',opacity:'Opacity',innerColor:'Remove colour inside logo',rotation:'360° Rotation',reset:'Reset (remove uploaded logo)',export:'Export JPG',exportOk:'Image exported, please check your downloads',exportFail:'Export failed, please try again',exportDone:{title:'Export Successful',lead:'Submit the files below to your sales representative to complete the customization',l1:'① The exported JPG preview;',l2:'② The LOGO file in <em>PDF</em> or <em>AI</em> format.',ok:'OK'},imageFail:'The product image failed to load. Please check your connection and refresh.',note:'Note: If you encounter any issues, please contact your sales representative or customer service.',sizeTitle:'Reference logo size',brandLogo:'Show brand logo',brandLogoHide:'Hide brand logo',fit:'Fit to Size',guide:'View Guide',zoneWarn:'Move the logo fully inside the red dashed frame or it may not be customizable.',tintChange:'Change colour',tintInput:'Enter colour',tintHue:'Hue',tintApply:'OK',tintCmyk:'CMYK (approx.)',tintPantone:'PANTONE (approx.)',tintReset:'Reset colour',tintBad:'Invalid value or colour not found — please check (HEX / RGB / CMYK / PANTONE)',guideUI:{step:'Step',back:'Back',next:'Next',done:'Got it',skip:'Skip'}},
+  ru:{name:'Русский',htmlLang:'ru',title:'MARK RYDEN · Предпросмотр логотипа',stageAria:'Область предпросмотра логотипа на рюкзаке',settingsAria:'Настройки логотипа',warningAria:'Показать ограничение размера логотипа',warningTitle:'Логотип выходит за безопасную зону',warningBody:'Полностью переместите логотип внутрь красной пунктирной рамки, иначе нанесение может быть невозможно.',warningSizeTitle:'Размер логотипа превышает ограничение',warningSizeBody:'Ширина или высота логотипа не должна превышать 12 × 12 см, иначе нанесение может быть невозможно.',warningConfirm:'ОК',warning:'Ширина и высота логотипа не должны превышать 12 × 12 см. Превышение размера может сделать нанесение невозможным.',stageTip:'Потяните за углы рамки, чтобы изменить размер логотипа',model:'Модель товара',color:'Цвет',modelSearch:'Поиск модели',modelNoMatch:'Модель не найдена',black:'Деловой чёрный',upload:'Загрузить логотип',uploadHint:'Рекомендуется прозрачный PNG;<br>фон изображения JPG удаляется автоматически',addMore:'Добавить ещё логотип',slotsFull:'Достигнут лимит 3 — новое заменит самое раннее',process:'Обработка логотипа',removeBg:'Удалить фон',invert:'Инверсия',tolerance:'Очистка краёв логотипа',toleranceHint:'Перемещайте ползунок для более тщательной очистки краёв',opacity:'Прозрачность',innerColor:'Удалить цвет внутри логотипа',rotation:'Поворот 360°',reset:'Сбросить (удалить логотип)',export:'Экспорт JPG',exportOk:'Изображение экспортировано, проверьте загрузки',exportFail:'Не удалось экспортировать, попробуйте ещё раз',exportDone:{title:'Экспорт выполнен',lead:'Отправьте указанные ниже файлы вашему менеджеру для завершения нанесения',l1:'① Экспортированное изображение JPG;',l2:'② Файл логотипа в формате <em>PDF</em> или <em>AI</em>.',ok:'ОК'},imageFail:'Не удалось загрузить изображение товара. Проверьте соединение и обновите страницу.',note:'Примечание: при возникновении вопросов обратитесь к вашему менеджеру или в службу поддержки.',sizeTitle:'Ориентировочный размер логотипа',brandLogo:'Показать логотип',brandLogoHide:'Скрыть логотип',fit:'По размеру',guide:'Инструкция',zoneWarn:'Полностью переместите логотип внутрь красной пунктирной рамки, иначе нанесение может быть невозможно.',tintChange:'Изменить цвет',tintInput:'Ввести цвет',tintHue:'Оттенок',tintApply:'ОК',tintCmyk:'CMYK (прибл.)',tintPantone:'PANTONE (прибл.)',tintReset:'Сбросить цвет',tintBad:'Неверное значение или цвет не найден — проверьте (HEX / RGB / CMYK / PANTONE)',guideUI:{step:'Шаг',back:'Назад',next:'Далее',done:'Понятно',skip:'Пропустить'}}
 };
 let currentLang='zh';
 /* 语言自动判定：只有中国大陆显示中文，其他地区一律英文 */
@@ -1054,7 +1064,10 @@ function refreshZoneState(){
     syncZoneGuide();
     syncWarningText();
     syncSizeRowOver();
-    if(warnActive())warnInfoUntil=0;
+    /* ⛔ 这里不再写 `if(warnActive())warnInfoUntil=0;`：
+       「该不该把信息性提醒收掉」只由 syncWarningBubble() 里那一处「违规→合规」跳变决定。
+       写在调用方会在**违规仍然成立**时也清计时，凭空制造一次跳变，
+       把 warningWasActive 的边沿跟踪搅乱（气泡该露的时候反而不露）。 */
     syncWarningBubble();
     return;
   }
@@ -1073,18 +1086,20 @@ function refreshZoneState(){
   syncZoneGuide();
   syncWarningText();
   syncSizeRowOver();
-  /* 真出现违规状态 → 作废「上传时那条信息性提醒」：它已经被状态性提示顶替，
-     不能在移回区内之后还替它撑着气泡（撑着的就是用户看到的 12cm 残留文案）。
-     反之，全程合规时不动它 —— 上传后那声提醒仍照旧挂满 4.2 秒。 */
-  if(warnActive())warnInfoUntil=0;
+  /* ⛔ 这里不再显式清 warnInfoUntil：清了就等于把「全程合规时那条 4.2 秒提醒」
+     提前掐掉 —— 上传后气泡文案切到 12cm 版却立刻消失，就是用户看到的「闪一下」。
+     该不该收由 syncWarningBubble() 一处决定：它本来就会在「违规→合规」那一下清计时。 */
   syncWarningBubble();
   canvas.requestRenderAll();
 }
 function syncWarningText(){
-  const pop=document.getElementById('warningPopover');
-  if(!pop)return;
+  const title=document.getElementById('warningTitle'),body=document.getElementById('warningBody'),ok=document.getElementById('warningConfirm');
+  if(!title||!body||!ok)return;
   const t=I18N[currentLang]||I18N.zh;
-  pop.textContent=(zoneBad&&t.zoneWarn)?t.zoneWarn:t.warning;
+  const sizeOver=sizeOvers().some(Boolean);
+  title.textContent=(zoneBad&&t.warningTitle)?t.warningTitle:(sizeOver&&t.warningSizeTitle?t.warningSizeTitle:(t.warningTitle||'LOGO 超出安全区'));
+  body.textContent=(zoneBad&&t.zoneWarn)?t.zoneWarn:(sizeOver&&t.warningSizeBody?t.warningSizeBody:(t.warningBody||t.warning));
+  ok.textContent=t.warningConfirm||'确认';
 }
 /* 上传时的初始尺寸：先按 logoMax 算。若「正中心落点 + 该尺寸」不能**完整落进**任何安全区，
    就按比例往下收到能落进去为止（落点规则不变，仍固定画布正中心）。
@@ -1777,7 +1792,13 @@ function removeLogo(o,silent){
     const next=logoImgs[Math.min(i,logoImgs.length-1)];
     canvas.setActiveObject(next);syncSlidersFromLogo(next);
   }
+  /* ⛔ 判定「这是不是第一张」不能只看 logoImgs.length：
+     demoLogo（教程演示图）不计入 logoImgs，但它已经在画布上了，视觉上不是「第一张」。
+     上传第一张用户 LOGO 时按老规矩弹一次信息性提醒；
+     删到一张不剩（或删掉最后一张用户 LOGO）时，确认记忆和画布一起复位。 */
+  const first=(logoImgs.length===0&&!demoLogo);
   canvas.renderAll();updateSizeReadout();refreshUploadBox();
+  if(first)showSizeWarning();
 }
 /* 上传框：有 LOGO 时显示「最近上传的缩略图 + 继续添加 LOGO (n/3)」；
    满 3 个提示会替换最早的；全删完后恢复「+」和首次提示。
@@ -1841,6 +1862,17 @@ function syncInnerChip(){
 const opa=document.getElementById('opa'),rot=document.getElementById('rot');
 const sizeWarning=document.getElementById('sizeWarning');
 let warningTimer=null;
+/* ⛔ 「确认」的语义 = 只压制**当前这一段**违规，不是永久静音（2026-09-28 用户明确）。
+   存的是「已确认过的违规类型签名」warnSigOf()，不是布尔：
+     · 用户点确认 → 记下点那一刻的签名；
+     · 违规还在（同类型）→ 气泡保持收起，不烦人；
+     · 违规一消失（移回区内 / 缩回 12cm 内）→ 签名清空，翻篇；
+     · 之后再出现同类或另一类违规 → 签名对不上 → **重新弹出**。
+   ⛔ 旧实现是 `warningAcknowledged=true` 一次性永久静音（确认过就再也不弹），
+      用户原话：「点了确认 弹窗消失，但是不要永远消失，如果出现了 大于12cm 或者
+      超出安全区 还是要弹提示。」*/
+let warningAckSig='';
+let warningManualOpen=false;
 /* 这个提示气泡有两种来源，必须分开管：
      ① 上传第一张 LOGO 时的 12cm 提醒 —— 信息性，到点自己收（4.2s）；
      ② 尺寸超 12cm / LOGO 越出安全区 —— **状态性**：问题还在就得一直看得见，
@@ -1859,29 +1891,68 @@ let warningWasActive=false; /* 记住上一帧是否真违规；违规→合规�
 function warnActive(){
   return !!zoneBad||sizeOvers().some(Boolean);
 }
+/* 当前违规的**类型签名**，判据 =「用户此刻看到的是哪一套文案」：
+     `Z` = 越界那条（LOGO 超出安全区）；`S` = 尺寸那条（超 12×12cm）；两者并存为 `ZS`。
+   ⛔ 必须取「真正超 12cm」这个子条件，**不能直接用 sizeOvers()**（2026-09-28 踩到）：
+      sizeOvers() 是复合判据 —— 它同时包含了「没落进安全区」，
+      所以只要越界它就一定为真，签名永远算成 `ZS`，纯 `Z` 永远构造不出来，
+      「确认越界后再超尺寸要重弹」这条语义就没法区分了。
+      真正的「尺寸超限」判据是 sizeRows() 里的 max(w,h) > 120（与 rowOver 的前半段同源）。
+   ⛔ 粒度是「类型」不是「哪一个 LOGO」（用户 2026-09-28 选定方案 A）：
+      两个 LOGO 都越界，确认一次即可；但「越界」与「超尺寸」是两回事。
+   ⛔ 文案的优先级也在这里统一：syncWarningText() 先看 zoneBad、再看尺寸，
+      签名必须完全对齐这个顺序，否则会出现「文案已经换了、签名却没换」→ 该重弹的不弹。 */
+function warnZhOnly(){
+  return sizeRows().some(r=>Math.max(r.s.w,r.s.h)>120);
+}
+function warnSigOf(){
+  return (zoneBad?'Z':'')+((!zoneBad&&warnZhOnly())?'S':'');
+}
 /* 状态性显隐：成立就开着、不成立立刻收。返回最终是否显示。
    ⛔ 只要经历过「违规→合规」，就无条件作废上传时的 12cm 信息提醒；
    否则气泡文案切回 12cm 后，会被旧计时继续撑着，形成用户看到的残留。 */
 function syncWarningBubble(){
   const active=warnActive();
+  const sig=warnSigOf();
   if(warningWasActive&&!active){
     warnInfoUntil=0;
     clearTimeout(warningTimer);
+    /* 违规真的消失过 → 这一段翻篇，清掉确认记忆。
+       ⛔ 只认「消失过」：全程一直在违规时不能清 —— 清了就等于确认失效、气泡又弹回来。 */
+    warningAckSig='';
   }
   warningWasActive=active;
-  const show=active||Date.now()<warnInfoUntil;
+  /* 已确认 = 当前签名非空、且与点确认那一下的签名一致。违规消失后签名清空 → 自然不等。 */
+  const acked=active&&sig!==''&&sig===warningAckSig;
+  const show=!acked&&(warningManualOpen||active||Date.now()<warnInfoUntil);
   sizeWarning.classList.toggle('is-open',show);
   return show;
 }
 /* 信息性提醒：上传第一张 LOGO 时告知 12cm 上限，4.2 秒自收。
    其间若真的有越界/超尺寸，syncWarningBubble() 会让它继续开着（状态优先）。 */
 function showSizeWarning(){
+  /* 上一条 LOGO 的确认记忆不能跨到新上传的这一张：清空后重新开始记 */
+  warningAckSig='';
   warnInfoUntil=Date.now()+4200;
   clearTimeout(warningTimer);
   warningTimer=setTimeout(()=>{warnInfoUntil=0;syncWarningBubble();},4200);
   syncWarningBubble();
 }
 /* 鼠标悬停时不让「信息性提醒」自己溜走（状态性本来就一直开着，不受影响） */
+document.getElementById('warningTrigger').addEventListener('click',()=>{
+  if(warnSigOf()&&warnSigOf()===warningAckSig)return;
+  warningManualOpen=!warningManualOpen;
+  syncWarningBubble();
+});
+document.getElementById('warningConfirm').addEventListener('click',()=>{
+  /* 只记下「当前这一段违规」的签名。⛔ 不许再把 warningWasActive 置 false ——
+     那会伪造一次「违规→合规」跳变，让下一次同步把刚记的签名清掉，确认当场失效。 */
+  warningAckSig=warnSigOf();
+  warningManualOpen=false;
+  warnInfoUntil=0;
+  clearTimeout(warningTimer);
+  sizeWarning.classList.remove('is-open');
+});
 sizeWarning.addEventListener('mouseenter',()=>{
   clearTimeout(warningTimer);
   if(Date.now()<warnInfoUntil)warnInfoUntil=Date.now()+600000;
@@ -1905,11 +1976,10 @@ fileInput.addEventListener('change',e=>{
       [opa,rot,tol].forEach(setRangeFill);
       const shown=processedFrom(img,0,true,false,!innerColor.checked);
       if(!shown)return;
-      const first=logoImgs.length===0;
-      /* 缩略图与「继续添加 LOGO (n/3)」文案统一由 addLogo → refreshUploadBox 维护 */
+      /* ⛔ 「第一张」的判定已收进 removeLogo（要连 demoLogo 一起看）：
+         只有第一张时才弹尺寸提醒，连传三张不会弹三次。
+         缩略图与「继续添加 LOGO (n/3)」文案统一由 addLogo → refreshUploadBox 维护 */
       addLogo(shown,0,{original:img});
-      /* 只有第一张时才弹尺寸提醒，连传三张不会弹三次 */
-      if(first)showSizeWarning();
     };
     img.src=ev.target.result;
   };
@@ -1933,6 +2003,8 @@ opa.addEventListener('input',()=>{
 rot.addEventListener('input',()=>{
   const o=curLogo();if(!o)return;
   o.set('angle',Number(rot.value));o.__meta.rot=Number(rot.value);canvas.renderAll();
+  /* 旋转会改「是否完整落在区内」的结论（obb 要把四个角都算），也要同一下反映到气泡 */
+  refreshZoneState();
 });
 /* 选中另一张 LOGO 时，滑杆自动切到它自己的参数 */
 let tintObj=null;
@@ -1942,6 +2014,9 @@ function onLogoSelected(e){
   /* 换选另一张 LOGO 时把改颜色浮层收回态A；同一张就保留当前状态（拖动中不能被自己打断） */
   if(o!==tintObj){tintObj=o||null;tintOpen=false;tintEntryOn=false;}
   syncTintUI(o);
+  /* ⛔ 换选是一个「不经过 updateSizeReadout」的入口：安全区判定与气泡显隐
+     都靠 refreshZoneState 推，换选时补一次，否则会出现「切到另一张越界 LOGO 却不提示」。 */
+  refreshZoneState();
 }
 canvas.on('selection:created',onLogoSelected);
 canvas.on('selection:updated',onLogoSelected);
@@ -1950,7 +2025,7 @@ canvas.on('object:scaling',e=>{const o=e.target;if(o&&o.__meta){const s=(o.scale
 /* 拖动过程中就实时判定安全区：出区立刻变红，不用等松手 */
 canvas.on('object:moving',e=>{const o=e.target;if(o&&o.__meta){refreshZoneState();syncTintBarPosition();}});
 canvas.on('object:rotating',e=>{const o=e.target;if(o&&o.__meta){const snapped=Math.round(o.angle/5)*5;o.set('angle',snapped);o.__meta.rot=snapped;rot.value=Math.max(-180,Math.min(180,snapped));setRangeFill(rot);}});
-canvas.on('object:modified',e=>{const o=e.target;if(o&&o.__meta){syncTintBarPosition();const s=(o.scaleX+o.scaleY)/2;o.set({scaleX:s,scaleY:s});let a=Math.round(o.angle/5)*5%360;if(a>180)a-=360;if(a<-180)a+=360;o.set('angle',a);o.__meta.rot=a;rot.value=a;setRangeFill(rot);canvas.renderAll();updateSizeReadout();}});
+canvas.on('object:modified',e=>{const o=e.target;if(o&&o.__meta){syncTintBarPosition();const s=(o.scaleX+o.scaleY)/2;o.set({scaleX:s,scaleY:s});let a=Math.round(o.angle/5)*5%360;if(a>180)a-=360;if(a<-180)a+=360;o.set('angle',a);o.__meta.rot=a;rot.value=a;setRangeFill(rot);canvas.renderAll();updateSizeReadout();refreshZoneState();}});
 /* 键盘 Delete / Backspace 删除当前选中的 LOGO（教程打开时让位给教程自己的按键） */
 document.addEventListener('keydown',e=>{
   if(e.key!=='Delete'&&e.key!=='Backspace')return;
@@ -1964,6 +2039,7 @@ document.addEventListener('keydown',e=>{
   if(!active||!active.__meta)return;
   e.preventDefault();
   removeLogo(active);
+  refreshZoneState();
 });
 
 const zoomSlider=document.getElementById('zoom');
@@ -3517,6 +3593,8 @@ function resetAll(){
   rmwhite.checked=true;invert.checked=false;innerColor.checked=true;opa.value=100;rot.value=0;tol.value=0;syncInnerChip();
   [opa,rot,tol].forEach(setRangeFill);
   tintOpen=false;tintEntryOn=false;tintObj=null;syncTintUI(null);
+  /* 全部清空 → 这一段结束，确认记忆一起复位（下次上传第一张要按新规矩提醒） */
+  warningAckSig='';warningManualOpen=false;warningWasActive=false;warnInfoUntil=0;clearTimeout(warningTimer);
   setViewZoom(DEFAULT_VIEW_ZOOM);
   canvas.renderAll();updateSizeReadout();refreshUploadBox();
 }
@@ -3538,6 +3616,9 @@ document.getElementById('model').addEventListener('change',e=>{
   logoImgs.forEach(o=>o.set({left:c,top:c}));
   setViewZoom(DEFAULT_VIEW_ZOOM);
   clearStageNotice();
+  /* 换画布 / 换安全区 = 上一段的违规判定作废，确认记忆一并复位 ——
+     否则旧签名会在新画布上把新出现的提示压掉。 */
+  warningAckSig='';warningManualOpen=false;warningWasActive=false;warnInfoUntil=0;clearTimeout(warningTimer);
   loadBag();applyView();updateSizeReadout();
   syncBrandLogo();
 });
