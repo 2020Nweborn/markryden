@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-30T06:33:02.899Z",
+  "updatedAt": "2026-09-30T06:34:49.549Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -1115,6 +1115,23 @@
         "rot": 0,
         "color": "#ffffff"
       }
+    },
+    "MR_701_14in": {
+      "id": "MR_701_14in",
+      "pxPerMm": 2,
+      "canvasMm": 393.5,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_701_14in_bizblack_trim.png",
+          "webp": "mr_701_14in_bizblack_trim.webp"
+        }
+      ]
     }
   }
 }
