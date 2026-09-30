@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-30T05:27:40.750Z",
+  "updatedAt": "2026-09-30T05:36:44.111Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -900,10 +900,27 @@
       },
       "colors": [
         {
-          "key": "133",
-          "label": "精英灰（13.3寸）",
-          "image": "mr_67_13.3in_133_trim.png",
-          "webp": "mr_67_13.3in_133_trim.webp"
+          "key": "elitegray",
+          "label": "精英灰",
+          "image": "mr_67_13.3in_elitegray_trim.png",
+          "webp": "mr_67_13.3in_elitegray_trim.webp"
+        }
+      ]
+    },
+    "MR_264": {
+      "id": "MR_264",
+      "pxPerMm": 2,
+      "canvasMm": 343,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_264_bizblack_trim.png",
+          "webp": "mr_264_bizblack_trim.webp"
         }
       ]
     }
