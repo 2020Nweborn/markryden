@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-30T03:19:05.049Z",
+  "updatedAt": "2026-09-30T03:19:10.309Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -700,6 +700,94 @@
         "color": "#dbdbdb"
       }
     },
+    "MR_67": {
+      "id": "MR_67",
+      "pxPerMm": 2,
+      "canvasMm": 421.5,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "154",
+          "label": "商务黑（15.4寸）",
+          "image": "mr_67_154_trim.png",
+          "webp": "mr_67_154_trim.webp"
+        },
+        {
+          "key": "133",
+          "label": "精英灰（13.3寸）",
+          "image": "mr_67_133_trim.png",
+          "webp": "mr_67_133_trim.webp"
+        }
+      ],
+      "brandLogo": {
+        "cxMm": 308.4,
+        "cyMm": 178.1,
+        "lenMm": 28,
+        "rot": 0,
+        "color": "#dedede"
+      },
+      "safeZones": [
+        {
+          "xMm": 48.9,
+          "yMm": 87.4,
+          "wMm": 337.8,
+          "hMm": 68.1
+        },
+        {
+          "xMm": 40.6,
+          "yMm": 187.2,
+          "wMm": 348.3,
+          "hMm": 145.1
+        }
+      ]
+    },
+    "MR_701": {
+      "id": "MR_701",
+      "pxPerMm": 2,
+      "canvasMm": 411,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "14",
+          "label": "商务黑（14寸）",
+          "image": "mr_701_14_trim.png",
+          "webp": "mr_701_14_trim.webp"
+        },
+        {
+          "key": "156",
+          "label": "商务黑（15.6寸）",
+          "image": "mr_701_156_trim.png",
+          "webp": "mr_701_156_trim.webp"
+        }
+      ],
+      "brandLogo": {
+        "cxMm": 24.5,
+        "cyMm": 242.7,
+        "lenMm": 30,
+        "rot": 630,
+        "color": "#bababa"
+      },
+      "safeZones": [
+        {
+          "xMm": 50.7,
+          "yMm": 90.7,
+          "wMm": 300,
+          "hMm": 184.9
+        },
+        {
+          "xMm": 44.9,
+          "yMm": 302,
+          "wMm": 312.9,
+          "hMm": 26.4
+        }
+      ]
+    },
     "MR_2900": {
       "id": "MR_2900",
       "pxPerMm": 1,
@@ -837,6 +925,57 @@
         "rot": 90,
         "color": "#dedede"
       }
+    },
+    "MR_67133": {
+      "id": "MR_67133",
+      "pxPerMm": 2,
+      "canvasMm": 362.5,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "133",
+          "label": "精英灰（13.3寸）",
+          "image": "mr_67133_133_trim.png",
+          "webp": "mr_67133_133_trim.webp"
+        }
+      ]
+    },
+    "MR_262enlarge": {
+      "id": "MR_262enlarge",
+      "pxPerMm": 2,
+      "canvasMm": 417,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_262enlarge_bizblack_trim.png",
+          "webp": "mr_262enlarge_bizblack_trim.webp"
+        }
+      ]
+    },
+    "MR_262regular": {
+      "id": "MR_262regular",
+      "pxPerMm": 2,
+      "canvasMm": 387,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_262regular_bizblack_trim.png",
+          "webp": "mr_262regular_bizblack_trim.webp"
+        }
+      ]
     }
   }
 }
