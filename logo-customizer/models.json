@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-30T08:14:34.095Z",
+  "updatedAt": "2026-09-30T08:17:29.355Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -1360,6 +1360,29 @@
           "label": "绿色",
           "image": "mr_72_绿色_trim.png",
           "webp": "mr_72_绿色_trim.webp"
+        }
+      ]
+    },
+    "MR_264": {
+      "id": "MR_264",
+      "pxPerMm": 2,
+      "canvasMm": 395,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_264_bizblack_trim.png",
+          "webp": "mr_264_bizblack_trim.webp"
+        },
+        {
+          "key": "商务黑（背面）",
+          "label": "商务黑（背面）",
+          "image": "mr_264_商务黑（背面）_trim.png",
+          "webp": "mr_264_商务黑（背面）_trim.webp"
         }
       ]
     }
