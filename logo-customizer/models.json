@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-30T09:59:07.993Z",
+  "updatedAt": "2026-09-30T09:59:54.792Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -1644,6 +1644,23 @@
           "yMm": 89.5,
           "wMm": 30.4,
           "hMm": 376
+        }
+      ]
+    },
+    "MR_520": {
+      "id": "MR_520",
+      "pxPerMm": 2,
+      "canvasMm": 526.5,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "紫色",
+          "label": "紫色",
+          "image": "mr_520_紫色_trim.png",
+          "webp": "mr_520_紫色_trim.webp"
         }
       ]
     }
