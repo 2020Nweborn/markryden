@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-30T05:39:22.347Z",
+  "updatedAt": "2026-09-30T05:42:48.570Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -904,6 +904,20 @@
           "label": "精英灰",
           "image": "mr_67_13.3in_elitegray_trim.png",
           "webp": "mr_67_13.3in_elitegray_trim.webp"
+        }
+      ],
+      "safeZones": [
+        {
+          "xMm": 25.5,
+          "yMm": 163,
+          "wMm": 311,
+          "hMm": 125.2
+        },
+        {
+          "xMm": 33.7,
+          "yMm": 72.9,
+          "wMm": 298.3,
+          "hMm": 66
         }
       ]
     },
