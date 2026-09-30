@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-30T09:28:24.067Z",
+  "updatedAt": "2026-09-30T09:29:10.720Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -1481,6 +1481,14 @@
           "label": "商务黑",
           "image": "mr_262_bizblack_trim.png",
           "webp": "mr_262_bizblack_trim.webp"
+        }
+      ],
+      "safeZones": [
+        {
+          "xMm": 135.1,
+          "yMm": 158,
+          "wMm": 164.4,
+          "hMm": 89
         }
       ]
     },
