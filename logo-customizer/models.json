@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-30T02:25:51.883Z",
+  "updatedAt": "2026-09-30T02:31:36.131Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -826,6 +826,43 @@
           "label": "商务黑",
           "image": "mr_9000_bizblack_trim.png",
           "webp": "mr_9000_bizblack_trim.webp"
+        }
+      ],
+      "safeZones": [
+        {
+          "xMm": 162.7,
+          "yMm": 176.2,
+          "wMm": 195.1,
+          "hMm": 237.3
+        },
+        {
+          "xMm": 192.8,
+          "yMm": 78.3,
+          "wMm": 139.3,
+          "hMm": 64
+        },
+        {
+          "xMm": 179.3,
+          "yMm": 438.4,
+          "wMm": 165,
+          "hMm": 35.4
+        }
+      ]
+    },
+    "MR_3998": {
+      "id": "MR_3998",
+      "pxPerMm": 2,
+      "canvasMm": 423,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_3998_bizblack_trim.png",
+          "webp": "mr_3998_bizblack_trim.webp"
         }
       ]
     }
