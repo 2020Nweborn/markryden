@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-30T05:45:48.049Z",
+  "updatedAt": "2026-09-30T05:51:09.122Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -995,6 +995,29 @@
           "yMm": 90.8,
           "wMm": 334.7,
           "hMm": 63.6
+        }
+      ]
+    },
+    "MR_1611": {
+      "id": "MR_1611",
+      "pxPerMm": 1,
+      "canvasMm": 452,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "citygreen",
+          "label": "城际绿",
+          "image": "mr_1611_citygreen_trim.png",
+          "webp": "mr_1611_citygreen_trim.webp"
+        },
+        {
+          "key": "elitegray",
+          "label": "精英灰",
+          "image": "mr_1611_elitegray_trim.png",
+          "webp": "mr_1611_elitegray_trim.webp"
         }
       ]
     }
