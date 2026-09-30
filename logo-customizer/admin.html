@@ -607,7 +607,17 @@ function sha256hex(str){
   }
   return Promise.resolve(null);
 }
-function normModel(s){return String(s||'').replace(/^(mr|MR)[_\- ]*/,'').replace(/[^0-9a-zA-Z]+/g,'');}
+/* ⛔ 型号命名规范（2026-09-30 用户定，长期规则）：
+   MR_ + 型号 + _ + 尺寸 + 可选后缀，全用下划线分隔、不要括号、保留小数点。
+     MR999(13.3in)      -> MR_999_13.3in
+     MR999(13.3in)-A    -> MR_999_13.3in_A
+     MR999(13.3in)-A-sj -> MR_999_13.3in_A_sj
+   ⛔ 旧实现把非字母数字「删掉」：999(13.3in) 变成 999133in（小数点一没，数字就没了边界），
+      而且 MR999(13.3in) / MR999(133in) / MR999(1.33in) 会撞成同一个 key。
+   现改为「非字母数字、非小数点 -> 下划线」，再收掉首尾与连续下划线。
+   ⛔ 返回值同时是 models.json 的 key 和素材文件名前缀，两边都要能吃；
+      文件名里的点已确认安全（扩展名解析全是尾部锚定）。必须幂等（会被套两次）。 */
+function normModel(s){return String(s||'').replace(/^(mr|MR)[_\- ]*/,'').replace(/[^0-9a-zA-Z.]+/g,'_').replace(/^[_.]+|[_.]+$/g,'').replace(/_{2,}/g,'_');}
 function fileSlug(color){
   var c=String(color||'').trim();
   if(COLOR_SLUG[c])return COLOR_SLUG[c];
