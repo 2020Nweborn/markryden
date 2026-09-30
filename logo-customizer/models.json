@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-30T05:51:09.122Z",
+  "updatedAt": "2026-09-30T05:52:58.002Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -1018,6 +1018,26 @@
           "label": "精英灰",
           "image": "mr_1611_elitegray_trim.png",
           "webp": "mr_1611_elitegray_trim.webp"
+        }
+      ],
+      "safeZones": [
+        {
+          "xMm": 99.7,
+          "yMm": 52,
+          "wMm": 251.3,
+          "hMm": 120.7
+        },
+        {
+          "xMm": 96.3,
+          "yMm": 207.6,
+          "wMm": 102.5,
+          "hMm": 165
+        },
+        {
+          "xMm": 255.3,
+          "yMm": 214.4,
+          "wMm": 100.2,
+          "hMm": 159.3
         }
       ]
     }
