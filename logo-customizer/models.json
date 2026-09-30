@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-30T08:17:29.355Z",
+  "updatedAt": "2026-09-30T08:22:05.074Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -1361,7 +1361,14 @@
           "image": "mr_72_绿色_trim.png",
           "webp": "mr_72_绿色_trim.webp"
         }
-      ]
+      ],
+      "brandLogo": {
+        "cxMm": 73,
+        "cyMm": 119.5,
+        "lenMm": 42,
+        "rot": 0,
+        "color": "#ffffff"
+      }
     },
     "MR_264": {
       "id": "MR_264",
