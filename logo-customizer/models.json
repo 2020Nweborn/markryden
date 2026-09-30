@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-30T08:01:10.000Z",
+  "updatedAt": "2026-09-30T08:04:55.356Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -1311,7 +1311,14 @@
           "image": "mr_9191_bizblack_trim.png",
           "webp": "mr_9191_bizblack_trim.webp"
         }
-      ]
+      ],
+      "brandLogo": {
+        "cxMm": 241.1,
+        "cyMm": 357.3,
+        "lenMm": 88,
+        "rot": 90,
+        "color": "#dedede"
+      }
     }
   }
 }
