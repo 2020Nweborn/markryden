@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-30T01:53:00.152Z",
+  "updatedAt": "2026-09-30T01:53:25.782Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -699,6 +699,23 @@
         "rot": 0,
         "color": "#dbdbdb"
       }
+    },
+    "MR_67": {
+      "id": "MR_67",
+      "pxPerMm": 2,
+      "canvasMm": 362.5,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "133",
+          "label": "精英灰（13.3寸）",
+          "image": "mr_67_133_trim.png",
+          "webp": "mr_67_133_trim.webp"
+        }
+      ]
     }
   }
 }
