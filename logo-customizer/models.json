@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-30T03:18:32.469Z",
+  "updatedAt": "2026-09-30T03:19:05.049Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -699,50 +699,6 @@
         "rot": 0,
         "color": "#dbdbdb"
       }
-    },
-    "MR_701": {
-      "id": "MR_701",
-      "pxPerMm": 2,
-      "canvasMm": 411,
-      "logoMax": {
-        "wMm": 60,
-        "hMm": 60
-      },
-      "colors": [
-        {
-          "key": "14",
-          "label": "商务黑（14寸）",
-          "image": "mr_701_14_trim.png",
-          "webp": "mr_701_14_trim.webp"
-        },
-        {
-          "key": "156",
-          "label": "商务黑（15.6寸）",
-          "image": "mr_701_156_trim.png",
-          "webp": "mr_701_156_trim.webp"
-        }
-      ],
-      "brandLogo": {
-        "cxMm": 24.5,
-        "cyMm": 242.7,
-        "lenMm": 30,
-        "rot": 630,
-        "color": "#bababa"
-      },
-      "safeZones": [
-        {
-          "xMm": 50.7,
-          "yMm": 90.7,
-          "wMm": 300,
-          "hMm": 184.9
-        },
-        {
-          "xMm": 44.9,
-          "yMm": 302,
-          "wMm": 312.9,
-          "hMm": 26.4
-        }
-      ]
     },
     "MR_2900": {
       "id": "MR_2900",
