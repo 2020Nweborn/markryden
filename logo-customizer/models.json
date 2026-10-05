@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-30T09:59:54.792Z",
+  "updatedAt": "2026-10-05T01:53:30.352Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -1661,6 +1661,14 @@
           "label": "紫色",
           "image": "mr_520_紫色_trim.png",
           "webp": "mr_520_紫色_trim.webp"
+        }
+      ],
+      "safeZones": [
+        {
+          "xMm": 140.5,
+          "yMm": 222.5,
+          "wMm": 222.5,
+          "hMm": 88.9
         }
       ]
     }
