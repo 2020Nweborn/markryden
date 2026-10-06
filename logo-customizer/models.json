@@ -1,6 +1,57 @@
 {
-  "updatedAt": "2026-10-06T02:18:17.440Z",
+  "updatedAt": "2026-10-06T02:27:04.566Z",
+  "pinnedCount": 1,
   "models": {
+    "MR_9031SJ": {
+      "id": "MR_9031SJ",
+      "pxPerMm": 1,
+      "canvasMm": 589,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_9031sj_bizblack_trim.png",
+          "webp": "mr_9031sj_bizblack_trim.webp"
+        },
+        {
+          "key": "citygreen",
+          "label": "城际绿",
+          "image": "mr_9031sj_citygreen_trim.png",
+          "webp": "mr_9031sj_citygreen_trim.webp"
+        },
+        {
+          "key": "elitegray",
+          "label": "精英灰",
+          "image": "mr_9031sj_elitegray_trim.png",
+          "webp": "mr_9031sj_elitegray_trim.webp"
+        },
+        {
+          "key": "metro",
+          "label": "都会蓝",
+          "image": "mr_9031sj_metro_trim.png",
+          "webp": "mr_9031sj_metro_trim.webp"
+        }
+      ],
+      "brandLogo": {
+        "cxMm": 292,
+        "cyMm": 430.5,
+        "lenMm": 80,
+        "rot": 90,
+        "color": "#a6a7ac"
+      },
+      "safeZones": [
+        {
+          "xMm": 203.4,
+          "yMm": 212.6,
+          "wMm": 172.1,
+          "hMm": 335.1
+        }
+      ]
+    },
     "MR_21": {
       "id": "MR_21",
       "pxPerMm": 5,
@@ -53,56 +104,6 @@
           "yMm": 31.5,
           "wMm": 47.5,
           "hMm": 57.2
-        }
-      ]
-    },
-    "MR_9031SJ": {
-      "id": "MR_9031SJ",
-      "pxPerMm": 1,
-      "canvasMm": 589,
-      "logoMax": {
-        "wMm": 60,
-        "hMm": 60
-      },
-      "colors": [
-        {
-          "key": "bizblack",
-          "label": "商务黑",
-          "image": "mr_9031sj_bizblack_trim.png",
-          "webp": "mr_9031sj_bizblack_trim.webp"
-        },
-        {
-          "key": "citygreen",
-          "label": "城际绿",
-          "image": "mr_9031sj_citygreen_trim.png",
-          "webp": "mr_9031sj_citygreen_trim.webp"
-        },
-        {
-          "key": "elitegray",
-          "label": "精英灰",
-          "image": "mr_9031sj_elitegray_trim.png",
-          "webp": "mr_9031sj_elitegray_trim.webp"
-        },
-        {
-          "key": "metro",
-          "label": "都会蓝",
-          "image": "mr_9031sj_metro_trim.png",
-          "webp": "mr_9031sj_metro_trim.webp"
-        }
-      ],
-      "brandLogo": {
-        "cxMm": 292,
-        "cyMm": 430.5,
-        "lenMm": 80,
-        "rot": 90,
-        "color": "#a6a7ac"
-      },
-      "safeZones": [
-        {
-          "xMm": 203.4,
-          "yMm": 212.6,
-          "wMm": 172.1,
-          "hMm": 335.1
         }
       ]
     },
