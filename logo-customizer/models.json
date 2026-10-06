@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-06T06:08:31.959Z",
+  "updatedAt": "2026-10-06T12:36:31.319Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -2323,6 +2323,47 @@
         "rot": 0,
         "color": "#f0f0f0"
       }
+    },
+    "MR_98_13.3in": {
+      "id": "MR_98_13.3in",
+      "pxPerMm": 1,
+      "canvasMm": 411,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "pu",
+          "label": "PU浅粉",
+          "image": "mr_98_13.3in_pu_trim.png",
+          "webp": "mr_98_13.3in_pu_trim.webp"
+        },
+        {
+          "key": "大连深灰",
+          "label": "大连深灰",
+          "image": "mr_98_13.3in_大连深灰_trim.png",
+          "webp": "mr_98_13.3in_大连深灰_trim.webp"
+        },
+        {
+          "key": "pu",
+          "label": "PU深灰",
+          "image": "mr_98_13.3in_pu_trim.png",
+          "webp": "mr_98_13.3in_pu_trim.webp"
+        },
+        {
+          "key": "浅灰",
+          "label": "浅灰",
+          "image": "mr_98_13.3in_浅灰_trim.png",
+          "webp": "mr_98_13.3in_浅灰_trim.webp"
+        },
+        {
+          "key": "darkgray",
+          "label": "深灰",
+          "image": "mr_98_13.3in_darkgray_trim.png",
+          "webp": "mr_98_13.3in_darkgray_trim.webp"
+        }
+      ]
     }
   }
 }
