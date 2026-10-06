@@ -1,71 +1,7 @@
 {
-  "updatedAt": "2026-10-06T01:15:32.210Z",
-  "pinnedCount": 1,
+  "updatedAt": "2026-10-06T01:16:24.298Z",
+  "pinnedCount": 2,
   "models": {
-    "MR_35": {
-      "id": "MR_35",
-      "pxPerMm": 2,
-      "canvasMm": 307,
-      "logoMax": {
-        "wMm": 110,
-        "hMm": 60
-      },
-      "colors": [
-        {
-          "key": "bizblack",
-          "label": "商务黑",
-          "image": "mr_35_bizblack_trim.png",
-          "webp": "mr_35_bizblack_trim.webp"
-        }
-      ]
-    },
-    "MR_21": {
-      "id": "MR_21",
-      "pxPerMm": 5,
-      "canvasMm": 113.6,
-      "logoMax": {
-        "wMm": 40,
-        "hMm": 40
-      },
-      "colors": [
-        {
-          "key": "orange",
-          "label": "橙",
-          "image": "mr_21_orange_trim.png",
-          "webp": "mr_21_orange_trim.webp"
-        },
-        {
-          "key": "gray",
-          "label": "灰",
-          "image": "mr_21_gray_trim.png",
-          "webp": "mr_21_gray_trim.webp"
-        },
-        {
-          "key": "purple",
-          "label": "紫",
-          "image": "mr_21_purple_trim.png",
-          "webp": "mr_21_purple_trim.webp"
-        },
-        {
-          "key": "green",
-          "label": "绿",
-          "image": "mr_21_green_trim.png",
-          "webp": "mr_21_green_trim.webp"
-        },
-        {
-          "key": "blue",
-          "label": "蓝",
-          "image": "mr_21_blue_trim.png",
-          "webp": "mr_21_blue_trim.webp"
-        },
-        {
-          "key": "black",
-          "label": "黑",
-          "image": "mr_21_black_trim.png",
-          "webp": "mr_21_black_trim.webp"
-        }
-      ]
-    },
     "MR_9031SJ": {
       "id": "MR_9031SJ",
       "pxPerMm": 1,
@@ -116,6 +52,23 @@
         }
       ]
     },
+    "MR_35": {
+      "id": "MR_35",
+      "pxPerMm": 2,
+      "canvasMm": 307,
+      "logoMax": {
+        "wMm": 110,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_35_bizblack_trim.png",
+          "webp": "mr_35_bizblack_trim.webp"
+        }
+      ]
+    },
     "MR_999_ka_14.5in": {
       "id": "MR_999_ka_14.5in",
       "pxPerMm": 1,
@@ -130,6 +83,53 @@
           "label": "商务黑",
           "image": "test-assets/mr_999_ka_14.5in_bizblack_trim.png",
           "webp": "test-assets/mr_999_ka_14.5in_bizblack_trim.webp"
+        }
+      ]
+    },
+    "MR_21": {
+      "id": "MR_21",
+      "pxPerMm": 5,
+      "canvasMm": 113.6,
+      "logoMax": {
+        "wMm": 40,
+        "hMm": 40
+      },
+      "colors": [
+        {
+          "key": "orange",
+          "label": "橙",
+          "image": "mr_21_orange_trim.png",
+          "webp": "mr_21_orange_trim.webp"
+        },
+        {
+          "key": "gray",
+          "label": "灰",
+          "image": "mr_21_gray_trim.png",
+          "webp": "mr_21_gray_trim.webp"
+        },
+        {
+          "key": "purple",
+          "label": "紫",
+          "image": "mr_21_purple_trim.png",
+          "webp": "mr_21_purple_trim.webp"
+        },
+        {
+          "key": "green",
+          "label": "绿",
+          "image": "mr_21_green_trim.png",
+          "webp": "mr_21_green_trim.webp"
+        },
+        {
+          "key": "blue",
+          "label": "蓝",
+          "image": "mr_21_blue_trim.png",
+          "webp": "mr_21_blue_trim.webp"
+        },
+        {
+          "key": "black",
+          "label": "黑",
+          "image": "mr_21_black_trim.png",
+          "webp": "mr_21_black_trim.webp"
         }
       ]
     }
