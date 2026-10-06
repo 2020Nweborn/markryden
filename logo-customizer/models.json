@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-06T05:20:51.982Z",
+  "updatedAt": "2026-10-06T05:23:55.757Z",
   "pinnedCount": 0,
   "models": {
     "MR_21": {
@@ -1351,22 +1351,22 @@
       },
       "colors": [
         {
-          "key": "白色",
-          "label": "白色",
-          "image": "mr_72_白色_trim.png",
-          "webp": "mr_72_白色_trim.webp"
+          "key": "gray",
+          "label": "灰",
+          "image": "mr_72_gray_trim.png",
+          "webp": "mr_72_gray_trim.webp"
         },
         {
-          "key": "黑色",
-          "label": "黑色",
-          "image": "mr_72_黑色_trim.png",
-          "webp": "mr_72_黑色_trim.webp"
+          "key": "black",
+          "label": "黑",
+          "image": "mr_72_black_trim.png",
+          "webp": "mr_72_black_trim.webp"
         },
         {
-          "key": "绿色",
-          "label": "绿色",
-          "image": "mr_72_绿色_trim.png",
-          "webp": "mr_72_绿色_trim.webp"
+          "key": "green",
+          "label": "绿",
+          "image": "mr_72_green_trim.png",
+          "webp": "mr_72_green_trim.webp"
         }
       ],
       "brandLogo": {
