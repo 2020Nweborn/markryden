@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-06T05:19:50.945Z",
+  "updatedAt": "2026-10-06T05:20:51.982Z",
   "pinnedCount": 0,
   "models": {
     "MR_21": {
@@ -2315,7 +2315,14 @@
           "wMm": 88.6,
           "hMm": 160.7
         }
-      ]
+      ],
+      "brandLogo": {
+        "cxMm": 103.3,
+        "cyMm": 166.8,
+        "lenMm": 40,
+        "rot": 0,
+        "color": "#f0f0f0"
+      }
     }
   }
 }
