@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-06T05:12:46.371Z",
+  "updatedAt": "2026-10-06T05:19:50.945Z",
   "pinnedCount": 0,
   "models": {
     "MR_21": {
@@ -2306,6 +2306,14 @@
           "label": "灰",
           "image": "mr_79_gray_trim.png",
           "webp": "mr_79_gray_trim.webp"
+        }
+      ],
+      "safeZones": [
+        {
+          "xMm": 60,
+          "yMm": 27.3,
+          "wMm": 88.6,
+          "hMm": 160.7
         }
       ]
     }
