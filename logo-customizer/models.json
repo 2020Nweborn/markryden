@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-06T01:53:17.135Z",
+  "updatedAt": "2026-10-06T01:54:12.609Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -2194,6 +2194,26 @@
           "label": "商务黑",
           "image": "mr_9103_bizblack_trim.png",
           "webp": "mr_9103_bizblack_trim.webp"
+        }
+      ],
+      "safeZones": [
+        {
+          "xMm": 187.3,
+          "yMm": 155.2,
+          "wMm": 213.9,
+          "hMm": 123.8
+        },
+        {
+          "xMm": 202.1,
+          "yMm": 94.7,
+          "wMm": 179.4,
+          "hMm": 27.5
+        },
+        {
+          "xMm": 186.1,
+          "yMm": 362.6,
+          "wMm": 236.1,
+          "hMm": 109
         }
       ]
     }
