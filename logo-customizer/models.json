@@ -1,61 +1,7 @@
 {
-  "updatedAt": "2026-10-06T02:27:36.864Z",
+  "updatedAt": "2026-10-06T02:28:52.908Z",
+  "pinnedCount": 1,
   "models": {
-    "MR_21": {
-      "id": "MR_21",
-      "pxPerMm": 5,
-      "canvasMm": 113.6,
-      "logoMax": {
-        "wMm": 40,
-        "hMm": 40
-      },
-      "colors": [
-        {
-          "key": "orange",
-          "label": "橙",
-          "image": "mr_21_orange_trim.png",
-          "webp": "mr_21_orange_trim.webp"
-        },
-        {
-          "key": "gray",
-          "label": "灰",
-          "image": "mr_21_gray_trim.png",
-          "webp": "mr_21_gray_trim.webp"
-        },
-        {
-          "key": "purple",
-          "label": "紫",
-          "image": "mr_21_purple_trim.png",
-          "webp": "mr_21_purple_trim.webp"
-        },
-        {
-          "key": "green",
-          "label": "绿",
-          "image": "mr_21_green_trim.png",
-          "webp": "mr_21_green_trim.webp"
-        },
-        {
-          "key": "blue",
-          "label": "蓝",
-          "image": "mr_21_blue_trim.png",
-          "webp": "mr_21_blue_trim.webp"
-        },
-        {
-          "key": "black",
-          "label": "黑",
-          "image": "mr_21_black_trim.png",
-          "webp": "mr_21_black_trim.webp"
-        }
-      ],
-      "safeZones": [
-        {
-          "xMm": 33.1,
-          "yMm": 31.5,
-          "wMm": 47.5,
-          "hMm": 57.2
-        }
-      ]
-    },
     "MR_9031SJ": {
       "id": "MR_9031SJ",
       "pxPerMm": 1,
@@ -141,6 +87,61 @@
           "yMm": 357.3,
           "wMm": 209,
           "hMm": 126.7
+        }
+      ]
+    },
+    "MR_21": {
+      "id": "MR_21",
+      "pxPerMm": 5,
+      "canvasMm": 113.6,
+      "logoMax": {
+        "wMm": 40,
+        "hMm": 40
+      },
+      "colors": [
+        {
+          "key": "orange",
+          "label": "橙",
+          "image": "mr_21_orange_trim.png",
+          "webp": "mr_21_orange_trim.webp"
+        },
+        {
+          "key": "gray",
+          "label": "灰",
+          "image": "mr_21_gray_trim.png",
+          "webp": "mr_21_gray_trim.webp"
+        },
+        {
+          "key": "purple",
+          "label": "紫",
+          "image": "mr_21_purple_trim.png",
+          "webp": "mr_21_purple_trim.webp"
+        },
+        {
+          "key": "green",
+          "label": "绿",
+          "image": "mr_21_green_trim.png",
+          "webp": "mr_21_green_trim.webp"
+        },
+        {
+          "key": "blue",
+          "label": "蓝",
+          "image": "mr_21_blue_trim.png",
+          "webp": "mr_21_blue_trim.webp"
+        },
+        {
+          "key": "black",
+          "label": "黑",
+          "image": "mr_21_black_trim.png",
+          "webp": "mr_21_black_trim.webp"
+        }
+      ],
+      "safeZones": [
+        {
+          "xMm": 33.1,
+          "yMm": 31.5,
+          "wMm": 47.5,
+          "hMm": 57.2
         }
       ]
     },
@@ -2254,15 +2255,7 @@
         "lenMm": 56,
         "rot": 0,
         "color": "#000000"
-      },
-      "safeZones": [
-        {
-          "xMm": 84.7,
-          "yMm": 177.9,
-          "wMm": 275.2,
-          "hMm": 223.7
-        }
-      ]
+      }
     }
   }
 }
