@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-06T00:59:53.364Z",
+  "updatedAt": "2026-10-06T01:01:17.900Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -1745,6 +1745,41 @@
           "label": "商务黑",
           "image": "mr_569_bizblack_trim.png",
           "webp": "mr_569_bizblack_trim.webp"
+        }
+      ]
+    },
+    "MR_615": {
+      "id": "MR_615",
+      "pxPerMm": 2,
+      "canvasMm": 515.5,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "citygreen",
+          "label": "城际绿",
+          "image": "mr_615_citygreen_trim.png",
+          "webp": "mr_615_citygreen_trim.webp"
+        },
+        {
+          "key": "elitegray",
+          "label": "精英灰",
+          "image": "mr_615_elitegray_trim.png",
+          "webp": "mr_615_elitegray_trim.webp"
+        },
+        {
+          "key": "科技灰",
+          "label": "科技灰",
+          "image": "mr_615_科技灰_trim.png",
+          "webp": "mr_615_科技灰_trim.webp"
+        },
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_615_bizblack_trim.png",
+          "webp": "mr_615_bizblack_trim.webp"
         }
       ]
     }
