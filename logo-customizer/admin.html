@@ -89,13 +89,19 @@
      卡内不留左右 padding，改由 .m-head / .m-colors 各自撑满，分隔线才能通到两边。 */
   .model-card{border:1px solid #e3e5e8;border-radius:16px;margin-bottom:14px;overflow:hidden;background:#fff}
   .model-card:last-child{margin-bottom:0}
-  .m-head{display:flex;align-items:center;gap:10px;padding:18px 20px}
+  /* ⛔ flex-wrap + row-gap：型号卡现在有 4 个 mini-dark 按钮（修改/品牌LOGO定位/安全区/置顶），
+     窄屏真放不下时**换行**而不是把按钮压扁、压到上传格上。卡片高度由 syncCardHeight() 动态量，换行会被计入。 */
+  .m-head{display:flex;align-items:center;gap:10px;padding:18px 20px;flex-wrap:wrap;row-gap:10px}
   .m-name{font-weight:500;font-size:17px;margin-right:auto;display:inline-flex;align-items:center;gap:4px;
     color:#141519;letter-spacing:.01em}
   .mini-dark{background:#141519;color:#fff;border:0;border-radius:9px;padding:9px 14px;font-size:13px;
     cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
     font-weight:400}
   .mini-dark:hover{background:#2a2c31}
+  /* 按钮永不被压扁：挤不下就靠 .m-head 换行（上面 row-gap 那条） */
+  .mini-dark{flex-shrink:0}
+  .mini-dark[disabled]{opacity:.4;cursor:default}
+  .mini-dark[disabled]:hover{background:#141519}
   .mini-dark svg{width:14px;height:14px;flex-shrink:0}
   /* 外部 SVG 图标：原图 viewBox 很小（修改 6×6 / 删除 8×8），必须显式给尺寸，
      否则会按固有尺寸渲染成针尖大小。 */
@@ -104,6 +110,24 @@
     display:inline-flex;align-items:center;justify-content:center;opacity:.65}
   .icon-btn img.ico{width:15px;height:15px;display:block}
   .icon-btn:hover{opacity:1}
+  /* ⛔ 拖拽排序（2026-09-30）：置顶/拖拽只重排 models.json 的 key 顺序，不加新字段。
+     把手用纯 CSS 点阵画（2 列 × 3 行），不新增 SVG 资产、不手写 path ——
+     项目红线「图标一律走外部 SVG」针对的是设计稿图标，这里只是个交互提示。 */
+  /* 2026-09-30 用户要求去掉左侧把手：按住卡片任意位置即可上下拖拽。
+     抓手提示改挂到整张卡上；⛔ 卡内的交互元素要自己压回 pointer，否则点按钮会被当成拖拽起手。 */
+  .model-card{cursor:grab}
+  .model-card:active{cursor:grabbing}
+  .model-card button,.model-card input,.model-card select,.model-card a{cursor:pointer}
+  /* ⛔ 搜索状态下禁止拖拽：可见顺序 ≠ 完整顺序，拖了必然错位 */
+  .model-card.no-drag{cursor:not-allowed}
+  .model-card.no-drag .m-head,.model-card.no-drag .m-colors{opacity:.62}
+  .model-card.is-dragging{opacity:.4}
+  .model-card.drag-before{box-shadow:inset 0 3px 0 0 #1938D7}
+  .model-card.drag-after{box-shadow:inset 0 -3px 0 0 #1938D7}
+  /* ⛔ 「置顶」不能放在 .m-name 里（2026-09-30 改）：
+     ① 违反既有红线「型号名后面只留删除」；
+     ② 会把 .m-name 的 textContent 污染成 `MR_9031SJ置顶`（读屏、按文本取型号名的地方全中招）。
+     所以它是一个普通的 mini-dark 按钮，与「修改 / 品牌LOGO定位 / 安全区」并列。 */
   /* 颜色行：默认不出现滚动条，真的溢出才显示（JS 加 .is-overflow） */
   .m-colors{display:flex;gap:10px;align-items:center;border-top:1px solid #eceef1;
     padding:16px 20px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-ms-overflow-style:none}
@@ -230,6 +254,14 @@
   .lp-add[hidden]{display:none}
   .lp-none{font-size:12.5px;color:var(--tx2);line-height:1.65;margin:0 0 6px}
   .lp-none[hidden]{display:none}
+  /* LOGO 画布 = 前端同一套 fabric（2026-10-05 用户：「直接把前端的代码拿来复用」）。
+     ⛔ 后台不再自绘选框：手柄样式 / 命中判定 / 旋转柄与连线 / 等比缩放
+        全部由 fabric 自己渲染，所以 .lp-ctl 那一整套手写几何已删除。
+     ⛔ 必须有**显式高度**：旧实现靠内部 <img> 撑开高度，换成 fabric 后
+        canvas 是绝对定位，容器会塌成一条线（实测 320×10）。 */
+  .lp-stage{aspect-ratio:1/1}
+  .lp-stage canvas{display:block}
+  .lp-stage .canvas-container{width:100%!important;height:100%!important;border-radius:9px}
   .lp-fields.off{opacity:.45;pointer-events:none}
   /* 安全区（可定制范围）编辑面板 */
   .zn-dim{position:absolute;background:rgba(20,21,25,.26);pointer-events:none;z-index:1}
@@ -238,7 +270,15 @@
   .zn-zone>span{position:absolute;left:3px;top:3px;font-size:10px;line-height:1.3;color:#fff;background:rgba(20,21,25,.62);padding:1px 4px;border-radius:3px;pointer-events:none;white-space:nowrap}
   .zn-grip{position:absolute;right:-7px;bottom:-7px;width:14px;height:14px;background:#141519;border:2px solid #fff;border-radius:3px;cursor:nwse-resize;z-index:6;display:none}
   .zn-zone.sel .zn-grip{display:block}
-  .zn-brand{position:absolute;border:1px dashed #7a7d85;pointer-events:none;z-index:2}
+  /* ⛔ 2026-10-05 用户要求：画布上的品牌LOGO**去掉虚线框，直接显示 LOGO 本体**
+     （原来是一圈 `1px dashed #7a7d85` 的占位轮廓）。
+     现在的做法：位置标记保留（仍然只读、不吃鼠标事件），但边框透明 ——
+     真正的 LOGO 图由下面的 <img class="zn-logo"> 叠在同位置画出来。 */
+  .zn-brand{position:absolute;border:0;pointer-events:none;z-index:2}
+  /* 画布上的品牌LOGO 本体：与 .zn-brand 同位置同尺寸，只读参考。
+     z-index 夹在「区外淡化(1)」与「安全区框(4)」之间 ——
+     这样它盖得住淡化遮罩、又盖不住安全区的选中框和把手。 */
+  .zn-logo{position:absolute;pointer-events:none;z-index:2;object-fit:contain}
   .zn-list{border:1px solid var(--bd);border-radius:8px;max-height:132px;overflow:auto;margin-bottom:4px}
   .zn-row{display:flex;align-items:center;gap:8px;padding:6px 8px;font-size:12.5px;cursor:pointer;border-bottom:1px solid #f0f1f3}
   .zn-row:last-child{border-bottom:0}
@@ -248,9 +288,33 @@
   .zn-flag{font-size:11.5px;line-height:1.6;margin:8px 0 0}
   .zn-flag.bad{color:#c0392b}
   .zn-flag[hidden]{display:none}
-  /* 型号卡上的「安全区」按钮：已经配过安全区的型号用红底标出来，一眼能看出哪些还没画 */
+  /* 型号卡上的「安全区」按钮：已经配过安全区的型号用红底标出来，一眼能看出哪些还没画。
+     ⛔ 文案不再带数量后缀（2026-10-05 用户：「安全区 后面都不要带数字」）。 */
   .mini-dark.zn-on{background:#c0392b}
   .mini-dark.zn-on:hover{background:#a93226}
+  /* 型号卡上的「品牌LOGO定位」按钮（2026-10-05 用户要求）：
+     未定位 = 墨色（沿用 .mini-dark 底色 #141519）；已定位 = 红底。
+     ⛔ 与「安全区」按钮同一套语义：红 = 这个型号已经配好了。 */
+  .mini-dark.lp-on{background:#c0392b}
+  .mini-dark.lp-on:hover{background:#a93226}
+  /* 置顶按钮（2026-10-05 用户给出设计稿 + 置顶.svg，重做两态）。
+     ⛔ 未置顶 = 白底 + 1px 浅灰描边圆角方按钮 + **灰色**图标；
+        已置顶 = 红底 + **白色**图标。两态只切换 color / background / border-color。
+     ⛔⛔ 图标必须是**内联 `<svg>`**，不能用 `<img src="icon-pin.svg">`：
+        `<img>` 是替换元素，SVG 里的 `fill="currentColor"` **取不到外层文字色**，
+        `color:#C1C1C1` 对它完全无效 → 图标恒为默认黑（2026-10-05 用户报的就是这个）。
+        只有内联 SVG 的 `currentColor` 才会继承 `color`。 */
+  .mini-dark.m-pin{padding:0;width:34px;height:34px;flex:0 0 34px;
+    display:inline-flex;align-items:center;justify-content:center;
+    background:#fff;border:1px solid #e3e5e8;border-radius:9px;
+    transition:background .15s,border-color .15s,box-shadow .15s}
+  .mini-dark.m-pin .ico-pin{display:block;width:13px;height:14px;flex:0 0 auto;
+    color:#C1C1C1;transition:color .15s}
+  .mini-dark.m-pin:hover{background:#fafbfc;border-color:#d5d9dd}
+  .mini-dark.m-pin:hover .ico-pin{color:#a8adb3}
+  .mini-dark.m-pin.pin-on{background:#C0392B;border-color:#C0392B}
+  .mini-dark.m-pin.pin-on .ico-pin{color:#fff}
+  .mini-dark.m-pin.pin-on:hover{background:#a93226;border-color:#a93226}
   .ghost-btn:disabled{opacity:.45;cursor:not-allowed}
   .ghost-btn{background:#fff;color:var(--tx);border:1px solid var(--bd);border-radius:10px;height:40px;padding:0 16px;font:inherit;cursor:pointer}
   .ghost-btn:hover{border-color:#141519}
@@ -274,6 +338,7 @@
   .env-chip.prod{background:#eaf5ee;color:#1e6b41;border-color:#c9e6d6}
   .env-chip[hidden]{display:none}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
 </head>
 <body>
 
@@ -353,12 +418,17 @@
 <div class="overlay" id="imgPanel" hidden>
   <div class="ov-card" style="width:720px">
     <h3 id="ipTitle">修改图片</h3>
-    <p class="ov-sub" id="ipSub">新传的同名颜色会替换原图，新颜色会追加；方框会按全部配色统一重算。</p>
+    <!-- ⛔ 2026-10-05 用户要求删掉这段说明（「共 2 个配色。新传的同名颜色会替换原图，
+         新颜色会追加；方框按全部配色统一重算。」）。元素保留 —— 它同时充当
+         「正在读取现有配色…」「正在解码 N 张图…」的进度播报位，只是不再写说明性长文案。 -->
+    <p class="ov-sub" id="ipSub"></p>
     <div class="uprow" id="ipPreviews"></div>
     <input type="file" id="ipFile" accept="image/png,image/jpeg,image/webp" multiple hidden>
     <div class="ov-btns">
       <button class="ghost-btn" id="ipCancel">取消</button>
-      <button class="dark-btn" id="ipSave">确认提交上传</button>
+      <!-- ⛔ 2026-10-05 用户要求：弹窗右下角按钮文案从「确认提交上传」改为「确认」。
+           ⛔ 只改这个弹窗；主界面底部那颗 #btnPublish 仍是「确认提交上传」，别一起改。 -->
+      <button class="dark-btn" id="ipSave">确认</button>
     </div>
   </div>
 </div>
@@ -371,8 +441,6 @@
       <div style="flex:0 0 320px">
         <div class="lp-stage" id="lpStage" style="width:320px"></div>
         <p class="lp-pos" id="lpPos"></p>
-        <p class="hint">添加后可直接在图上拖动 LOGO 调位置，右侧微调大小、角度和颜色。<br>
-          若 LOGO 颜色与包体接近而看不清，改右侧「颜色」即可。</p>
       </div>
       <div class="lp-ctrl">
         <!-- ⛔ 品牌LOGO 一律由用户显式添加：进面板时不会「默认已经放好一个 LOGO」，
@@ -398,28 +466,29 @@
 <!-- 安全区（可定制范围）编辑面板 -->
 <div class="overlay" id="zonePanel" hidden>
   <div class="lp-card">
-    <h3 id="znTitle">安全区（可定制范围）</h3>
+    <h3 id="znTitle">安全区</h3>
     <div class="lp-stage-wrap">
       <div style="flex:0 0 320px">
         <div class="lp-stage" id="znStage" style="width:320px"></div>
         <p class="lp-pos" id="znPos"></p>
-        <p class="hint">框内是可以定制的范围。拖框体移动、拖右下角改大小。<br>
-          客户 LOGO 只要与任一安全区有重叠就算合格，超出会变红提示但不拦。</p>
       </div>
       <div class="lp-ctrl">
         <button class="dark-btn lp-add" id="znAdd">＋ 添加安全区</button>
-        <p class="lp-none" id="znNone">这个型号还没有安全区，客户 LOGO 可以放在画布任意位置。点上面的按钮开始画。</p>
+        <!-- ⛔ 2026-10-05 用户要求：删掉「这个型号还没有安全区，客户 LOGO 可以放在
+             画布任意位置。点上面的按钮开始画。」这句说明。
+             元素保留（套件与 renderZonePanel 都还引用 #znNone），
+             但改成永久隐藏 —— 见 renderZonePanel() 里的守卫。 -->
+        <p class="lp-none" id="znNone" hidden></p>
         <div class="lp-fields" id="znFields">
           <div class="zn-list" id="znList"></div>
-          <label>左边距 X（mm）</label><input type="number" id="znX" step="1" min="0">
-          <label>上边距 Y（mm）</label><input type="number" id="znY" step="1" min="0">
           <label>宽度（mm）</label><input type="number" id="znW" step="1" min="1">
           <label>高度（mm）</label><input type="number" id="znH" step="1" min="1">
         </div>
         <p class="zn-flag" id="znFlag" hidden></p>
         <div class="lp-btns">
           <button class="ghost-btn" id="znFill" style="flex:1">铺满画布</button>
-          <button class="ghost-btn warn" id="znDel" style="flex:1">删除这个区</button>
+          <!-- ⛔ 2026-10-05 用户要求：文案从「删除这个区」简化为「删除」（不带序号、不带“这个区”） -->
+          <button class="ghost-btn warn" id="znDel" style="flex:1">删除</button>
           <button class="ghost-btn" id="znCancel" style="flex:1">取消</button>
           <button class="dark-btn" id="znSave" style="flex:1">保存安全区</button>
         </div>
@@ -458,7 +527,13 @@
 
 /* ========== 常量（与 add_model.py 保持一致） ========== */
 var OWNER='2020Nweborn', REPO='markryden', DIR='logo-customizer', BRANCH='main';
-var RAW='https://raw.githubusercontent.com/'+OWNER+'/'+REPO+'/'+BRANCH+'/'+DIR+'/models.json';
+/* 正式版配置文件名。⛔ 这里是正式版后台，**没有沙盒白名单**（不像测试版有 inSandbox）；
+   写回目标就是正式版的 models.json 与根目录素材。
+   这一行必须存在：全文的读取 / 写回 / 兜底提示都引用 CFG，
+   ⛔ 2026-10-06 回填时漏掉过它（测试版把它和 SUB 写在同一行、属于沙盒块被整行还原掉），
+   症状 = 后台一开就 `ReferenceError: CFG is not defined`、整页不工作。 */
+var CFG='models.json';
+var RAW='https://raw.githubusercontent.com/'+OWNER+'/'+REPO+'/'+BRANCH+'/'+DIR+'/'+CFG;
 /* 任意素材的 raw 前缀：本地同源取不到时回源它。
    为什么用 raw 而不是 contents API：本机到 github 的 API 响应对大图会中途掐断
    （500KB PNG 变 0.7MB base64 时高发），且要烧匿名额度；raw 不 base64、不占额度。 */
@@ -479,7 +554,7 @@ var TK='mr_admin_token';
    比本机写的还旧」，从而拒绝采用。
    键名带配置名：正式版后台与测试版后台同域，localStorage 共用，不隔开会互相串。
    ⛔ 快照只是兜底，不能替代「写完不回头读」——见 afterWrite()。 */
-var LW='mr_cfg_lastwrite:models.json';
+var LW='mr_cfg_lastwrite:'+CFG;
 function lwGet(){try{return JSON.parse(localStorage.getItem(LW)||'null');}catch(e){return null;}}
 function lwSave(cfg){try{localStorage.setItem(LW,JSON.stringify({t:Date.now(),updatedAt:String((cfg&&cfg.updatedAt)||''),cfg:cfg}));}catch(e){}}
 function lwDrop(){try{localStorage.removeItem(LW);}catch(e){}}
@@ -531,7 +606,7 @@ var IS_LOCAL=!(PROD_HOST.test(String(location.hostname||'')))&&(window.__MR_FORC
      忘了套 `if(IS_LOCAL)`，于是本机只要存过 token 就直接打 GitHub contents。
      用户看到的是「保存失败：Bad credentials」，而**真正的问题是发错了地方**，
      更坏的情况是写成功 —— 那就等于从开发环境偷偷跳过了第②级线上测试版。 */
-var DK='mr_cfg_draft:models.json';
+var DK='mr_cfg_draft:'+CFG;
 function dkGet(){try{return JSON.parse(localStorage.getItem(DK)||'null');}catch(e){return null;}}
 /* ⛔ 返回布尔：写不进去（隐私模式、配额满、被策略禁用）必须让调用方知道并报出来，
    否则又变成「保存像是成功了、刷新却回退，且查无原因」。 */
@@ -577,7 +652,7 @@ function syncEnvChip(){
   var long=(IS_LOCAL?'开发环境 · 保存只落本机草稿、不推线上':'线上（github.io）· 保存会写 GitHub')
     +' ｜ 读：'+lastRead
     +' ｜ 写：'+lastWrite
-    +' ｜ 型号 '+n+' ｜ models.json'
+    +' ｜ 型号 '+n+' ｜ '+CFG
     +' ｜ 草稿 '+(d&&d.cfg?draftStamp()+'（未上传线上，可在左下角清除）':'无')
     +' ｜ 版本 '+BUILD;
   el.hidden=false;
@@ -591,7 +666,7 @@ function syncEnvChip(){
     +' ｜ '+BUILD;
 }
 var lastSrc='api';   /* 最近一次读取的来源；enter() 靠它决定要不要用成功提示盖掉警告 */
-var state={models:{},dirty:false,puts:[],dels:[],pendingCopy:[],busy:false};
+var state={models:{},pinnedCount:0,dirty:false,puts:[],dels:[],pendingCopy:[],blocked:[],busy:false};
 var draft={model:'',items:[],editKey:'',geo:null,brandLogo:null};
 window.__mrDraft=function(){return draft;};
 var lp={key:null,cxMm:0,cyMm:0,lenMm:DEFAULT_LOGO_LEN,rot:DEFAULT_LOGO_ROT,color:'#a6a7ac',pxPerMmDisp:1,src:''};
@@ -703,6 +778,7 @@ function loadModels(){
     lastSrc='本机草稿';
     lastRead='本机草稿 '+draftStamp();
     state.models=dk.cfg.models;
+    state.pinnedCount=dk.cfg.pinnedCount;
     state.dirty=false;state.puts=[];state.dels=[];state.pendingCopy=[];
     draft={model:'',items:[],editKey:'',geo:null,brandLogo:null};
     $('newModel').value='';
@@ -713,22 +789,22 @@ function loadModels(){
     return Promise.resolve(state.models);
   }
   var src='api';
-  return fetch(API+'models.json?t='+Date.now(),{cache:'no-store'}).then(function(r){
-    if(!r.ok)throw new Error('api 读不到 models.json');
+  return fetch(API+CFG+'?t='+Date.now(),{cache:'no-store'}).then(function(r){
+    if(!r.ok)throw new Error('api 读不到 '+CFG);
     return r.json();
   }).then(function(j){
     if(!j||!j.content)throw new Error('api 返回里没有 content');
     return JSON.parse(b64ToText(j.content));
   }).catch(function(){
     src='同源文件';
-    return fetch('models.json?t='+Date.now(),{cache:'no-store'}).then(function(r){
-      if(!r.ok)throw new Error('同源读不到 models.json');
+    return fetch(CFG+'?t='+Date.now(),{cache:'no-store'}).then(function(r){
+      if(!r.ok)throw new Error('同源读不到 '+CFG);
       return r.json();
     });
   }).catch(function(){
     src='raw CDN 缓存';
     return fetch(RAW+'?t='+Date.now(),{cache:'no-store'}).then(function(r){
-      if(!r.ok)throw new Error('线上还没有 models.json');
+      if(!r.ok)throw new Error('线上还没有 '+CFG);
       return r.json();
     });
   }).then(function(j){
@@ -744,6 +820,7 @@ function loadModels(){
     lastSrc=src;      /* ⛔ 必须记在守卫之后：守卫会改写 src，记早了等于没记 */
     lastRead=src+' '+(j&&j.updatedAt?String(j.updatedAt).slice(5,16).replace('T',' '):'');
     state.models=(j&&j.models)||{};
+    state.pinnedCount=(j&&j.pinnedCount);
     state.dirty=false;state.puts=[];state.dels=[];state.pendingCopy=[];
     draft={model:'',items:[],editKey:'',geo:null,brandLogo:null};
     $('newModel').value='';
@@ -765,6 +842,13 @@ function loadModels(){
    icon-delete 是浅灰的垃圾桶图标，用在型号名后面。 */
 var ICON_EDIT='<img class="ico" src="icon-edit.svg" alt="">';
 var ICON_DEL='<img class="ico" src="icon-delete.svg" alt="">';
+/* 置顶图标：形状取自用户设计稿（Desktop/置顶.svg = 「向上箭头 + 底座横线」实心图标）。
+   ⛔⛔ 必须**内联**为 `<svg>`，不能用 `<img src="icon-pin.svg">`：
+      `<img>` 是替换元素，内部 SVG 的 `fill="currentColor"` **继承不到外层 color**，
+      CSS 的 `color:#C1C1C1` / `color:#fff` 对它一律无效 → 图标恒为黑（2026-10-05 用户报的 bug）。
+      内联后 `currentColor` 才会跟着按钮的 color 走（未置顶灰 #C1C1C1 / 置顶白）。
+   viewBox 用原稿的 9×10，尺寸交给 CSS 的 .ico-pin 控制。 */
+var PIN_SVG='<svg class="ico-pin" viewBox="0 0 9 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M8.24035 3.40132L5.11403 0.275C4.74737 -0.0916667 4.14912 -0.0916667 3.78246 0.275L0.65614 3.40132H1.94912V6.46974C1.94912 6.99079 2.37368 7.41535 2.89474 7.41535H5.98246C6.50351 7.41535 6.92807 6.99079 6.92807 6.46974V3.40132H8.24035ZM7.97018 9.67325H0.694737C0.308772 9.67325 0 9.36447 0 8.97851C0 8.59254 0.308772 8.28377 0.694737 8.28377H7.97018C8.35614 8.28377 8.66491 8.59254 8.66491 8.97851C8.66491 9.36447 8.35614 9.67325 7.97018 9.67325Z" fill="currentColor"/></svg>';
 function renderList(){
   var kw=($('search').value||'').trim().toLowerCase();
   var box=$('list');
@@ -776,13 +860,15 @@ function renderList(){
       return '<span class="cchip"><span class="cname" data-act="cedit" data-m="'+esc(k)+'" data-i="'+i+'" title="点击改名">'+esc(c.label||c.key)+'</span>'+
         '<button class="x" data-act="cdel" data-m="'+esc(k)+'" data-i="'+i+'" title="删除该颜色">×</button></span>';
     }).join('');
-    return '<div class="model-card">'+
+    return '<div class="model-card'+(kw?' no-drag':'')+'" data-key="'+esc(k)+'">'+
       '<div class="m-head">'+
-        '<span class="m-name">'+esc(k)+
+        '<span class="m-name">'+
+          esc(k)+
           '<button class="icon-btn del" data-act="mdel" data-m="'+esc(k)+'" title="删除型号">'+ICON_DEL+'</button></span>'+
         '<button class="mini-dark" data-act="mimg" data-m="'+esc(k)+'">'+ICON_EDIT+'修改</button>'+
-        '<button class="mini-dark" data-act="mlogo" data-m="'+esc(k)+'">品牌LOGO定位</button>'+
-        '<button class="mini-dark'+(modelZones(k).length?' zn-on':'')+'" data-act="mzone" data-m="'+esc(k)+'">安全区'+(modelZones(k).length?' '+modelZones(k).length:'')+'</button>'+
+        '<button class="mini-dark'+(state.models[k].brandLogo?' lp-on':'')+'" data-act="mlogo" data-m="'+esc(k)+'">品牌LOGO定位</button>'+
+        '<button class="mini-dark'+(modelZones(k).length?' zn-on':'')+'" data-act="mzone" data-m="'+esc(k)+'">安全区</button>'+
+        '<button class="mini-dark m-pin'+(isPinned(k)?' pin-on':'')+'" data-act="'+(isPinned(k)?'munpin':'mtop')+'" data-m="'+esc(k)+'" title="'+(isPinned(k)?'取消置顶（回到普通型号）':'置顶到最前面')+'" aria-label="'+(isPinned(k)?'取消置顶':'置顶')+'" aria-pressed="'+(isPinned(k)?'true':'false')+'">'+PIN_SVG+'</button>'+
       '</div>'+
       '<div class="m-colors">'+cols+
         '<button class="add-c" data-act="mimg" data-m="'+esc(k)+'" title="添加颜色">＋</button>'+
@@ -812,7 +898,22 @@ function markOverflow(){
 /* 两栏等高：把较高一栏的高度写成 --card-h，另一栏跟着长。
    左栏型号多时先靠自身滚动，所以只量「内容高度」，不量被滚动截断后的可视高度。 */
 /* 左栏列表最多露 3 张型号卡，第 4 张起靠内部滚动。
-   卡高是实测的（每张卡内容不同），所以这里量前 3 张的实际高度 + 间距求和。 */
+   ⛔ 2026-10-05 用户报「第三张卡最底部的边框被吞掉 1 像素」。根因有**两层**，
+      只修第一层会看起来「好了一点但还是差一点」：
+      ① `offsetHeight` 是**取整**的：单卡真实高 146.391px，取整成 146，
+         三张各抹掉 0.391px 的零头，求和得 466px，比真实内容 467.173px 矮 1.173px。
+      ② `scrollHeight` 会**被 max-height 反向夹住**，不能当「内容真实高度」用 ——
+         这才是第一版修法（`Math.max(ceil(h), scrollHeight) + 1`）失败的原因：
+         max-height 写 629px 后，scrollHeight 直接返回 clientHeight 628，
+         于是 `max(max(466,628),628)+1 = 629` 把错误值放大而不是纠正。
+      ✅ 正解：**用几何量「第 1 张卡顶边 → 第 3 张卡底边」的距离**，
+         再向上取整。它不受 max-height 影响（rect 是真渲染位置），
+         也自带亚像素精度。实测 467.173 → ceil → 468px，
+         第 3 张卡底边 = 182 + 467.173 = 649.173，列表可视底边 = 182 + 468 = 650
+         → 余量 +0.827px，底边框不再被吞。
+   ⛔ 不要退回 offsetHeight 求和：三张卡零头叠加的误差会随卡高变化漂移。
+   ⛔ 这段测量必须在下面那个「先置 none 再量」的窗口里做 ——
+      提前把 --list-h 设成最小值会让列表滚动、rect 位置整体偏移，量出来就废了。 */
 function syncListHeight(){
   var list=$('list');
   if(!list)return;
@@ -820,12 +921,10 @@ function syncListHeight(){
   var cards=list.querySelectorAll('.model-card');
   if(!cards.length)return;
   var n=Math.min(3,cards.length);
-  var h=0;
-  for(var i=0;i<n;i++){
-    h+=cards[i].offsetHeight;
-    if(i<n-1)h+=parseFloat(getComputedStyle(cards[i]).marginBottom)||0;
-  }
-  list.style.setProperty('--list-h',h+'px');
+  /* 几何量：第 1 张卡顶边 → 第 n 张卡底边。
+     间距已经包含在这段距离里，不用另外加 marginBottom。 */
+  var m=cards[n-1].getBoundingClientRect().bottom-cards[0].getBoundingClientRect().top;
+  list.style.setProperty('--list-h',Math.ceil(m)+'px');
 }
 function syncCardHeight(){
   var cards=document.querySelectorAll('.cols .card');
@@ -876,6 +975,136 @@ $('search').addEventListener('input',renderList);
 })();
 window.addEventListener('resize',function(){markOverflow();syncCardHeight();});
 
+/* ========== 型号顺序：人工置顶 + 人工拖拽（2026-09-30） ==========
+   ⛔ 顺序的载体 = models.json 里 models 对象的 key 顺序（不加新字段）。
+      前端 applyRemoteModels() 按 key 顺序重建 MODELS，下拉顺序天然跟着走 → 前端不用改。
+   写回走 autoCommit()：它自己判 IS_LOCAL（本地落草稿 / 线上才 PUT），与删型号同一条路。 */
+function modelKeys(){return Object.keys(state.models);}
+/* ===== 置顶（2026-09-30 用户定：不限数量，能置顶也能取消置顶）=====
+   ⛔ 不给每个型号加字段，只用一个顶层整数 pinnedCount。语义 =「models 的 key 顺序里，
+      前 pinnedCount 个就是置顶区」。于是：
+        置顶     = 移到第一位 + pinnedCount+1
+        取消置顶 = 移到第 pinnedCount 位（离开置顶区）+ pinnedCount-1
+   好处：物理顺序（= 前端下拉的真实顺序）与「谁被置顶」永远一致；拖拽跨过边界时
+   置顶状态会自动跟着走，不会出现「标着已置顶却排在后面」的自相矛盾。 */
+function clampPinned(n){
+  var N=modelKeys().length;
+  n=Math.floor(Number(n)||0);
+  if(!(n>0))return 0;
+  return n>N?N:n;
+}
+function pinnedCount(){state.pinnedCount=clampPinned(state.pinnedCount);return state.pinnedCount;}
+function isPinned(k){var i=modelKeys().indexOf(k);return i>=0&&i<pinnedCount();}
+/* 把 fromKey 挪到 toKey 的前面或后面，就地重排 state.models 的 key 顺序。
+   ⛔ 必须「就地删光再按新顺序塞回」：state.models 的引用被很多地方持有（renderList / buildConfigJobs /
+      写回时的 merged），整体替换成新对象会让那些引用指向旧数据。 */
+function moveModelOrder(fromKey,toKey,after){
+  var ks=modelKeys();
+  var i=ks.indexOf(fromKey);if(i<0)return false;
+  if(fromKey===toKey)return false;
+  ks.splice(i,1);
+  var j=ks.indexOf(toKey);if(j<0)return false;
+  ks.splice(after?j+1:j,0,fromKey);
+  var keep={};
+  ks.forEach(function(k){keep[k]=state.models[k];});
+  Object.keys(state.models).forEach(function(k){delete state.models[k];});
+  ks.forEach(function(k){state.models[k]=keep[k];});
+  return true;
+}
+function pinModelOrder(k){
+  var ks=modelKeys();
+  if(!ks.length)return false;
+  var i=ks.indexOf(k);
+  if(i<0)return false;
+  if(i<pinnedCount())return false;          /* 已在置顶区里，不重复计数 */
+  if(!moveModelOrder(k,ks[0],false))return false;
+  state.pinnedCount=pinnedCount()+1;
+  return true;
+}
+/* 取消置顶 = 离开置顶区，落在「非置顶区最前」（即新置顶区的紧后一位）。
+   ⛔ 不能用 moveModelOrder(k,ks[n-1],true)：取消的恰好是置顶区最后一个时 toKey===fromKey，
+   会被它当成「没动」直接返回 false。 */
+function unpinModelOrder(k){
+  var ks=modelKeys();
+  var i=ks.indexOf(k);
+  var n=pinnedCount();
+  if(i<0||i>=n)return false;
+  ks.splice(i,1);
+  var t=n-1;
+  if(t<0)t=0;
+  ks.splice(t,0,k);
+  var keep={};
+  ks.forEach(function(x){keep[x]=state.models[x];});
+  Object.keys(state.models).forEach(function(x){delete state.models[x];});
+  ks.forEach(function(x){state.models[x]=keep[x];});
+  state.pinnedCount=n-1;
+  return true;
+}
+/* 顺序变了才写回。publishConfig()/saveLocalDraft() 成功时返回 'ok'（与删型号同一判据）。 */
+function commitModelOrder(what){
+  state.dirty=true;
+  renderList();refreshPending();
+  autoCommit(what||'调整型号顺序').then(function(r){
+    if(r==='ok')toastMsg((what||'型号顺序')+' 已更新');
+  });
+}
+/* ---------- 拖拽：只在「把手」上按下才让卡片可拖，避免误拖与选字 ---------- */
+var dragKey=null;
+function clearDragMarks(){
+  var all=$('list').querySelectorAll('.model-card');
+  Array.prototype.forEach.call(all,function(c){c.classList.remove('drag-before','drag-after');});
+}
+function searchActive(){return !!($('search').value||'').trim();}
+$('list').addEventListener('mousedown',function(e){
+  var card=e.target.closest('.model-card');
+  if(!card)return;
+  /* 2026-09-30 用户要求：去掉把手，按住卡片任意位置即可拖动。
+     ⛔ 只有落在**交互元素**上才不许拖 —— 否则点按钮会被当成拖拽起手。 */
+  card.draggable=!e.target.closest('button,input,select,textarea,a')&&!searchActive();
+});
+$('list').addEventListener('dragstart',function(e){
+  var card=e.target.closest('.model-card');
+  if(!card||!card.draggable){e.preventDefault();return;}
+  if(searchActive()){e.preventDefault();toastMsg('搜索状态下不能调整顺序 —— 请先清空搜索');return;}
+  dragKey=card.getAttribute('data-key');
+  if(!dragKey){e.preventDefault();return;}
+  card.classList.add('is-dragging');
+  try{e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',dragKey);}catch(_){ }
+});
+$('list').addEventListener('dragover',function(e){
+  if(!dragKey)return;
+  var card=e.target.closest('.model-card');
+  if(!card)return;
+  var to=card.getAttribute('data-key');
+  if(!to||to===dragKey)return;
+  e.preventDefault();
+  try{e.dataTransfer.dropEffect='move';}catch(_){ }
+  var r=card.getBoundingClientRect();
+  var after=(e.clientY-r.top)>r.height/2;
+  clearDragMarks();
+  card.classList.add(after?'drag-after':'drag-before');
+});
+$('list').addEventListener('dragleave',function(e){
+  if(!dragKey)return;
+  var card=e.target.closest('.model-card');
+  if(card)card.classList.remove('drag-before','drag-after');
+});
+$('list').addEventListener('drop',function(e){
+  if(!dragKey)return;
+  var card=e.target.closest('.model-card');
+  if(!card){clearDragMarks();return;}
+  e.preventDefault();
+  var r=card.getBoundingClientRect();
+  var after=(e.clientY-r.top)>r.height/2;
+  var from=dragKey,to=card.getAttribute('data-key');
+  dragKey=null;clearDragMarks();
+  if(moveModelOrder(from,to,after))commitModelOrder('调整型号顺序：'+from+' → '+to+(after?' 之后':' 之前'));
+});
+$('list').addEventListener('dragend',function(){
+  dragKey=null;clearDragMarks();
+  var all=$('list').querySelectorAll('.model-card.is-dragging');
+  Array.prototype.forEach.call(all,function(c){c.classList.remove('is-dragging');});
+});
 $('list').addEventListener('click',function(e){
   var t=e.target.closest('[data-act]');
   if(!t)return;
@@ -885,6 +1114,15 @@ $('list').addEventListener('click',function(e){
   if(act==='mimg'){openImgPanel(k);}
   else if(act==='mlogo'){openLogoPanel(k);}
   else if(act==='mzone'){openZonePanel(k);}
+  else if(act==='mtop'){
+    /* 置顶 = 移到第一位并计入置顶区。不限数量；已在置顶区的型号该按钮会变成「取消置顶」。 */
+    if(pinModelOrder(k))commitModelOrder('置顶 '+k);
+    else toastMsg('「'+k+'」已经在置顶区了');
+  }
+  else if(act==='munpin'){
+    if(unpinModelOrder(k))commitModelOrder('取消置顶 '+k);
+    else toastMsg('「'+k+'」不在置顶区');
+  }
   else if(act==='medit'){
     var nv=prompt('新的型号名（例如 9031SJ）：',k.replace(/^MR_/,''));
     if(!nv)return;
@@ -1132,10 +1370,16 @@ function fetchExistingColors(key){
     });
   })).then(function(list){return list.filter(Boolean);});
 }
-var ip={key:'',items:[],loading:false};
+/* ⛔ removed = 本次在弹窗里「点 ×」删掉的配色（元素是原来的 color 对象）。
+   为什么必须单独存一份：`ip.items` 里删掉的那个直接消失了，光看 items 根本
+   推断不出「有东西被删」—— 于是点「确认」会被判成「没有检测到改动」而不提交
+   （2026-10-05 用户报的正是这个：「删除了里面的图片后，点击保存 会弹窗提示『没有检测到改动』」）。
+   存的是**引用**：提交时要靠 `old===c` 把原配色对象从 state.models 里挑出来做 del。 */
+var ip={key:'',items:[],removed:[],loading:false};
 function openImgPanel(k){
-  ip.key=k;ip.items=[];ip.loading=true;
-  $('ipTitle').textContent='修改图片 · '+k;
+  ip.key=k;ip.items=[];ip.removed=[];ip.loading=true;
+  /* ⛔ 2026-10-05 用户要求：标题只留型号名（去掉「修改图片 · 」前缀）。 */
+  $('ipTitle').textContent=k;
   $('ipSub').textContent='正在读取现有配色…';
   $('ipPreviews').innerHTML='<p class="empty-tip">加载中…</p>';
   $('imgPanel').hidden=false;
@@ -1144,7 +1388,9 @@ function openImgPanel(k){
   fetchExistingColors(k).then(function(list){
     ip.items=list;
     ip.loading=false;
-    $('ipSub').textContent='共 '+have.length+' 个配色。新传的同名颜色会替换原图，新颜色会追加；方框按全部配色统一重算。';
+    /* ⛔ 2026-10-05 用户要求：读完后不再显示「共 N 个配色。新传的同名颜色会替换原图…」
+       那句说明，清空即可（进度播报位留给下面的解码/提交状态）。 */
+    $('ipSub').textContent='';
     renderIpPreviews();
   }).catch(function(e){
     ip.loading=false;
@@ -1167,8 +1413,18 @@ function renderIpPreviews(){
     inp.placeholder='点此填色名';
     inp.addEventListener('input',function(){it.label=inp.value;});
     var rm=document.createElement('button');
-    rm.className='rm';rm.textContent='×';rm.title='移除该颜色';
-    rm.addEventListener('click',function(){ip.items.splice(i,1);renderIpPreviews();});
+    rm.className='rm';rm.textContent='×';rm.title='删除该颜色';
+    /* ⛔ 2026-10-05 用户要求：点 × 要先弹确认框，确认后才从弹窗里移除。
+       ⛔ 这里只是「移出待提交列表」，**不落盘** —— 真正生效要等用户点右下角「确认」。
+          （颜色是与型号图片一起提交的，所以不能在这里直接删线上。）
+       ⛔ 必须把删掉的那条记进 `ip.removed`：只从 items 里 splice 掉的话，
+          提交时无从得知「有东西被删」→ 会被判成「没有检测到改动」（2026-10-05 用户报的 bug）。 */
+    rm.addEventListener('click',function(){
+      if(!confirm('确认删除「'+(it.label||'该颜色')+'」？\n\n确认后这张图会从列表里移除，点右下角「确认」后生效。'))return;
+      if(it.old&&ip.removed.indexOf(it.old)<0)ip.removed.push(it.old);
+      ip.items.splice(i,1);
+      renderIpPreviews();
+    });
     d.appendChild(rm);d.appendChild(th);d.appendChild(inp);
     box.appendChild(d);
   });
@@ -1194,7 +1450,8 @@ function ipAddFiles(files){
     return new Promise(function(r){requestAnimationFrame(function(){setTimeout(r,0);});});
   }).then(function(){
     var m=state.models[ip.key];
-    $('ipSub').textContent='共 '+((m&&m.colors)||[]).length+' 个配色（原有）+ 本次新传。同名会替换，新颜色会追加。';
+    /* ⛔ 同上：解码完成后清空说明文案（2026-10-05 用户要求删除该类长说明）。 */
+    $('ipSub').textContent='';
     renderIpPreviews();
   }).catch(function(e){alert(e.message||e);});
 }
@@ -1278,6 +1535,24 @@ function idbPutFiles(pairs){
       tx.onabort=function(){rej(tx.error||new Error('写入本机图片仓被中止（多半是空间不足）'));};
     });
   });
+}
+/* 从本机图片仓删掉若干路径（删除配色时用）。
+   ⛔ 删不掉不算致命：配置里已经不带这个颜色了，前端就不会去取它；
+      图片仓里留个孤儿文件只是占点空间。所以**失败不抛**，只返回删了几个。 */
+function idbDelFiles(paths){
+  var arr=(paths||[]).filter(Boolean);
+  if(!arr.length)return Promise.resolve(0);
+  return idbOpen().then(function(db){
+    return new Promise(function(res){
+      var tx;
+      try{tx=db.transaction('files','readwrite');}catch(e){return res(0);}
+      var st=tx.objectStore('files');
+      arr.forEach(function(p){try{st.delete(p);}catch(e){}});
+      tx.oncomplete=function(){res(arr.length);};
+      tx.onerror=function(){res(0);};
+      tx.onabort=function(){res(0);};
+    });
+  }).catch(function(){return 0;});
 }
 function idbClearFiles(){
   return idbOpen().then(function(db){
@@ -1505,15 +1780,29 @@ function runJobs(jobs,ui){
         })();
       }else if(j.kind==='del'){
         label='删除 '+j.path;
+        /* ⛔ 一次性：删成功（或被跳过）后立刻把它从 state.dels 里摘掉。
+           为什么必须摘：buildJobs 现在**无条件**带上 state.dels（见那里的说明），
+           如果这里不消费，同一次会话里后续任何一次提交都会把同一批文件再删一遍
+           （第二次会拿不到 sha 而记「跳过删除」，日志里一路报错、还烧 GitHub 额度）。
+           用 `catch` 兜底摘除：文件本来就不在（404）也算「已经不在」，不该再试。 */
         task=ghFile(j.path).then(function(cur){return ghDel(j.path,cur.sha,'后台：删除 '+j.path);})
-          .catch(function(e){log('跳过删除 '+j.path+'：'+e.message);});
+          .catch(function(e){log('跳过删除 '+j.path+'：'+e.message);})
+          .then(function(){
+            var di=state.dels.indexOf(j.path);
+            if(di>=0)state.dels.splice(di,1);
+          });
       }else if(j.kind==='copy'){
         label='改名 '+j.from;
         task=ghFile(j.from).then(function(cur){
           return ghPut(j.to,cur.content,'后台：改名 '+j.from+' → '+j.to,null);
         }).then(function(){
           return ghFile(j.from).then(function(c2){return ghDel(j.from,c2.sha,'后台：改名删除 '+j.from);});
-        }).catch(function(e){log('跳过改名 '+j.from+'：'+e.message);});
+        }).catch(function(e){log('跳过改名 '+j.from+'：'+e.message);})
+          .then(function(){
+            /* ⛔ 与 del 同理：copy 完成后摘掉，避免重复改名。 */
+            var ci=state.pendingCopy.findIndex(function(cp){return cp.from===j.from;});
+            if(ci>=0)state.pendingCopy.splice(ci,1);
+          });
       }else{
         label='更新 models.json';
         var merged=state.models;
@@ -1537,7 +1826,7 @@ function runJobs(jobs,ui){
             if(!exist)merged[j.model.key].colors.push(c);
           });
         }
-        var body=JSON.stringify({updatedAt:new Date().toISOString(),models:merged},null,2);
+        var body=JSON.stringify({updatedAt:new Date().toISOString(),pinnedCount:pinnedCount(),models:merged},null,2);
         task=(function(){
           var b64=btoa(unescape(encodeURIComponent(body)));
           var snap=JSON.parse(body);
@@ -1561,6 +1850,18 @@ function runJobs(jobs,ui){
                        function(e){closeJobPanel();throw e;});
 }
 /* 组装本次要跑的任务（新增/修改弹窗共用） */
+/* 组装本次要跑的任务（新增/修改弹窗共用）
+   ⛔ `skipGlobalEdits` 只该屏蔽 **pendingCopy**（改名的 copy 任务），
+      绝不能连 `state.dels` 一起屏蔽 —— 2026-10-05 用户报的
+      「删除图片后线上图片还在」根因就在这里：
+      · 「修改图片」弹窗点 × 后，dropFiles() 会把该配色的 png/webp 逐个
+        stageDel() 进 `state.dels`（= 「本次要删掉的 GitHub 文件」）；
+      · 但 ipSave 走的是 `buildJobs(up,{skipGlobalEdits:true})`，
+        旧写法把 `state.dels` 也一起跳过了 → `del` 任务一个都没生成；
+      · 结果：配置里那个颜色没了、**GitHub 上的两张图却还在**（孤儿文件），
+        下次再传同名颜色时还会撞上旧图。
+      现在只屏蔽 copy：`state.dels` 永远参与组装（它是「本弹窗的预期结果」，
+      不是「别处攒着的全局改动」）。 */
 function buildJobs(up,opt){
   opt=opt||{};
   var jobs=[];
@@ -1569,9 +1870,8 @@ function buildJobs(up,opt){
   }
   up.files.forEach(function(f){jobs.push({kind:'put',path:f.path,blob:f.blob});});
   up.keepColors.forEach(function(c){jobs.push({kind:'refile',color:c,key:up.key});});
-  if(!opt.skipGlobalEdits){
-    state.dels.forEach(function(p){jobs.push({kind:'del',path:p});});
-  }
+  /* ⛔ 无条件：本次 stageDel 进来的文件必须真的删掉，见上面的说明。 */
+  state.dels.forEach(function(p){jobs.push({kind:'del',path:p});});
   jobs.push({kind:'json',model:up});
   return jobs;
 }
@@ -1709,11 +2009,11 @@ function saveLocalDraft(what){
      刷新自然回退，而且页面上一个字都不提示原因。这类静默分支一律不许留。 */
   if(state.busy){toastMsg('上一次提交还在进行中，这次改动没有保存 —— 请稍候再操作一次');return Promise.resolve('busy');}
   if(!pendingCount()){toastMsg('还没有任何改动');return Promise.resolve('nochange');}
-  var wrote=dkSave({updatedAt:new Date().toISOString(),models:state.models});
+  var wrote=dkSave({updatedAt:new Date().toISOString(),pinnedCount:pinnedCount(),models:state.models});
   if(!wrote){
     /* 写不进 localStorage（隐私模式 / 配额满）时必须大声说，否则又变成「刷新就回退」且查无原因 */
     alert('本机草稿写入失败：浏览器拒绝写入 localStorage（可能是隐私模式或存储已满）。\n'+
-      '这次改动只留在页面上，刷新就会丢。建议在线上后台操作。');
+      '这次改动只留在页面上，刷新就会丢。建议改用线上测试版后台。');
     lastWrite='草稿写入失败';
     syncEnvChip();
     return Promise.resolve('fail');
@@ -1819,7 +2119,9 @@ function znUniq(a){
    底图（stage 里的 <img>）保持不动，只替换三类覆盖元素。 */
 function renderZoneStage(){
   var st=$('znStage');if(!st||!(zp.mm>0))return;
-  Array.prototype.forEach.call(st.querySelectorAll('.zn-dim,.zn-zone,.zn-brand'),function(n){
+  /* ⛔ 清理上一帧：`.zn-logo`（LOGO 本体图）必须一起删 —— 漏了它会导致每重画一次就
+     多叠一张 LOGO 图（点击区、拖拽、切型号都会重画）。2026-10-05 加 .zn-logo 时补上。 */
+  Array.prototype.forEach.call(st.querySelectorAll('.zn-dim,.zn-zone,.zn-brand,.zn-logo'),function(n){
     if(n.parentNode)n.parentNode.removeChild(n);
   });
   var k=znPx(),W=zp.mm*k,zs=zp.zones,i,j;
@@ -1844,17 +2146,38 @@ function renderZoneStage(){
       }
     }
   }
-  /* 品牌LOGO 位置：只读参考，让用户直接看出它有没有落在安全区里 */
+  /* 品牌LOGO 位置：只读参考，让用户直接看出它有没有落在安全区里。
+     ⛔ 2026-10-05 用户要求：**去掉虚线框，直接显示 LOGO 本体**。
+     所以这里除了记下位置，还要把 LOGO 图按同一外接矩形画上去。
+     图源优先用型号自带的 brandLogo 素材（没有就退回内联 SVG 占位图形）。 */
   if(zp.brand&&zp.brand.lenMm>0){
     var ar=BRAND_ASPECT||14.076,hMm=zp.brand.lenMm/ar,wMm=zp.brand.lenMm;
     var rad=(zp.brand.rot||0)*Math.PI/180;
     var hx=Math.abs(wMm*Math.cos(rad))+Math.abs(hMm*Math.sin(rad));
     var hy=Math.abs(wMm*Math.sin(rad))+Math.abs(hMm*Math.cos(rad));
+    var bx=(zp.brand.cxMm-hx/2)*k,by=(zp.brand.cyMm-hy/2)*k;
     var bl=document.createElement('div');bl.className='zn-brand';
-    bl.style.left=((zp.brand.cxMm-hx/2)*k)+'px';bl.style.top=((zp.brand.cyMm-hy/2)*k)+'px';
+    bl.style.left=bx+'px';bl.style.top=by+'px';
     bl.style.width=(hx*k)+'px';bl.style.height=(hy*k)+'px';
     bl.title='品牌LOGO 当前位置（只读参考）';
     st.appendChild(bl);
+    /* LOGO 本体：按 zp.brand.rot 旋转，用与外接矩形一致的居中变换，
+       保证渲染结果与上面那个只读标记框严丝合缝。 */
+    var lg=document.createElement('img');
+    lg.className='zn-logo';
+    lg.alt='';
+    lg.draggable=false;
+    lg.style.left=((zp.brand.cxMm-wMm/2)*k)+'px';
+    lg.style.top=((zp.brand.cyMm-hMm/2)*k)+'px';
+    lg.style.width=(wMm*k)+'px';lg.style.height=(hMm*k)+'px';
+    lg.style.transform='rotate('+(zp.brand.rot||0)+'deg)';
+    lg.style.transformOrigin='center center';
+    /* 颜色：型号里存的是客户 LOGO 的着色（默认浅灰 #a6a7ac）。
+       用 CSS filter 无法精确上色，这里让源图自己带上颜色即可 ——
+       brandLogo 素材本身就是最终效果图。 */
+    lg.src=zp.logoSrc||'';
+    lg.onerror=function(){if(this.parentNode)this.parentNode.removeChild(this);};
+    st.appendChild(lg);
   }
   zs.forEach(function(z,idx){
     var el=document.createElement('div');
@@ -1863,7 +2186,8 @@ function renderZoneStage(){
     el.style.left=(z.xMm*k)+'px';el.style.top=(z.yMm*k)+'px';
     el.style.width=(z.wMm*k)+'px';el.style.height=(z.hMm*k)+'px';
     var lb=document.createElement('span');
-    lb.textContent='安全区 '+(idx+1)+' · '+Math.round(z.wMm)+'×'+Math.round(z.hMm)+'mm';
+    /* ⛔ 画布上的标签也不带序号（与右侧列表口径一致，2026-10-05 用户要求） */
+    lb.textContent='安全区 · '+Math.round(z.wMm)+'×'+Math.round(z.hMm)+'mm';
     el.appendChild(lb);
     var gp=document.createElement('div');gp.className='zn-grip';el.appendChild(gp);
     st.appendChild(el);
@@ -1872,27 +2196,35 @@ function renderZoneStage(){
 function renderZonePanel(){
   var list=$('znList'),none=$('znNone'),fields=$('znFields'),flag=$('znFlag');
   var has=zp.zones.length>0;
-  if(none)none.hidden=has;
+  /* ⛔ 2026-10-05 用户要求删掉空态说明文案 —— 元素永久隐藏，不再随 has 切换
+     （它已经没有任何文字，露出来只会是一块空白）。 */
+  if(none)none.hidden=true;
   if(fields)fields.classList.toggle('off',!has);
-  ['znX','znY','znW','znH','znFill','znDel'].forEach(function(id){
+  ['znW','znH','znFill','znDel'].forEach(function(id){
     var el=$(id);if(el)el.disabled=!has;
   });
   if(list){
+    /* ⛔ 2026-10-05 用户明确：安全区**不要带序号**（「安全区 1 / 安全区 2」没有意义）——
+       列表项一律只写「安全区」，靠选中态区分是哪一个。 */
     list.innerHTML=zp.zones.map(function(z,i){
       return '<div class="zn-row'+(i===zp.sel?' sel':'')+'" data-zi="'+i+'">'+
-        '<i>安全区 '+(i+1)+'</i><b>'+Math.round(z.wMm)+' × '+Math.round(z.hMm)+' mm</b></div>';
+        '<i>安全区</i><b>'+Math.round(z.wMm)+' × '+Math.round(z.hMm)+' mm</b></div>';
     }).join('');
   }
   var z=znSel();
   if(z){
-    $('znX').value=Math.round(z.xMm*10)/10;$('znY').value=Math.round(z.yMm*10)/10;
+    /* ⛔ 只回填宽高：X/Y 边距输入框已按用户要求删除（见 §znFields 的 DOM）。
+       坐标仍存在 z.xMm / z.yMm 里（拖拽与导出照旧要用），只是不再给用户手输。 */
     $('znW').value=Math.round(z.wMm*10)/10;$('znH').value=Math.round(z.hMm*10)/10;
   }
   var pos=$('znPos');
   if(pos){
+    /* ⛔ 2026-10-05 用户要求删掉空态那句「还没有安全区，客户 LOGO 不受位置限制（画布 …mm）」。
+       有安全区时报「有几个」这个有信息量的数仍保留（且按用户要求不带序号）。 */
     pos.textContent=has
-      ? ('共 '+zp.zones.length+' 个安全区，当前第 '+(zp.sel+1)+' 个（画布 '+Math.round(zp.mm*10)/10+'mm）')
-      : ('还没有安全区，客户 LOGO 不受位置限制（画布 '+Math.round(zp.mm*10)/10+'mm）');
+      ? ('已配置 '+zp.zones.length+' 个安全区（画布 '+Math.round(zp.mm*10)/10+'mm）')
+      : '';
+    pos.hidden=!has;
   }
   if(flag){
     if(has&&brandObb()){
@@ -1917,8 +2249,20 @@ function openZonePanel(key){
   zp.sel=zp.zones.length?0:-1;
   var b=m.brandLogo||null;
   zp.brand=b?{cxMm:Number(b.cxMm)||0,cyMm:Number(b.cyMm)||0,
-              lenMm:Number(b.lenMm)||0,rot:Number(b.rot)||0}:null;
-  $('znTitle').textContent='安全区（可定制范围） · '+key;
+              lenMm:Number(b.lenMm)||0,rot:Number(b.rot)||0,color:b.color||''}:null;
+  /* ⛔ 画布上要「直接显示 LOGO 本体」（2026-10-05 用户要求去掉虚线框），
+     所以这里异步取一份着色后的 LOGO 图（brand-logo.svg + __BRAND_FILL__ 换色）。
+     取到之前 renderZoneStage() 会跳过 <img>，不会留空框。 */
+  zp.logoSrc=null;
+  if(zp.brand){
+    brandLogoUrl(zp.brand.color||'#a6a7ac').then(function(u){
+      if(zp.key!==key)return;              /* 面板已被切换，丢弃过期结果 */
+      zp.logoSrc=u;
+      if(!$('zonePanel').hidden)renderZonePanel();
+    }).catch(function(){});
+  }
+  /* ⛔ 2026-10-05 用户要求：标题只留型号名（去掉「安全区（可定制范围） · 」前缀） */
+  $('znTitle').textContent=key;
   $('zonePanel').hidden=false;
   var st=$('znStage');
   st.innerHTML='';
@@ -1990,7 +2334,9 @@ $('znList').addEventListener('click',function(e){
     el=el.parentNode;
   }
 });
-['znX','znY','znW','znH'].forEach(function(id){
+/* ⛔ 只绑宽/高两个输入框：X/Y 边距框已按用户要求删掉（拖动即改坐标，
+   手输边距没人用）。⛔ znX/znY 分支必须一并删掉，否则 $(id) 取到 null 会抛错。 */
+['znW','znH'].forEach(function(id){
   var zbT=null;
   /* apply(write)：把输入框的数值夹进画布后写进选中区。
      write=true 时才把被夹住的值回写到输入框。
@@ -2001,9 +2347,7 @@ $('znList').addEventListener('click',function(e){
     var z=znSel();if(!z)return;
     var raw=parseFloat($(id).value);if(!isFinite(raw))return;
     var v;
-    if(id==='znX'){z.xMm=v=Math.max(0,Math.min(zp.mm-z.wMm,raw));}
-    else if(id==='znY'){z.yMm=v=Math.max(0,Math.min(zp.mm-z.hMm,raw));}
-    else if(id==='znW'){z.wMm=v=Math.max(ZN_MIN,Math.min(zp.mm-z.xMm,raw));}
+    if(id==='znW'){z.wMm=v=Math.max(ZN_MIN,Math.min(zp.mm-z.xMm,raw));}
     else {z.hMm=v=Math.max(ZN_MIN,Math.min(zp.mm-z.yMm,raw));}
     renderZoneStage();
     if(write&&Math.abs(v-raw)>1e-6)$(id).value=Math.round(v*10)/10;
@@ -2029,27 +2373,34 @@ $('znFill').addEventListener('click',function(){
   renderZonePanel();
 });
 $('znCancel').addEventListener('click',function(){$('zonePanel').hidden=true;});
-/* ⛔ 删除 / 清空 → 确认即提交。只改内存 + 标脏的历史教训见文件顶部红线第 1 条。 */
-function commitZones(what){
-  if(!setModelZones(zp.key,zp.zones))return Promise.resolve('missing');
-  state.dirty=true;renderList();refreshPending();
-  var p=$('zonePanel');if(p)p.hidden=true;
-  return autoCommit(what).then(function(r){
-    if(r==='ok')toastMsg(what+'，已同步到线上');
-    return r;
-  });
-}
-$('znDel').addEventListener('click',function(){
+/* ⛔ 删除一个安全区（2026-10-05 用户明确改口径）：
+     · 按钮文案就叫「删除」（原来是「删除这个区」）
+     · **不再弹二次确认**，点了就立刻从画布/列表里消失
+     · **不立刻写线上** —— 真正生效要等用户点「保存安全区」
+   所以这里只动内存 + 重画，绝不调 commitZones()（那是「确认即提交」的老行为）。 */
+function deleteCurrentZone(){
   var z=znSel();
-  if(!z){toastMsg('先在左边选中一个安全区');return;}
-  var no=zp.sel+1;
-  if(!confirm('删除「安全区 '+no+'」？\n\n确认后会立即同步到线上，这块不再算作可定制范围。'))return;
+  if(!z){toastMsg('先在左边选中一个安全区');return false;}
   zp.zones.splice(zp.sel,1);
   zp.sel=zp.zones.length?Math.max(0,zp.sel-1):-1;
   renderZonePanel();
-  commitZones('删除型号 '+zp.key+' 的安全区 '+no);
+  toastMsg('已删除该安全区，点「保存安全区」后生效');
+  return true;
+}
+$('znDel').addEventListener('click',function(){deleteCurrentZone();});
+/* ⛔ Delete / Backspace 也能删当前选中的安全区（2026-10-05 用户要求）。
+   ⛔ 输入框里按 Delete 是「删字符」，不能被面板抢走 —— 必须放过 input/textarea。
+      数字框里正是改宽高的地方，抢了就没法退格了。 */
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Delete'&&e.key!=='Backspace')return;
+  if($('zonePanel').hidden)return;
+  var t=e.target||{};
+  var tn=(t.tagName||'').toLowerCase();
+  if(tn==='input'||tn==='textarea'||tn==='select'||t.isContentEditable)return;
+  if(deleteCurrentZone())e.preventDefault();
 });
-/* 保存：与「改色名 / 改型号名」同类，用户可能连着拖好几次，所以保留显式提交 */
+/* 保存：与「改色名 / 改型号名」同类，用户可能连着拖好几次，所以保留显式提交。
+   ⛔ 删除也是在这里才真正生效（znDel 只改内存，不提交）。 */
 $('znSave').addEventListener('click',function(){
   if(!zp.key||!state.models[zp.key]){alert('型号不存在');return;}
   if(!setModelZones(zp.key,zp.zones)){alert('型号不存在');return;}
@@ -2079,7 +2430,7 @@ function openLogoPanel(key){
   var isNew=!key;
   /* 每次进面板都从干净状态开始：旧的节点引用必须清掉，否则「未添加」时
      残留的旧节点会被 applyLp() 当成当前 LOGO 摆上去。 */
-  lp.logoEl=null;lp.srcEl=null;
+  lp.logoEl=null;lp.srcEl=null;   /* 仅作兼容占位：fabric 改造后这两个 DOM 引用已不再使用 */
   var mm,srcPromise,have=null;
   if(isNew){
     if(!draft.items.length){alert('请先上传这个型号的图片，再定位LOGO');return;}
@@ -2105,7 +2456,9 @@ function openLogoPanel(key){
     have=m.brandLogo||null;
   }
   lpAdded=!!have;
-  $('lpTitle').textContent='品牌LOGO定位'+(isNew?(' · '+$('newModel').value):(' · '+key));
+  /* ⛔ 2026-10-05 用户要求：标题只留型号名（去掉「品牌LOGO定位 · 」前缀）。
+     新型号这时还没有正式键名，就用输入框里填的那个。 */
+  $('lpTitle').textContent=isNew?$('newModel').value:key;
   if(have){
     lp.cxMm=have.cxMm;lp.cyMm=have.cyMm;lp.lenMm=have.lenMm;lp.rot=have.rot||0;lp.color=have.color||'#a6a7ac';
   }else{
@@ -2118,34 +2471,19 @@ function openLogoPanel(key){
   $('lpLen').value=lp.lenMm;$('lpRot').value=lp.rot;$('lpColor').value=lp.color;
   $('logoPanel').hidden=false;
   renderLpState();
-  var stage=$('lpStage');
-  /* 底图是 width:100% 撑满 stage（有 1px 边框），先按此给一个正确比例，
-     等图片解码完再用实测宽度校准一次，避免开场闪一下小 LOGO。 */
-  lp.pxPerMmDisp=318/mm;
-  srcPromise.then(function(src){
-    stage.innerHTML='';
-    lp.srcEl=document.createElement('img');
-    lp.srcEl.src=src;
-    stage.appendChild(lp.srcEl);
-    var lg=document.createElement('img');
-    lg.className='lp-logo';lg.id='lpLogo';
-    stage.appendChild(lg);
-    lp.logoEl=lg;
-    /* 等底图真正渲染出来，用它此刻的实测宽度换算 px/mm，
-       不能预设 stage 宽度：底图有 padding、边框，且尺寸要等解码后才定。 */
-    return new Promise(function(res){
-      var done=function(){res();};
-      stageImgGuard(stage,lp.srcEl,src,done);
-      if(lp.srcEl.complete&&lp.srcEl.naturalWidth)setTimeout(done,0);
-      else setTimeout(done,1500);
-    });
+  /* ⛔ 画布整体交给 fabric：底图 + 品牌LOGO 都是 fabric 对象，
+     LOGO 的选框/手柄/旋转柄由 fabric 自己渲染（与前端 test.html 逐项一致）。 */
+  lpFabricDispose();
+  lpFabricInit();
+  return srcPromise.then(function(src){
+    /* 底图按解码后的真实宽高铺满画布；失败时 stageImgGuard 会给出可见说明 */
+    return lpFabricLoadBag(src);
   }).then(function(){
-    var w=lp.srcEl?lp.srcEl.getBoundingClientRect().width:0;
-    if(w>1)lp.pxPerMmDisp=w/lp.mm;
     return brandLogoUrl(lp.color);
   }).then(function(u){
-    if(lp.logoEl)lp.logoEl.src=u;
-    applyLp();renderLpState();
+    /* ⛔ 未添加时不许默认摆上 LOGO（用户明确要求，见 renderLpState 注释） */
+    if(!lpAdded){renderLpState();return;}
+    return lpFabricSetLogo(u).then(function(){renderLpState();});
   }).catch(function(e){alert(e.message||e);$('logoPanel').hidden=true;});
 }
 /* 面板的「有LOGO / 没有LOGO」两态。
@@ -2159,7 +2497,7 @@ function renderLpState(){
   if(fields)fields.classList.toggle('off',!on);
   ['lpLen','lpRot','lpColor'].forEach(function(id){var el=$(id);if(el)el.disabled=!on;});
   var clr=$('lpClear');if(clr)clr.disabled=!on;
-  if(lp.logoEl)lp.logoEl.style.display=on?'':'none';
+  /* ⛔ LOGO 的显隐由 fabric 对象的 visible 管（旧实现是切 DOM <img> 的 display） */
   /* ⛔ 画布上不放虚线占位块和提示文字：用户明确要求去掉（视觉上像压了一层白膜）。
      未添加时只看右侧的「＋ 添加品牌LOGO」按钮即可。 */
   var emp=$('lpEmpty');if(emp)emp.hidden=true;
@@ -2168,55 +2506,211 @@ function renderLpState(){
 /* 添加品牌LOGO：默认落在画布正中心，长度/角度取默认值，颜色取面板当前值 */
 function addLp(){
   if(lpAdded)return;
-  if(!lp.logoEl){toastMsg('图片还没准备好，稍等一下再试');return;}
+  if(!lpCanvas){toastMsg('画布还没准备好，稍等一下再试');return;}
   lpAdded=true;
   lp.cxMm=lp.mm/2;lp.cyMm=lp.mm/2;lp.lenMm=DEFAULT_LOGO_LEN;lp.rot=DEFAULT_LOGO_ROT;
   lp.color=($('lpColor')&&$('lpColor').value)||'#a6a7ac';
   $('lpLen').value=lp.lenMm;$('lpRot').value=lp.rot;$('lpColor').value=lp.color;
-  brandLogoUrl(lp.color).then(function(u){if(lp.logoEl)lp.logoEl.src=u;renderLpState();});
+  brandLogoUrl(lp.color).then(function(u){return lpFabricSetLogo(u);}).then(function(){renderLpState();});
   toastMsg('已添加品牌LOGO，直接在图上拖动调位置');
 }
 $('lpAdd').addEventListener('click',addLp);
+/* ⛔ 2026-10-05 起 applyLp() 只是「把 lp 的 mm 状态推给 fabric」的门面 ——
+   前端同一套 fabric 负责渲染选框/手柄，后台不再算任何屏幕几何。
+   （旧实现是给 DOM <img> 手工算 px 宽高 + transform + 自绘控制框，已整体删除。） */
 function applyLp(){
-  var el=lp.logoEl;
-  if(!el)return;
-  /* SVG 在 position:absolute + height:auto 下会退化成按宽高比反算，
-     必须同时把宽和高都按 mm 显式算出来（这个字标长宽比约 14.08:1）。 */
-  var w=lp.lenMm*lp.pxPerMmDisp;
-  if(!(w>0))w=DEFAULT_LOGO_LEN;
-  var ar=BRAND_ASPECT||14.076;
-  el.style.width=w+'px';
-  el.style.height=(w/ar)+'px';
-  el.style.maxWidth='none';
-  el.style.left=(lp.cxMm*lp.pxPerMmDisp)+'px';
-  el.style.top=(lp.cyMm*lp.pxPerMmDisp)+'px';
-  el.style.transform='translate(-50%,-50%) rotate('+lp.rot+'deg)';
+  if(!lpCanvas)return;
+  lpFabricSync();
+  lpUpdatePos();
+}
+/* 滑块/输入框改值后：既更新 fabric，也把 LOGO 的 src（颜色）刷一遍 */
+function applyLpLive(){
+  if(!lpAdded)return;
+  applyLp();
+}
+/* ===== LOGO 画布 = fabric（与前端 test.html 同一套配置）=====
+   ⛔ 2026-10-05 用户原话：「直接把前端的代码拿来复用不就好了么？」
+   → 手柄外观、等比缩放、旋转柄与连线、命中判定，全部复用前端 fabric 配置，
+     后台**不再自绘选框**（lpCtlGeom / renderLpCtl / pickCorner 已整体删除）。
+
+   坐标口径与前端完全一致：画布 1 个 fabric 单位 = 1mm，原点在画布左上角。
+   底图按 k 放大到 stage 宽度（k = stage 宽 / canvasMm），LOGO 以 mm 为单位落在图上，
+   所以 ll.cxMm / cyMm / lenMm / rot 这些**存进配置的数值不受显示缩放影响**。 */
+var lpCanvas=null, lpLogoObj=null, lpBagObj=null, lpK=1;
+function lpFabricInit(){
+  if(lpCanvas)return lpCanvas;
+  var stage=$('lpStage');if(!stage)return null;
+  stage.innerHTML='';
+  /* ⛔ 宽度以 inline style / CSS 的 320px 为准；高度由 aspect-ratio:1/1 决定。
+     这里不能读 clientHeight —— 刚清空时它还没参与布局，会拿到 0。 */
+  var W=stage.clientWidth||320, H=W;
+  /* ⛔ fabric 5 的 Canvas 构造函数要的是 **<canvas> 元素**（或指向 canvas 的 id），
+     直接传 <div> 的 id 会得到 "this.lowerCanvasEl.getContext is not a function"
+     —— 因为 div 上没有 getContext。所以必须先自己建一个 canvas 再交进去。 */
+  var cv=document.createElement('canvas');
+  cv.width=W;cv.height=H;
+  stage.appendChild(cv);
+  lpCanvas=new fabric.Canvas(cv,{
+    /* ⛔ 与前端 test.html 逐项一致：
+       new fabric.Canvas('c',{preserveObjectStacking:true,selection:false,
+                              uniformScaling:true,uniScaleTransform:true}) */
+    preserveObjectStacking:true, selection:false,
+    uniformScaling:true, uniScaleTransform:true,
+    backgroundColor:'#f6f7f8'});
+  lpCanvas.setDimensions({width:W,height:H});
+  /* 底图：整张铺满，与前端 bagImg 同一口径 */
+  lpBagObj=null;lpLogoObj=null;
+  return lpCanvas;
+}
+/* 重排画布尺寸（面板打开 / 窗口变化时调用）。
+   ⛔ 与前端 applyView() 同款：改完尺寸要**重新算视口 + 重设控件尺寸**，
+   否则 resize 后角柄又会按旧 z 画。 */
+function lpFabricFit(){
+  if(!lpCanvas)return;
+  var stage=$('lpStage');if(!stage)return;
+  var W=stage.clientWidth||320;
+  lpCanvas.setDimensions({width:W,height:W});
+  lpFabricSync();
+}
+function lpFabricDispose(){
+  if(lpCanvas){try{lpCanvas.dispose();}catch(e){}}
+  lpCanvas=null;lpLogoObj=null;lpBagObj=null;
+  lpK=1;
+}
+/* 把当前 lp 状态同步到 fabric 对象上。
+   ⛔ 与前端 test.html 逐项同一口径 —— 别改回「直接缩放对象」：
+   前端 applyView() 是
+     z = disp / MODEL.canvasMm * viewZoom;  t = disp/2 - z*canvasMm/2;
+     canvas.setViewportTransform([z,0,0,z,t,t]);
+     logoImgs.forEach(o=>o.set({cornerSize:Math.max(5,9/z),padding:2/z}));
+   即**画布里 1 个 fabric 单位 = 1mm**，缩放交给视口；控件尺寸要**除以 z** 才不会
+   被视口一起放大（否则角柄比前端粗一倍、旋转柄也跟着变形，就是用户看到的「样式不一样」）。
+   后台没有 viewZoom 概念，取 1（画布正好铺满 canvasMm）。 */
+function lpFabricSync(){
+  if(!lpCanvas||!lpBagObj)return;
+  var mm=lp.mm>0?lp.mm:1;
+  var W=lpCanvas.getWidth();
+  lpK=W/mm;                                  /* px per mm —— 仅供外部换算用 */
+  var z=lpK;                                 /* 视口缩放因子（viewZoom 固定 1） */
+  var t=W/2-z*mm/2;
+  /* 底图：mm 坐标铺满（前端 bagImg 同款：中心对齐 + scale=1/pxPerMm，
+     这里 pxPerMm = width/mm，所以 scale = mm/width） */
+  lpBagObj.set({left:mm/2, top:mm/2, originX:'center', originY:'center',
+                scaleX:mm/lpBagObj.width, scaleY:mm/lpBagObj.height,
+                selectable:false, evented:false});
+  lpCanvas.setViewportTransform([z,0,0,z,t,t]);
+  if(lpLogoObj){
+    /* LOGO 用**真实 mm**落点与尺寸，不再乘 lpK —— 视口负责放大 */
+    lpLogoObj.set({
+      left:lp.cxMm, top:lp.cyMm,
+      originX:'center', originY:'center',
+      scaleX:lp.lenMm/lpLogoObj.width, scaleY:lp.lenMm/lpLogoObj.width,
+      angle:lp.rot,
+      visible:!!lpAdded,
+    });
+    /* ⛔ 控件尺寸必须除以 z：这是前后端「选框样式一致」的唯一关键一行。
+       ⛔ 2026-10-05 用户报「画布里放大缩小的白色方块太大了，会遮挡住 LOGO」：
+          纯 `Math.max(5,9/z)` 在**大件**上会失控 —— 后台画布固定 318px 宽，
+          视口缩放 z = 318/mm，包体越大 z 越小、9/z 越大：
+            MR_21     113.6mm → z=2.80 → 9/z=3.2  → 取地板 5px（正常）
+            MR_35     307mm   → z=1.04 → 9/z=8.7  → 8.7px（偏大）
+            MR_9031SJ 589mm   → z=0.54 → 9/z=16.7 → **16.7px 白色实心块，把 LOGO 整段盖住**
+          前端 test.html 没有这个问题：它的画布随型号自适应、canvasMm 又小，
+          z 一直偏大，9/z 天然落在 5 左右。
+          → 修法：给 9/z 加**上限 9px**（同时也保留 5px 地板）。
+             角柄是「控件」不是「画面内容」，它的可读尺寸只取决于屏幕像素，
+             不该随包体实际毫米数线性放大。9px 与前端常见取值一致，
+             在 318px 画布上仍然好点中（约 2.5% 边长），又不至于挡住 LOGO。 */
+    lpLogoObj.set({cornerSize:Math.min(9,Math.max(5,9/z)), padding:2/z});
+    /* ⛔ 改值（右侧输入框 / 换色重建）之后必须**重新选中**：
+       否则选框与手柄当场消失，用户会以为「LOGO 又没了」——
+       fabric 只在 setActiveObject 后才画控件。 */
+    if(lpAdded&&lpCanvas.getActiveObject()!==lpLogoObj)lpCanvas.setActiveObject(lpLogoObj);
+    lpLogoObj.setCoords();
+  }
+  lpCanvas.renderAll();
+}
+/* 首次挂底图（异步解码，尺寸由图片本身决定） */
+function lpFabricLoadBag(src){
+  return new Promise(function(res){
+    if(!lpCanvas)return res(false);
+    var img=new Image();
+    img.onload=function(){
+      /* ⛔ 底图用 mm 坐标（与前端 bagImg 一致），不按像素铺满 */
+      lpBagObj=new fabric.Image(img,{left:0,top:0,originX:'left',originY:'top',
+                                     selectable:false,evented:false});
+      lpCanvas.add(lpBagObj);
+      lpCanvas.sendToBack(lpBagObj);
+      lpFabricSync();
+      res(true);
+    };
+    img.onerror=function(){
+      var stage=$('lpStage');
+      if(stage){stage.classList.add('bad');}
+      res(false);
+    };
+    img.src=src;
+  });
+}
+/* LOGO 图：走 brandLogoUrl(color) 生成的 dataURL，染色由 SVG 自己完成 */
+function lpFabricSetLogo(url){
+  return new Promise(function(res){
+    if(!lpCanvas)return res(false);
+    if(lpLogoObj){lpCanvas.remove(lpLogoObj);lpLogoObj=null;}
+    if(!url||!lpAdded)return res(false);
+    fabric.Image.fromURL(url,function(img,isError){
+      if(isError||!img||!img._element)return res(false);
+      /* ⛔ 与前端逐项一致：白实心角柄 + 深灰描边 + 深灰细框 + 等比缩放 + 只留 4 角。
+         cornerSize/padding 的最终值由 lpFabricSync() 按视口 z 重算。 */
+      img.set({
+        left:0, top:0, originX:'center', originY:'center',
+        lockUniScaling:true, lockScalingFlip:true,
+        transparentCorners:false, cornerColor:'#fff', cornerStrokeColor:'#222',
+        borderColor:'#222', cornerSize:9, padding:2,
+        hasControls:true, hasBorders:true,
+      });
+      img.setControlsVisibility({mt:false,mb:false,ml:false,mr:false});
+      img.on('moving',lpFabricReadBack);
+      img.on('scaling',lpFabricReadBack);
+      img.on('rotating',lpFabricReadBack);
+      img.on('modified',lpFabricReadBack);
+      lpLogoObj=img;
+      lpCanvas.add(img);
+      lpCanvas.setActiveObject(img);
+      lpFabricSync();
+      res(true);
+    });
+  });
+}
+/* 用户拖完 → 把 fabric 的真实几何换算回 mm 写回 lp（并实时回写右侧输入框）。
+   ⛔ 画布里 1 单位 = 1mm（缩放走视口），所以读出来的值**本身就是 mm**，
+   不要再除 lpK —— 除了会让拖 1mm 记成 0.5mm，位置越拖越飘。 */
+var lpReadPending=false;
+function lpFabricReadBack(){
+  if(!lpCanvas||!lpLogoObj||!lpAdded)return;
+  var o=lpLogoObj;
+  /* ⛔ 必须用 getCenterPoint：带 origin 的 left/top 在旋转后不是「几何中心」，
+     直接用 o.left/o.top 会在旋转后把 LOGO 越拖越偏。 */
+  var c=o.getCenterPoint();
+  lp.cxMm=c.x;
+  lp.cyMm=c.y;
+  lp.lenMm=Math.max(5,Math.min(300,Math.round(o.width*o.scaleX*10)/10));
+  lp.rot=Math.round(((o.angle%360)+360)%360);
+  if($('lpLen'))$('lpLen').value=lp.lenMm;
+  if($('lpRot'))$('lpRot').value=lp.rot;
+  lpUpdatePos();
+}
+function lpUpdatePos(){
+  if(!$('lpPos'))return;
   if(!lpAdded){$('lpPos').textContent='未添加品牌LOGO（画布 '+Math.round(lp.mm*10)/10+'mm）';return;}
   $('lpPos').textContent='中心位置：X '+Math.round(lp.cxMm*10)/10+' mm，Y '+Math.round(lp.cyMm*10)/10+' mm（画布 '+Math.round(lp.mm*10)/10+'mm）';
 }
-function bindLpDrag(){
-  var stage=$('lpStage'),dragging=false;
-  function move(e){
-    if(!dragging)return;
-    var r=stage.getBoundingClientRect();
-    lp.cxMm=(e.clientX-r.left)/lp.pxPerMmDisp;
-    lp.cyMm=(e.clientY-r.top)/lp.pxPerMmDisp;
-    applyLp();
-  }
-  stage.addEventListener('pointerdown',function(e){
-    if(e.target.id!=='lpLogo')return;
-    dragging=true;stage.setPointerCapture(e.pointerId);e.preventDefault();
-  });
-  stage.addEventListener('pointermove',move);
-  stage.addEventListener('pointerup',function(){dragging=false;});
-}
-bindLpDrag();
-$('lpLen').addEventListener('input',function(){if(!lpAdded)return;lp.lenMm=parseFloat($('lpLen').value)||lp.lenMm;applyLp();});
-$('lpRot').addEventListener('input',function(){if(!lpAdded)return;lp.rot=parseFloat($('lpRot').value)||0;applyLp();});
+$('lpLen').addEventListener('input',function(){if(!lpAdded)return;lp.lenMm=parseFloat($('lpLen').value)||lp.lenMm;applyLpLive();});
+$('lpRot').addEventListener('input',function(){if(!lpAdded)return;lp.rot=parseFloat($('lpRot').value)||0;applyLpLive();});
 $('lpColor').addEventListener('input',function(){
   if(!lpAdded)return;
   lp.color=$('lpColor').value;
-  brandLogoUrl(lp.color).then(function(u){lp.logoEl.src=u;applyLp();});
+  brandLogoUrl(lp.color).then(function(u){return lpFabricSetLogo(u);}).then(function(){applyLp();});
 });
 $('lpCancel').addEventListener('click',function(){$('logoPanel').hidden=true;});
 $('lpClear').addEventListener('click',function(){
@@ -2282,7 +2776,7 @@ $('btnToken').addEventListener('click',openTokenPanel);
 /* 清除本机草稿：草稿只在本机浏览器里，删了不可恢复，所以要确认一次。
    清完重新读配置 —— 这时才会去读线上那份（api → 同源 → raw）。 */
 $('btnDraft').addEventListener('click',function(){
-  if(!confirm('清除本机草稿？\n\n清掉后本页与前端都会回到线上配置（models.json）。\n草稿只存在本机浏览器里，且没有别的备份，删了不可恢复。'))return;
+  if(!confirm('清除本机草稿？\n\n清掉后本页与前端都会回到线上配置（'+CFG+'）。\n草稿只存在本机浏览器里，且没有别的备份，删了不可恢复。'))return;
   dkDrop();
   syncDraftChip();          /* ⛔ 必须先撤角标：loadModels 成功时不一定会再走到这里 */
   lastWrite='（已清除草稿）';
@@ -2399,28 +2893,68 @@ $('ipSave').addEventListener('click',function(){
   if(!IS_LOCAL&&!token()){openTokenPanel();alert('还没有连接 GitHub，请先连接');return;}
   var key=ip.key,m=state.models[key];
   if(!m)return;
-  /* 只要新增/改名过的颜色才需要重传；纯改名不改图的情况也走这里（同名会重裁） */
+  /* 三类改动都要提交：
+       · 新增   —— `!it.old`（新传进来的配色）
+       · 改名   —— 色名变了（同名会重裁，所以要重传）
+       · 删除   —— `ip.removed`（点 × 移出列表的那些）
+     ⛔ 2026-10-05 修 bug：原来只判前两类，**删图后 `changed` 恒为空**，
+        点「确认」直接弹「没有检测到改动」，删除永远提交不了（用户报的正是这个）。
+        删除是「从 items 里消失」，光看 items 推断不出来，必须靠 ip.removed 记录。 */
   var changed=ip.items.filter(function(it){
     if(!it.old)return true;                       /* 新加的颜色 */
     return it.label!==(it.old.label||it.old.key); /* 改了色名 */
   });
-  if(!changed.length){alert('没有检测到改动');return;}
-  var model=normModel(key.replace(/^MR_/,''));
-  var keep=(m.colors||[]).filter(function(c){
-    return !changed.some(function(it){return it.old===c;});
+  var removed=(ip.removed||[]).filter(function(c){
+    return (m.colors||[]).indexOf(c)>=0;          /* 只提交确实还在配置里的（幂等） */
   });
-  var restore=function(){$('ipSave').disabled=false;$('ipSave').textContent='确认提交上传';};
+  if(!changed.length&&!removed.length){alert('没有检测到改动');return;}
+  /* ⛔ 一个型号至少要留一个配色：删到一个不剩会让前端没有产品图可显示。
+     在提交之前拦住，别等写进配置后前端白屏才发现。 */
+  var remain=(m.colors||[]).filter(function(c){return removed.indexOf(c)<0;}).length+changed.length;
+  if(remain<1){alert('至少要保留一个配色，最后一个颜色不能删。');return;}
+  var model=normModel(key.replace(/^MR_/,''));
+  /* ⛔ keep = 本次「没被改动」的旧配色，要原样带过去（否则覆盖时会丢图）。
+     删掉的也要从 keep 里剔除 —— 否则它会被当成「没动」又被补回配置里，删除白做。
+     剔除口径与上面 removed 一致，都用「是否还在 m.colors 里」判，保持幂等。 */
+  var keep=(m.colors||[]).filter(function(c){
+    if(removed.indexOf(c)>=0)return false;                                  /* 本次删掉的 */
+    return !changed.some(function(it){return it.old===c;});                 /* 本次改动的 */
+  });
+  var restore=function(){$('ipSave').disabled=false;$('ipSave').textContent='确认';};
   $('ipSave').disabled=true;$('ipSave').textContent='提交中…';
+  /* 删掉的文件要落盘删掉：线上走 del 任务，本地走本机图片仓 + 本机草稿。
+     ⛔ 与「点 ×」不同 —— 那一步只改弹窗列表，**这里才是真正生效的那一刻**。 */
+  var dropFiles=function(up){
+    var gone=[];
+    removed.forEach(function(c){
+      if(c.image){stageDel(c.image);gone.push(c.image);}
+      if(c.webp){stageDel(c.webp);gone.push(c.webp);}
+      if(up&&up.model&&up.model.colors){
+        up.model.colors=up.model.colors.filter(function(x){return x.key!==c.key;});
+      }
+    });
+    /* 本机图片仓里的那两张也删掉，否则图片仓越攒越多孤儿文件。
+       ⛔ 线上不走这里（线上由 buildJobs 的 del 任务删 GitHub 上的文件）。 */
+    if(IS_LOCAL&&gone.length)idbDelFiles(gone);
+    return gone;
+  };
   /* ⛔ 开发环境落本机，与「新增型号」共用 localCommitUpload（裁切管线同源）。
      这段 2026-09-18 之前不存在：本地点「确认提交上传」会直接打 GitHub contents，
      token 一失效就是「提交中断：Bad credentials」。 */
   if(IS_LOCAL){
-    return packUpload(changed,model,keep,{brandLogo:m.brandLogo}).then(function(up){
+    /* ⛔ 纯删除时 `changed` 是空的：packUpload([]) 会以「图片宽度不一致」软失败
+       （calcGeo([]) 拿不到几何），所以这条路径必须能处理「没有新图要传」。
+       做法：没有新图就走「只改配置」—— keep 原样带过去，删掉的文件另行 stageDel。 */
+    var upP=changed.length
+      ? packUpload(changed,model,keep,{brandLogo:m.brandLogo})
+      : Promise.resolve({key:'MR_'+model,model:{id:'MR_'+model,colors:keep.slice()},files:[],keepColors:[]});
+    return upP.then(function(up){
+      dropFiles(up);
       return localCommitUpload(up);
     }).then(function(r){
       restore();
       if(!r.ok)return r;
-      $('imgPanel').hidden=true;ip.items=[];
+      $('imgPanel').hidden=true;ip.items=[];ip.removed=[];
       toastMsg('已存到本机（'+draftStamp()+'）：'+r.key+' 的 '+r.files+
         ' 个图片文件进了本机图片仓，配置进了本机草稿。刷新前端页面即可看到。');
       return r;
@@ -2430,12 +2964,16 @@ $('ipSave').addEventListener('click',function(){
       return 'error';
     });
   }
-  packUpload(changed,model,keep,{brandLogo:m.brandLogo}).then(function(up){
+  var upQ=changed.length
+    ? packUpload(changed,model,keep,{brandLogo:m.brandLogo})
+    : Promise.resolve({key:'MR_'+model,model:{id:'MR_'+model,colors:keep.slice()},files:[],keepColors:[]});
+  upQ.then(function(up){
+    dropFiles(up);
     return runJobs(buildJobs(up,{skipGlobalEdits:true}),
       {title:'正在提交到 GitHub'});
   }).then(function(){
     restore();
-    $('imgPanel').hidden=true;ip.items=[];
+    $('imgPanel').hidden=true;ip.items=[];ip.removed=[];
     alert('已提交！前端页面约 30–60 秒后会自动显示新内容。');
     return afterWrite();
   }).catch(function(e){
