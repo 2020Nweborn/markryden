@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-06T01:05:55.131Z",
+  "updatedAt": "2026-10-06T01:06:16.566Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -1882,6 +1882,23 @@
           "label": "商务黑",
           "image": "mr_7080_15.6in_bizblack_trim.png",
           "webp": "mr_7080_15.6in_bizblack_trim.webp"
+        }
+      ]
+    },
+    "MR_7080_17.3in": {
+      "id": "MR_7080_17.3in",
+      "pxPerMm": 1,
+      "canvasMm": 587,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_7080_17.3in_bizblack_trim.png",
+          "webp": "mr_7080_17.3in_bizblack_trim.webp"
         }
       ]
     }
