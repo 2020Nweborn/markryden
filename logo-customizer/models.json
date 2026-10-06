@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-06T02:01:40.185Z",
+  "updatedAt": "2026-10-06T01:58:53.124Z",
   "models": {
     "MR_21": {
       "id": "MR_21",
@@ -2246,30 +2246,30 @@
     },
     "MR_79": {
       "id": "MR_79",
-      "pxPerMm": 1.5,
-      "canvasMm": 300.7,
+      "pxPerMm": 2,
+      "canvasMm": 303.5,
       "logoMax": {
         "wMm": 60,
         "hMm": 60
       },
       "colors": [
         {
-          "key": "好",
-          "label": "好",
-          "image": "mr_79_好_trim.png",
-          "webp": "mr_79_好_trim.webp"
+          "key": "black",
+          "label": "黑",
+          "image": "mr_79_black_trim.png",
+          "webp": "mr_79_black_trim.webp"
         },
         {
-          "key": "吗",
-          "label": "吗",
-          "image": "mr_79_吗_trim.png",
-          "webp": "mr_79_吗_trim.webp"
+          "key": "gray",
+          "label": "灰",
+          "image": "mr_79_gray_trim.png",
+          "webp": "mr_79_gray_trim.webp"
         },
         {
-          "key": "吧",
-          "label": "吧",
-          "image": "mr_79_吧_trim.png",
-          "webp": "mr_79_吧_trim.webp"
+          "key": "green",
+          "label": "绿",
+          "image": "mr_79_green_trim.png",
+          "webp": "mr_79_green_trim.webp"
         }
       ]
     }
