@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-06T03:50:08.590Z",
+  "updatedAt": "2026-10-06T05:12:46.371Z",
   "pinnedCount": 0,
   "models": {
     "MR_21": {
@@ -2279,6 +2279,35 @@
         "rot": -19,
         "color": "#a6a7ac"
       }
+    },
+    "MR_79": {
+      "id": "MR_79",
+      "pxPerMm": 2,
+      "canvasMm": 206.5,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "black",
+          "label": "黑",
+          "image": "mr_79_black_trim.png",
+          "webp": "mr_79_black_trim.webp"
+        },
+        {
+          "key": "green",
+          "label": "绿",
+          "image": "mr_79_green_trim.png",
+          "webp": "mr_79_green_trim.webp"
+        },
+        {
+          "key": "gray",
+          "label": "灰",
+          "image": "mr_79_gray_trim.png",
+          "webp": "mr_79_gray_trim.webp"
+        }
+      ]
     }
   }
 }
