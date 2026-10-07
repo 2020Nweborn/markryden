@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-07T04:35:01.472Z",
+  "updatedAt": "2026-10-07T04:37:08.128Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -3122,6 +3122,26 @@
           "label": "精英灰",
           "image": "mr_7080_elitegray_trim.png",
           "webp": "mr_7080_elitegray_trim.webp"
+        }
+      ],
+      "safeZones": [
+        {
+          "xMm": 189.7,
+          "yMm": 117.7,
+          "wMm": 85,
+          "hMm": 75.1
+        },
+        {
+          "xMm": 179.8,
+          "yMm": 221.1,
+          "wMm": 67.9,
+          "hMm": 156
+        },
+        {
+          "xMm": 281.4,
+          "yMm": 232.8,
+          "wMm": 12.1,
+          "hMm": 141.6
         }
       ]
     },
