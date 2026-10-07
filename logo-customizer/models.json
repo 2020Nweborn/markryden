@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-07T05:24:57.527Z",
+  "updatedAt": "2026-10-07T10:40:59.900Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -3693,6 +3693,47 @@
           "yMm": 212,
           "wMm": 255.8,
           "hMm": 96.2
+        }
+      ]
+    },
+    "MR_98_15in": {
+      "id": "MR_98_15in",
+      "pxPerMm": 1,
+      "canvasMm": 439,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "樱花粉",
+          "label": "樱花粉",
+          "image": "mr_98_15in_樱花粉_trim.png",
+          "webp": "mr_98_15in_樱花粉_trim.webp"
+        },
+        {
+          "key": "绅士灰",
+          "label": "绅士灰",
+          "image": "mr_98_15in_绅士灰_trim.png",
+          "webp": "mr_98_15in_绅士灰_trim.webp"
+        },
+        {
+          "key": "深空灰",
+          "label": "深空灰",
+          "image": "mr_98_15in_深空灰_trim.png",
+          "webp": "mr_98_15in_深空灰_trim.webp"
+        },
+        {
+          "key": "岩白灰",
+          "label": "岩白灰",
+          "image": "mr_98_15in_岩白灰_trim.png",
+          "webp": "mr_98_15in_岩白灰_trim.webp"
+        },
+        {
+          "key": "科技灰",
+          "label": "科技灰",
+          "image": "mr_98_15in_科技灰_trim.png",
+          "webp": "mr_98_15in_科技灰_trim.webp"
         }
       ]
     }
