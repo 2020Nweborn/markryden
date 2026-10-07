@@ -1,39 +1,7 @@
 {
-  "updatedAt": "2026-10-07T02:14:19.960Z",
+  "updatedAt": "2026-10-07T02:14:29.374Z",
   "pinnedCount": 2,
   "models": {
-    "MR_9299": {
-      "id": "MR_9299",
-      "pxPerMm": 1,
-      "canvasMm": 498,
-      "logoMax": {
-        "wMm": 60,
-        "hMm": 60
-      },
-      "colors": [
-        {
-          "key": "bizblack",
-          "label": "商务黑",
-          "image": "mr_9299_bizblack_trim.png",
-          "webp": "mr_9299_bizblack_trim.webp"
-        }
-      ],
-      "safeZones": [
-        {
-          "xMm": 144.7,
-          "yMm": 63.2,
-          "wMm": 205.7,
-          "hMm": 409.1
-        }
-      ],
-      "brandLogo": {
-        "cxMm": 330.2,
-        "cyMm": 337.6,
-        "lenMm": 56,
-        "rot": 90,
-        "color": "#d1d1d1"
-      }
-    },
     "MR_9031SJ": {
       "id": "MR_9031SJ",
       "pxPerMm": 1,
@@ -89,6 +57,38 @@
           "hMm": 36.9
         }
       ]
+    },
+    "MR_9299": {
+      "id": "MR_9299",
+      "pxPerMm": 1,
+      "canvasMm": 498,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_9299_bizblack_trim.png",
+          "webp": "mr_9299_bizblack_trim.webp"
+        }
+      ],
+      "safeZones": [
+        {
+          "xMm": 144.7,
+          "yMm": 63.2,
+          "wMm": 205.7,
+          "hMm": 409.1
+        }
+      ],
+      "brandLogo": {
+        "cxMm": 330.2,
+        "cyMm": 337.6,
+        "lenMm": 56,
+        "rot": 90,
+        "color": "#d1d1d1"
+      }
     },
     "MR_21": {
       "id": "MR_21",
