@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-08T02:40:42.545Z",
+  "updatedAt": "2026-10-08T03:35:02.087Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -4326,6 +4326,35 @@
         "rot": 90,
         "color": "#000000"
       }
+    },
+    "MR_901": {
+      "id": "MR_901",
+      "pxPerMm": 2,
+      "canvasMm": 462,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "黑白",
+          "label": "黑白",
+          "image": "mr_901_黑白_trim.png",
+          "webp": "mr_901_黑白_trim.webp"
+        },
+        {
+          "key": "黑橙",
+          "label": "黑橙",
+          "image": "mr_901_黑橙_trim.png",
+          "webp": "mr_901_黑橙_trim.webp"
+        },
+        {
+          "key": "灰黑",
+          "label": "灰黑",
+          "image": "mr_901_灰黑_trim.png",
+          "webp": "mr_901_灰黑_trim.webp"
+        }
+      ]
     }
   }
 }
