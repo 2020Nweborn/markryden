@@ -789,6 +789,12 @@ function applyRemoteModels(j){
     MODEL=MODELS[want];
     msSyncFromSelect();
     renderColorSelect();
+    /* ⛔⛔ 2026-10-08（第三轮）：换了一整份配置 = 品牌LOGO 的签名全部作废。
+       不清的话，首屏「读 models.test.json → 应用」这条路径上，
+       sig 可能与内置 MODELS 的签名相同（都是同样的默认字标参数）→ 短路 return，
+       于是**首屏就该显示的 LOGO 一个都不画**。
+       —— 用户报「前端页面也不显示」的最常见入口就是这里（直接打开页面，不切型号）。 */
+    brandLogoSig='';brandLogoTok++;
     loadBag();applyView();updateSizeReadout();syncBrandLogo();
     return true;
   }catch(e){
@@ -1023,23 +1029,65 @@ function syncBrandToggleUI(){
 function syncBrandLogo(){
   /* 一份坐标全配色共用。不同颜色的渲染图取景本来就有几毫米差异，
      LOGO 跟着差一点点属正常，不做逐色换算。 */
-  const list=modelHasBrandLogo()?brandLogosOf():[];
-  /* 默认值按型号定：有配置 → 显示；用户显式选过就以他的选择为准 */
+  const list=modelHasBrandLogo()?brandLogosOf():[];  /* 默认值按型号定：有配置 → 显示；用户显式选过就以他的选择为准 */
   const pref=brandLogoPref[MODEL.id];
   brandLogoOn=list.length>0&&(pref===undefined?true:!!pref);
   syncBrandToggleUI();
+  /* ⛔⛔ 2026-10-08（第三轮，真凶）：`sig` 短路判据以前用的是**「有没有画过」**，
+     而它在**异步加载开始之前**就被写死了（旧代码 `brandLogoSig=sig;` 在 forEach 之前）。
+     于是出现这个致命时序（用户报的「上传自定义LOGO 会消失」正是它）：
+       T0 change → syncBrandLogo #1：sig 记下、tok=A、启动 2 项异步
+                   （第 1 项是内联 SVG 的 dataURL，几乎同步就回来；
+                     第 2 项是 195KB 的网络位图，慢一个数量级）
+       T1 loadBag 的 fromURL 回调里又调 syncBrandLogo #2（见 loadBag 里的调用）
+                   → 此刻 sig 与上次相同 → **旧代码直接 return，什么都不做**
+       T2 或者：切型号/切色导致 sig 变化 → tok=++B → #1 那批的第 2 项回来时
+                   token(A)!==brandLogoTok(B) → **慢图被丢掉**
+     两种情况的结果一模一样：`brandLogoObjs` 里缺项（甚至为空），
+     而 `brandLogoSig` 已经记成「这一版画过了」→ **之后永远不会重建** → 前端一直不显示。
+     ⛔ 为什么「切走再切回来」就好了：图进了缓存，第 2 项也变快，赶在被作废之前回来。
+        —— 这正是用户看到的「有时显示、有时不显示」的随机性来源，不是文件没传上去。
+
+     修法（三条，缺一不可）：
+       ① **签名只在真正需要重建时才写**，且**记在「这一轮已经作废」之后就重置**，
+          绝不能出现「签名说画过了、画布上却没有」的状态；
+       ② 短路时**按品牌 LOGO 的实际在画布上的存活情况判断**，而不是只看数组长度 ——
+          数组里可能留着已被 canvas.remove 掉的僵尸引用；
+       ③ 判定「画过了」必须**等这一批全部落定**（成功或失败都算），
+          期间不允许再记成「完成」。 */
   const sig=(brandLogoOn)?JSON.stringify(list.map(brandLogoSigOf)):'';
-  if(sig===brandLogoSig){if(brandLogoObjs.length)canvas.renderAll();return;}
-  brandLogoSig=sig;
-  brandLogoObjs.forEach(o=>canvas.remove(o));
+  /* ⛔ 短路的前提：签名一致 **且** 该有的对象都真的还在画布上。
+     `brandLogoObjs.length` 单独用是不安全的（删过型号/换过画布后可能是僵尸引用），
+     所以再核对一次 `canvas.contains()`。 */
+  const objsAlive=brandLogoObjs.length>0&&brandLogoObjs.every(o=>o&&canvas.contains(o));
+  if(sig===brandLogoSig&&(objsAlive||!brandLogoOn)){
+    if(brandLogoObjs.length)canvas.renderAll();
+    return;
+  }
+  /* ⛔ 进入重建前先把签名**清掉**：本轮的异步还没落定，此刻画布状态未知。
+     等这一批全部结束（成功或失败）再写回 sig —— 这样即使中途被 token 作废，
+     下一次 syncBrandLogo() 也不会被「假签名」短路掉。 */
+  brandLogoSig='';
+  brandLogoObjs.forEach(o=>{try{canvas.remove(o);}catch(e){}});
   brandLogoObjs=[];
-  if(!brandLogoOn){canvas.renderAll();return;}
+  if(!brandLogoOn){brandLogoSig='';canvas.renderAll();return;}
   const token=++brandLogoTok;
   /* ⛔ 逐项异步加载。⛔ token 判据必须放在**每一项**的回调里：
      快速切型号时旧的一批会陆续回来，只判一次会让新旧混在画布上。
      ⛔ 缩放基准不能再用常量 BRAND_LOGO_W：那是字标的 viewBox 宽（1578），
         自定义图的宽度完全是另一回事，用它算会让自定义 LOGO 的显示尺寸完全错掉。
         正确口径 = 以**图片自己的自然宽度**为基准，让 lenMm 表示「图上实长多少毫米」。 */
+  /* 本批的落定计数：全部结束且未被作废时，才把 sig 记成「这一版画好了」。
+     ⛔ 失败项也计数 —— 否则一张永久 404 的图会让 sig 永远写不上、
+        syncBrandLogo 每次都被调用都全量重建（切色会闪）。 */
+  let settled=0;
+  const total=list.length;
+  const finish=()=>{
+    settled++;
+    if(settled<total)return;
+    if(token!==brandLogoTok)return;      /* 本批已被更新的一轮作废：不记签名，留给下一轮重建 */
+    brandLogoSig=sig;
+  };
   list.forEach((cfg,idx)=>{
     const raw=brandLogoImgUrl(cfg);
     const custom=!!cfg.src;
@@ -1055,9 +1103,13 @@ function syncBrandLogo(){
       : Promise.resolve(brandLogoSrcUrl(raw));
     load.then(url=>{
       fabric.Image.fromURL(url,(img,isError)=>{
-        if(token!==brandLogoTok)return;
+        /* ⛔ token 作废时也要 finish()：否则 settled 永远到不了 total、
+           sig 永远写不上，下一轮又会全量重建（白底闪一下）。
+           这里先 finish() 再 return，语义是「本批此项已有结论，只是结果不要了」。 */
+        if(token!==brandLogoTok){finish();return;}
         if(isError||!img||!img._element||!img._element.naturalWidth){   /* ⛔ 取不到图就什么都不画：静默失败会让用户以为功能没了 */
           console.warn('品牌LOGO 第 '+(idx+1)+' 个加载失败：'+url);
+          finish();
           return;
         }
         const lenMm=Number(cfg.lenMm);
@@ -1071,8 +1123,9 @@ function syncBrandLogo(){
         /* 压在包体之上、安全区之上、用户上传的 LOGO 之下（安全区占 1..n，所以这里要跳过它们） */
         if(bagImg)canvas.moveTo(img,1+zoneObjs.length);
         canvas.renderAll();
+        finish();
       });
-    });
+    }).catch(()=>{finish();});
   });
 }
 /* ==== 品牌 LOGO 结束 ==== */
@@ -1694,6 +1747,21 @@ function preloadImages(){
         if(m===MODEL)return;
         const c=(m.colors||[])[0];
         if(c){try{const i=new Image();i.src=modelSrc(c);}catch(e){}}
+      });
+      /* ⛔⛔ 2026-10-08（第三轮）：**自定义 LOGO 的图也要预热**。
+         以前只预热包体图，自定义 LOGO 的位图要等用户切到那个型号才第一次请求。
+         线上那张签名图 195KB，冷启动要好几秒 —— 正好落在 syncBrandLogo 的
+         token 作废窗口里，于是「切过去看不到自定义LOGO」（用户报的现象）。
+         ⛔ 用 `loadImageEl()` 而不是裸 `new Image()`：它自带全局缓存
+           （`brandLogoImgCache`），syncBrandLogo 到达时能同步命中，
+           既省一次请求，也让异步窗口从「秒级」压到「零」。
+         ⛔ 必须 try/catch 单项：一张图 404 不该拖垮整批预热。 */
+      Object.keys(MODELS).forEach(k=>{
+        const bl=brandLogosOf(MODELS[k]);
+        bl.forEach(cfg=>{
+          if(!cfg||!cfg.src)return;
+          try{loadImageEl(brandLogoSrcUrl(cfg.src)).catch(()=>{});}catch(e){}
+        });
       });
     }
   },2500);
@@ -3801,6 +3869,12 @@ document.getElementById('model').addEventListener('change',e=>{
   /* 换画布 / 换安全区 = 上一段的违规判定作废，确认记忆一并复位 ——
      否则旧签名会在新画布上把新出现的提示压掉。 */
   warningAckSig='';warningManualOpen=false;warningWasActive=false;warnInfoUntil=0;clearTimeout(warningTimer);
+  /* ⛔⛔ 2026-10-08（第三轮）：切型号**必须清掉品牌LOGO 的签名**。
+     不清的后果：新型号的 sig 若与上一型号恰好相同（比如两个型号都只有一个
+     默认字标 LOGO、参数也一致），会走短路直接 return，画布上却已经被
+     loadBag/applyView 清过 —— 表现就是「切了型号，LOGO 不显示」。
+     清掉签名等于强制重建一次，代价只是重新取图（有缓存），换来状态永远可信。 */
+  brandLogoSig='';brandLogoTok++;
   loadBag();applyView();updateSizeReadout();
   syncBrandLogo();
 });
