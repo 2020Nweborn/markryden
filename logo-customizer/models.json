@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-08T01:44:27.105Z",
+  "updatedAt": "2026-10-08T01:44:36.879Z",
   "pinnedCount": 2,
   "models": {
     "MR_9299": {
@@ -160,6 +160,44 @@
         }
       ]
     },
+    "MR_35": {
+      "id": "MR_35",
+      "pxPerMm": 2,
+      "canvasMm": 364,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_35_bizblack_trim.png",
+          "webp": "mr_35_bizblack_trim.webp"
+        },
+        {
+          "key": "商务黑（背面）",
+          "label": "商务黑（背面）",
+          "image": "mr_35_商务黑（背面）_trim.png",
+          "webp": "mr_35_商务黑（背面）_trim.webp"
+        }
+      ],
+      "brandLogo": {
+        "cxMm": 179.7,
+        "cyMm": 162.2,
+        "lenMm": 60,
+        "rot": 0,
+        "color": "#a6a7ac"
+      },
+      "safeZones": [
+        {
+          "xMm": 87.7,
+          "yMm": 143.8,
+          "wMm": 188.6,
+          "hMm": 81
+        }
+      ]
+    },
     "MR_21": {
       "id": "MR_21",
       "pxPerMm": 5,
@@ -221,44 +259,6 @@
         "rot": 90,
         "color": "#ffffff"
       }
-    },
-    "MR_35": {
-      "id": "MR_35",
-      "pxPerMm": 2,
-      "canvasMm": 364,
-      "logoMax": {
-        "wMm": 60,
-        "hMm": 60
-      },
-      "colors": [
-        {
-          "key": "bizblack",
-          "label": "商务黑",
-          "image": "mr_35_bizblack_trim.png",
-          "webp": "mr_35_bizblack_trim.webp"
-        },
-        {
-          "key": "商务黑（背面）",
-          "label": "商务黑（背面）",
-          "image": "mr_35_商务黑（背面）_trim.png",
-          "webp": "mr_35_商务黑（背面）_trim.webp"
-        }
-      ],
-      "brandLogo": {
-        "cxMm": 179.7,
-        "cyMm": 162.2,
-        "lenMm": 60,
-        "rot": 0,
-        "color": "#a6a7ac"
-      },
-      "safeZones": [
-        {
-          "xMm": 87.7,
-          "yMm": 143.8,
-          "wMm": 188.6,
-          "hMm": 81
-        }
-      ]
     },
     "MR_9008SJ": {
       "id": "MR_9008SJ",
