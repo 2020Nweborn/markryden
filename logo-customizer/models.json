@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-08T05:06:05.562Z",
+  "updatedAt": "2026-10-08T05:07:12.321Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -4746,6 +4746,14 @@
           "label": "商务黑",
           "image": "mr_1556_handbag_bizblack_trim.png",
           "webp": "mr_1556_handbag_bizblack_trim.webp"
+        }
+      ],
+      "safeZones": [
+        {
+          "xMm": 77,
+          "yMm": 319.2,
+          "wMm": 374.1,
+          "hMm": 176.2
         }
       ]
     },
