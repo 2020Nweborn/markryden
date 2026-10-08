@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-08T05:05:11.484Z",
+  "updatedAt": "2026-10-08T05:06:05.562Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -4723,7 +4723,14 @@
           "wMm": 220.2,
           "hMm": 35.5
         }
-      ]
+      ],
+      "brandLogo": {
+        "cxMm": 345,
+        "cyMm": 304.1,
+        "lenMm": 60,
+        "rot": 26,
+        "color": "#a6a7ac"
+      }
     },
     "MR_1556_Handbag": {
       "id": "MR_1556_Handbag",
