@@ -1,7 +1,39 @@
 {
-  "updatedAt": "2026-10-08T01:03:16.861Z",
-  "pinnedCount": 1,
+  "updatedAt": "2026-10-08T01:44:03.361Z",
+  "pinnedCount": 2,
   "models": {
+    "MR_9299": {
+      "id": "MR_9299",
+      "pxPerMm": 1,
+      "canvasMm": 498,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_9299_bizblack_trim.png",
+          "webp": "mr_9299_bizblack_trim.webp"
+        }
+      ],
+      "safeZones": [
+        {
+          "xMm": 144.7,
+          "yMm": 63.2,
+          "wMm": 205.7,
+          "hMm": 409.1
+        }
+      ],
+      "brandLogo": {
+        "cxMm": 330.2,
+        "cyMm": 337.6,
+        "lenMm": 56,
+        "rot": 90,
+        "color": "#d1d1d1"
+      }
+    },
     "MR_9031SJ": {
       "id": "MR_9031SJ",
       "pxPerMm": 1,
@@ -511,38 +543,6 @@
         "lenMm": 82,
         "rot": 90,
         "color": "#a6a7ac"
-      }
-    },
-    "MR_9299": {
-      "id": "MR_9299",
-      "pxPerMm": 1,
-      "canvasMm": 498,
-      "logoMax": {
-        "wMm": 60,
-        "hMm": 60
-      },
-      "colors": [
-        {
-          "key": "bizblack",
-          "label": "商务黑",
-          "image": "mr_9299_bizblack_trim.png",
-          "webp": "mr_9299_bizblack_trim.webp"
-        }
-      ],
-      "safeZones": [
-        {
-          "xMm": 144.7,
-          "yMm": 63.2,
-          "wMm": 205.7,
-          "hMm": 409.1
-        }
-      ],
-      "brandLogo": {
-        "cxMm": 330.2,
-        "cyMm": 337.6,
-        "lenMm": 56,
-        "rot": 90,
-        "color": "#d1d1d1"
       }
     },
     "MR_6033": {
@@ -3887,6 +3887,29 @@
           "label": "商务黑",
           "image": "mr_7219_bizblack_trim.png",
           "webp": "mr_7219_bizblack_trim.webp"
+        }
+      ]
+    },
+    "MR_8703": {
+      "id": "MR_8703",
+      "pxPerMm": 1,
+      "canvasMm": 488,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "elitegray",
+          "label": "精英灰",
+          "image": "mr_8703_elitegray_trim.png",
+          "webp": "mr_8703_elitegray_trim.webp"
+        },
+        {
+          "key": "玫瑰",
+          "label": "玫瑰",
+          "image": "mr_8703_玫瑰_trim.png",
+          "webp": "mr_8703_玫瑰_trim.webp"
         }
       ]
     }
