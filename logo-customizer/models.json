@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-08T04:59:44.956Z",
+  "updatedAt": "2026-10-08T05:03:28.052Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -4671,6 +4671,20 @@
           "label": "灰蓝撞色",
           "image": "mr_7802_灰蓝撞色_trim.png",
           "webp": "mr_7802_灰蓝撞色_trim.webp"
+        }
+      ],
+      "safeZones": [
+        {
+          "xMm": 139,
+          "yMm": 88,
+          "wMm": 235,
+          "hMm": 82
+        },
+        {
+          "xMm": 164.5,
+          "yMm": 196,
+          "wMm": 196,
+          "hMm": 295
         }
       ]
     },
