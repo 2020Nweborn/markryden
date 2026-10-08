@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-08T03:40:06.597Z",
+  "updatedAt": "2026-10-08T03:41:28.569Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -4111,6 +4111,14 @@
           "image": "mr_2206_bizblack_trim.png",
           "webp": "mr_2206_bizblack_trim.webp"
         }
+      ],
+      "safeZones": [
+        {
+          "xMm": 265.9,
+          "yMm": 204.3,
+          "wMm": 172.8,
+          "hMm": 348.7
+        }
       ]
     },
     "MR_208": {
@@ -4450,6 +4458,23 @@
           "label": "商务黑",
           "image": "mr_1556_handbag_bizblack_trim.png",
           "webp": "mr_1556_handbag_bizblack_trim.webp"
+        }
+      ]
+    },
+    "MR_1556_Backpack": {
+      "id": "MR_1556_Backpack",
+      "pxPerMm": 1,
+      "canvasMm": 372,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_1556_backpack_bizblack_trim.png",
+          "webp": "mr_1556_backpack_bizblack_trim.webp"
         }
       ]
     }
