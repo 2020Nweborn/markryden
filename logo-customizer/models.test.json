@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-08T07:31:28.730Z",
+  "updatedAt": "2026-10-08T07:32:33.636Z",
   "pinnedCount": 2,
   "models": {
     "MR_9031SJ": {
@@ -76,7 +76,7 @@
           "rot": 0,
           "color": "#1f39bd",
           "src": "test-assets/35_logo.png",
-          "srcNm": "LOGO.png"
+          "srcNm": "963.png"
         },
         {
           "cxMm": 194,
@@ -95,7 +95,7 @@
         "rot": 0,
         "color": "#1f39bd",
         "src": "test-assets/35_logo.png",
-        "srcNm": "LOGO.png"
+        "srcNm": "963.png"
       }
     },
     "MR_21": {
