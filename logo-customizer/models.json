@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-08T03:37:53.350Z",
+  "updatedAt": "2026-10-08T03:40:06.597Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -4433,6 +4433,23 @@
           "label": "商务黑",
           "image": "mr_5226_bizblack_trim.png",
           "webp": "mr_5226_bizblack_trim.webp"
+        }
+      ]
+    },
+    "MR_1556_Handbag": {
+      "id": "MR_1556_Handbag",
+      "pxPerMm": 1,
+      "canvasMm": 597,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_1556_handbag_bizblack_trim.png",
+          "webp": "mr_1556_handbag_bizblack_trim.webp"
         }
       ]
     }
