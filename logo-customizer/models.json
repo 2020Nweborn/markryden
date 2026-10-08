@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-08T05:07:45.127Z",
+  "updatedAt": "2026-10-08T05:08:39.070Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -4778,6 +4778,26 @@
           "label": "商务黑",
           "image": "mr_1556_backpack_bizblack_trim.png",
           "webp": "mr_1556_backpack_bizblack_trim.webp"
+        }
+      ],
+      "safeZones": [
+        {
+          "xMm": 110.6,
+          "yMm": 81.9,
+          "wMm": 143.4,
+          "hMm": 46.6
+        },
+        {
+          "xMm": 108.4,
+          "yMm": 149.9,
+          "wMm": 66.8,
+          "hMm": 185.9
+        },
+        {
+          "xMm": 189.2,
+          "yMm": 149.9,
+          "wMm": 76.4,
+          "hMm": 181.6
         }
       ]
     }
