@@ -796,6 +796,13 @@ function applyRemoteModels(j){
        —— 用户报「前端页面也不显示」的最常见入口就是这里（直接打开页面，不切型号）。 */
     brandLogoSig='';brandLogoTok++;
     loadBag();applyView();updateSizeReadout();syncBrandLogo();
+    /* ⛔⛔ 2026-10-08（第三轮）：配置一就位就**立刻**预热所有型号的自定义 LOGO 图。
+       不能只靠 preloadImages()（它挂在 loadBag 成功之后 + 再等 2500ms）——
+       用户往往在包体图刚出来时就切型号，那时自定义图还没进缓存，
+       于是要现场下载 195KB + 逐像素染色，慢到看起来「没显示」。
+       这里提前发起请求，等用户真的切过去，图与染色结果都已在缓存里。
+       ⛔ 必须延迟一拍（setTimeout 0）避开首次渲染的竞争，且不阻塞当前渲染。 */
+    setTimeout(()=>{try{preloadBrandLogoAssets();}catch(e){}},0);
     return true;
   }catch(e){
     console.warn('models.test.json 应用失败，沿用内置配置',e);
@@ -985,6 +992,23 @@ function loadImageEl(u){
     im.src=u;
   });
 }
+/* ⛔⛔ 2026-10-08（第三轮）：**染色结果缓存** —— 这是「自定义LOGO 迟迟不显示」的性能主因。
+   每次 syncBrandLogo 对自定义图都要：解码 195KB 位图 → 逐像素刷 1111×411 → toDataURL 重编码。
+   一次就是几十到几百毫秒，慢机器上更久；而它发生在**画 LOGO 之前**，
+   所以用户看到的是「切到那个型号，自定义LOGO 半天不出来」= 他说的「丢失」。
+   ⛔ 键必须是「地址 + 颜色」：同一张图换色要重算，同色复用。
+   ⛔ 只对自定义图（有 src）做，默认字标本来就是 dataURL 拼接、零成本。 */
+const brandLogoTintCache=new Map();
+function tintedLogoUrl(u,color){
+  const key=u+'|'+(color||'');
+  if(brandLogoTintCache.has(key))return Promise.resolve(brandLogoTintCache.get(key));
+  return loadImageEl(u).then(el=>{
+    const c=tintImageEl(el,color);
+    const out=c?c.toDataURL('image/png'):u;
+    brandLogoTintCache.set(key,out);
+    return out;
+  }).catch(()=>u);
+}
 /* ==== 品牌 LOGO 对象池（2026-10-08 起支持一个型号最多 3 个）====
    ⛔ 数据结构：配置里新增 `brandLogos` 数组，每项自带 cxMm/cyMm/lenMm/rot/color/src/srcNm。
    ⛔ 向后兼容（红线：models.json 是活数据、只能加字段不许改语义）：
@@ -1094,12 +1118,12 @@ function syncBrandLogo(){
     /* ⛔ 自定义图 + 有颜色 → 先染色再画。
        做法是「解码 → 逐像素刷 → toDataURL → 交给 fromURL」，
        ⛔ 不直接 setElement(染色 canvas)：那样 fabric 的对象缓存在切色时不会失效，
-          表现为「改了颜色但画布上没变」。走 dataURL 等价于换了一张新图，缓存自然重建。 */
+          表现为「改了颜色但画布上没变」。走 dataURL 等价于换了一张新图，缓存自然重建。
+       ⛔⛔ 2026-10-08（第三轮）：改走 tintedLogoUrl() —— 染色结果按「地址+颜色」缓存。
+          直接内联这段（旧写法）会导致**每次切型号都重算一遍 195KB 位图的逐像素染色**，
+          用户看到的就是「切过去半天不显示自定义LOGO」。 */
     const load=custom&&cfg.color
-      ? loadImageEl(brandLogoSrcUrl(raw)).then(el=>{
-          const c=tintImageEl(el,cfg.color);
-          return c?c.toDataURL('image/png'):brandLogoSrcUrl(raw);
-        }).catch(()=>brandLogoSrcUrl(raw))
+      ? tintedLogoUrl(brandLogoSrcUrl(raw),cfg.color)
       : Promise.resolve(brandLogoSrcUrl(raw));
     load.then(url=>{
       fabric.Image.fromURL(url,(img,isError)=>{
@@ -1748,23 +1772,32 @@ function preloadImages(){
         const c=(m.colors||[])[0];
         if(c){try{const i=new Image();i.src=modelSrc(c);}catch(e){}}
       });
-      /* ⛔⛔ 2026-10-08（第三轮）：**自定义 LOGO 的图也要预热**。
-         以前只预热包体图，自定义 LOGO 的位图要等用户切到那个型号才第一次请求。
-         线上那张签名图 195KB，冷启动要好几秒 —— 正好落在 syncBrandLogo 的
-         token 作废窗口里，于是「切过去看不到自定义LOGO」（用户报的现象）。
-         ⛔ 用 `loadImageEl()` 而不是裸 `new Image()`：它自带全局缓存
-           （`brandLogoImgCache`），syncBrandLogo 到达时能同步命中，
-           既省一次请求，也让异步窗口从「秒级」压到「零」。
-         ⛔ 必须 try/catch 单项：一张图 404 不该拖垮整批预热。 */
-      Object.keys(MODELS).forEach(k=>{
-        const bl=brandLogosOf(MODELS[k]);
-        bl.forEach(cfg=>{
-          if(!cfg||!cfg.src)return;
-          try{loadImageEl(brandLogoSrcUrl(cfg.src)).catch(()=>{});}catch(e){}
-        });
-      });
+      /* ⛔⛔ 2026-10-08（第三轮）：自定义 LOGO 的图也要预热（见 preloadBrandLogoAssets）。 */
+      preloadBrandLogoAssets();
     }
   },2500);
+}
+/* ⛔⛔ 2026-10-08（第三轮）**自定义 LOGO 素材预热**的唯一入口。
+   为什么必须有：自定义 LOGO 走的是「下载位图 → 逐像素染色 → toDataURL 重编码 → 交给 fabric」
+   这条路，一副 195KB、1111×411 的签名图在慢机器上要几百毫秒到数秒。
+   而这段耗时发生在**画 LOGO 之前**，用户看到的就是「切到某型号，我要的 LOGO 不显示」。
+   做法：把**所有型号**的自定义图提前取回来，连染色产物一起缓存（tintedLogoUrl）。
+   等用户真的切过去，syncBrandLogo 拿到的已是现成 dataURL —— 零等待。
+   ⛔ 走 tintedLogoUrl 而不是裸 loadImageEl：只缓存原图的话，
+      切过去还得再做一次逐像素染色，仍然会卡那一下。
+   ⛔ 逐项 try/catch：一张图 404 / 跨域失败不该拖垮整批。 */
+function preloadBrandLogoAssets(){
+  Object.keys(MODELS).forEach(k=>{
+    const bl=brandLogosOf(MODELS[k]);
+    bl.forEach(cfg=>{
+      if(!cfg||!cfg.src)return;
+      try{
+        const u=brandLogoSrcUrl(cfg.src);
+        if(cfg.color)tintedLogoUrl(u,cfg.color).catch(()=>{});
+        else loadImageEl(u).catch(()=>{});
+      }catch(e){}
+    });
+  });
 }
 function showStageNotice(msg){
   const el=document.getElementById('stageNotice');
