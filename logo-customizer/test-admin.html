@@ -263,6 +263,48 @@
   .lp-stage canvas{display:block}
   .lp-stage .canvas-container{width:100%!important;height:100%!important;border-radius:9px}
   .lp-fields.off{opacity:.45;pointer-events:none}
+  /* LOGO 图形来源行（2026-10-08 新增「上传自定义 LOGO」）：
+     默认字标 / 用户上传的图 二选一，同一行里给缩略图 + 名称 + 两个操作按钮。
+     ⛔ .lp-src 只描述外观，不参与布局计算；宽度由 .lp-ctrl 决定。 */
+  .lp-src{display:flex;align-items:center;gap:8px;margin:0 0 12px;
+          padding:8px 10px;border:1px solid var(--bd);border-radius:9px;background:var(--gray)}
+  .lp-src-thumb{flex:0 0 30px;height:30px;border-radius:6px;display:flex;
+                align-items:center;justify-content:center;overflow:hidden;
+                background:#fff;border:1px solid var(--bd)}
+  .lp-src-thumb img{max-width:26px;max-height:26px;object-fit:contain;display:block}
+  .lp-src-thumb svg{max-width:26px;max-height:26px;display:block}
+  .lp-src-name{flex:1;min-width:0;font-size:12.5px;color:var(--tx2);
+               white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .lp-src .mini-dark{flex:0 0 auto;height:30px;padding:0 11px;border-radius:7px;
+                     font-size:12px;white-space:nowrap;cursor:pointer}
+  .lp-src .mini-dark[hidden]{display:none}
+  /* LOGO 列表（2026-10-08 起一个型号可放 1~3 个品牌 LOGO，各自独立的位置/尺寸/角度/颜色/图形）。
+     交互与「安全区」面板的 .zn-list 同一套：点一行 = 选中那一个，右侧参数区跟着切过去。
+     ⛔ .lp-list 自己**不是**滚动容器以外的东西：行高固定、超出滚，避免长列表把
+        弹窗撑高（.lp-card 有 max-height）。 */
+  .lp-list-head{display:flex;align-items:center;gap:8px;margin:0 0 6px}
+  .lp-list-head b{flex:1;font-size:12px;font-weight:500;color:var(--tx2)}
+  .lp-list-head button{flex:0 0 auto;height:28px;padding:0 10px;border-radius:7px;
+                       font-size:12px;white-space:nowrap;cursor:pointer}
+  .lp-list-head button[hidden]{display:none}
+  .lp-list-head button:disabled{opacity:.45;cursor:not-allowed}
+  .lp-list{border:1px solid var(--bd);border-radius:8px;max-height:132px;overflow:auto;margin:0 0 4px}
+  .lp-list[hidden]{display:none}
+  .lp-row{display:flex;align-items:center;gap:8px;padding:6px 8px;font-size:12.5px;
+          cursor:pointer;border-bottom:1px solid #f0f1f3}
+  .lp-row:last-child{border-bottom:0}
+  .lp-row.sel{background:#f1f2f4}
+  .lp-row .lp-row-th{flex:0 0 24px;height:24px;border-radius:5px;display:flex;
+                     align-items:center;justify-content:center;overflow:hidden;
+                     background:#fff;border:1px solid var(--bd)}
+  .lp-row .lp-row-th img{max-width:20px;max-height:20px;object-fit:contain;display:block}
+  .lp-row .lp-row-th svg{max-width:20px;max-height:20px;display:block}
+  .lp-row i{flex:1;font-style:normal;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .lp-row b{font-weight:500;font-size:11.5px;color:var(--tx2);white-space:nowrap}
+  .lp-row .lp-row-del{flex:0 0 auto;width:22px;height:22px;padding:0;border-radius:6px;
+                      border:1px solid var(--bd);background:#fff;color:#c0392b;
+                      font-size:13px;line-height:1;cursor:pointer}
+  .lp-row .lp-row-del:hover{border-color:#f0c8c8;background:#fdf4f3}
   /* 安全区（可定制范围）编辑面板 */
   .zn-dim{position:absolute;background:rgba(20,21,25,.26);pointer-events:none;z-index:1}
   .zn-zone{position:absolute;box-sizing:border-box;border:1.5px dashed #c0392b;background:rgba(192,57,43,.10);cursor:move;z-index:3}
@@ -450,6 +492,23 @@
         <button class="dark-btn lp-add" id="lpAdd">＋ 添加品牌LOGO</button>
         <p class="lp-none" id="lpNone">这个型号还没有品牌LOGO，点上面的按钮添加（默认落在画布正中心）。</p>
         <div class="lp-fields" id="lpFields">
+        <!-- ⛔ 2026-10-08 起一个型号可放 1~3 个品牌 LOGO（各自的位置/尺寸/角度/颜色/图形独立）。
+             下面是列表头 + 列表本体：只有 1 个时列表默认收起但**不隐藏头部**，
+             否则用户在单个 LOGO 的型号上看不到「再加一个」的入口。
+             ⛔ 别把列表做成唯一入口 —— 「＋ 添加品牌LOGO」在 0 个时仍要独立可用。 -->
+        <div class="lp-list-head">
+          <b id="lpListCap">品牌LOGO（1/3）</b>
+          <button class="mini-dark" id="lpAdd2" type="button">＋ 再添加一个</button>
+        </div>
+        <div class="lp-list" id="lpList" hidden></div>
+        <label>LOGO 图形</label>
+        <div class="lp-src" id="lpSrcRow">
+          <span class="lp-src-thumb" id="lpSrcThumb"></span>
+          <span class="lp-src-name" id="lpSrcName">默认字标</span>
+          <button class="mini-dark" id="lpUpBtn" type="button">上传自定义</button>
+          <button class="mini-dark" id="lpRstBtn" type="button" hidden>恢复默认</button>
+        </div>
+        <input type="file" id="lpFile" accept="image/png,image/jpeg,image/webp" hidden>
         <label>字标长度（mm）</label><input type="number" id="lpLen" step="1" min="5" max="300">
         <label>旋转角度（顺时针，度）</label><input type="number" id="lpRot" step="1">
         <label>颜色</label><input type="color" id="lpColor" value="#a6a7ac">
@@ -667,11 +726,42 @@ function syncEnvChip(){
     +' ｜ 草稿 '+(d&&d.cfg?draftStamp()+' 未传':'无')
     +' ｜ '+BUILD;
 }
-var lastSrc='api';   /* 最近一次读取的来源；enter() 靠它决定要不要用成功提示盖掉警告 */
+var lastSrc='api';   /* 最近一次读取的来源；enter() 靠它决定要不要用成功提示盖过警告 */
 var state={models:{},pinnedCount:0,dirty:false,puts:[],dels:[],pendingCopy:[],blocked:[],busy:false};
-var draft={model:'',items:[],editKey:'',geo:null,brandLogo:null};
+var draft={model:'',items:[],editKey:'',geo:null,brandLogo:null,brandLogos:null};
 window.__mrDraft=function(){return draft;};
-var lp={key:null,cxMm:0,cyMm:0,lenMm:DEFAULT_LOGO_LEN,rot:DEFAULT_LOGO_ROT,color:'#a6a7ac',pxPerMmDisp:1,src:''};
+/* ⛔ 2026-10-08 起一个型号支持**最多 3 个**品牌 LOGO，每个各自独立：位置/尺寸/角度/颜色/图形。
+   实现取「**保持 lp 的字段名不变**」这条路 —— 让 lp 永远指向列表里当前选中的那一项：
+     lpList = 全部 LOGO 项；lp = lpList[lpIdx]（**同一个对象引用**，改 lp 就是改列表里那一项）。
+   ⛔ 这样做是为了让下面几百行已经写好、且经过验证的 `lp.xxx` 逻辑一行都不用改
+      （lp.cxMm / lp.lenMm / lp.customUrl / lp.customBlob …全部照旧）。
+      换选中项 = 改 lpIdx + 把 lp 重新指向那个对象，仅此而已。
+   ⛔ 绝对不许把 lp 换成「容器对象」（lp.cur.xxx）—— 那会波及全文两百多处引用，
+      漏一处就是运行时崩，收益为零。
+   每项字段：
+     { cxMm, cyMm, lenMm, rot, color,          ← 位置与外观（会被写进配置）
+       customUrl, customBlob, customName }     ← 图形来源；customUrl 写进配置的 src
+   ⛔ 每项的 customBlob 必须**各自独立** —— 两个 LOGO 各传一张图，
+      共享同一个 blob 引用会让保存时两条 src 都指向最后那次上传的图。 */
+var lpList=[];
+var lpIdx=0;
+var lp={cxMm:0,cyMm:0,lenMm:DEFAULT_LOGO_LEN,rot:DEFAULT_LOGO_ROT,color:'#a6a7ac',
+        customUrl:'',customBlob:null,customName:''};
+var lpKey=null;      /* 面板正在编辑哪个型号；新建型号时为空串 */
+var lpMm=0;          /* 该型号的画布边长（mm），给「默认放正中心」用 */
+function lpNewItem(){
+  return {cxMm:0,cyMm:0,lenMm:DEFAULT_LOGO_LEN,rot:DEFAULT_LOGO_ROT,color:'#a6a7ac',
+          customUrl:'',customBlob:null,customName:''};
+}
+/* ⛔ 切换当前编辑的那一个 LOGO。**唯一入口** —— 别在别处直接 lp=...
+   换完必须把右侧所有控件（长度/角度/颜色/图形行/列表高亮）整体重刷一遍，
+   否则输入框还显示上一个 LOGO 的值，用户一改就写错对象。 */
+function lpSelect(i){
+  if(!lpList.length){lpIdx=0;lp=null;return false;}
+  lpIdx=Math.max(0,Math.min(lpList.length-1,i));
+  lp=lpList[lpIdx];
+  return true;
+}
 var lpAdded=false;   /* 面板里当前有没有 LOGO：没有时只显示「＋ 添加品牌LOGO」 */
 
 var $=function(id){return document.getElementById(id);};
@@ -784,7 +874,7 @@ function loadModels(){
     state.models=dk.cfg.models;
     state.pinnedCount=dk.cfg.pinnedCount;
     state.dirty=false;state.puts=[];state.dels=[];state.pendingCopy=[];state.blocked=[];
-    draft={model:'',items:[],editKey:'',geo:null,brandLogo:null};
+    draft={model:'',items:[],editKey:'',geo:null,brandLogo:null,brandLogos:null};
     $('newModel').value='';
     $('upTitle').textContent='新增型号与图片';
     renderList();renderPreviews();refreshPending();syncDraftChip();
@@ -826,7 +916,7 @@ function loadModels(){
     state.models=(j&&j.models)||{};
     state.pinnedCount=(j&&j.pinnedCount);
     state.dirty=false;state.puts=[];state.dels=[];state.pendingCopy=[];state.blocked=[];
-    draft={model:'',items:[],editKey:'',geo:null,brandLogo:null};
+    draft={model:'',items:[],editKey:'',geo:null,brandLogo:null,brandLogos:null};
     $('newModel').value='';
     $('upTitle').textContent='新增型号与图片';
     renderList();renderPreviews();refreshPending();syncDraftChip();
@@ -870,7 +960,7 @@ function renderList(){
           esc(k)+
           '<button class="icon-btn del" data-act="mdel" data-m="'+esc(k)+'" title="删除型号">'+ICON_DEL+'</button></span>'+
         '<button class="mini-dark" data-act="mimg" data-m="'+esc(k)+'">'+ICON_EDIT+'修改</button>'+
-        '<button class="mini-dark'+(state.models[k].brandLogo?' lp-on':'')+'" data-act="mlogo" data-m="'+esc(k)+'">品牌LOGO定位</button>'+
+        '<button class="mini-dark'+(brandLogoItemsOf(state.models[k]).length?' lp-on':'')+'" data-act="mlogo" data-m="'+esc(k)+'">品牌LOGO定位</button>'+
         '<button class="mini-dark'+(modelZones(k).length?' zn-on':'')+'" data-act="mzone" data-m="'+esc(k)+'">安全区</button>'+
         '<button class="mini-dark m-pin'+(isPinned(k)?' pin-on':'')+'" data-act="'+(isPinned(k)?'munpin':'mtop')+'" data-m="'+esc(k)+'" title="'+(isPinned(k)?'取消置顶（回到普通型号）':'置顶到最前面')+'" aria-label="'+(isPinned(k)?'取消置顶':'置顶')+'" aria-pressed="'+(isPinned(k)?'true':'false')+'">'+PIN_SVG+'</button>'+
       '</div>'+
@@ -1492,21 +1582,30 @@ function packUpload(items,model,keepColors,opt){
 
   var key='MR_'+model,lower=model.toLowerCase();
   var prev=state.models[key]||null;
-  /* 三个字段必须在后台「什么都不做」时原样继承，否则等于每次上传图片都把它们抹掉：
-     · brandLogo —— 品牌 LOGO 落点。新型号取定位面板暂存值；覆盖已有型号时若没重新定位则保留原值。
+  /* 四个字段必须在后台「什么都不做」时原样继承，否则等于每次上传图片都把它们抹掉：
+     · brandLogo  —— 品牌 LOGO 落点（老字段，正式版仍认它）。
+     · brandLogos —— 品牌 LOGO 落点数组（2026-10-08 起，支持 1~3 个）。
      · logoMax  —— 用户可上传 LOGO 的尺寸上限。原本每个型号不同（如 9100 是 120×80），
                    早前这里写死 MAX_LOGO_MM(60×60)，导致只要从后台上传一次图片，
                    该型号的上限就被永久改成 60×60。
      · safeZones —— 可定制范围。用「修改」重传图片是很日常的操作，
                    丢了它等于安全区每次改图都要重画一遍。 */
   var keepLogo=opt.brandLogo||(prev&&prev.brandLogo)||null;
+  var keepLogos=Array.isArray(opt.brandLogos)?opt.brandLogos
+               :((prev&&Array.isArray(prev.brandLogos))?prev.brandLogos:null);
   var keepLogoMax=(prev&&prev.logoMax)||{wMm:MAX_LOGO_MM,hMm:MAX_LOGO_MM};
   var keepZones=(prev&&Array.isArray(prev.safeZones))?prev.safeZones:[];
   var out={key:key,model:{id:key,pxPerMm:g.px,canvasMm:Math.round(g.side/g.px*10)/10,
     logoMax:{wMm:Number(keepLogoMax.wMm)||MAX_LOGO_MM,hMm:Number(keepLogoMax.hMm)||MAX_LOGO_MM},
     colors:[]},files:[],keepColors:keepColors||[]};
   if(keepLogo)out.model.brandLogo=keepLogo;
+  if(keepLogos&&keepLogos.length)out.model.brandLogos=keepLogos;
   if(keepZones.length)out.model.safeZones=keepZones;
+  /* ⛔ 2026-10-08：新型号若带了自定义 LOGO，图必须跟着型号图片一起提交 ——
+     配置里只有 src 路径，图不上传就是死链（前端取不到图，LOGO 直接不显示）。
+     ⛔ 文件名用 **out.key 现算**，不能用 lpKey（新型号这时它还是空的）。
+     ⛔ 支持多张：opt.customLogoBlobs = [{path,blob}]，各自独立上传。 */
+  if(Array.isArray(opt.customLogoBlobs)&&opt.customLogoBlobs.length)out.customLogoBlobs=opt.customLogoBlobs;
   return Promise.all(items.map(function(it){
     var cv=cropTo(it.canvas,g.cx,g.cy,g.side);
     var base='test-assets/'+'mr_'+lower+'_'+fileSlug(it.label)+'_trim';
@@ -1514,7 +1613,14 @@ function packUpload(items,model,keepColors,opt){
       out.files.push({path:base+'.png',blob:bs[0]},{path:base+'.webp',blob:bs[1]});
       out.model.colors.push({key:fileSlug(it.label),label:it.label.trim(),image:base+'.png',webp:base+'.webp'});
     });
-  })).then(function(){return out;});
+  })).then(function(){
+    /* 自定义 LOGO 图：跟在产品图后面一起进 files，走同一套上传通道 */
+    if(out.customLogoBlobs&&out.customLogoBlobs.length){
+      out.customLogoBlobs.forEach(function(f){if(f&&f.path&&f.blob)out.files.push(f);});
+      delete out.customLogoBlobs;
+    }
+    return out;
+  });
 }
 /* 新增型号：右侧栏 */
 function buildUpload(){
@@ -1523,7 +1629,18 @@ function buildUpload(){
   if(!g)return Promise.reject(new Error('图片宽度不一致，同一个型号必须用同样宽度的图'));
   var model=normModel($('newModel').value||draft.model);
   if(!model)return Promise.reject(new Error('请填写型号名称'));
-  return packUpload(draft.items,model,[],{geo:g,brandLogo:draft.brandLogo});
+  /* ⛔ 新型号的自定义 LOGO 图也要一起提交：路径与 lpSave 里算的**必须完全一致**
+     （同一把 customLogoPath 尺子），否则配置里的 src 指向一个没人上传过的路径。
+     ⛔ 只在还没有正式键名（lpKey 为空）时接管：覆盖已有型号时 buildUpload 不负责它，
+        那条路走 lpSave 自己。 */
+  var blobs=[];
+  if(!lpKey&&Array.isArray(lpList)){
+    lpList.slice(0,MAX_LP_LOGOS).forEach(function(it,i){
+      if(it.customBlob)blobs.push({path:customLogoPath('MR_'+model,i),blob:it.customBlob});
+    });
+  }
+  return packUpload(draft.items,model,[],{geo:g,brandLogo:draft.brandLogo,
+    brandLogos:draft.brandLogos,customLogoBlobs:blobs});
 }
 
 /* ========== 本机图片仓（仅开发环境 / 第①级本地） ==========
@@ -2115,14 +2232,33 @@ function obbHit(a,b){
   return true;
 }
 function zoneBoxOf(z){return {cx:z.xMm+z.wMm/2,cy:z.yMm+z.hMm/2,w:z.wMm,h:z.hMm,ang:0};}
-function brandObb(){
-  if(!zp.brand||!(zp.brand.lenMm>0))return null;
-  var ar=BRAND_ASPECT||14.076;
-  return {cx:zp.brand.cxMm,cy:zp.brand.cyMm,w:zp.brand.lenMm,h:zp.brand.lenMm/ar,ang:zp.brand.rot||0};
+/* ⛔ 2026-10-08：品牌 LOGO 参考是**多个**（最多 3 个），逐个判是否落在任一安全区内。
+   · brandObbOf(b) —— 单个的外接有向矩形；宽高比优先用解码后的真实值（zp.arCache），
+     拿不到才退字标那个 BRAND_ASPECT（自定义图的比例完全不是 14.076）。
+   · brandInZones() —— **全部**都要在区内才算合格（有一个露在区外就要提醒），
+     否则用户配了 3 个 LOGO、只有 1 个合格也会看到「可以定制」。 */
+function brandObbOf(b,i){
+  if(!b||!(b.lenMm>0))return null;
+  var ar=(zp.arCache&&zp.arCache[i]>0)?zp.arCache[i]:(BRAND_ASPECT||14.076);
+  return {cx:b.cxMm,cy:b.cyMm,w:b.lenMm,h:b.lenMm/ar,ang:b.rot||0};
 }
+function brandObb(){return brandObbOf((zp.brands||[])[0],0);}
 function brandInZones(){
-  var o=brandObb();if(!o)return true;
-  return zp.zones.some(function(z){return obbHit(o,zoneBoxOf(z));});
+  var list=zp.brands||[];
+  if(!list.length)return true;
+  return list.every(function(b,i){
+    var o=brandObbOf(b,i);if(!o)return true;
+    return zp.zones.some(function(z){return obbHit(o,zoneBoxOf(z));});
+  });
+}
+/* 有几个品牌LOGO、有几个不在区内（给提示语用，让用户知道是哪个不合格） */
+function brandOutCount(){
+  var list=zp.brands||[],n=0;
+  list.forEach(function(b,i){
+    var o=brandObbOf(b,i);if(!o)return;
+    if(!zp.zones.some(function(z){return obbHit(o,zoneBoxOf(z));}))n++;
+  });
+  return n;
 }
 function znSel(){return (zp.sel>=0&&zp.sel<zp.zones.length)?zp.zones[zp.sel]:null;}
 /* stage 里 1mm 对应多少 px：底图是 width:100% 撑满 stage，用它的实测宽度换算 */
@@ -2169,39 +2305,56 @@ function renderZoneStage(){
       }
     }
   }
-  /* 品牌LOGO 位置：只读参考，让用户直接看出它有没有落在安全区里。
+  /* 品牌LOGO 位置：只读参考，让用户直接看出它们有没有落在安全区里。
      ⛔ 2026-10-05 用户要求：**去掉虚线框，直接显示 LOGO 本体**。
      所以这里除了记下位置，还要把 LOGO 图按同一外接矩形画上去。
-     图源优先用型号自带的 brandLogo 素材（没有就退回内联 SVG 占位图形）。 */
-  if(zp.brand&&zp.brand.lenMm>0){
-    var ar=BRAND_ASPECT||14.076,hMm=zp.brand.lenMm/ar,wMm=zp.brand.lenMm;
-    var rad=(zp.brand.rot||0)*Math.PI/180;
+     ⛔ 2026-10-08：一个型号可能有多个（最多 3 个），全部画出来 ——
+        只画第 1 个会让用户以为「只配了一个」，安全区判定就白看了。
+     ⛔ 外接矩形用**实际图片宽高比**算，不再用死常量 BRAND_ASPECT：
+        自定义图的宽高比完全不是字标那个 14.076，用常量会让占位框和真图对不上。 */
+  (zp.brands||[]).forEach(function(b,i){
+    if(!(b.lenMm>0))return;
+    var ar=BRAND_ASPECT||14.076;
+    var wMm=b.lenMm,hMm=b.lenMm/ar;
+    var src=zp.logoSrcs&&zp.logoSrcs[i];
+    /* 拿到图之后用图自己的宽高比重算一次（拿不到就先用字标比例兜着） */
+    if(src&&zp.arCache&&zp.arCache[i]>0)ar=zp.arCache[i];
+    hMm=wMm/ar;
+    var rad=(b.rot||0)*Math.PI/180;
     var hx=Math.abs(wMm*Math.cos(rad))+Math.abs(hMm*Math.sin(rad));
     var hy=Math.abs(wMm*Math.sin(rad))+Math.abs(hMm*Math.cos(rad));
-    var bx=(zp.brand.cxMm-hx/2)*k,by=(zp.brand.cyMm-hy/2)*k;
+    var bx=(b.cxMm-hx/2)*k,by=(b.cyMm-hy/2)*k;
     var bl=document.createElement('div');bl.className='zn-brand';
     bl.style.left=bx+'px';bl.style.top=by+'px';
     bl.style.width=(hx*k)+'px';bl.style.height=(hy*k)+'px';
-    bl.title='品牌LOGO 当前位置（只读参考）';
+    bl.title='品牌LOGO '+(i+1)+' 当前位置（只读参考）';
     st.appendChild(bl);
-    /* LOGO 本体：按 zp.brand.rot 旋转，用与外接矩形一致的居中变换，
+    /* LOGO 本体：按 b.rot 旋转，用与外接矩形一致的居中变换，
        保证渲染结果与上面那个只读标记框严丝合缝。 */
     var lg=document.createElement('img');
     lg.className='zn-logo';
     lg.alt='';
     lg.draggable=false;
-    lg.style.left=((zp.brand.cxMm-wMm/2)*k)+'px';
-    lg.style.top=((zp.brand.cyMm-hMm/2)*k)+'px';
+    lg.style.left=((b.cxMm-wMm/2)*k)+'px';
+    lg.style.top=((b.cyMm-hMm/2)*k)+'px';
     lg.style.width=(wMm*k)+'px';lg.style.height=(hMm*k)+'px';
-    lg.style.transform='rotate('+(zp.brand.rot||0)+'deg)';
+    lg.style.transform='rotate('+(b.rot||0)+'deg)';
     lg.style.transformOrigin='center center';
-    /* 颜色：型号里存的是客户 LOGO 的着色（默认浅灰 #a6a7ac）。
-       用 CSS filter 无法精确上色，这里让源图自己带上颜色即可 ——
-       brandLogo 素材本身就是最终效果图。 */
-    lg.src=zp.logoSrc||'';
+    /* 颜色：默认字标靠 SVG 自己带色；自定义图由 currentLogoUrl 那侧预先染好色。
+       用 CSS filter 无法精确上色，所以让源图自己带上颜色。 */
+    lg.src=src||'';
+    lg.onload=function(){
+      /* 首次解码后记下真实宽高比，下一轮 renderZonePanel 用真实比例重排 */
+      if(!zp.arCache)zp.arCache=[];
+      var a=this.naturalWidth&&this.naturalHeight?(this.naturalWidth/this.naturalHeight):0;
+      if(a>0&&Math.abs(a-(zp.arCache[i]||0))>0.01){
+        zp.arCache[i]=a;
+        if(!$('zonePanel').hidden)renderZonePanel();
+      }
+    };
     lg.onerror=function(){if(this.parentNode)this.parentNode.removeChild(this);};
     st.appendChild(lg);
-  }
+  });
   zs.forEach(function(z,idx){
     var el=document.createElement('div');
     el.className='zn-zone'+(idx===zp.sel?' sel':'');
@@ -2250,13 +2403,15 @@ function renderZonePanel(){
     pos.hidden=!has;
   }
   if(flag){
-    if(has&&brandObb()){
-      var ok=brandInZones();
+    var nb=(zp.brands||[]).length;
+    if(has&&nb){
+      var out=brandOutCount();
       flag.hidden=false;
-      flag.className='zn-flag'+(ok?'':' bad');
-      flag.textContent=ok
-        ?'品牌LOGO 落在安全区内，可以定制。'
-        :'提醒：品牌LOGO 不在任何安全区内，工厂可能无法定制。';
+      flag.className='zn-flag'+(out?' bad':'');
+      flag.textContent=out
+        ?('提醒：有 '+out+' 个品牌LOGO 不在任何安全区内，工厂可能无法定制。')
+        :(nb>1?('全部 '+nb+' 个品牌LOGO 都落在安全区内，可以定制。')
+              :'品牌LOGO 落在安全区内，可以定制。');
     }else{flag.hidden=true;flag.textContent='';}
   }
   renderZoneStage();
@@ -2270,20 +2425,25 @@ function openZonePanel(key){
   zp.key=key;zp.mm=mm;
   zp.zones=modelZones(key).map(function(z){return {xMm:z.xMm,yMm:z.yMm,wMm:z.wMm,hMm:z.hMm};});
   zp.sel=zp.zones.length?0:-1;
-  var b=m.brandLogo||null;
-  zp.brand=b?{cxMm:Number(b.cxMm)||0,cyMm:Number(b.cyMm)||0,
-              lenMm:Number(b.lenMm)||0,rot:Number(b.rot)||0,color:b.color||''}:null;
-  /* ⛔ 画布上要「直接显示 LOGO 本体」（2026-10-05 用户要求去掉虚线框），
-     所以这里异步取一份着色后的 LOGO 图（brand-logo.svg + __BRAND_FILL__ 换色）。
-     取到之前 renderZoneStage() 会跳过 <img>，不会留空框。 */
-  zp.logoSrc=null;
-  if(zp.brand){
-    brandLogoUrl(zp.brand.color||'#a6a7ac').then(function(u){
+  /* ⛔ 2026-10-08：安全区面板里显示的品牌 LOGO 参考是**多个**（一个型号最多 3 个）。
+     这里只做「只读参考」，让用户看出这些 LOGO 有没有落在安全区里。
+     ⛔ 每个 LOGO 各取一份图源（默认字标按各自的 color 着色；自定义图用它自己的 src）。 */
+  zp.brands=brandLogoItemsOf(m).map(function(b){
+    return {cxMm:Number(b.cxMm)||0,cyMm:Number(b.cyMm)||0,
+            lenMm:Number(b.lenMm)||0,rot:Number(b.rot)||0,
+            color:b.color||'',src:b.src||''};
+  });
+  zp.logoSrcs=[];
+  /* ⛔ 换型号必须清掉上一型号的宽高比缓存，否则新图的占位框会沿用旧比例（错位） */
+  zp.arCache=[];
+  zp.brands.forEach(function(b,i){
+    var q=(b.src?Promise.resolve(customLogoDisplayUrl(b.src)):brandLogoUrl(b.color||'#a6a7ac'));
+    q.then(function(u){
       if(zp.key!==key)return;              /* 面板已被切换，丢弃过期结果 */
-      zp.logoSrc=u;
+      zp.logoSrcs[i]=u;
       if(!$('zonePanel').hidden)renderZonePanel();
     }).catch(function(){});
-  }
+  });
   /* ⛔ 2026-10-05 用户要求：标题只留型号名（去掉「安全区（可定制范围） · 」前缀） */
   $('znTitle').textContent=key;
   $('zonePanel').hidden=false;
@@ -2449,25 +2609,147 @@ function brandLogoUrl(color){
     return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(t.replace(/__BRAND_FILL__/g,color||'#a6a7ac'));
   });
 }
+/* ⛔ 2026-10-08 「当前该画什么 LOGO」的**唯一入口**。
+   有自定义图就用自定义图，没有就回落到默认字标。
+   ⛔ 别在别处直接调 brandLogoUrl()：那会在用户传了自定义 LOGO 之后
+      又被默认字标覆盖回去（「改了颜色，我上传的图就没了」）。
+   ⛔ 颜色对**两种图源都生效**（2026-10-08 用户明确要求「上传之后也要能改颜色」）：
+      · 默认字标 —— SVG 里的 __BRAND_FILL__ 换成 color，本身就是着色的；
+      · 自定义图 —— 位图，先解码再用 tintImageEl() 逐像素刷成 color。
+      两者出来的必须是同一个视觉效果，否则后台看到的 ≠ 前端显示的。 */
+function currentLogoUrl(){
+  if(!lp.customUrl)return brandLogoUrl(lp.color);
+  var u=lp.customUrl;
+  if(!lp.color)return Promise.resolve(u);
+  /* 自定义图 + 有颜色 → 解码后染色，回一个 dataURL。
+     ⛔ 透明像素不刷（否则 LOGO 会被刷成一个实心方块）。
+     ⛔ 不用 CSS filter 近似上色：色相旋转对灰/黑无效（2026-09-24 踩过的坑）。 */
+  return loadImgEl(u).then(function(el){
+    var c=tintImageEl(el,lp.color);
+    return c?c.toDataURL('image/png'):u;
+  }).catch(function(){return u;});     /* 取不到图就回原地址，让上层走它自己的失败路径 */
+}
+/* 把地址解成 <img> 元素（同一地址复用，避免每次切色都重新请求） */
+var lpImgCache={};
+function loadImgEl(u){
+  if(lpImgCache[u])return Promise.resolve(lpImgCache[u]);
+  return new Promise(function(res,rej){
+    var im=new Image();
+    im.crossOrigin='anonymous';
+    im.onload=function(){lpImgCache[u]=im;res(im);};
+    im.onerror=function(){rej(new Error('LOGO 图加载失败：'+u));};
+    im.src=u;
+  });
+}
+/* ⛔ 2026-10-08 用户报「自定义 LOGO 上传后没办法改颜色」→ 已改为**整图刷成所选颜色**
+   （与默认字标的染色语义完全一致：不透明像素全刷、alpha 原样保留）。
+   ⛔ 别改成色相旋转：黑色/灰色没有 hue，旋转等于什么都不做。
+   ⛔ 透明像素必须跳过，否则透明区会被刷成实心色块。 */
+function tintImageEl(imgEl,color){
+  var w=imgEl.naturalWidth||imgEl.width,h=imgEl.naturalHeight||imgEl.height;
+  if(!w||!h)return null;
+  var c=document.createElement('canvas');
+  c.width=w;c.height=h;
+  var ctx=c.getContext('2d',{willReadFrequently:true});
+  ctx.drawImage(imgEl,0,0,w,h);
+  var rgb=hexToRgb(color);
+  if(!rgb)return c;                    /* 颜色解析不出来就不动图 */
+  var d=ctx.getImageData(0,0,w,h),px=d.data;
+  for(var i=0;i<px.length;i+=4){
+    if(px[i+3]===0)continue;
+    px[i]=rgb[0];px[i+1]=rgb[1];px[i+2]=rgb[2];
+  }
+  ctx.putImageData(d,0,0);
+  return c;
+}
+function hexToRgb(s){
+  var m=/^#?([0-9a-f]{6})$/i.exec(String(s||'').trim());
+  if(!m)return null;
+  var n=parseInt(m[1],16);
+  return [(n>>16)&255,(n>>8)&255,n&255];
+}
+/* 自定义 LOGO 的线上素材路径：与产品图同一套命名规则，按型号独立，
+   放在 logo-custom/ 子目录里，避免和产品图混在一起。
+   ⛔ 一个型号最多 3 个自定义图，文件名必须能区分开：
+      第 1 个沿用老名字（xxx_logo.png，保证已发出去的配置继续有效），
+      第 2/3 个加序号后缀（xxx_logo2.png / xxx_logo3.png）。
+   ⛔ 别给全部统一加序号 —— 那会把线上已有的 xxx_logo.png 变成孤儿文件，
+      而正式素材是只读区、不允许我们删。 */
+function customLogoPath(key,idx){
+  var base='logo-custom/'+key.replace(/^MR_/,'').toLowerCase()+'_logo';
+  var i=Number(idx)||0;
+  return base+(i>0?String(i+1):'')+'.png';
+}
+/* 线上模式下自定义图走同源相对路径；本地模式下可能只在本机图片仓里。 */
+function customLogoDisplayUrl(path){
+  if(!path)return '';
+  if(!IS_LOCAL)return path;
+  return adminAssetUrl(path);
+}
+/* 把用户选的图片文件读成 dataURL，并同步刷新缩略图与 fabric */
+function lpSetCustomFromFile(file){
+  if(!file)return;
+  if(!/^image\/(png|jpeg|webp)$/.test(file.type)){
+    alert('请选择 PNG / JPG / WebP 格式的图片。');return;
+  }
+  var fr=new FileReader();
+  fr.onload=function(){
+    lp.customUrl=fr.result;
+    lp.customBlob=file;
+    lp.customName=file.name||'自定义图';
+    /* ⛔ 换图后**保留**原有位置/尺寸/角度（用户明确要求：改图不断定位）。
+       只把图形换掉，其余参数一个字不动。 */
+    renderLpSrc();
+    if(!lpAdded){
+      /* 还没添加 LOGO 就先传图 → 顺手当成「添加」处理，免得用户再点一次 */
+      lpAdded=true;
+      lp.cxMm=lpMm/2;lp.cyMm=lpMm/2;
+      $('lpLen').value=lp.lenMm;$('lpRot').value=lp.rot;
+    }
+    lpFabricRenderAll()
+      .then(function(){renderLpState();toastMsg('已换成自定义 LOGO，可继续拖动调整位置');});
+  };
+  fr.onerror=function(){alert('图片读取失败，请重试。');};
+  fr.readAsDataURL(file);
+}
+/* ⛔ 「这个型号配了哪些品牌 LOGO」的**唯一读取口径**（前端 test.html 里也有一份同款）。
+   ⛔ 向后兼容是硬要求（红线：models.json 是活数据、只许加字段不许改语义）：
+      老配置只有单个 `brandLogo` 对象 → 自动折成 [brandLogo]，行为一字不变。
+      新配置是 `brandLogos` 数组（最多 3 个），每项自带位置/尺寸/角度/颜色/图形。
+   ⛔ 返回的**永远是新数组**，改它不会动到 state.models 里的对象。 */
+var MAX_LP_LOGOS=3;
+function brandLogoItemsOf(m){
+  if(!m)return [];
+  var arr=Array.isArray(m.brandLogos)?m.brandLogos:[];
+  var out=[];
+  for(var i=0;i<arr.length&&out.length<MAX_LP_LOGOS;i++){
+    var o=arr[i];
+    if(o&&Number(o.lenMm)>0)out.push(o);
+  }
+  if(out.length)return out;
+  return (m.brandLogo&&Number(m.brandLogo.lenMm)>0)?[m.brandLogo]:[];
+}
 function openLogoPanel(key){
   var isNew=!key;
   /* 每次进面板都从干净状态开始：旧的节点引用必须清掉，否则「未添加」时
      残留的旧节点会被 applyLp() 当成当前 LOGO 摆上去。 */
   lp.logoEl=null;lp.srcEl=null;   /* 仅作兼容占位：fabric 改造后这两个 DOM 引用已不再使用 */
-  var mm,srcPromise,have=null;
+  var mm,srcPromise,has=[];
   if(isNew){
     if(!draft.items.length){alert('请先上传这个型号的图片，再定位LOGO');return;}
     calcDraft();
     if(!draft.geo){alert('图片还没准备好');return;}
-    lp.key='';
+    lpKey='';
     mm=draft.geo.side/draft.geo.px;
     srcPromise=Promise.resolve(draft.items[0].url);
     var ex=state.models['MR_'+normModel($('newModel').value)];
-    have=(ex&&ex.brandLogo)||draft.brandLogo||null;
+    /* ⛔ 新型号：优先用内存里候选型号的落点，其次用草稿里暂存的。
+       两条都支持数组（brandLogos）与老单对象（brandLogo）。 */
+    has=brandLogoItemsOf(ex).concat(brandLogoItemsOf(draft));
   }else{
     var m=state.models[key];
     if(!m)return;
-    lp.key=key;
+    lpKey=key;
     mm=m.canvasMm;
     var c0=(m.colors||[])[0];
     if(!c0){alert('该型号还没有图片');return;}
@@ -2476,22 +2758,42 @@ function openLogoPanel(key){
     srcPromise=IS_LOCAL
       ? adminAssetsPromise.then(function(){return adminAssetUrl(c0.image);})
       : Promise.resolve(c0.image);
-    have=m.brandLogo||null;
+    has=brandLogoItemsOf(m);
   }
-  lpAdded=!!have;
-  /* ⛔ 2026-10-05 用户要求：标题只留型号名（去掉「品牌LOGO定位 · 」前缀）。
-     新型号这时还没有正式键名，就用输入框里填的那个。 */
-  $('lpTitle').textContent=isNew?$('newModel').value:key;
-  if(have){
-    lp.cxMm=have.cxMm;lp.cyMm=have.cyMm;lp.lenMm=have.lenMm;lp.rot=have.rot||0;lp.color=have.color||'#a6a7ac';
-  }else{
+  /* ⛔ 2026-10-08 起是一整个列表。**逐项深拷贝**成独立对象：
+     直接用配置里的对象引用会让「面板里改了但没点保存」就把内存 state 改了，
+     而 state 是「当前真值」—— 等于没点保存也生效，关闭面板都退不回去。
+     每个 item 的 customBlob 也各归各的（见 lpList 上方注释）。 */
+  lpList=has.slice(0,MAX_LP_LOGOS).map(function(h,i){
+    var it=lpNewItem();
+    it.cxMm=Number(h.cxMm)||0;it.cyMm=Number(h.cyMm)||0;
+    it.lenMm=Number(h.lenMm)>0?Number(h.lenMm):DEFAULT_LOGO_LEN;
+    it.rot=Number(h.rot)||0;
+    it.color=h.color||'#a6a7ac';
+    /* ⛔ 配置里带 src 就是这个型号的这一条用了自定义 LOGO。
+       `customBlob` 必须清空 —— 它表示「本次待上传的新图」，
+       只是把面板打开、什么也没传，不该触发上传。 */
+    it.customUrl=h.src||'';
+    it.customName=h.srcNm||'';
+    it.customBlob=null;
+    return it;
+  });
+  /* 一个都没有时，给一个「待添加」的空位（参数先默认落正中心），
+     但 lpAdded 保持 false —— 不许默认摆上画布（用户明确要求）。 */
+  if(!lpList.length){
+    var n=lpNewItem();
     /* 新型号默认放正中心。颜色给浅灰（与 9031SJ 的实测色一致），
        它在深色包体上对比很低、容易被误判成「没显示」，
        所以下面面板里放一句提示，让用户知道改颜色即可。 */
-    lp.cxMm=mm/2;lp.cyMm=mm/2;lp.lenMm=DEFAULT_LOGO_LEN;lp.rot=DEFAULT_LOGO_ROT;lp.color='#a6a7ac';
+    n.cxMm=mm/2;n.cyMm=mm/2;
+    lpList=[n];
   }
-  lp.mm=mm;
-  $('lpLen').value=lp.lenMm;$('lpRot').value=lp.rot;$('lpColor').value=lp.color;
+  lpSelect(0);
+  lpAdded=has.length>0;
+  lpMm=mm;
+  /* ⛔ 2026-10-05 用户要求：标题只留型号名（去掉「品牌LOGO定位 · 」前缀）。
+     新型号这时还没有正式键名，就用输入框里填的那个。 */
+  $('lpTitle').textContent=isNew?$('newModel').value:key;
   $('logoPanel').hidden=false;
   renderLpState();
   /* ⛔ 画布整体交给 fabric：底图 + 品牌LOGO 都是 fabric 对象，
@@ -2502,11 +2804,17 @@ function openLogoPanel(key){
     /* 底图按解码后的真实宽高铺满画布；失败时 stageImgGuard 会给出可见说明 */
     return lpFabricLoadBag(src);
   }).then(function(){
-    return brandLogoUrl(lp.color);
-  }).then(function(u){
-    /* ⛔ 未添加时不许默认摆上 LOGO（用户明确要求，见 renderLpState 注释） */
-    if(!lpAdded){renderLpState();return;}
-    return lpFabricSetLogo(u).then(function(){renderLpState();});
+    /* ⛔ 2026-10-08：列表里**每一项**的自定义图都要转成能真正取到图的地址 ——
+       本地模式下图可能只在本机图片仓（IndexedDB），照配置里的相对路径取会 404，
+       该项就静默不显示（正是用户报的「后端画布里面不显示」的另一半原因）。
+       ⛔ 必须逐项转：只转 `lp` 那一项会让第 2/3 个 LOGO 依然取不到图。 */
+    lpList.forEach(function(it){
+      if(it&&it.customUrl)it.customUrl=customLogoDisplayUrl(it.customUrl);
+    });
+    /* ⛔ 未添加时不许默认摆上 LOGO（用户明确要求，见 renderLpState 注释）。
+       未添加时也要走一次 renderAll —— 它会把画布清干净（防止上次残留）。 */
+    if(!lpAdded){return lpFabricRenderAll().then(function(){renderLpState();});}
+    return lpFabricRenderAll().then(function(){renderLpState();});
   }).catch(function(e){alert(e.message||e);$('logoPanel').hidden=true;});
 }
 /* 面板的「有LOGO / 没有LOGO」两态。
@@ -2519,25 +2827,180 @@ function renderLpState(){
   if(none)none.hidden=on;
   if(fields)fields.classList.toggle('off',!on);
   ['lpLen','lpRot','lpColor'].forEach(function(id){var el=$(id);if(el)el.disabled=!on;});
+  /* ⛔ 2026-10-08：LOGO 图形来源行跟着「有没有 LOGO」一起启停，
+     和上面三个参数控件保持同一口径 —— 没有 LOGO 时不许传图、也不许恢复默认。 */
+  ['lpUpBtn','lpRstBtn'].forEach(function(id){var el=$(id);if(el)el.disabled=!on;});
+  /* ⛔ 「再添加一个」：满 3 个就禁用（不是隐藏 —— 藏起来用户会以为功能没了）。
+     ⛔ 未添加时也禁用：那一步该走「＋ 添加品牌LOGO」大按钮。 */
+  var a2=$('lpAdd2');
+  if(a2)a2.disabled=(!on)||lpList.length>=MAX_LP_LOGOS;
+  renderLpList();
+  renderLpSrc();
   var clr=$('lpClear');if(clr)clr.disabled=!on;
+  /* ⛔ 当前选中项的参数要推回输入框：切换 LOGO 之后不重刷，
+     输入框还显示上一个的值，用户一改就写错对象。 */
+  if(on&&lp){
+    $('lpLen').value=lp.lenMm;$('lpRot').value=lp.rot;$('lpColor').value=lp.color;
+  }
   /* ⛔ LOGO 的显隐由 fabric 对象的 visible 管（旧实现是切 DOM <img> 的 display） */
   /* ⛔ 画布上不放虚线占位块和提示文字：用户明确要求去掉（视觉上像压了一层白膜）。
      未添加时只看右侧的「＋ 添加品牌LOGO」按钮即可。 */
   var emp=$('lpEmpty');if(emp)emp.hidden=true;
   applyLp();
 }
-/* 添加品牌LOGO：默认落在画布正中心，长度/角度取默认值，颜色取面板当前值 */
+/* ⛔ 2026-10-08 「LOGO 图形」动态部分的**唯一渲染入口**：
+   缩略图 + 名称 + 「恢复默认」按钮的显隐，全在这里算。
+   ⛔ 别在别处直接改 #lpSrcThumb / #lpSrcName 的内容 —— 会与这里打架。 */
+function renderLpSrc(){
+  var th=$('lpSrcThumb'), nm=$('lpSrcName'), rst=$('lpRstBtn');
+  if(!th||!nm)return;
+  var custom=!!lp.customUrl;
+  if(custom){
+    /* 自定义图：直接用当前生效的地址渲染缩略图（dataURL 或线上路径） */
+    th.innerHTML='';
+    var im=document.createElement('img');
+    im.src=lp.customUrl;im.alt='';
+    th.appendChild(im);
+    nm.textContent=lp.customName||'自定义 LOGO';
+    nm.title=lp.customName||'自定义 LOGO';
+    if(rst)rst.hidden=false;
+  }else{
+    /* 默认字标：缩略图直接内联一个 1:1 的 mini SVG，
+       ⛔ 不复用 brandSvgText() 的 dataURL —— 那是异步的，切图形时会出现
+          「先空白一下再出图」的抖动。这里一个静态字形足够表达「默认字标」。 */
+    th.innerHTML='<svg viewBox="0 0 24 24" fill="none"><path d="M3 17.5V7.2c0-.4.5-.6.8-.3l4.4 5.4c.2.2.5.2.7 0l3.9-4.1c.2-.2.5-.2.7 0l3.9 4.1c.2.2.5.2.7 0l4.4-5.4c.3-.3.8-.1.8.3v10.3" stroke="#a6a7ac" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    nm.textContent='默认字标';
+    nm.title='默认字标（brand-logo.svg）';
+    if(rst)rst.hidden=true;
+  }
+}
+/* ⛔ 2026-10-08 「LOGO 列表」的**唯一渲染入口**（一个型号 1~3 个，各自独立）。
+   交互与安全区面板的 .zn-list 同一套：点行 = 选中，行尾 × = 删掉这一个。
+   ⛔ 列表只有 1 项时**不隐藏整个列表头** —— 头部同时是「＋ 再添加一个」的入口，
+      藏了用户在单 LOGO 的型号上就找不到加第二个的地方了。
+   ⛔ 每行的小缩略图刻意不复用品牌 SVG 的 dataURL（异步 → 切行会闪），
+      固定画一个静态字标字形即可；用了自定义图的显示真实图片缩略。 */
+function renderLpList(){
+  var box=$('lpList'), cap=$('lpListCap');
+  if(!box)return;
+  if(cap)cap.textContent='品牌LOGO（'+lpList.length+'/'+MAX_LP_LOGOS+'）';
+  /* ⛔ 列表在**未添加**时隐藏：那时数组里是「待添加的空位」，不是真的 LOGO。 */
+  if(!lpAdded){box.hidden=true;box.innerHTML='';return;}
+  box.hidden=false;
+  box.innerHTML=lpList.map(function(it,i){
+    var thumb=it.customUrl
+      ?'<img src="'+esc(it.customUrl)+'" alt="">'
+      :'<svg viewBox="0 0 24 24" fill="none"><path d="M3 17.5V7.2c0-.4.5-.6.8-.3l4.4 5.4c.2.2.5.2.7 0l3.9-4.1c.2-.2.5-.2.7 0l3.9 4.1c.2.2.5.2.7 0l4.4-5.4c.3-.3.8-.1.8.3v10.3" stroke="#a6a7ac" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    var nm=it.customUrl?(it.customName||'自定义 LOGO'):'默认字标';
+    /* ⛔ 2026-10-08：行里带上中心坐标 —— 多 LOGO 默认都落画布正中心，
+       两个完全重叠时画布上「看起来只有一个」，用户会以为第二个没加上。
+       把坐标摆在行上，一眼就能看出「哦，两个都在，只是叠在一起」。
+       有 XY 也能判断该往哪边拖。 */
+    var cx=Math.round((Number(it.cxMm)||0)*10)/10, cy=Math.round((Number(it.cyMm)||0)*10)/10;
+    return '<div class="lp-row'+(i===lpIdx?' sel':'')+'" data-lpi="'+i+'" title="中心 X '+cx+' mm，Y '+cy+' mm">'+
+      '<span class="lp-row-th">'+thumb+'</span>'+
+      '<i>LOGO '+(i+1)+' · '+esc(nm)+'</i>'+
+      '<b>'+Math.round(it.lenMm)+'mm</b>'+
+      '<button class="lp-row-del" type="button" data-lpdel="'+i+'" title="删除这个 LOGO">×</button>'+
+    '</div>';
+  }).join('');
+}
+/* 列表点击（选中 / 删除）。走事件委托 —— 行是每次渲染重建的，
+   逐个 addEventListener 会随重渲染反复叠加。 */
+(function(){
+  var box=$('lpList');
+  if(!box)return;
+  box.addEventListener('click',function(e){
+    var del=e.target.closest?e.target.closest('[data-lpdel]'):null;
+    if(del){
+      e.stopPropagation();
+      lpDeleteItem(parseInt(del.getAttribute('data-lpdel'),10));
+      return;
+    }
+    var row=e.target.closest?e.target.closest('[data-lpi]'):null;
+    if(!row)return;
+    var i=parseInt(row.getAttribute('data-lpi'),10);
+    if(!(i>=0)||i===lpIdx)return;
+    lpSelect(i);
+    /* 切到的那一项要立刻画到画布上（图形可能完全不同：字标 vs 自定义图） */
+    lpFabricRenderAll()
+      .then(function(){renderLpState();});
+  });
+})();
+/* 删掉列表里的第 i 个 LOGO。
+   ⛔ 删到只剩 0 个 = 回到「未添加」态（画布上撤掉、右侧参数区禁用），
+      但**不改配置** —— 真正落盘只在「保存定位」时按当时的列表重算。
+   ⛔ 删掉当前选中项时，选中位要夹回合法范围，否则 lp 会指向已经不存在的对象。 */
+function lpDeleteItem(i){
+  if(!lpAdded||!(i>=0)||i>=lpList.length)return;
+  var wasSel=(i===lpIdx);
+  lpList.splice(i,1);
+  if(!lpList.length){
+    lpAdded=false;
+    lpSelect(0);                       /* 空了 → 把 lp 复位成一份默认值，避免悬空引用 */
+    lp=lpNewItem();
+    lp.cxMm=lpMm/2;lp.cyMm=lpMm/2;
+    /* ⛔ 用 lpFabricRenderAll()（它会清空 lpLogoObjs 并重画）——
+       不要手写 remove(lpLogoObj)，多 LOGO 后那个变量不存在，会静默什么都不做。 */
+    lpFabricRenderAll().then(function(){renderLpState();});
+    toastMsg('已移除全部品牌LOGO，点「保存定位」后生效');
+    return;
+  }
+  if(wasSel||i<lpIdx)lpSelect(wasSel?Math.min(i,lpList.length-1):lpIdx-1);
+  else lpSelect(lpIdx);
+  lpFabricRenderAll()
+    .then(function(){renderLpState();toastMsg('已删除该 LOGO，点「保存定位」后生效');});
+}
+/* ⛔ 「＋ 再添加一个」：把一个新 LOGO 加到列表末尾并选中它。
+   ⛔ 新版默认落画布正中心（与前端「LOGO 上传后固定落正中心」同一规则）；
+      若要避开已有的那个，由用户自己拖开 —— 不加自动错开（用户明确否过）。
+   ⛔ 2026-10-08：必须走 `lpFabricRenderAll()`（整体重建），
+      原来的 `lpFabricSetLogo()` 会把已有的那个 remove 掉 ——
+      那正是用户报的「上传两个 LOGO，后端画布里面不显示」的根因。 */
+function lpAddAnother(){
+  if(!lpAdded){toastMsg('请先点「＋ 添加品牌LOGO」');return;}
+  if(lpList.length>=MAX_LP_LOGOS){toastMsg('一个型号最多 '+MAX_LP_LOGOS+' 个品牌LOGO');return;}
+  var it=lpNewItem();
+  it.cxMm=lpMm/2;it.cyMm=lpMm/2;
+  it.color=(lp&&lp.color)||'#a6a7ac';    /* 沿用当前那个的颜色，省一步操作 */
+  lpList.push(it);
+  lpSelect(lpList.length-1);
+  lpFabricRenderAll()
+    .then(function(){
+      renderLpState();
+      /* ⛔ 2026-10-08：新版落在画布正中心，会和已有的那个**完全重叠**。
+         用户看到的就是「明明加了第二个，画布上还是一个」，以为功能坏了
+         （本轮报的「后端画布里面不显示」就是被这个放大出来的）。
+         不加自动错开（用户早前明确否过算法挪位），而是**说清楚 + 让人自己拖**。 */
+      if(lpList.length>1){
+        toastMsg('已添加第 '+lpList.length+' 个 LOGO（默认落在正中心，和上一个重叠了 —— 拖动它移开即可）');
+      }else{
+        toastMsg('已添加第 '+lpList.length+' 个品牌LOGO，拖到想要的位置');
+      }
+    });
+}
+
 function addLp(){
   if(lpAdded)return;
   if(!lpCanvas){toastMsg('画布还没准备好，稍等一下再试');return;}
+  /* ⛔ 第一次点「添加」= 把列表里那个「待添加的空位」转正。
+     列表里那份就是刚才 openLogoPanel 铺好的默认值，这里只需要选中它即可 ——
+     ⛔ 不要重新构造一份新对象，否则列表里那份空位永远留在数组里、变成幽灵行。 */
+  if(!lpList.length)lpList=[lpNewItem()];
+  lpSelect(lpList.length-1);
   lpAdded=true;
-  lp.cxMm=lp.mm/2;lp.cyMm=lp.mm/2;lp.lenMm=DEFAULT_LOGO_LEN;lp.rot=DEFAULT_LOGO_ROT;
-  lp.color=($('lpColor')&&$('lpColor').value)||'#a6a7ac';
-  $('lpLen').value=lp.lenMm;$('lpRot').value=lp.rot;$('lpColor').value=lp.color;
-  brandLogoUrl(lp.color).then(function(u){return lpFabricSetLogo(u);}).then(function(){renderLpState();});
+  if(!(Number(lp.cxMm)>0)&&!(Number(lp.cyMm)>0)){
+    /* 空位没被铺过位置（极少数路径）→ 现补一个正中心 */
+    lp.cxMm=lpMm/2;lp.cyMm=lpMm/2;lp.lenMm=DEFAULT_LOGO_LEN;lp.rot=DEFAULT_LOGO_ROT;
+    lp.color=($('lpColor')&&$('lpColor').value)||'#a6a7ac';
+  }
+  /* ⛔ 走整体重建：用户可能先传了自定义图、再点「添加」，
+     这时要摆上去的是自定义图，不是默认字标（`logoUrlOfItem` 按项的 src 取图）。 */
+  lpFabricRenderAll().then(function(){renderLpState();});
   toastMsg('已添加品牌LOGO，直接在图上拖动调位置');
 }
 $('lpAdd').addEventListener('click',addLp);
+$('lpAdd2').addEventListener('click',lpAddAnother);
 /* ⛔ 2026-10-05 起 applyLp() 只是「把 lp 的 mm 状态推给 fabric」的门面 ——
    前端同一套 fabric 负责渲染选框/手柄，后台不再算任何屏幕几何。
    （旧实现是给 DOM <img> 手工算 px 宽高 + transform + 自绘控制框，已整体删除。） */
@@ -2559,7 +3022,17 @@ function applyLpLive(){
    坐标口径与前端完全一致：画布 1 个 fabric 单位 = 1mm，原点在画布左上角。
    底图按 k 放大到 stage 宽度（k = stage 宽 / canvasMm），LOGO 以 mm 为单位落在图上，
    所以 ll.cxMm / cyMm / lenMm / rot 这些**存进配置的数值不受显示缩放影响**。 */
-var lpCanvas=null, lpLogoObj=null, lpBagObj=null, lpK=1;
+/* ⛔ 2026-10-08 用户报「上传两个LOGO 定位好之后，后端画布里面不显示」。
+   根因：后台画布**从来只维护一个 `lpLogoObj`** —— `lpFabricSetLogo()` 每次都先把上一个
+   `remove` 掉再画新的，所以画布上永远只有 1 个 LOGO（而且是当前选中的那个），
+   多 LOGO 根本没法「同时看到」。用户配好第 1 个、再加第 2 个，
+   第 1 个当场消失，看起来就是「定位好后画布里面不显示」。
+   修法：改成**数组 `lpLogoObjs[]`**，与 `lpList[]` **一一对应（同下标）**，
+   画布上同时渲染全部；只有**当前选中**的那一个带选框角柄（可拖），
+   其余 `selectable:false` / 无控件，但仍然可见。
+   ⛔ 别改回单个对象：前端 test.html 就是数组（`brandLogoObjs[]`），
+      前后端口径必须一致，否则用户看到的画布和导出的图不一样。 */
+var lpCanvas=null, lpLogoObjs=[], lpBagObj=null, lpK=1;
 function lpFabricInit(){
   if(lpCanvas)return lpCanvas;
   var stage=$('lpStage');if(!stage)return null;
@@ -2582,7 +3055,7 @@ function lpFabricInit(){
     backgroundColor:'#f6f7f8'});
   lpCanvas.setDimensions({width:W,height:H});
   /* 底图：整张铺满，与前端 bagImg 同一口径 */
-  lpBagObj=null;lpLogoObj=null;
+  lpBagObj=null;lpLogoObjs=[];
   return lpCanvas;
 }
 /* 重排画布尺寸（面板打开 / 窗口变化时调用）。
@@ -2597,7 +3070,7 @@ function lpFabricFit(){
 }
 function lpFabricDispose(){
   if(lpCanvas){try{lpCanvas.dispose();}catch(e){}}
-  lpCanvas=null;lpLogoObj=null;lpBagObj=null;
+  lpCanvas=null;lpLogoObjs=[];lpBagObj=null;
   lpK=1;
 }
 /* 把当前 lp 状态同步到 fabric 对象上。
@@ -2611,7 +3084,7 @@ function lpFabricDispose(){
    后台没有 viewZoom 概念，取 1（画布正好铺满 canvasMm）。 */
 function lpFabricSync(){
   if(!lpCanvas||!lpBagObj)return;
-  var mm=lp.mm>0?lp.mm:1;
+  var mm=lpMm>0?lpMm:1;
   var W=lpCanvas.getWidth();
   lpK=W/mm;                                  /* px per mm —— 仅供外部换算用 */
   var z=lpK;                                 /* 视口缩放因子（viewZoom 固定 1） */
@@ -2622,15 +3095,25 @@ function lpFabricSync(){
                 scaleX:mm/lpBagObj.width, scaleY:mm/lpBagObj.height,
                 selectable:false, evented:false});
   lpCanvas.setViewportTransform([z,0,0,z,t,t]);
-  if(lpLogoObj){
+  /* ⛔ 2026-10-08：改成**遍历全部** LOGO 对象（`lpLogoObjs[i]` ↔ `lpList[i]` 同下标）。
+     只有**当前选中**的那个 `hasControls:true` 且被 setActiveObject（fabric 只给激活对象画手柄），
+     其余保持可见但不可交互 —— 用户能同时看到自己配的几个 LOGO，
+     又不会误拖到别的那一个。 */
+  lpLogoObjs.forEach(function(o,i){
+    var it=lpList[i];
+    if(!o)return;
+    if(!it){o.visible=false;return;}
     /* LOGO 用**真实 mm**落点与尺寸，不再乘 lpK —— 视口负责放大 */
-    lpLogoObj.set({
-      left:lp.cxMm, top:lp.cyMm,
+    o.set({
+      left:it.cxMm, top:it.cyMm,
       originX:'center', originY:'center',
-      scaleX:lp.lenMm/lpLogoObj.width, scaleY:lp.lenMm/lpLogoObj.width,
-      angle:lp.rot,
+      scaleX:it.lenMm/o.width, scaleY:it.lenMm/o.width,
+      angle:it.rot,
       visible:!!lpAdded,
     });
+    var isCur=(i===lpIdx)&&lpAdded;
+    o.set({selectable:isCur, evented:isCur, hasControls:isCur, hasBorders:isCur,
+           hoverCursor:isCur?'move':'default'});
     /* ⛔ 控件尺寸必须除以 z：这是前后端「选框样式一致」的唯一关键一行。
        ⛔ 2026-10-05 用户报「画布里放大缩小的白色方块太大了，会遮挡住 LOGO」：
           纯 `Math.max(5,9/z)` 在**大件**上会失控 —— 后台画布固定 318px 宽，
@@ -2644,12 +3127,17 @@ function lpFabricSync(){
              角柄是「控件」不是「画面内容」，它的可读尺寸只取决于屏幕像素，
              不该随包体实际毫米数线性放大。9px 与前端常见取值一致，
              在 318px 画布上仍然好点中（约 2.5% 边长），又不至于挡住 LOGO。 */
-    lpLogoObj.set({cornerSize:Math.min(9,Math.max(5,9/z)), padding:2/z});
-    /* ⛔ 改值（右侧输入框 / 换色重建）之后必须**重新选中**：
-       否则选框与手柄当场消失，用户会以为「LOGO 又没了」——
-       fabric 只在 setActiveObject 后才画控件。 */
-    if(lpAdded&&lpCanvas.getActiveObject()!==lpLogoObj)lpCanvas.setActiveObject(lpLogoObj);
-    lpLogoObj.setCoords();
+    o.set({cornerSize:Math.min(9,Math.max(5,9/z)), padding:2/z});
+    o.setCoords();
+  });
+  /* ⛔ 改值（右侧输入框 / 换色重建）之后必须**重新选中**：
+     否则选框与手柄当场消失，用户会以为「LOGO 又没了」——
+     fabric 只在 setActiveObject 后才画控件。
+     ⛔ 只能激活**当前项**那一个对象；激活别的会让手柄长在错的 LOGO 上。 */
+  if(lpAdded&&lpLogoObjs[lpIdx]){
+    if(lpCanvas.getActiveObject()!==lpLogoObjs[lpIdx])lpCanvas.setActiveObject(lpLogoObjs[lpIdx]);
+  }else{
+    lpCanvas.discardActiveObject();
   }
   lpCanvas.renderAll();
 }
@@ -2675,43 +3163,89 @@ function lpFabricLoadBag(src){
     img.src=src;
   });
 }
-/* LOGO 图：走 brandLogoUrl(color) 生成的 dataURL，染色由 SVG 自己完成 */
-function lpFabricSetLogo(url){
-  return new Promise(function(res){
-    if(!lpCanvas)return res(false);
-    if(lpLogoObj){lpCanvas.remove(lpLogoObj);lpLogoObj=null;}
-    if(!url||!lpAdded)return res(false);
-    fabric.Image.fromURL(url,function(img,isError){
-      if(isError||!img||!img._element)return res(false);
-      /* ⛔ 与前端逐项一致：白实心角柄 + 深灰描边 + 深灰细框 + 等比缩放 + 只留 4 角。
-         cornerSize/padding 的最终值由 lpFabricSync() 按视口 z 重算。 */
-      img.set({
-        left:0, top:0, originX:'center', originY:'center',
-        lockUniScaling:true, lockScalingFlip:true,
-        transparentCorners:false, cornerColor:'#fff', cornerStrokeColor:'#222',
-        borderColor:'#222', cornerSize:9, padding:2,
-        hasControls:true, hasBorders:true,
+/* ⛔ 2026-10-08 重写：从「换掉唯一那个 LOGO」改成**按 lpList 整体重建**。
+   原实现每次先把旧的 remove 掉再画新的 ⇒ 画布上永远只有 1 个，
+   用户配第二个时第一个当场消失（本轮报的「后端画布里面不显示」）。
+   现在：清空全部 → 逐个取图 → 按**同下标**填进 `lpLogoObjs[]`。
+   ⛔ `lpLogoObjs[i]` 必须与 `lpList[i]` 严格对齐（中间不能有空洞），
+      所以取图失败也要占位（填 null），否则后面所有项都会错位到别的 LOGO 上。
+   ⛔ token 判据：快速切型号/连点「再添加一个」时，旧的一批会陆续回来，
+      只判一次会让新旧混在画布上。 */
+var lpRenderTok=0;
+function lpFabricRenderAll(){
+  if(!lpCanvas)return Promise.resolve(false);
+  lpLogoObjs.forEach(function(o){if(o)lpCanvas.remove(o);});
+  lpLogoObjs=[];
+  lpCanvas.discardActiveObject();
+  if(!lpAdded||!lpList.length){lpCanvas.renderAll();return Promise.resolve(true);}
+  var token=++lpRenderTok;
+  /* 先占好位（全 null），保证下标对齐 */
+  var n=lpList.length;
+  for(var i=0;i<n;i++)lpLogoObjs.push(null);
+  var jobs=lpList.map(function(it,idx){
+    return logoUrlOfItem(it).then(function(url){
+      return new Promise(function(res){
+        if(token!==lpRenderTok)return res(false);
+        if(!url)return res(false);
+        fabric.Image.fromURL(url,function(img,isError){
+          if(token!==lpRenderTok)return res(false);
+          if(isError||!img||!img._element||!img._element.naturalWidth){
+            console.warn('后台：第 '+(idx+1)+' 个品牌LOGO 加载失败：'+url);
+            return res(false);              /* ⛔ 占位留 null，不许 splice，否则后面全部错位 */
+          }
+          img.set({
+            left:0, top:0, originX:'center', originY:'center',
+            lockUniScaling:true, lockScalingFlip:true,
+            transparentCorners:false, cornerColor:'#fff', cornerStrokeColor:'#222',
+            borderColor:'#222', cornerSize:9, padding:2,
+            hasControls:true, hasBorders:true,
+          });
+          img.setControlsVisibility({mt:false,mb:false,ml:false,mr:false});
+          img.on('moving',lpFabricReadBack);
+          img.on('scaling',lpFabricReadBack);
+          img.on('rotating',lpFabricReadBack);
+          img.on('modified',lpFabricReadBack);
+          lpLogoObjs[idx]=img;
+          lpCanvas.add(img);
+          res(true);
+        });
       });
-      img.setControlsVisibility({mt:false,mb:false,ml:false,mr:false});
-      img.on('moving',lpFabricReadBack);
-      img.on('scaling',lpFabricReadBack);
-      img.on('rotating',lpFabricReadBack);
-      img.on('modified',lpFabricReadBack);
-      lpLogoObj=img;
-      lpCanvas.add(img);
-      lpCanvas.setActiveObject(img);
-      lpFabricSync();
-      res(true);
-    });
+    }).catch(function(){return false;});
+  });
+  return Promise.all(jobs).then(function(){
+    if(token!==lpRenderTok)return false;
+    lpFabricSync();
+    return true;
   });
 }
-/* 用户拖完 → 把 fabric 的真实几何换算回 mm 写回 lp（并实时回写右侧输入框）。
+/* ⛔ 「这一项该画什么图」—— 支持传入列表里的**任意一项**（不再只认当前的 lp）。
+   这是多 LOGO 的关键：不能再用 `currentLogoUrl()`（它只认 `lp`）。 */
+function logoUrlOfItem(it){
+  if(!it)return Promise.resolve('');
+  if(!it.customUrl)return brandLogoUrl(it.color);
+  var u=it.customUrl;
+  if(!it.color)return Promise.resolve(u);
+  return loadImgEl(u).then(function(el){
+    var c=tintImageEl(el,it.color);
+    return c?c.toDataURL('image/png'):u;
+  }).catch(function(){return u;});
+}
+/* 兼容旧调用点：换「当前这一个」的图 = 重建全部（成本可忽略，一套列表最多 3 个） */
+function lpFabricSetLogo(url){
+  return lpFabricRenderAll();
+}
+/* 用户拖完 → 把 fabric 的真实几何换算回 mm 写回**当前选中的那一项**（并实时回写右侧输入框）。
    ⛔ 画布里 1 单位 = 1mm（缩放走视口），所以读出来的值**本身就是 mm**，
-   不要再除 lpK —— 除了会让拖 1mm 记成 0.5mm，位置越拖越飘。 */
+   不要再除 lpK —— 除了会让拖 1mm 记成 0.5mm，位置越拖越飘。
+   ⛔ 多 LOGO 后必须从 `lpLogoObjs[lpIdx]` 取对象，不能再用「唯一的那个」：
+      否则拖第 2 个、值会写回第 1 个（两个 LOGO 参数互相串）。 */
 var lpReadPending=false;
-function lpFabricReadBack(){
-  if(!lpCanvas||!lpLogoObj||!lpAdded)return;
-  var o=lpLogoObj;
+function lpFabricReadBack(e){
+  if(!lpCanvas||!lpAdded)return;
+  var o=lpLogoObjs[lpIdx];
+  /* ⛔ 事件可能来自非当前项（理论上不该，但保险）：只处理当前项那一个对象 */
+  if(e&&e.target&&e.target!==o)return;
+  if(!o||!lp)return;
   /* ⛔ 必须用 getCenterPoint：带 origin 的 left/top 在旋转后不是「几何中心」，
      直接用 o.left/o.top 会在旋转后把 LOGO 越拖越偏。 */
   var c=o.getCenterPoint();
@@ -2725,48 +3259,110 @@ function lpFabricReadBack(){
 }
 function lpUpdatePos(){
   if(!$('lpPos'))return;
-  if(!lpAdded){$('lpPos').textContent='未添加品牌LOGO（画布 '+Math.round(lp.mm*10)/10+'mm）';return;}
-  $('lpPos').textContent='中心位置：X '+Math.round(lp.cxMm*10)/10+' mm，Y '+Math.round(lp.cyMm*10)/10+' mm（画布 '+Math.round(lp.mm*10)/10+'mm）';
+  if(!lpAdded){$('lpPos').textContent='未添加品牌LOGO（画布 '+Math.round(lpMm*10)/10+'mm）';return;}
+  $('lpPos').textContent='中心位置：X '+Math.round(lp.cxMm*10)/10+' mm，Y '+Math.round(lp.cyMm*10)/10+' mm（画布 '+Math.round(lpMm*10)/10+'mm）';
 }
 $('lpLen').addEventListener('input',function(){if(!lpAdded)return;lp.lenMm=parseFloat($('lpLen').value)||lp.lenMm;applyLpLive();});
 $('lpRot').addEventListener('input',function(){if(!lpAdded)return;lp.rot=parseFloat($('lpRot').value)||0;applyLpLive();});
 $('lpColor').addEventListener('input',function(){
   if(!lpAdded)return;
   lp.color=$('lpColor').value;
-  brandLogoUrl(lp.color).then(function(u){return lpFabricSetLogo(u);}).then(function(){applyLp();});
+  /* ⛔ 2026-10-08 用户明确要求：「自定义 LOGO 上传之后也要能改颜色」。
+     所以这里**不再对自定义图提前 return** —— 颜色一律生效，走 currentLogoUrl() 统一取图源：
+       · 默认字标 → brandLogoUrl(color) 生成的着色 SVG；
+       · 自定义图 → 原图 + 后面的染色（由 currentLogoUrl 内部按 lp.color 处理）。
+     ⛔ 别改回「自定义图不染色」：那是第一版的设计，已被用户否决。 */
+  lpFabricRenderAll().then(function(){applyLp();});
+});
+/* ⛔ 2026-10-08 新增：上传自定义 LOGO / 恢复默认字标。
+   ⛔ 两者都**只改图形**，位置/尺寸/角度一律保留（用户明确要求：改图不断定位）。
+   ⛔ 两者都只作用于**当前选中的那一个 LOGO**（lp 指向它），别的 LOGO 不动。 */
+$('lpUpBtn').addEventListener('click',function(){
+  if(!lpAdded){toastMsg('请先点「＋ 添加品牌LOGO」');return;}
+  $('lpFile').value='';          /* 允许重复选同一个文件（否则第二次选它不触发 change） */
+  $('lpFile').click();
+});
+$('lpFile').addEventListener('change',function(e){
+  var f=(e.target.files||[])[0];
+  if(f)lpSetCustomFromFile(f);
+});
+$('lpRstBtn').addEventListener('click',function(){
+  if(!lpAdded)return;
+  if(!lp.customUrl&&!lp.customBlob)return;
+  if(!confirm('恢复成默认字标？\n\n这一条上传的自定义 LOGO 会被撤下（位置、尺寸、角度保留，其他 LOGO 不受影响），点「保存定位」后才生效。'))return;
+  lp.customUrl='';lp.customBlob=null;lp.customName='';
+  lpFabricRenderAll()
+    .then(function(){renderLpState();toastMsg('已恢复默认字标');});
 });
 $('lpCancel').addEventListener('click',function(){$('logoPanel').hidden=true;});
 $('lpClear').addEventListener('click',function(){
-  /* ⛔ 先确认真的有目标型号。以前 lp.key 为空时会静默跳过删除，
+  /* ⛔ 先确认真的有目标型号。以前 lpKey 为空时会静默跳过删除，
      却仍然弹「已清除 null 的品牌LOGO」—— 用户以为清除成功了，其实一个字都没改。 */
-  if(!lp.key){alert('请先从型号卡上的「品牌LOGO定位」进入，再清除。');return;}
+  if(!lpKey){alert('请先从型号卡上的「品牌LOGO定位」进入，再清除。');return;}
   if(!lpAdded){toastMsg('这个型号目前没有品牌LOGO，不需要清除');return;}
-  var key=lp.key;
+  var key=lpKey;
   if(!state.models[key]){alert('型号 '+key+' 不在当前配置里，无法清除。');return;}
-  if(!confirm('清除型号 '+key+' 的品牌LOGO？\n\n确认后会立即同步到线上，前端不再显示这个 LOGO。'))return;
+  var n=lpList.length;
+  if(!confirm('清除型号 '+key+' 的'+(n>1?('全部 '+n+' 个'):'')+'品牌LOGO？\n\n确认后会立即同步到线上，前端不再显示这些 LOGO。'))return;
+  /* ⛔ 老字段与新数组必须**一起**删干净：只删一个会让正式版（认 brandLogo）
+     或新版（认 brandLogos）各留一半，前端显示什么完全取决于走哪条分支。 */
   delete state.models[key].brandLogo;
+  delete state.models[key].brandLogos;
   state.dirty=true;renderList();refreshPending();
   $('logoPanel').hidden=true;
   autoCommit('清除 '+key+' 的品牌LOGO').then(function(r){
     if(r==='ok')toastMsg('型号 '+key+' 的品牌LOGO 已从线上清除');
   });
 });
+/* ⛔ 2026-10-08 保存：把面板里的整个 lpList 折算成配置。
+   ⛔ 写入口径（红线：models.json 是活数据、只能加字段不许改语义）：
+      · 写新的 `brandLogos` 数组（最多 3 项），每项 {cxMm,cyMm,lenMm,rot,color[,src,srcNm]}。
+      · **同时写老字段 `brandLogo` = 第 1 项**（不删、不改名）——
+        线上正式版 index.html 还是老代码、只认 brandLogo；不回填一份它整个型号的
+        品牌 LOGO 就没了（2026-10-06 的历史事故就是这个形状）。
+        → 「双写」是这次唯一的兼容手段，别省。
+      · 绝不整表覆盖：只给这一个型号改字段，别的型号一个字不动。 */
 $('lpSave').addEventListener('click',function(){
   if(!lpAdded){toastMsg('请先点「＋ 添加品牌LOGO」再保存');return;}
-  if(lp.key&&!state.models[lp.key]){alert('型号不存在');return;}
-  var pos={cxMm:Math.round(lp.cxMm*10)/10,cyMm:Math.round(lp.cyMm*10)/10,
-    lenMm:Math.round(lp.lenMm*10)/10,rot:Math.round(lp.rot),color:lp.color};
-  var m=lp.key?state.models[lp.key]:null;
+  if(lpKey&&!state.models[lpKey]){alert('型号不存在');return;}
+  /* 新型号此时 lpKey 还是空串，拿不到型号名 —— 但素材路径必须按型号命名，
+     所以用输入框里的型号名现算（与 packUpload 里 normModel 的口径一致）。
+     算不出来就只存图不存 src：宁可这次不带自定义图，也不能写一个错路径进配置。 */
+  var modelKey=lpKey||(function(){
+    var nm=normModel($('newModel').value||draft.model);
+    return nm?'MR_'+nm:'';
+  })();
+  var missingName=0;
+  var list=lpList.slice(0,MAX_LP_LOGOS).map(function(it,i){
+    var pos={cxMm:Math.round(it.cxMm*10)/10,cyMm:Math.round(it.cyMm*10)/10,
+             lenMm:Math.round(it.lenMm*10)/10,rot:Math.round(it.rot),color:it.color};
+    /* ⛔ 自定义 LOGO 的落点 = 配置里多一个 src 字段。
+       `srcNm` 只用于后台回显文件名，前端不读它。 */
+    if(it.customUrl&&modelKey){
+      pos.src=customLogoPath(modelKey,i);
+      if(it.customName)pos.srcNm=it.customName;
+    }else if(it.customUrl){
+      missingName++;
+    }
+    return pos;
+  });
+  if(missingName){
+    toastMsg('有 '+missingName+' 个自定义LOGO 因为没有型号名，本次只记录了位置（图未写进配置）');
+  }
+  var m=lpKey?state.models[lpKey]:null;
   if(!m){
-    /* 新型号：暂存到 draft.brandLogo，跟型号图片一起提交 */
-    draft.brandLogo=pos;
+    /* 新型号：暂存到草稿，跟型号图片一起提交。
+       ⛔ 数组与老字段一起暂存，两条路都留着。 */
+    draft.brandLogos=list;
+    draft.brandLogo=list[0];
     $('logoPanel').hidden=true;
     toastMsg('LOGO 定位已暂存，点「确认提交上传」后生效');
     return;
   }
   /* 已有型号：只改 LOGO 落点。这里必须单独把 models.test.json 写回去 ——
      否则「改了定位但不重传图片」时找不到提交入口，等于白改。 */
-  m.brandLogo=pos;
+  m.brandLogos=list;
+  m.brandLogo=list[0];                 /* ⛔ 双写：老代码只认这个（见上方注释） */
   state.dirty=true;renderList();refreshPending();
   $('logoPanel').hidden=true;
   /* ⛔ 开发环境无条件落本机草稿（红线：本地保存一律不进线上）。
@@ -2774,13 +3370,37 @@ $('lpSave').addEventListener('click',function(){
      点「保存定位」会直接打 GitHub contents，token 失效/过期就是
      「保存失败：Bad credentials」，看着像定位功能坏了，其实是发错了地方。
      ⛔ 不许写成 `IS_LOCAL&&!token()`：那等于「碰巧存过 token 就绕过第①级」。 */
-  if(IS_LOCAL)return saveLocalDraft('品牌LOGO定位（'+lp.key+'）');
+  if(IS_LOCAL){
+    /* ⛔ 本地若刚传了自定义图，也要把它落进本机图片仓，否则刷新后图就没了。
+       走与产品图同一条 localPublishUpload 思路：先存图，再存草稿。
+       ⛔ 每个 LOGO 各存各的（路径带序号），不能只存最后一张。 */
+    var pairs=[],pending=lpList.slice(0,MAX_LP_LOGOS);
+    pending.forEach(function(it,i){
+      if(it.customBlob&&modelKey)pairs.push({path:customLogoPath(modelKey,i),blob:it.customBlob});
+    });
+    if(pairs.length){
+      return idbPutFiles(pairs).then(function(){
+        lpList.forEach(function(it){it.customBlob=null;});
+        return saveLocalDraft('品牌LOGO定位（'+lpKey+'）');
+      }).catch(function(e){alert('自定义LOGO存本机失败：'+(e.message||e));});
+    }
+    lpList.forEach(function(it){it.customBlob=null;});
+    return saveLocalDraft('品牌LOGO定位（'+lpKey+'）');
+  }
   if(!token()){toastMsg('LOGO 定位已记录，连接 GitHub 后再点「确认提交上传」');return;}
-  var up={key:lp.key,model:m,files:[],keepColors:[]};
+  /* ⛔ 有刚上传的自定义图 → 先把它作为素材文件推上去，再写配置。
+     没传图（只是挪了位置/改了尺寸）→ 一个文件都不用传，直接走 json。 */
+  var files=[];
+  lpList.slice(0,MAX_LP_LOGOS).forEach(function(it,i){
+    if(it.customBlob&&modelKey)files.push({path:customLogoPath(modelKey,i),blob:it.customBlob});
+  });
+  var up={key:lpKey,model:m,files:files,keepColors:[]};
   state.busy=true;
-  runJobs([{kind:'json',model:up}],{title:'正在保存 LOGO 定位到 GitHub'}).then(function(){
+  var title=files.length?'正在上传自定义LOGO并写回配置':'正在保存 LOGO 定位到 GitHub';
+  runJobs([{kind:'json',model:up}],{title:title}).then(function(){
     state.busy=false;state.dirty=false;refreshPending();
-    alert('品牌LOGO定位已保存到线上。');
+    lpList.forEach(function(it){it.customBlob=null;});
+    alert(files.length?'自定义LOGO已保存到线上。':'品牌LOGO定位已保存到线上。');
     return afterWrite();
   }).catch(function(e){
     state.busy=false;
@@ -2969,7 +3589,7 @@ $('ipSave').addEventListener('click',function(){
        （calcGeo([]) 拿不到几何），所以这条路径必须能处理「没有新图要传」。
        做法：没有新图就走「只改配置」—— keep 原样带过去，删掉的文件另行 stageDel。 */
     var upP=changed.length
-      ? packUpload(changed,model,keep,{brandLogo:m.brandLogo})
+      ? packUpload(changed,model,keep,{brandLogo:m.brandLogo,brandLogos:m.brandLogos})
       : Promise.resolve({key:'MR_'+model,model:{id:'MR_'+model,colors:keep.slice()},files:[],keepColors:[]});
     return upP.then(function(up){
       dropFiles(up);
@@ -2988,7 +3608,7 @@ $('ipSave').addEventListener('click',function(){
     });
   }
   var upQ=changed.length
-    ? packUpload(changed,model,keep,{brandLogo:m.brandLogo})
+    ? packUpload(changed,model,keep,{brandLogo:m.brandLogo,brandLogos:m.brandLogos})
     : Promise.resolve({key:'MR_'+model,model:{id:'MR_'+model,colors:keep.slice()},files:[],keepColors:[]});
   upQ.then(function(up){
     dropFiles(up);
