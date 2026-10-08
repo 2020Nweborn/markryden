@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-08T06:51:53.563Z",
+  "updatedAt": "2026-10-08T07:29:37.012Z",
   "pinnedCount": 2,
   "models": {
     "MR_9031SJ": {
@@ -70,15 +70,17 @@
       ],
       "brandLogos": [
         {
-          "cxMm": 154.5,
-          "cyMm": 127.4,
-          "lenMm": 80,
+          "cxMm": 77.8,
+          "cyMm": 157.1,
+          "lenMm": 48.2,
           "rot": 0,
-          "color": "#a6a7ac"
+          "color": "#a6a7ac",
+          "src": "test-assets/35_logo.png",
+          "srcNm": "洞-2.jpg"
         },
         {
-          "cxMm": 155.4,
-          "cyMm": 164.1,
+          "cxMm": 196.9,
+          "cyMm": 131.3,
           "lenMm": 80,
           "rot": 0,
           "color": "#a6a7ac",
@@ -87,11 +89,13 @@
         }
       ],
       "brandLogo": {
-        "cxMm": 154.5,
-        "cyMm": 127.4,
-        "lenMm": 80,
+        "cxMm": 77.8,
+        "cyMm": 157.1,
+        "lenMm": 48.2,
         "rot": 0,
-        "color": "#a6a7ac"
+        "color": "#a6a7ac",
+        "src": "test-assets/35_logo.png",
+        "srcNm": "洞-2.jpg"
       }
     },
     "MR_21": {
