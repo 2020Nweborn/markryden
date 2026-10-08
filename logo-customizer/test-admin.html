@@ -826,14 +826,26 @@ function gh(path,opt){
 function ghFile(path){
   return gh(path).then(function(j){return {sha:j.sha,content:j.content||''};});
 }
+/* ⛔⛔ 2026-10-08：沙盒外的写入**不许静默跳过**（用户报「自定义LOGO 上传后消失」的真凶之一）。
+   旧写法 `if(!inSandbox(path))return Promise.resolve({skipped:true,path:path});` 会让
+   调用方以为「上传成功」，于是配置里写下一个指向不存在文件的路径 —— 前端 404、LOGO 消失，
+   而且中间没有任何一处报错，极难排查。
+   现在统一走 assertWritable()：沙盒外**直接 reject**，让调用方能看见、能补救。
+   ⛔ 别改回 `{skipped:true}`：静默失败是这个 bug 能从 2026-10-08 潜到线上的唯一原因。 */
+function assertWritable(path){
+  if(inSandbox(path))return;
+  var e=new Error('受保护路径，测试版不写：'+path);
+  e.mrProtected=true;e.mrPath=path;
+  throw e;
+}
 function ghPut(path,b64,msg,sha){
-  if(!inSandbox(path))return Promise.resolve({skipped:true,path:path});
+  assertWritable(path);
   var body={message:msg,content:b64,branch:BRANCH};
   if(sha)body.sha=sha;
   return gh(path,{method:'PUT',body:JSON.stringify(body)});
 }
 function ghDel(path,sha,msg){
-  if(!inSandbox(path))return Promise.resolve({skipped:true,path:path});
+  assertWritable(path);
   return gh(path,{method:'DELETE',body:JSON.stringify({message:msg,sha:sha,branch:BRANCH})});
 }
 function setGhChip(){
@@ -2675,8 +2687,24 @@ function hexToRgb(s){
       第 2/3 个加序号后缀（xxx_logo2.png / xxx_logo3.png）。
    ⛔ 别给全部统一加序号 —— 那会把线上已有的 xxx_logo.png 变成孤儿文件，
       而正式素材是只读区、不允许我们删。 */
+/* ⛔⛔ 2026-10-08 用户报「线上的测试版本 上传了 自定义LOGO 会消失 不显示，前端页面也不显示」。
+   根因（设计级缺陷，不是小 bug）：**测试版沙盒写入白名单不含 logo-custom/**
+     var SUB='test-assets/', CFG='models.test.json';
+     function inSandbox(p){return p===CFG||String(p).indexOf(SUB)===0;}
+   → `ghPut('logo-custom/xxx_logo.png')` 命中 `!inSandbox()` 后**静默返回 {skipped:true}**，
+     图压根没上传、且不报错；而 lpSave 照样把 `pos.src='logo-custom/xxx_logo.png'`
+     写进 models.test.json → 配置指向一个不存在的文件 → 前端取图 404 → **LOGO 消失**。
+   修法（用户 2026-10-08 拍板「存 test-assets/ 下」）：**测试版的自定义图改写到沙盒内的
+   `test-assets/` 下**，配置里的 src 也跟着指这里 —— 前端 brandLogoSrcUrl() 线上直接原样返回 src，
+   所以**前端一行都不用改**就能取到；正式版素材区 logo-custom/ 一个字节都不碰。
+   ⛔ 本地（开发）仍走 logo-custom/：本机图片仓（IndexedDB）的既有口径不动，避免连累本地草稿链路。
+   ⛔ 正式版后台 admin.html 里仍是 logo-custom/（那是它的正式素材区，本来就该写那里）。
+   ⚠️ 副作用（必须知道）：测**试版**配的自定义图存 test-assets/，**发布正式版时路径会失效** ——
+      那种型号必须在正式版后台**重新上传一次**自定义 LOGO（见 skill §5a-2 的注意事项）。
+      这是「测试版不许写正式素材」这条红线的必然代价，不是缺陷。 */
 function customLogoPath(key,idx){
-  var base='logo-custom/'+key.replace(/^MR_/,'').toLowerCase()+'_logo';
+  var dir=IS_LOCAL?'logo-custom/':'test-assets/';
+  var base=dir+key.replace(/^MR_/,'').toLowerCase()+'_logo';
   var i=Number(idx)||0;
   return base+(i>0?String(i+1):'')+'.png';
 }
@@ -3397,14 +3425,33 @@ $('lpSave').addEventListener('click',function(){
   var up={key:lpKey,model:m,files:files,keepColors:[]};
   state.busy=true;
   var title=files.length?'正在上传自定义LOGO并写回配置':'正在保存 LOGO 定位到 GitHub';
-  runJobs([{kind:'json',model:up}],{title:title}).then(function(){
+  /* ⛔⛔ 2026-10-08（第二轮）：这里以前是 `runJobs([{kind:'json',model:up}],…)` —— **手搓了一个
+     只有 json 的任务清单**，`up.files`（刚上传的自定义LOGO）被整包丢掉：
+       · 配置照写，src 指向 `test-assets/xxx_logo.png`；
+       · 但那个文件**从来没上传过** → GitHub 上不存在 → 前端取图 404 → **LOGO 消失**。
+     这正是用户报的「上传了自定义LOGO 会消失，前端页面也不显示」的**第二个真凶**
+     （第一个是沙盒静默跳过 logo-custom/，已在本文件上方 ghPut 处修掉）。
+     修法：改用 `buildJobs(up)` —— 与「新增型号」「修改图片」**同一条装配线**。
+     它会把 up.files 展开成 {kind:'put'} 任务，且**排在 json 之前**，
+     所以「上传失败 → 配置不写」，不会再出现「配置指向不存在的文件」。
+     ⛔ 别改回手搓数组：那样等于绕过 put 任务，这个 bug 会原样复发。 */
+  runJobs(buildJobs(up),{title:title}).then(function(){
     state.busy=false;state.dirty=false;refreshPending();
     lpList.forEach(function(it){it.customBlob=null;});
     alert(files.length?'自定义LOGO已保存到线上。':'品牌LOGO定位已保存到线上。');
     return afterWrite();
   }).catch(function(e){
     state.busy=false;
-    alert('保存失败：'+(e.message||e)+'\n改动还留在页面上，再点一次可重试。');
+    /* ⛔⛔ 2026-10-08：受保护路径被拦时**必须说清「配置也没写」**。
+       旧行为是静默跳过上传 + 照写配置 → 配置里躺着一个指向不存在文件的 src
+       （用户报的「自定义LOGO 上传后消失、前端也不显示」）。
+       现在 ghPut 会 reject、json 在它后面不会执行，所以配置是干净的 ——
+       但用户必须被告知「这次没成功」，否则他会以为已保存然后关掉页面。 */
+    var tip=(e&&e.mrProtected)
+      ? ('这次的自定义LOGO 没能上传（路径受保护）：'+(e.mrPath||'')+
+         '\n\n配置也没有改动，页面上的改动都还在，可以重试。')
+      : ('保存失败：'+(e.message||e)+'\n改动还留在页面上，再点一次可重试。');
+    alert(tip);
   });
 });
 $('btnLogoPos').addEventListener('click',function(){openLogoPanel(null);});
