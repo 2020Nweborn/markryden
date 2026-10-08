@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-08T01:54:08.105Z",
+  "updatedAt": "2026-10-08T01:55:20.162Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -3826,6 +3826,32 @@
           "label": "商务黑",
           "image": "mr_3950_bizblack_trim.png",
           "webp": "mr_3950_bizblack_trim.webp"
+        }
+      ],
+      "safeZones": [
+        {
+          "xMm": 260.9,
+          "yMm": 117.1,
+          "wMm": 78.7,
+          "hMm": 319.7
+        },
+        {
+          "xMm": 146.5,
+          "yMm": 120.1,
+          "wMm": 68.6,
+          "hMm": 315.6
+        },
+        {
+          "xMm": 256.8,
+          "yMm": 66.5,
+          "wMm": 44.3,
+          "hMm": 40.2
+        },
+        {
+          "xMm": 170.8,
+          "yMm": 68.5,
+          "wMm": 41.2,
+          "hMm": 36.2
         }
       ]
     },
