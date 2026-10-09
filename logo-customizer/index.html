@@ -789,6 +789,13 @@ function applyRemoteModels(j){
     msSyncFromSelect();
     renderColorSelect();
     loadBag();applyView();updateSizeReadout();syncBrandLogo();
+    /* ⛔⛔ 2026-10-08（第三轮）：配置一就位就**立刻**预热所有型号的自定义 LOGO 图。
+       不能只靠 preloadImages()（它挂在 loadBag 成功之后 + 再等 2500ms）——
+       用户往往在包体图刚出来时就切型号，那时自定义图还没进缓存，
+       于是要现场下载 195KB + 逐像素染色，慢到看起来「没显示」。
+       这里提前发起请求，等用户真的切过去，图与染色结果都已在缓存里。
+       ⛔ 必须延迟一拍（setTimeout 0）避开首次渲染的竞争，且不阻塞当前渲染。 */
+    setTimeout(()=>{try{preloadBrandLogoAssets();}catch(e){}},0);
     return true;
   }catch(e){
     console.warn('models.json 应用失败，沿用内置配置',e);
@@ -908,7 +915,8 @@ window.__mrLocalDraft={isLocal:()=>IS_LOCAL,get:localDraft,drop:dropLocalDraft,k
 /* ==== 包体自带品牌 LOGO（一份 SVG 全型号复用） ====
    来源：LOGO [转换].svg（MARK RYDEN 横排字标，viewBox 1578 x 112.09）。
    全站只内联这一份、不随型号增加，因此完全不增加产品图加载量。
-   每个型号的落点存在 MODELS[x].brandLogo（mm），由「有 LOGO 参考图」差分标定得出。
+   ⛔ 2026-10-08 起落点支持**多个**：优先读 MODELS[x].brandLogos 数组（最多 3 个），
+      老配置的单个 MODELS[x].brandLogo 对象仍然照读（自动折成 1 个元素），行为一字不变。
    坐标约定：画布 1 个 fabric 单位 = 1mm（bagImg 已按 1/pxPerMm 缩放），原点在左上。 */
 const BRAND_LOGO_W=1578, BRAND_LOGO_AR=1578/112.09;
 const BRAND_LOGO_SVG=`<svg id="_图层_1" data-name="图层 1" xmlns="http://www.w3.org/2000/svg" width="1578" height="112.09" viewBox="0 0 1578 112.09"><defs><style>.cls-1 {fill: __BRAND_FILL__;}</style></defs><path class="cls-1" d="M1232.39,0h-124.37c-2.22,0-4.02,1.8-4.02,4.02v104.05c0,2.22,1.8,4.02,4.02,4.02h124.37c8.57,0,15.52-6.95,15.52-15.52V15.52c0-8.57-6.95-15.52-15.52-15.52ZM1219.58,83.84c0,5.35-4.33,9.68-9.68,9.68h-67.68c-5.46,0-9.89-4.43-9.89-9.89V28.25c0-5.46,4.43-9.89,9.89-9.89h67.68c5.35,0,9.68,4.33,9.68,9.68v55.8Z"/><path class="cls-1" d="M1395.8,0h-117.29c-1.81,0-3.27,1.47-3.27,3.27v105.55c0,1.81,1.47,3.27,3.27,3.27h25.05v-.21h92.24c1.34,0,2.42-1.08,2.42-2.42v-13.52c0-1.34-1.08-2.42-2.42-2.42h-86.69c-3.07,0-5.55-2.49-5.55-5.55v-17.3c0-3.07,2.49-5.55,5.55-5.55h86.69c1.34,0,2.42-1.08,2.42-2.42v-13.52c0-1.34-1.08-2.42-2.42-2.42h-86.69c-3.07,0-5.55-2.49-5.55-5.55v-17.29c0-3.07,2.49-5.55,5.55-5.55h86.69c1.34,0,2.42-1.08,2.42-2.42V2.42c0-1.34-1.08-2.42-2.42-2.42Z"/><path class="cls-1" d="M1571.85,0h-16.02c-3.4,0-6.16,2.76-6.16,6.15v71.9c0,4.87-6.23,6.89-9.08,2.95l-56.71-78.12c-1.31-1.81-3.4-2.88-5.64-2.88h-49.24c-2.22,0-4.02,1.8-4.02,4.02v101.92c0,3.4,2.76,6.15,6.15,6.15h16.02c3.4,0,6.15-2.76,6.15-6.15V33.58c0-4.84,6.18-6.88,9.06-2.99l57.07,77.06c2.07,2.79,5.34,4.44,8.82,4.44h34.31l11.57-.16c2.15-.03,3.88-1.78,3.88-3.93V6.15c0-3.4-2.76-6.15-6.15-6.15Z"/><path class="cls-1" d="M307.43,0h-41.58c-2.29,0-4.38,1.29-5.41,3.34l-53.77,107.29c-.34.67.15,1.46.9,1.46h21.05c2.5,0,4.78-1.41,5.9-3.64l6.73-13.42c1.12-2.23,3.4-3.65,5.9-3.65h78.84c2.5,0,4.78,1.41,5.9,3.65l6.73,13.42c1.12,2.23,3.4,3.64,5.9,3.64h21.18c.75,0,1.24-.79.9-1.46L312.84,3.34c-1.03-2.05-3.12-3.34-5.41-3.34ZM308.27,73.02h-43.25c-5.79,0-9.55-6.09-6.96-11.27l21.63-43.15c1.32-2.63,4.01-4.3,6.96-4.3s5.64,1.66,6.96,4.3l21.63,43.15c2.59,5.18-1.17,11.27-6.96,11.27Z"/><path class="cls-1" d="M634.49,61.7c-2.03-1.74-3.2-4.29-3.2-6.97s1.17-5.22,3.2-6.97l52.74-45.21c1.03-.88.4-2.56-.95-2.56h-27.09c-3.92,0-7.72,1.4-10.7,3.96l-45.94,39.38c-1.66,1.43-3.78,2.21-5.97,2.21h-8.5c-5.07,0-9.18-4.11-9.18-9.18V3.17c0-1.75-1.42-3.17-3.17-3.17h-21.99c-1.75,0-3.17,1.42-3.17,3.17v105.76c0,1.75,1.42,3.17,3.17,3.17h21.99c1.75,0,3.17-1.42,3.17-3.17v-35.84c0-5.07,4.11-9.18,9.18-9.18h4.52c2.19,0,4.31.78,5.97,2.21l49.01,42.02c2.98,2.55,6.77,3.96,10.7,3.96h31.05c1.35,0,1.97-1.68.95-2.56l-55.8-47.83Z"/><path class="cls-1" d="M1081.23,0h-30.2l-32.82,39.49c-3.69,4.44-10.52,4.43-14.2-.02L971.38,0h-30.2c-1.18,0-1.83,1.37-1.07,2.28l54.36,65.76c1.37,1.65,2.11,3.73,2.11,5.88v36.24c0,1.07.87,1.93,1.93,1.93h24.46c1.07,0,1.93-.87,1.93-1.93v-35.13c0-2.14.75-4.22,2.11-5.88l55.28-66.87c.75-.91.11-2.28-1.07-2.28Z"/><path class="cls-1" d="M185.04,0h-48.03c-2.3,0-4.4,1.34-5.37,3.42l-30.37,65.34c-2.66,5.76-10.84,5.76-13.5,0L57.62,3.44c-.97-2.1-3.07-3.44-5.37-3.44H3.92C1.75,0,0,1.75,0,3.92v104.26c0,2.16,1.75,3.92,3.92,3.92h18.5c2.16,0,3.92-1.75,3.92-3.92V27.93c0-4.11,3.33-7.43,7.44-7.43h.07c2.9,0,5.54,1.69,6.75,4.32l39.09,83.86c.97,2.09,3.06,3.42,5.37,3.42h19.33c2.31,0,4.41-1.34,5.37-3.44l38.68-83.84c1.22-2.63,3.85-4.32,6.75-4.32,4.11,0,7.43,3.33,7.43,7.43v80.25c0,2.16,1.75,3.92,3.92,3.92h18.5c2.16,0,3.92-1.75,3.92-3.92V3.92c0-2.16-1.75-3.92-3.92-3.92Z"/><path class="cls-1" d="M510.23,0h-118.71c-1.3,0-2.35,1.05-2.35,2.35v13.66c0,1.3,1.05,2.35,2.35,2.35h100.07c3.97,0,7.19,3.22,7.19,7.19v27.47c0,3.97-3.22,7.19-7.19,7.19h-100.07c-1.3,0-2.35,1.05-2.35,2.35v47.19c0,1.3,1.05,2.35,2.35,2.35h21.6c1.32,0,2.39-1.07,2.39-2.39v-22.88c0-4.56,3.7-8.26,8.26-8.26h66.75c4.56,0,8.26,3.7,8.26,8.26v22.92c0,1.3,1.05,2.35,2.35,2.35h23.63c1.3,0,2.35-1.05,2.35-2.35v-24.26c0-3.84-2.63-7.17-6.37-8.07l-5.07-1.21c-3.31-.79-5.64-3.75-5.64-7.15,0-3.15,2-5.94,4.98-6.96l4.85-1.65c4.33-1.48,7.25-5.55,7.25-10.12V16.87c0-9.32-7.55-16.87-16.87-16.87Z"/><path class="cls-1" d="M904.8,0h-118.71c-1.3,0-2.35,1.05-2.35,2.35v13.66c0,1.3,1.05,2.35,2.35,2.35h100.07c3.97,0,7.19,3.22,7.19,7.19v27.47c0,3.97-3.22,7.19-7.19,7.19h-100.07c-1.3,0-2.35,1.05-2.35,2.35v47.19c0,1.3,1.05,2.35,2.35,2.35h21.6c1.32,0,2.39-1.07,2.39-2.39v-22.88c0-4.56,3.7-8.26,8.26-8.26h66.75c4.56,0,8.26,3.7,8.26,8.26v22.92c0,1.3,1.05,2.35,2.35,2.35h23.63c1.3,0,2.35-1.05,2.35-2.35v-24.26c0-3.84-2.63-7.17-6.37-8.07l-5.07-1.21c-3.31-.79-5.64-3.75-5.64-7.15,0-3.15,2-5.94,4.98-6.96l4.85-1.65c4.33-1.48,7.25-5.55,7.25-10.12V16.87c0-9.32-7.55-16.87-16.87-16.87Z"/></svg>`;
@@ -916,14 +924,107 @@ function brandLogoUrl(color){
   return 'data:image/svg+xml;charset=utf-8,'+
     encodeURIComponent(BRAND_LOGO_SVG.replace(/__BRAND_FILL__/g,color||'#a6a7ac'));
 }
-let brandLogoObj=null,brandLogoOn=false,brandLogoTok=0,brandLogoSig='';
+/* ⛔ 2026-10-08 「这一条 LOGO 该画哪张图」的**唯一入口**。
+   · 配置里有 src → 用那个自定义图（后台为该型号单独上传的）。
+     ⛔ 但颜色仍然生效：自定义图是位图，由 syncBrandLogo 里的 tintImageEl() 逐像素刷色
+        （2026-10-08 用户明确要求「上传之后也要能改颜色」）。
+   · 没有 src → 回落内联字标，按 color 染色（老行为，一字不变）。
+   ⛔ 别在别处直接调 brandLogoUrl()：那会在型号配了自定义 LOGO 之后
+      又把它画回品牌字标（「后台明明传了图，前台不显示」）。 */
+function brandLogoImgUrl(cfg){
+  const src=cfg&&cfg.src;
+  if(src)return src;
+  return brandLogoUrl((cfg&&cfg.color)||'#a6a7ac');
+}
+/* 配置里带 src 时，换色不该重建 LOGO 对象（图得重新解码，切色会闪）。
+   但**染色仍然要对自定义图生效**（2026-10-08 用户明确要求「上传后也要能改颜色」），
+   所以签名里必须同时含 src 与 color：任一变了才重建。 */
+function brandLogoSigOf(cfg){
+  if(!cfg)return '';
+  return JSON.stringify({src:cfg.src||'',lenMm:cfg.lenMm,rot:cfg.rot,
+                         cxMm:cfg.cxMm,cyMm:cfg.cyMm,color:cfg.color||''});
+}
+/* ⛔ 2026-10-08 用户报「自定义 LOGO 上传后没办法改颜色」→ 已改为**整图刷成所选颜色**
+   （与默认字标同一语义：不透明像素全刷、alpha 原样保留）。
+   · 默认字标本来就靠 SVG 里的 __BRAND_FILL__ 染色，走 dataURL 就成。
+   · 自定义图是位图，得先解码到 canvas 再逐像素刷。
+   ⛔ 别改成色相旋转：黑色/灰色没有 hue，旋转等于什么都不做（这是 2026-09-24 踩过的坑）。
+   ⛔ 透明像素必须跳过（否则透明区会被刷成实心色块，LOGO 变成一个大方块）。 */
+function tintImageEl(imgEl,color){
+  const c=document.createElement('canvas');
+  c.width=imgEl.naturalWidth||imgEl.width;
+  c.height=imgEl.naturalHeight||imgEl.height;
+  if(!c.width||!c.height)return null;
+  const ctx=c.getContext('2d',{willReadFrequently:true});
+  ctx.drawImage(imgEl,0,0,c.width,c.height);
+  let rgb=null;
+  try{
+    const m=/^#?([0-9a-f]{6})$/i.exec(String(color||'').trim());
+    if(m){const n=parseInt(m[1],16);rgb=[(n>>16)&255,(n>>8)&255,n&255];}
+  }catch(e){}
+  if(!rgb)return c;                       /* 颜色解析不出来就不动图，别刷成黑的 */
+  const data=ctx.getImageData(0,0,c.width,c.height),px=data.data;
+  for(let i=0;i<px.length;i+=4){
+    if(px[i+3]===0)continue;              /* 透明像素不刷 */
+    px[i]=rgb[0];px[i+1]=rgb[1];px[i+2]=rgb[2];
+  }
+  ctx.putImageData(data,0,0);
+  return c;
+}
+/* 把地址解成 <img> 元素（同地址复用，避免切色时反复请求同一张图）。
+   ⛔ crossOrigin 必须设 —— 线上素材与页面同源倒无所谓，但本机 blob URL / 跨域回源
+      取不到像素时会污染 canvas，getImageData 直接抛 SecurityError。 */
+const brandLogoImgCache={};
+function loadImageEl(u){
+  if(brandLogoImgCache[u])return Promise.resolve(brandLogoImgCache[u]);
+  return new Promise((res,rej)=>{
+    const im=new Image();
+    im.crossOrigin='anonymous';
+    im.onload=()=>{brandLogoImgCache[u]=im;res(im);};
+    im.onerror=()=>rej(new Error('LOGO 图加载失败：'+u));
+    im.src=u;
+  });
+}
+/* ⛔⛔ 2026-10-08（第三轮）：**染色结果缓存** —— 这是「自定义LOGO 迟迟不显示」的性能主因。
+   每次 syncBrandLogo 对自定义图都要：解码 195KB 位图 → 逐像素刷 1111×411 → toDataURL 重编码。
+   一次就是几十到几百毫秒，慢机器上更久；而它发生在**画 LOGO 之前**，
+   所以用户看到的是「切到那个型号，自定义LOGO 半天不出来」= 他说的「丢失」。
+   ⛔ 键必须是「地址 + 颜色」：同一张图换色要重算，同色复用。
+   ⛔ 只对自定义图（有 src）做，默认字标本来就是 dataURL 拼接、零成本。 */
+const brandLogoTintCache=new Map();
+function tintedLogoUrl(u,color){
+  const key=u+'|'+(color||'');
+  if(brandLogoTintCache.has(key))return Promise.resolve(brandLogoTintCache.get(key));
+  return loadImageEl(u).then(el=>{
+    const c=tintImageEl(el,color);
+    const out=c?c.toDataURL('image/png'):u;
+    brandLogoTintCache.set(key,out);
+    return out;
+  }).catch(()=>u);
+}
+/* ==== 品牌 LOGO 对象池（2026-10-08 起支持一个型号最多 3 个）====
+   ⛔ 数据结构：配置里新增 `brandLogos` 数组，每项自带 cxMm/cyMm/lenMm/rot/color/src/srcNm。
+   ⛔ 向后兼容（红线：models.json 是活数据、只能加字段不许改语义）：
+      老配置只有单个 `brandLogo` 对象 → 读的时候自动折成 [brandLogo]，行为一字不变。
+      **不回写、不删除 brandLogo**，只在用户重新保存该型号时才写新的 brandLogos。 */
+const MAX_BRAND_LOGOS=3;
+let brandLogoObjs=[],brandLogoOn=false,brandLogoTok=0,brandLogoSig='';
+/* 读取口径：优先 brandLogos 数组；没有就回落老的单个 brandLogo。 */
+function brandLogosOf(m){
+  const o=m||(MODEL||null);
+  if(!o)return [];
+  const arr=Array.isArray(o.brandLogos)?o.brandLogos:[];
+  const list=arr.filter(c=>c&&Number(c.lenMm)>0).slice(0,MAX_BRAND_LOGOS);
+  if(list.length)return list;
+  return (o.brandLogo&&Number(o.brandLogo.lenMm)>0)?[o.brandLogo]:[];
+}
 /* 用户对某型号品牌 LOGO 的「显式选择」：true=显示、false=隐藏，
    没有这个键就用默认值（有配置的型号默认显示）。
    ⛔ 以前这里存的是「用户是否手动关过」（只会变 true），
    而 syncBrandLogo 又按 !touched 重算状态 —— 关掉一次以后 touched 永远是 true，
    于是再点也只会得到「隐藏」，LOGO 永远回不来。现在直接存目标状态。 */
 const brandLogoPref={};
-function modelHasBrandLogo(){return !!(MODEL&&MODEL.brandLogo);}
+function modelHasBrandLogo(){return brandLogosOf().length>0;}
 function brandToggleLabel(){
   const t=I18N[currentLang]||I18N.zh;
   return brandLogoOn?(t.brandLogoHide||'隐藏品牌LOGO'):(t.brandLogo||'显示品牌LOGO');
@@ -945,29 +1046,103 @@ function syncBrandToggleUI(){
 function syncBrandLogo(){
   /* 一份坐标全配色共用。不同颜色的渲染图取景本来就有几毫米差异，
      LOGO 跟着差一点点属正常，不做逐色换算。 */
-  const cfg=modelHasBrandLogo()?MODEL.brandLogo:null;
-  /* 默认值按型号定：有配置 → 显示；用户显式选过就以他的选择为准 */
+  const list=modelHasBrandLogo()?brandLogosOf():[];  /* 默认值按型号定：有配置 → 显示；用户显式选过就以他的选择为准 */
   const pref=brandLogoPref[MODEL.id];
-  brandLogoOn=!!cfg&&(pref===undefined?true:!!pref);
+  brandLogoOn=list.length>0&&(pref===undefined?true:!!pref);
   syncBrandToggleUI();
-  const sig=(cfg&&brandLogoOn)?JSON.stringify(cfg):'';
-  if(sig===brandLogoSig){if(brandLogoObj)canvas.renderAll();return;}
-  brandLogoSig=sig;
-  if(brandLogoObj){canvas.remove(brandLogoObj);brandLogoObj=null;}
-  if(!cfg||!brandLogoOn||!(Number(cfg.lenMm)>0)){canvas.renderAll();return;}
+  /* ⛔⛔ 2026-10-08（第三轮，真凶）：`sig` 短路判据以前用的是**「有没有画过」**，
+     而它在**异步加载开始之前**就被写死了（旧代码 `brandLogoSig=sig;` 在 forEach 之前）。
+     于是出现这个致命时序（用户报的「上传自定义LOGO 会消失」正是它）：
+       T0 change → syncBrandLogo #1：sig 记下、tok=A、启动 2 项异步
+                   （第 1 项是内联 SVG 的 dataURL，几乎同步就回来；
+                     第 2 项是 195KB 的网络位图，慢一个数量级）
+       T1 loadBag 的 fromURL 回调里又调 syncBrandLogo #2（见 loadBag 里的调用）
+                   → 此刻 sig 与上次相同 → **旧代码直接 return，什么都不做**
+       T2 或者：切型号/切色导致 sig 变化 → tok=++B → #1 那批的第 2 项回来时
+                   token(A)!==brandLogoTok(B) → **慢图被丢掉**
+     两种情况的结果一模一样：`brandLogoObjs` 里缺项（甚至为空），
+     而 `brandLogoSig` 已经记成「这一版画过了」→ **之后永远不会重建** → 前端一直不显示。
+     ⛔ 为什么「切走再切回来」就好了：图进了缓存，第 2 项也变快，赶在被作废之前回来。
+        —— 这正是用户看到的「有时显示、有时不显示」的随机性来源，不是文件没传上去。
+
+     修法（三条，缺一不可）：
+       ① **签名只在真正需要重建时才写**，且**记在「这一轮已经作废」之后就重置**，
+          绝不能出现「签名说画过了、画布上却没有」的状态；
+       ② 短路时**按品牌 LOGO 的实际在画布上的存活情况判断**，而不是只看数组长度 ——
+          数组里可能留着已被 canvas.remove 掉的僵尸引用；
+       ③ 判定「画过了」必须**等这一批全部落定**（成功或失败都算），
+          期间不允许再记成「完成」。 */
+  const sig=(brandLogoOn)?JSON.stringify(list.map(brandLogoSigOf)):'';
+  /* ⛔ 短路的前提：签名一致 **且** 该有的对象都真的还在画布上。
+     `brandLogoObjs.length` 单独用是不安全的（删过型号/换过画布后可能是僵尸引用），
+     所以再核对一次 `canvas.contains()`。 */
+  const objsAlive=brandLogoObjs.length>0&&brandLogoObjs.every(o=>o&&canvas.contains(o));
+  if(sig===brandLogoSig&&(objsAlive||!brandLogoOn)){
+    if(brandLogoObjs.length)canvas.renderAll();
+    return;
+  }
+  /* ⛔ 进入重建前先把签名**清掉**：本轮的异步还没落定，此刻画布状态未知。
+     等这一批全部结束（成功或失败）再写回 sig —— 这样即使中途被 token 作废，
+     下一次 syncBrandLogo() 也不会被「假签名」短路掉。 */
+  brandLogoSig='';
+  brandLogoObjs.forEach(o=>{try{canvas.remove(o);}catch(e){}});
+  brandLogoObjs=[];
+  if(!brandLogoOn){brandLogoSig='';canvas.renderAll();return;}
   const token=++brandLogoTok;
-  fabric.Image.fromURL(brandLogoUrl(cfg.color),(img,isError)=>{
-    if(token!==brandLogoTok)return;
-    if(isError||!img||!img._element)return;
-    const lenMm=Number(cfg.lenMm), sc=lenMm/BRAND_LOGO_W;
-    img.set({left:Number(cfg.cxMm)||0,top:Number(cfg.cyMm)||0,
-             originX:'center',originY:'center',angle:Number(cfg.rot)||0,
-             scaleX:sc,scaleY:sc,selectable:false,evented:false,
-             hoverCursor:'default'});
-    brandLogoObj=img;canvas.add(img);
-    /* 压在包体之上、安全区之上、用户上传的 LOGO 之下（安全区占 1..n，所以这里要跳过它们） */
-    if(bagImg)canvas.moveTo(img,1+zoneObjs.length);
-    canvas.renderAll();
+  /* ⛔ 逐项异步加载。⛔ token 判据必须放在**每一项**的回调里：
+     快速切型号时旧的一批会陆续回来，只判一次会让新旧混在画布上。
+     ⛔ 缩放基准不能再用常量 BRAND_LOGO_W：那是字标的 viewBox 宽（1578），
+        自定义图的宽度完全是另一回事，用它算会让自定义 LOGO 的显示尺寸完全错掉。
+        正确口径 = 以**图片自己的自然宽度**为基准，让 lenMm 表示「图上实长多少毫米」。 */
+  /* 本批的落定计数：全部结束且未被作废时，才把 sig 记成「这一版画好了」。
+     ⛔ 失败项也计数 —— 否则一张永久 404 的图会让 sig 永远写不上、
+        syncBrandLogo 每次都被调用都全量重建（切色会闪）。 */
+  let settled=0;
+  const total=list.length;
+  const finish=()=>{
+    settled++;
+    if(settled<total)return;
+    if(token!==brandLogoTok)return;      /* 本批已被更新的一轮作废：不记签名，留给下一轮重建 */
+    brandLogoSig=sig;
+  };
+  list.forEach((cfg,idx)=>{
+    const raw=brandLogoImgUrl(cfg);
+    const custom=!!cfg.src;
+    /* ⛔ 自定义图 + 有颜色 → 先染色再画。
+       做法是「解码 → 逐像素刷 → toDataURL → 交给 fromURL」，
+       ⛔ 不直接 setElement(染色 canvas)：那样 fabric 的对象缓存在切色时不会失效，
+          表现为「改了颜色但画布上没变」。走 dataURL 等价于换了一张新图，缓存自然重建。
+       ⛔⛔ 2026-10-08（第三轮）：改走 tintedLogoUrl() —— 染色结果按「地址+颜色」缓存。
+          直接内联这段（旧写法）会导致**每次切型号都重算一遍 195KB 位图的逐像素染色**，
+          用户看到的就是「切过去半天不显示自定义LOGO」。 */
+    const load=custom&&cfg.color
+      ? tintedLogoUrl(brandLogoSrcUrl(raw),cfg.color)
+      : Promise.resolve(brandLogoSrcUrl(raw));
+    load.then(url=>{
+      fabric.Image.fromURL(url,(img,isError)=>{
+        /* ⛔ token 作废时也要 finish()：否则 settled 永远到不了 total、
+           sig 永远写不上，下一轮又会全量重建（白底闪一下）。
+           这里先 finish() 再 return，语义是「本批此项已有结论，只是结果不要了」。 */
+        if(token!==brandLogoTok){finish();return;}
+        if(isError||!img||!img._element||!img._element.naturalWidth){   /* ⛔ 取不到图就什么都不画：静默失败会让用户以为功能没了 */
+          console.warn('品牌LOGO 第 '+(idx+1)+' 个加载失败：'+url);
+          finish();
+          return;
+        }
+        const lenMm=Number(cfg.lenMm);
+        const natW=img._element.naturalWidth||img.width||BRAND_LOGO_W;
+        const sc=lenMm/natW;
+        img.set({left:Number(cfg.cxMm)||0,top:Number(cfg.cyMm)||0,
+                 originX:'center',originY:'center',angle:Number(cfg.rot)||0,
+                 scaleX:sc,scaleY:sc,selectable:false,evented:false,
+                 hoverCursor:'default'});
+        brandLogoObjs.push(img);canvas.add(img);
+        /* 压在包体之上、安全区之上、用户上传的 LOGO 之下（安全区占 1..n，所以这里要跳过它们） */
+        if(bagImg)canvas.moveTo(img,1+zoneObjs.length);
+        canvas.renderAll();
+        finish();
+      });
+    }).catch(()=>{finish();});
   });
 }
 /* ==== 品牌 LOGO 结束 ==== */
@@ -1232,6 +1407,18 @@ function modelSrc(c,forcePng){
   const alt=(want===c.webp)?c.image:c.webp;
   return localAssetMap[want]||localAssetMap[alt]||want;
 }
+/* ⛔ 2026-10-08 自定义 LOGO 的图源解析 —— 「后台传了图、前端不显示」的根因就在这里。
+   后台把落点写成 `brandLogo.src`（**相对路径**，如 logo-custom/21_logo.png），
+   线上模式下它是仓库里的真素材、同源直接取得到，没问题。
+   ⛔ 但本地模式下，那张图是后台刚存的「本机图片仓（IndexedDB）」里的对象，
+      **磁盘上没有这个文件** —— 照相对路径去请求必然 404，fabric.Image.fromURL
+      拿不到图就静默什么都不画，表现正是「保存定位后前端不显示」。
+   所以本地必须先查本机图片仓（与 modelSrc 同一策略：命不中就照旧走原路径）。 */
+function brandLogoSrcUrl(src){
+  if(!src)return '';
+  if(!IS_LOCAL)return src;
+  return localAssetMap[src]||src;
+}
 /* 型号下拉按 MODELS 动态生成：加型号只改 MODELS，不必再动 HTML */
 const modelSelect=document.getElementById('model');
 function renderModelSelect(){
@@ -1481,11 +1668,14 @@ let bagToken=0,bagLoadedOnce=false;
    ② 慢网时给个明确反馈，而不是盯着空画布。
    ⛔ 首屏立刻显示；切型号/切配色的图多半已预热命中（preloadImages），用 160ms 延迟显示，避免闪一下。 */
 let stageLoadingTimer=null,stageLoadingHoldTimer=null,stageLoadingShownAt=0;
-/* ⛔ 本地调试用（2026-09-30 用户要求「切换型号时设置 5 秒加载」，正式上线去掉）：
-   靠现成的环境判定 IS_LOCAL 门控 —— 本地（127.0.0.1 / 开发预览域）让加载态至少停留 5 秒，
-   便于肉眼看动画；线上 IS_LOCAL=false → 值为 0 → 行为与以前完全一致。
-   ⛔ 这正是项目红线要的形态：线上自动失效，不需要上线前记得回来删代码，也不另建本地专用页。 */
-const STAGE_LOAD_MIN_MS=IS_LOCAL?5000:0;
+/* ⛔⛔ 2026-10-08（第八轮）用户要求：「这个加载动画是假的吧？之前用来测试，现在不需要测试看效果。」
+   —— 是的，之前 `STAGE_LOAD_MIN_MS=IS_LOCAL?5000:0`：**本地故意让加载态至少停 5 秒**方便肉眼看动画，
+   线上为 0（行为本来就一致）。现在用户不要这个「为了看效果而拖时间」的行为，**本地也归零**。
+   ⛔ 保留的是**真加载态**：图没到位时遮罩挡住画布，避免先把 LOGO 露出来；慢网时给反馈。
+      去掉的只是「人为补足到 5 秒」这段。所以 `STAGE_LOAD_MIN_MS` 恒为 0，
+      下面 hideStageLoading 里那段「补足停留」自然永不生效（保留代码是为了最小改动、
+      且将来若要再加最短停留只需改这一个常量）。 */
+const STAGE_LOAD_MIN_MS=0;
 function showStageLoading(immediate){
   const el=document.getElementById('stageLoading');
   if(!el)return;
@@ -1555,8 +1745,32 @@ function preloadImages(){
         const c=(m.colors||[])[0];
         if(c){try{const i=new Image();i.src=modelSrc(c);}catch(e){}}
       });
+      /* ⛔⛔ 2026-10-08（第三轮）：自定义 LOGO 的图也要预热（见 preloadBrandLogoAssets）。 */
+      preloadBrandLogoAssets();
     }
   },2500);
+}
+/* ⛔⛔ 2026-10-08（第三轮）**自定义 LOGO 素材预热**的唯一入口。
+   为什么必须有：自定义 LOGO 走的是「下载位图 → 逐像素染色 → toDataURL 重编码 → 交给 fabric」
+   这条路，一副 195KB、1111×411 的签名图在慢机器上要几百毫秒到数秒。
+   而这段耗时发生在**画 LOGO 之前**，用户看到的就是「切到某型号，我要的 LOGO 不显示」。
+   做法：把**所有型号**的自定义图提前取回来，连染色产物一起缓存（tintedLogoUrl）。
+   等用户真的切过去，syncBrandLogo 拿到的已是现成 dataURL —— 零等待。
+   ⛔ 走 tintedLogoUrl 而不是裸 loadImageEl：只缓存原图的话，
+      切过去还得再做一次逐像素染色，仍然会卡那一下。
+   ⛔ 逐项 try/catch：一张图 404 / 跨域失败不该拖垮整批。 */
+function preloadBrandLogoAssets(){
+  Object.keys(MODELS).forEach(k=>{
+    const bl=brandLogosOf(MODELS[k]);
+    bl.forEach(cfg=>{
+      if(!cfg||!cfg.src)return;
+      try{
+        const u=brandLogoSrcUrl(cfg.src);
+        if(cfg.color)tintedLogoUrl(u,cfg.color).catch(()=>{});
+        else loadImageEl(u).catch(()=>{});
+      }catch(e){}
+    });
+  });
 }
 function showStageNotice(msg){
   const el=document.getElementById('stageNotice');
@@ -3661,6 +3875,12 @@ document.getElementById('model').addEventListener('change',e=>{
   /* 换画布 / 换安全区 = 上一段的违规判定作废，确认记忆一并复位 ——
      否则旧签名会在新画布上把新出现的提示压掉。 */
   warningAckSig='';warningManualOpen=false;warningWasActive=false;warnInfoUntil=0;clearTimeout(warningTimer);
+  /* ⛔⛔ 2026-10-08（第三轮）：切型号**必须清掉品牌LOGO 的签名**。
+     不清的后果：新型号的 sig 若与上一型号恰好相同（比如两个型号都只有一个
+     默认字标 LOGO、参数也一致），会走短路直接 return，画布上却已经被
+     loadBag/applyView 清过 —— 表现就是「切了型号，LOGO 不显示」。
+     清掉签名等于强制重建一次，代价只是重新取图（有缓存），换来状态永远可信。 */
+  brandLogoSig='';brandLogoTok++;
   loadBag();applyView();updateSizeReadout();
   syncBrandLogo();
 });
