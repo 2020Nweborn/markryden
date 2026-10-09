@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T08:44:05.375Z",
+  "updatedAt": "2026-10-09T08:46:45.831Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -5594,6 +5594,26 @@
           "image": "mr_9779_bizblack_trim.png",
           "webp": "mr_9779_bizblack_trim.webp"
         }
+      ],
+      "safeZones": [
+        {
+          "xMm": 158.3,
+          "yMm": 80.7,
+          "wMm": 197.5,
+          "hMm": 109.5
+        },
+        {
+          "xMm": 127.8,
+          "yMm": 222.8,
+          "wMm": 82.8,
+          "hMm": 216
+        },
+        {
+          "xMm": 302.7,
+          "yMm": 228.3,
+          "wMm": 79.5,
+          "hMm": 205.1
+        }
       ]
     },
     "MR_9418": {
@@ -6205,6 +6225,35 @@
           "label": "灰",
           "image": "mr_9004_gray_trim.png",
           "webp": "mr_9004_gray_trim.webp"
+        }
+      ]
+    },
+    "MR_9822": {
+      "id": "MR_9822",
+      "pxPerMm": 1,
+      "canvasMm": 532,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "citygreen",
+          "label": "城际绿",
+          "image": "mr_9822_citygreen_trim.png",
+          "webp": "mr_9822_citygreen_trim.webp"
+        },
+        {
+          "key": "elitegray",
+          "label": "精英灰",
+          "image": "mr_9822_elitegray_trim.png",
+          "webp": "mr_9822_elitegray_trim.webp"
+        },
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_9822_bizblack_trim.png",
+          "webp": "mr_9822_bizblack_trim.webp"
         }
       ]
     }
