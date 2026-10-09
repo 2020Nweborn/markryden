@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T09:17:39.358Z",
+  "updatedAt": "2026-10-09T09:17:59.406Z",
   "pinnedCount": 2,
   "models": {
     "MR_999_ka_14.5in": {
@@ -208,6 +208,24 @@
         }
       ],
       "order": 4
+    },
+    "MR_116": {
+      "id": "MR_116",
+      "pxPerMm": 0.575,
+      "canvasMm": 902.6,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "test-assets/mr_116_bizblack_trim.png",
+          "webp": "test-assets/mr_116_bizblack_trim.webp"
+        }
+      ],
+      "order": 5
     }
   }
 }
