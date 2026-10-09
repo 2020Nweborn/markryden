@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T09:12:06.659Z",
+  "updatedAt": "2026-10-09T09:17:25.412Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -624,12 +624,25 @@
       },
       "colors": [
         {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_8057_bizblack_trim.png",
+          "webp": "mr_8057_bizblack_trim.webp"
+        },
+        {
           "key": "elitegray",
           "label": "精英灰",
           "image": "mr_8057_elitegray_trim.png",
           "webp": "mr_8057_elitegray_trim.webp"
         }
       ],
+      "brandLogo": {
+        "cxMm": 265,
+        "cyMm": 388,
+        "lenMm": 86,
+        "rot": 90,
+        "color": "#c9c9c9"
+      },
       "safeZones": [
         {
           "xMm": 136.5,
@@ -643,14 +656,7 @@
           "wMm": 242.4,
           "hMm": 115.1
         }
-      ],
-      "brandLogo": {
-        "cxMm": 265,
-        "cyMm": 388,
-        "lenMm": 86,
-        "rot": 90,
-        "color": "#c9c9c9"
-      }
+      ]
     },
     "MR_8109": {
       "id": "MR_8109",
