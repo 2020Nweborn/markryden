@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T03:05:21.612Z",
+  "updatedAt": "2026-10-09T03:06:29.266Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -5252,7 +5252,14 @@
           "wMm": 115.5,
           "hMm": 66.9
         }
-      ]
+      ],
+      "brandLogo": {
+        "cxMm": 251.3,
+        "cyMm": 168.4,
+        "lenMm": 32,
+        "rot": 0,
+        "color": "#d4d4d4"
+      }
     },
     "MR_532": {
       "id": "MR_532",
