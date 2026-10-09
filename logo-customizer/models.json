@@ -1,7 +1,40 @@
 {
-  "updatedAt": "2026-10-09T09:27:25.584Z",
-  "pinnedCount": 1,
+  "updatedAt": "2026-10-09T09:27:45.998Z",
+  "pinnedCount": 2,
   "models": {
+    "MR_9299": {
+      "id": "MR_9299",
+      "pxPerMm": 1,
+      "canvasMm": 498,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_9299_bizblack_trim.png",
+          "webp": "mr_9299_bizblack_trim.webp"
+        }
+      ],
+      "safeZones": [
+        {
+          "xMm": 144.7,
+          "yMm": 63.2,
+          "wMm": 205.7,
+          "hMm": 409.1
+        }
+      ],
+      "brandLogo": {
+        "cxMm": 330.2,
+        "cyMm": 337.6,
+        "lenMm": 56,
+        "rot": 90,
+        "color": "#d1d1d1"
+      },
+      "order": 0
+    },
     "MR_9031SJ": {
       "id": "MR_9031SJ",
       "pxPerMm": 1,
@@ -57,7 +90,7 @@
           "hMm": 36.9
         }
       ],
-      "order": 0
+      "order": 1
     },
     "MR_2422": {
       "id": "MR_2422",
@@ -96,7 +129,7 @@
           "hMm": 126.7
         }
       ],
-      "order": 1
+      "order": 2
     },
     "MR_35": {
       "id": "MR_35",
@@ -135,69 +168,6 @@
           "hMm": 81
         }
       ],
-      "order": 2
-    },
-    "MR_21": {
-      "id": "MR_21",
-      "pxPerMm": 5,
-      "canvasMm": 113.6,
-      "logoMax": {
-        "wMm": 40,
-        "hMm": 40
-      },
-      "colors": [
-        {
-          "key": "orange",
-          "label": "橙",
-          "image": "mr_21_orange_trim.png",
-          "webp": "mr_21_orange_trim.webp"
-        },
-        {
-          "key": "gray",
-          "label": "灰",
-          "image": "mr_21_gray_trim.png",
-          "webp": "mr_21_gray_trim.webp"
-        },
-        {
-          "key": "purple",
-          "label": "紫",
-          "image": "mr_21_purple_trim.png",
-          "webp": "mr_21_purple_trim.webp"
-        },
-        {
-          "key": "green",
-          "label": "绿",
-          "image": "mr_21_green_trim.png",
-          "webp": "mr_21_green_trim.webp"
-        },
-        {
-          "key": "blue",
-          "label": "蓝",
-          "image": "mr_21_blue_trim.png",
-          "webp": "mr_21_blue_trim.webp"
-        },
-        {
-          "key": "black",
-          "label": "黑",
-          "image": "mr_21_black_trim.png",
-          "webp": "mr_21_black_trim.webp"
-        }
-      ],
-      "safeZones": [
-        {
-          "xMm": 33.1,
-          "yMm": 31.5,
-          "wMm": 47.5,
-          "hMm": 57.2
-        }
-      ],
-      "brandLogo": {
-        "cxMm": 57.5,
-        "cyMm": 60.4,
-        "lenMm": 22,
-        "rot": 90,
-        "color": "#ffffff"
-      },
       "order": 3
     },
     "MR_9008SJ": {
@@ -266,6 +236,69 @@
       },
       "order": 5
     },
+    "MR_21": {
+      "id": "MR_21",
+      "pxPerMm": 5,
+      "canvasMm": 113.6,
+      "logoMax": {
+        "wMm": 40,
+        "hMm": 40
+      },
+      "colors": [
+        {
+          "key": "orange",
+          "label": "橙",
+          "image": "mr_21_orange_trim.png",
+          "webp": "mr_21_orange_trim.webp"
+        },
+        {
+          "key": "gray",
+          "label": "灰",
+          "image": "mr_21_gray_trim.png",
+          "webp": "mr_21_gray_trim.webp"
+        },
+        {
+          "key": "purple",
+          "label": "紫",
+          "image": "mr_21_purple_trim.png",
+          "webp": "mr_21_purple_trim.webp"
+        },
+        {
+          "key": "green",
+          "label": "绿",
+          "image": "mr_21_green_trim.png",
+          "webp": "mr_21_green_trim.webp"
+        },
+        {
+          "key": "blue",
+          "label": "蓝",
+          "image": "mr_21_blue_trim.png",
+          "webp": "mr_21_blue_trim.webp"
+        },
+        {
+          "key": "black",
+          "label": "黑",
+          "image": "mr_21_black_trim.png",
+          "webp": "mr_21_black_trim.webp"
+        }
+      ],
+      "safeZones": [
+        {
+          "xMm": 33.1,
+          "yMm": 31.5,
+          "wMm": 47.5,
+          "hMm": 57.2
+        }
+      ],
+      "brandLogo": {
+        "cxMm": 57.5,
+        "cyMm": 60.4,
+        "lenMm": 22,
+        "rot": 90,
+        "color": "#ffffff"
+      },
+      "order": 6
+    },
     "MR_3101": {
       "id": "MR_3101",
       "pxPerMm": 1.5,
@@ -297,7 +330,7 @@
         "rot": -1,
         "color": "#828282"
       },
-      "order": 6
+      "order": 7
     },
     "MR_9366": {
       "id": "MR_9366",
@@ -347,7 +380,7 @@
           "hMm": 50.8
         }
       ],
-      "order": 7
+      "order": 8
     },
     "MR_9808": {
       "id": "MR_9808",
@@ -392,7 +425,7 @@
         "rot": 90,
         "color": "#dedede"
       },
-      "order": 8
+      "order": 9
     },
     "MR_8518": {
       "id": "MR_8518",
@@ -425,7 +458,7 @@
           "hMm": 170
         }
       ],
-      "order": 9
+      "order": 10
     },
     "MR_3102": {
       "id": "MR_3102",
@@ -458,7 +491,7 @@
         "rot": -4,
         "color": "#b8b8b8"
       },
-      "order": 10
+      "order": 11
     },
     "MR_9813": {
       "id": "MR_9813",
@@ -490,39 +523,6 @@
         "lenMm": 82,
         "rot": 90,
         "color": "#a6a7ac"
-      },
-      "order": 11
-    },
-    "MR_9299": {
-      "id": "MR_9299",
-      "pxPerMm": 1,
-      "canvasMm": 498,
-      "logoMax": {
-        "wMm": 60,
-        "hMm": 60
-      },
-      "colors": [
-        {
-          "key": "bizblack",
-          "label": "商务黑",
-          "image": "mr_9299_bizblack_trim.png",
-          "webp": "mr_9299_bizblack_trim.webp"
-        }
-      ],
-      "safeZones": [
-        {
-          "xMm": 144.7,
-          "yMm": 63.2,
-          "wMm": 205.7,
-          "hMm": 409.1
-        }
-      ],
-      "brandLogo": {
-        "cxMm": 330.2,
-        "cyMm": 337.6,
-        "lenMm": 56,
-        "rot": 90,
-        "color": "#d1d1d1"
       },
       "order": 12
     },
