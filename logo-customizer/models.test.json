@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T02:11:44.289Z",
+  "updatedAt": "2026-10-09T02:11:55.606Z",
   "pinnedCount": 2,
   "models": {
     "MR_9031SJ": {
@@ -84,6 +84,12 @@
           "rot": 0,
           "src": "test-assets/35_logo2.png",
           "srcNm": "电子签名.png"
+        },
+        {
+          "cxMm": 103.3,
+          "cyMm": 186.3,
+          "lenMm": 80,
+          "rot": 0
         }
       ],
       "brandLogo": {
