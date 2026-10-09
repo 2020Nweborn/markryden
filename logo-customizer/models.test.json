@@ -1,31 +1,7 @@
 {
-  "updatedAt": "2026-10-09T09:15:01.315Z",
-  "pinnedCount": 3,
+  "updatedAt": "2026-10-09T09:17:05.778Z",
+  "pinnedCount": 2,
   "models": {
-    "MR_79": {
-      "id": "MR_79",
-      "pxPerMm": 2,
-      "canvasMm": 201.5,
-      "logoMax": {
-        "wMm": 60,
-        "hMm": 60
-      },
-      "colors": [
-        {
-          "key": "gray",
-          "label": "灰",
-          "image": "test-assets/mr_79_gray_trim.png",
-          "webp": "test-assets/mr_79_gray_trim.webp"
-        },
-        {
-          "key": "elitegray",
-          "label": "精英灰",
-          "image": "test-assets/mr_79_elitegray_trim.png",
-          "webp": "test-assets/mr_79_elitegray_trim.webp"
-        }
-      ],
-      "order": 0
-    },
     "MR_9031SJ": {
       "id": "MR_9031SJ",
       "pxPerMm": 1,
@@ -75,7 +51,7 @@
           "hMm": 348.1
         }
       ],
-      "order": 1
+      "order": 0
     },
     "MR_35": {
       "id": "MR_35",
@@ -111,6 +87,30 @@
         "src": "test-assets/35_logo.png",
         "srcNm": "电子签名.png"
       },
+      "order": 1
+    },
+    "MR_79": {
+      "id": "MR_79",
+      "pxPerMm": 2,
+      "canvasMm": 201.5,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "gray",
+          "label": "灰",
+          "image": "test-assets/mr_79_gray_trim.png",
+          "webp": "test-assets/mr_79_gray_trim.webp"
+        },
+        {
+          "key": "elitegray",
+          "label": "精英灰",
+          "image": "test-assets/mr_79_elitegray_trim.png",
+          "webp": "test-assets/mr_79_elitegray_trim.webp"
+        }
+      ],
       "order": 2
     },
     "MR_21": {
