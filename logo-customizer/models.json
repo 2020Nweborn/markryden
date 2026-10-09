@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T09:31:44.826Z",
+  "updatedAt": "2026-10-09T09:33:54.280Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -6345,12 +6345,18 @@
     "MR_7612": {
       "id": "MR_7612",
       "pxPerMm": 1,
-      "canvasMm": 494,
+      "canvasMm": 493,
       "logoMax": {
         "wMm": 60,
         "hMm": 60
       },
       "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_7612_bizblack_trim.png",
+          "webp": "mr_7612_bizblack_trim.webp"
+        },
         {
           "key": "white",
           "label": "白",
