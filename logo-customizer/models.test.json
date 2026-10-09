@@ -1,7 +1,43 @@
 {
-  "updatedAt": "2026-10-09T09:17:05.778Z",
-  "pinnedCount": 2,
+  "updatedAt": "2026-10-09T09:17:09.884Z",
+  "pinnedCount": 1,
   "models": {
+    "MR_35": {
+      "id": "MR_35",
+      "pxPerMm": 2,
+      "canvasMm": 307,
+      "logoMax": {
+        "wMm": 110,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_35_bizblack_trim.png",
+          "webp": "mr_35_bizblack_trim.webp"
+        }
+      ],
+      "brandLogos": [
+        {
+          "cxMm": 166.9,
+          "cyMm": 150.6,
+          "lenMm": 80,
+          "rot": 0,
+          "src": "test-assets/35_logo.png",
+          "srcNm": "电子签名.png"
+        }
+      ],
+      "brandLogo": {
+        "cxMm": 166.9,
+        "cyMm": 150.6,
+        "lenMm": 80,
+        "rot": 0,
+        "src": "test-assets/35_logo.png",
+        "srcNm": "电子签名.png"
+      },
+      "order": 0
+    },
     "MR_9031SJ": {
       "id": "MR_9031SJ",
       "pxPerMm": 1,
@@ -51,42 +87,6 @@
           "hMm": 348.1
         }
       ],
-      "order": 0
-    },
-    "MR_35": {
-      "id": "MR_35",
-      "pxPerMm": 2,
-      "canvasMm": 307,
-      "logoMax": {
-        "wMm": 110,
-        "hMm": 60
-      },
-      "colors": [
-        {
-          "key": "bizblack",
-          "label": "商务黑",
-          "image": "mr_35_bizblack_trim.png",
-          "webp": "mr_35_bizblack_trim.webp"
-        }
-      ],
-      "brandLogos": [
-        {
-          "cxMm": 166.9,
-          "cyMm": 150.6,
-          "lenMm": 80,
-          "rot": 0,
-          "src": "test-assets/35_logo.png",
-          "srcNm": "电子签名.png"
-        }
-      ],
-      "brandLogo": {
-        "cxMm": 166.9,
-        "cyMm": 150.6,
-        "lenMm": 80,
-        "rot": 0,
-        "src": "test-assets/35_logo.png",
-        "srcNm": "电子签名.png"
-      },
       "order": 1
     },
     "MR_79": {
