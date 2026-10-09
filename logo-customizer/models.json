@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T01:30:31.659Z",
+  "updatedAt": "2026-10-09T01:34:31.484Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -5309,7 +5309,22 @@
           "image": "mr_2492_bizblack_trim.png",
           "webp": "mr_2492_bizblack_trim.webp"
         }
-      ]
+      ],
+      "safeZones": [
+        {
+          "xMm": 125.1,
+          "yMm": 117.2,
+          "wMm": 181.6,
+          "hMm": 308
+        }
+      ],
+      "brandLogo": {
+        "cxMm": 288.2,
+        "cyMm": 314.4,
+        "lenMm": 57,
+        "rot": 90,
+        "color": "#ededed"
+      }
     },
     "MR_5045": {
       "id": "MR_5045",
