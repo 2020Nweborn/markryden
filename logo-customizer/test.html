@@ -3,7 +3,15 @@
 <head data-page-node-id="RrHHwKVa6pXLMr4fS7L4dS">
 <meta charset="UTF-8" data-page-node-id="jo3pmD21HUXDmJDmoLbdAg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="90YumJ2zsCgDdBdm0Hgr5i">
-<title>MARK RYDEN · LOGO 定制预览 · 测试版</title>
+<!-- ⛔⛔ 合并双轨开关（2026-10-09，V2.0）—— 本文件与 index.html 是**同一份内容**，
+     唯一的人为差异就是这一行。改版只改这一份，另一个文件用 cp 覆盖后改这里的 true/false。
+     ⛔ 本行必须在任何脚本之前（title 与角标都按它推导）。
+     ⛔⛔ 别用 document.write 往 <title> 里写后缀 —— <title> 是 RCDATA 元素，
+        解析器在里面**不认标签**，写进去的 <script> 会变成字面文本显示在标题栏（实测踩过）。
+        正确做法：由 setLanguage() 在设 title 之后追加后缀（见下方 setLanguage）。
+     ⛔ 不许给正式版引外部 js —— 保持单文件、可离线打开、可直接双击。 -->
+<script>var IS_SANDBOX=true;/* 测试版＝沙盒：配置读 models.test.json、素材写 test-assets/ */</script>
+<title>MARK RYDEN · LOGO 定制预览</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
 <style>
   :root{
@@ -379,7 +387,7 @@
 </style>
 </head>
 <body data-page-node-id="IPopAk2MU4y4SzLbrQdj7C">
-<style id="mr-test-badge-css">.mr-test-badge{position:fixed;left:12px;bottom:12px;z-index:2147483000;padding:4px 11px;border-radius:999px;background:rgba(48,48,48,.84);color:#fff;font-size:12px;letter-spacing:.08em;pointer-events:none;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",Arial,sans-serif}</style><div class="mr-test-badge">测试版</div>
+<script>if(IS_SANDBOX)document.write('<style id="mr-test-badge-css">.mr-test-badge{position:fixed;left:12px;bottom:12px;z-index:2147483000;padding:4px 11px;border-radius:999px;background:rgba(48,48,48,.84);color:#fff;font-size:12px;letter-spacing:.08em;pointer-events:none;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",Arial,sans-serif}</style><div class="mr-test-badge">测试版</div>')</script>
 <style id="mr-draft-badge-css">.mr-draft-badge{position:fixed;left:12px;bottom:44px;z-index:2147483000;display:flex;align-items:center;gap:7px;padding:5px 12px;border:0;border-radius:999px;background:rgba(198,132,26,.95);color:#fff;cursor:pointer;font:12px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",Arial,sans-serif;letter-spacing:.02em;box-shadow:0 2px 10px rgba(0,0,0,.22)}.mr-draft-badge i{width:7px;height:7px;border-radius:50%;background:#fff;flex:0 0 auto}.mr-draft-badge u{text-decoration:underline;text-underline-offset:2px}.mr-draft-badge[hidden]{display:none}</style>
 <button class="mr-draft-badge" id="mrDraftBadge" type="button" hidden><i></i><span id="mrDraftText"></span><u>清除</u></button>
 <header data-page-node-id="U872brYtajZACf2F2osm0r">
@@ -597,6 +605,11 @@ const langWrap=document.getElementById('langWrap'),langButton=document.getElemen
 function setLanguage(code,remember){
   const t=I18N[code]||I18N.zh;currentLang=code;
   document.documentElement.lang=t.htmlLang;document.title=t.title;langCurrent.textContent=t.name;
+  /* ⛔ 合并双轨（2026-10-09）：测试版标题加后缀。
+     必须加在**上面那行之后**（i18n 刚设完 title），否则会被覆盖掉、后缀消失。
+     ⛔ 不许改用 document.write 往 <title> 里写 —— <title> 是 RCDATA，
+        解析器在里面不认标签，写进去的 <script> 会变成字面文本显示在标题栏（实测踩过）。 */
+  if(IS_SANDBOX)document.title+=' · 测试版';
   document.getElementById('stageSection').setAttribute('aria-label',t.stageAria);
   document.getElementById('settingsPanel').setAttribute('aria-label',t.settingsAria);
   document.getElementById('warningTrigger').setAttribute('aria-label',t.warningAria);
@@ -754,12 +767,17 @@ const MODELS = {
 /* ==== MODELS:END ==== */
 
 /* ==== 后台维护的型号配置 ====
-   内置 MODELS 只作为兜底。启动时读取同目录 models.test.json（由后台页写入），
-   读到就整体覆盖并重新渲染；读不到或格式不对时静默沿用内置配置，页面照常可用。 */
+   内置 MODELS 只作为兜底。启动时读取同目录 CFG（由后台页写入），
+   读到就整体覆盖并重新渲染；读不到或格式不对时静默沿用内置配置，页面照常可用。
+   ⛔ CFG 由顶部 IS_SANDBOX 开关推导：正式版 models.json / 测试版 models.test.json。
+     改版时**只许改顶部那一行开关**，全文其他地方的 models.json 字样都只是注释。
+     下面是配置文件名常量（合并双轨 2026-10-09 新增）：
+     ⛔ 原本这里写死 models.test.json、正式版写死 models.json，两地各一份、回填靠手工甄别。 */
+const CFG=IS_SANDBOX?'models.test.json':'models.json';
 /* ⛔ 「型号表为空」是合法状态，不是坏配置。
    2026-09-17 用户报「本地后台删了型号，前端不跟着变」——根因就在这里：
    旧代码 `if(!keys.length)return false;` 把空对象当读取失败，调用方于是转头去读
-   `models.test.json` 旧文件，前端继续显示已经被删掉的型号，**而且一句提示都没有**。
+   `CFG` 旧文件，前端继续显示已经被删掉的型号，**而且一句提示都没有**。
    区分标准只有一条：`models` 不是对象才算坏配置；是对象（哪怕没有键）就是有效配置。
    只有「读不到 / 解析不出来」才该退回内置配置。 */
 /* ===== 记住上次打开的型号（2026-09-30） =====
@@ -790,7 +808,7 @@ function applyRemoteModels(j){
     msSyncFromSelect();
     renderColorSelect();
     /* ⛔⛔ 2026-10-08（第三轮）：换了一整份配置 = 品牌LOGO 的签名全部作废。
-       不清的话，首屏「读 models.test.json → 应用」这条路径上，
+       不清的话，首屏「读 CFG → 应用」这条路径上，
        sig 可能与内置 MODELS 的签名相同（都是同样的默认字标参数）→ 短路 return，
        于是**首屏就该显示的 LOGO 一个都不画**。
        —— 用户报「前端页面也不显示」的最常见入口就是这里（直接打开页面，不切型号）。 */
@@ -805,7 +823,7 @@ function applyRemoteModels(j){
     setTimeout(()=>{try{preloadBrandLogoAssets();}catch(e){}},0);
     return true;
   }catch(e){
-    console.warn('models.test.json 应用失败，沿用内置配置',e);
+    console.warn(CFG+' 应用失败，沿用内置配置',e);
     return false;
   }
 }
@@ -848,7 +866,7 @@ function hideNoModels(){
     ⛔ 不许静默：用草稿时左下角常驻一条橙色角标，写明「未上传线上」并给出一键清除，
        否则很容易误以为线上配置已经更新了。
     ⛔ 只在开发环境替换读取来源，不动「后台 api → 同源 → raw」那条线上读取顺序。 */
-const LOCAL_DRAFT_KEY='mr_cfg_draft:models.test.json';
+const LOCAL_DRAFT_KEY='mr_cfg_draft:'+CFG;
 /* ⛔ 判定规则（2026-09-17 第二次修正，别改回「hostname 是不是 localhost」）：
    旧规则只认 localhost / 127.* / 私网 IP / file:，任何别的开发预览形态
    （IDE 内置预览、代理域名、容器 host、about:srcdoc…）都会被误判成线上，
@@ -856,7 +874,7 @@ const LOCAL_DRAFT_KEY='mr_cfg_draft:models.test.json';
    新规则反过来：**只有线上部署域（github.io）算线上**，其它一律开发环境。 */
 const PROD_HOST=/(^|\.)github\.io$/i;
 /* ⛔ 仅供验证脚本使用的开关（URL 上没有入口）：预置 window.__MR_FORCE_ONLINE=true
-   即按「线上」跑，用来保证旧套件（在 127.0.0.1 上跑、断言读的是 models.test.json）
+   即按「线上」跑，用来保证旧套件（在 127.0.0.1 上跑、断言读的是 CFG）
    不被新判定引入的草稿通道干扰。 */
 const IS_LOCAL=!(PROD_HOST.test(String(location.hostname||'')))&&(window.__MR_FORCE_ONLINE!==true);
 function localDraft(){
@@ -886,7 +904,7 @@ window.__mrLocalDraft={isLocal:()=>IS_LOCAL,get:localDraft,drop:dropLocalDraft,k
 (function(){
   const b=document.getElementById('mrDraftBadge');
   if(b)b.addEventListener('click',function(){
-    if(!confirm('清除本地草稿？\n\n清掉后本页会显示线上的 models.test.json 配置。\n草稿只存在本机浏览器里、没有别的备份，删了不可恢复。'))return;
+    if(!confirm('清除本地草稿？\n\n清掉后本页会显示线上的 '+CFG+' 配置。\n草稿只存在本机浏览器里、没有别的备份，删了不可恢复。'))return;
     dropLocalDraft();
     /* 图片仓与草稿是同一份本机数据的两半，必须一起清干净，否则会留下引不到的残留图片 */
     localAssetsClear().then(function(){location.reload();});
@@ -909,7 +927,7 @@ window.__mrLocalDraft={isLocal:()=>IS_LOCAL,get:localDraft,drop:dropLocalDraft,k
       return;
     }
     syncDraftBadge(null);
-    fetch('models.test.json?t='+Date.now(),{cache:'no-store'})
+    fetch(CFG+'?t='+Date.now(),{cache:'no-store'})
       .then(function(r){return r.ok?r.json():null;})
       .then(function(j){if(applyRemoteModels(j))console.log('已加载后台型号配置');})
       .catch(function(){});
@@ -1362,7 +1380,7 @@ colorSelect.addEventListener('change',e=>{
 const CAN_WEBP=(()=>{try{const c=document.createElement('canvas');c.width=c.height=1;return c.toDataURL('image/webp').indexOf('data:image/webp')===0;}catch(e){return false;}})();
 /* ==== 本机图片仓（仅开发环境） ====
    本地后台「新增型号」时把裁好的 PNG/WebP 存进 IndexedDB，key 就是线上同名路径
-   （如 test-assets/mr_9041_bizblack_trim.png）。这里在启动时预载成 objectURL，
+   （如 mr_9041_bizblack_trim.png）。这里在启动时预载成 objectURL，
    modelSrc() 优先命中 —— 于是「本地新增型号 → 前端出现产品图」这条绑定本地也能验。
    ⛔ 只在开发环境启用；线上走同源静态资源，这条路径完全不参与。
    ⛔ 必须做成「同步查表」：modelSrc() 是同步函数，而读 IndexedDB 是异步的，
@@ -1403,7 +1421,7 @@ function localAssetsClear(){
   });
 }
 /* ⛔ 立刻开始预载，不要等到 DOMContentLoaded：让这趟 IndexedDB 往返与页面解析重叠。
-   放在 boot 里顺序 await 会把「读 models.test.json」推迟到 load 事件之后，
+   放在 boot 里顺序 await 会把「读 CFG」推迟到 load 事件之后，
    既拖慢首屏，也会让「加载期抓请求」这类断言抓不到 —— 表现为假红。 */
 const localAssetsPromise=localAssetsReady();
 function modelSrc(c,forcePng){
@@ -1430,7 +1448,7 @@ function brandLogoSrcUrl(src){
 const modelSelect=document.getElementById('model');
 /* 演示用型号（只为「验得出滚动」而存在）：
    线上只有 5 个型号，永远看不到第 6 项起的滚动条，所以本地补 5 个假型号凑到 10 个。
-   ⛔ 只写进内存（MODELS 对象）—— 不碰 models.json、不写本机草稿、线上一个字节都不会有；
+   ⛔ 只写进内存（MODELS 对象）—— 不碰 CFG、不写本机草稿、线上一个字节都不会有；
       几何与配色直接复用第 1 个真型号，点开照样有图、不会裂。名字带 DEMO，一眼可辨。 */
 /* ⛔ 只在 URL 显式带 ?demo=1 时才注入 —— 不做成「本地就自动注入」：
    verify-localdraft / verify-test-pages 这些回归脚本是拿 `#model option` 的**集合**
