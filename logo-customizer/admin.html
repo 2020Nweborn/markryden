@@ -932,6 +932,7 @@ function loadModels(){
     lastRead='本机草稿 '+draftStamp();
     state.models=dk.cfg.models;
     state.pinnedCount=dk.cfg.pinnedCount;
+    normalizeOrder();   /* ⛔ 与线上那条读取路径同理：草稿也按 order 重排（见下方线上路径的说明） */
     state.dirty=false;state.puts=[];state.dels=[];state.pendingCopy=[];state.blocked=[];
     draft={model:'',items:[],editKey:'',geo:null,brandLogo:null,brandLogos:null};
     $('newModel').value='';
@@ -974,6 +975,15 @@ function loadModels(){
     lastRead=src+' '+(j&&j.updatedAt?String(j.updatedAt).slice(5,16).replace('T',' '):'');
     state.models=(j&&j.models)||{};
     state.pinnedCount=(j&&j.pinnedCount);
+    /* ⛔⛔ 2026-10-09 根治（关键一步）：按每个型号自带的 `order` 重排 key 顺序。
+       为什么必须有这一步 —— 用户报「调整完顺序，你一更新就全变回默认」：
+       旧口径下顺序只活在 **JSON 的 key 顺序**里，任何一次「不带顺序的外部覆盖」
+       都会让它归零，而页面不报错、用户只看到排好的顺序没了。
+       现在顺序在每个型号里都存了一份 `order`，所以读进来就先按它排一遍 → **自愈**。
+       ⛔ 时机：必须在 state.models / state.pinnedCount 都赋值**之后**、renderList **之前**。
+       ⛔ normalizeOrder() 会**就地重排**（并给缺失 order 的型号按原顺序补号），
+          在「老数据第一次被接管」时**不改变任何现有视觉顺序**。 */
+    normalizeOrder();
     state.dirty=false;state.puts=[];state.dels=[];state.pendingCopy=[];state.blocked=[];
     draft={model:'',items:[],editKey:'',geo:null,brandLogo:null,brandLogos:null};
     $('newModel').value='';
@@ -1131,15 +1141,87 @@ window.addEventListener('resize',function(){markOverflow();syncCardHeight();});
 /* ========== 型号顺序：人工置顶 + 人工拖拽（2026-09-30） ==========
    ⛔ 顺序的载体 = models.json 里 models 对象的 key 顺序（不加新字段）。
       前端 applyRemoteModels() 按 key 顺序重建 MODELS，下拉顺序天然跟着走 → 前端不用改。
-   写回走 autoCommit()：它自己判 IS_LOCAL（本地落草稿 / 线上才 PUT），与删型号同一条路。 */
+   写回走 autoCommit()：它自己判 IS_LOCAL（本地落草稿 / 线上才 PUT），与删型号同一条路。
+
+   ⛔⛔⛔ 2026-10-09（第十五/十六轮）根治：**每个型号里再冗余存一份显式序号 `order`**
+   ─────────────────────────────────────────────────────────────────────────
+   背景（用户报「我调整完顺序，你一更新，我置顶/排好的型号都变回默认了」）：
+     旧口径把「顺序」只存在 **JSON 的 key 顺序**里、「置顶」只存在 **顶层整数 pinnedCount** 里。
+     这两样都是**游离于型号之外**的信息 —— 只要有任何一处写 `models.json` 时**没带上它们**
+     （最典型：用仓库里那份过期的本地 `models.json` 覆盖线上），顺序与置顶就**整段归零**，
+     而页面上不会报任何错，用户只看到「排好的顺序没了、置顶全变灰」。
+   根治口径：
+     · 每个型号对象里写一个整数 `order`（0,1,2,… 越小越靠前）。
+     · **读取时**以 `order` 为准重排 key 顺序；缺失 `order` 的按原 key 顺序**顺延补号**。
+     · **任何一次重排**都把新的 `order` 写回**所有**型号（序号始终连续、从 0 起）。
+     · 于是「顺序」跟着型号本体走 —— 外部再怎么覆盖，只要有 `order` 就能**自愈**。
+   ⛔ 兼容三条：
+     ① `order` 缺失（线上老数据 / 外部写的配置）→ 按现有 key 顺序补号，**不改变视觉顺序**；
+     ② 前端**一行都不用改**（它仍按 key 顺序渲染，而后台保证 key 顺序 == order 顺序）；
+     ③ `pinnedCount` 继续保留并写回（老前端/老代码只认它），但**置顶与否现在也能由 order 复原**。
+   ⛔ 不许把 `order` 当成「绝对权威」去覆盖 `pinnedCount` 的语义 —— 两者是同一个顺序的两种表达。 */
 function modelKeys(){return Object.keys(state.models);}
+/* 按 order 重排 state.models 的 key 顺序，并保证每个型号都带上连续 order。
+   ⛔ 就地重排（不许整体替换 state.models 的引用）—— 它的引用被 renderList / buildConfigJobs
+      / 写回时的 merged 多处持有，换对象会让那些引用指向旧数据。 */
+/* ⛔⛔⛔ 两个方向完全不同的函数，别混用（2026-10-09 被这个坑咬过一次，见下）：
+     · normalizeOrder()  —— **以 order 为准**，重排 key 顺序。
+                            用于「读进来之后」：让文件里的顺序服从 order（自愈）。
+     · numberOrder()     —— **以当前 key 顺序为准**，重编 order。
+                            用于「用户刚改完顺序之后」：让 order 服从新的 key 顺序。
+   ⛔⛔ 踩过的坑：一开始把两者合成一个（都走 normalizeOrder），于是用户点「置顶」后
+      key 顺序被 moveModelOrder 改对了，紧接着 syncOrder() 又按**旧的 order** 把它排回去
+      → **置顶被当场撤销**，表现是「点了置顶，卡片纹丝不动」。
+      套件 A9/A13d/A13g/A13h/A17 五条因此变红 —— 这是真回归，不是假红。 */
+function normalizeOrder(){
+  var ks=modelKeys();
+  if(!ks.length)return false;
+  var changed=false;
+  /* 排序用的键：有 order 用它，没有则用「当前下标」（= 它在 key 顺序里的位置）——
+     这样首次接管老数据时**不会打乱任何现有顺序**。 */
+  var arr=ks.map(function(k,i){
+    var o=state.models[k]&&state.models[k].order;
+    return {k:k,o:(typeof o==='number'&&isFinite(o))?o:i,had:(typeof o==='number'&&isFinite(o))};
+  });
+  /* 稳定排序：order 相同（或都缺失）时保持原 key 顺序 */
+  arr.forEach(function(e,i){e.i=i;});
+  arr.sort(function(a,b){return (a.o-b.o)||(a.i-b.i);});
+  /* 重排 key + 补写连续 order */
+  var newKs=arr.map(function(e){return e.k;});
+  for(var i=0;i<newKs.length;i++){
+    if(ks[i]!==newKs[i]){changed=true;break;}
+  }
+  var keep={};
+  newKs.forEach(function(k){keep[k]=state.models[k];});
+  Object.keys(state.models).forEach(function(k){delete state.models[k];});
+  newKs.forEach(function(k,i){
+    var m=keep[k];
+    if(m&&m.order!==i){m.order=i;changed=true;}
+    state.models[k]=m;
+  });
+  return changed;
+}
+/* 以**当前 key 顺序**为准，把每个型号的 order 重编成 0,1,2,…（不动 key 顺序）。
+   ⛔ 这才是「用户刚改完顺序」之后该调的那个 —— 见上面两个函数的说明。 */
+function numberOrder(){
+  var ks=modelKeys();
+  var changed=false;
+  for(var i=0;i<ks.length;i++){
+    var m=state.models[ks[i]];
+    if(m&&m.order!==i){m.order=i;changed=true;}
+  }
+  return changed;
+}
+/* ⛔ 「顺序变了、需要把新顺序固化进配置」时调它 —— 以 key 顺序为准重编 order。 */
+function syncOrder(){return numberOrder();}
 /* ===== 置顶（2026-09-30 用户定：不限数量，能置顶也能取消置顶）=====
    ⛔ 不给每个型号加字段，只用一个顶层整数 pinnedCount。语义 =「models 的 key 顺序里，
       前 pinnedCount 个就是置顶区」。于是：
         置顶     = 移到第一位 + pinnedCount+1
         取消置顶 = 移到第 pinnedCount 位（离开置顶区）+ pinnedCount-1
    好处：物理顺序（= 前端下拉的真实顺序）与「谁被置顶」永远一致；拖拽跨过边界时
-   置顶状态会自动跟着走，不会出现「标着已置顶却排在后面」的自相矛盾。 */
+   置顶状态会自动跟着走，不会出现「标着已置顶却排在后面」的自相矛盾。
+   ⛔ 2026-10-09 补充：上面的语义**不变**，但现在 key 顺序由 `order` 字段兜底复原。 */
 function clampPinned(n){
   var N=modelKeys().length;
   n=Math.floor(Number(n)||0);
@@ -1193,8 +1275,13 @@ function unpinModelOrder(k){
   state.pinnedCount=n-1;
   return true;
 }
-/* 顺序变了才写回。publishConfig()/saveLocalDraft() 成功时返回 'ok'（与删型号同一判据）。 */
+/* 顺序变了才写回。publishConfig()/saveLocalDraft() 成功时返回 'ok'（与删型号同一判据）。
+   ⛔⛔ 2026-10-09 根治：这里是**所有顺序变更的唯一出口**（置顶 / 取消置顶 / 拖拽三条路都调它），
+      所以 `order` 的同步也放在这里，一个点覆盖全部——⛔ 不许分散到三个调用处各写一遍。
+   `syncOrder()` 会把当前 key 顺序折算成连续 order 写进每个型号，
+   于是「顺序」从此刻起**跟着型号本体走**，外部覆盖 models.json 也能自愈。 */
 function commitModelOrder(what){
+  syncOrder();                     /* ⛔ 必须在 renderList 之前：列表要按最终顺序渲染 */
   state.dirty=true;
   renderList();refreshPending();
   autoCommit(what||'调整型号顺序').then(function(r){
@@ -1651,7 +1738,13 @@ function packUpload(items,model,keepColors,opt){
                    早前这里写死 MAX_LOGO_MM(60×60)，导致只要从后台上传一次图片，
                    该型号的上限就被永久改成 60×60。
      · safeZones —— 可定制范围。用「修改」重传图片是很日常的操作，
-                   丢了它等于安全区每次改图都要重画一遍。 */
+                   丢了它等于安全区每次改图都要重画一遍。
+     ⛔⛔ 2026-10-09 新增第 5 个必须继承的字段：`order`（型号的人工排序序号）。
+         它和上面四个同理 —— 用户排好的顺序必须扛得住「重传图片 / 改配色」这类日常操作。
+         不继承则每次改图都会把该型号踢到队尾（甚至因 order 缺失被 normalizeOrder 排到最后）。
+         新型号（prev 为空）不写 order：交给 commitModelOrder()/normalizeOrder() 统一编号，
+         避免这里凭空造一个与现有序号冲突的值。 */
+  var keepOrder=(prev&&typeof prev.order==='number'&&isFinite(prev.order))?prev.order:null;
   var keepLogo=opt.brandLogo||(prev&&prev.brandLogo)||null;
   var keepLogos=Array.isArray(opt.brandLogos)?opt.brandLogos
                :((prev&&Array.isArray(prev.brandLogos))?prev.brandLogos:null);
@@ -1660,6 +1753,7 @@ function packUpload(items,model,keepColors,opt){
   var out={key:key,model:{id:key,pxPerMm:g.px,canvasMm:Math.round(g.side/g.px*10)/10,
     logoMax:{wMm:Number(keepLogoMax.wMm)||MAX_LOGO_MM,hMm:Number(keepLogoMax.hMm)||MAX_LOGO_MM},
     colors:[]},files:[],keepColors:keepColors||[]};
+  if(keepOrder!==null)out.model.order=keepOrder;
   if(keepLogo)out.model.brandLogo=keepLogo;
   if(keepLogos&&keepLogos.length)out.model.brandLogos=keepLogos;
   if(keepZones.length)out.model.safeZones=keepZones;
@@ -2228,6 +2322,18 @@ function publishConfig(){
    实际上一个字都没写回 GitHub，刷新自然全长回来。
    所以：确认后直接写回，一步到位。返回 Promise，调用方可据此决定是否刷新界面。 */
 function autoCommit(what){
+  /* ⛔⛔ 2026-10-09 根治：这里是**所有写回线上的唯一总出口**（新增型号 / 删型号 / 删配色 /
+     改颜色名 / 调顺序 / 置顶 … 全部经过它），所以把 `order` 的编号也钉在这里。
+      为什么要有这一手：新增的型号对象身上**没有** order（见 buildUpload 里的说明），
+      如果用户加完型号后**没再拖动过**就直接提交，那份配置里就有一个型号缺 order ——
+      下次读进来只能按「当时的 key 位置」补号，等于顺序不受控。
+      在这里统一编号 → 任何一次写回，落盘的配置**必然是每个型号都带连续 order 的**。
+      ⛔ 与 commitModelOrder 里那次 syncOrder 不重复：那边保证**渲染前**顺序已正确
+         （用户拖完立刻要看到新顺序），这边保证**落盘内容**永远完整。两次都幂等。
+      ⛔⛔ 这里**只编号、不渲染**：autoCommit 会在弹窗/面板还开着的时候被调用，
+         在此重渲染列表会打断用户正在做的事；渲染交给原有流程（afterWrite / renderList 调用点）。
+         顺序若真的变了，页面会在该刷新的时候自然刷到最新。 */
+  syncOrder();
   /* ⛔ 本地草稿模式同样要守住「确认即提交」这条红线：
      本地也不能只改内存 + 标脏，否则刷新就回退，用户会以为删不掉。
      ⛔ 而且必须无条件走草稿（不带 `!token()`）—— 见 saveLocalDraft 上方那段：
