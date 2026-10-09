@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T09:33:54.280Z",
+  "updatedAt": "2026-10-09T09:36:31.116Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -3084,26 +3084,36 @@
     },
     "MR_7917": {
       "id": "MR_7917",
-      "pxPerMm": 2,
-      "canvasMm": 492.5,
+      "pxPerMm": 1,
+      "canvasMm": 498,
       "logoMax": {
         "wMm": 60,
         "hMm": 60
       },
       "colors": [
         {
+          "key": "银",
+          "label": "银",
+          "image": "mr_7917_银_trim.png",
+          "webp": "mr_7917_银_trim.webp"
+        },
+        {
+          "key": "blue",
+          "label": "蓝",
+          "image": "mr_7917_blue_trim.png",
+          "webp": "mr_7917_blue_trim.webp"
+        },
+        {
+          "key": "white",
+          "label": "白",
+          "image": "mr_7917_white_trim.png",
+          "webp": "mr_7917_white_trim.webp"
+        },
+        {
           "key": "bizblack",
           "label": "商务黑",
           "image": "mr_7917_bizblack_trim.png",
           "webp": "mr_7917_bizblack_trim.webp"
-        }
-      ],
-      "safeZones": [
-        {
-          "xMm": 165.6,
-          "yMm": 50.2,
-          "wMm": 163.8,
-          "hMm": 404.9
         }
       ],
       "brandLogo": {
@@ -3112,7 +3122,15 @@
         "lenMm": 76,
         "rot": 90,
         "color": "#f2f2f2"
-      }
+      },
+      "safeZones": [
+        {
+          "xMm": 165.6,
+          "yMm": 50.2,
+          "wMm": 163.8,
+          "hMm": 404.9
+        }
+      ]
     },
     "MR_8112": {
       "id": "MR_8112",
