@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T03:27:51.584Z",
+  "updatedAt": "2026-10-09T03:31:31.857Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -5785,6 +5785,23 @@
           "label": "灰蓝",
           "image": "mr_3807_灰蓝_trim.png",
           "webp": "mr_3807_灰蓝_trim.webp"
+        }
+      ]
+    },
+    "MR_3777": {
+      "id": "MR_3777",
+      "pxPerMm": 3,
+      "canvasMm": 311.7,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_3777_bizblack_trim.png",
+          "webp": "mr_3777_bizblack_trim.webp"
         }
       ]
     }
