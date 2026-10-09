@@ -278,6 +278,17 @@
   .lp-src .mini-dark{flex:0 0 auto;height:30px;padding:0 11px;border-radius:7px;
                      font-size:12px;white-space:nowrap;cursor:pointer}
   .lp-src .mini-dark[hidden]{display:none}
+  /* ⛔ 2026-10-08（第八轮）：颜色行 = 色盘 + 「使用此颜色」勾选。
+     不勾 = 保留上传图的原本颜色（用户明确要求的新默认）；
+     勾上 = 用左边这个颜色去刷整张图（覆盖原色）。 */
+  .lp-color-row{display:flex;align-items:center;gap:10px;margin:0 0 12px}
+  .lp-color-row #lpColor{flex:0 0 auto;width:52px;height:34px;padding:2px;border:1px solid var(--bd,#dcdfe4);
+                         border-radius:8px;background:#fff;cursor:pointer}
+  .lp-color-row #lpColor:disabled{opacity:.45;cursor:default}
+  .lp-color-use{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--tx2);
+                cursor:pointer;user-select:none;white-space:nowrap}
+  .lp-color-use input{width:14px;height:14px;accent-color:#1938D7;cursor:pointer;margin:0}
+  .lp-color-use input:disabled{cursor:default}
   /* LOGO 列表（2026-10-08 起一个型号可放 1~3 个品牌 LOGO，各自独立的位置/尺寸/角度/颜色/图形）。
      交互与「安全区」面板的 .zn-list 同一套：点一行 = 选中那一个，右侧参数区跟着切过去。
      ⛔ .lp-list 自己**不是**滚动容器以外的东西：行高固定、超出滚，避免长列表把
@@ -511,7 +522,13 @@
         <input type="file" id="lpFile" accept="image/png,image/jpeg,image/webp" hidden>
         <label>字标长度（mm）</label><input type="number" id="lpLen" step="1" min="5" max="300">
         <label>旋转角度（顺时针，度）</label><input type="number" id="lpRot" step="1">
-        <label>颜色</label><input type="color" id="lpColor" value="#a6a7ac">
+        <label>颜色</label>
+        <div class="lp-color-row">
+          <input type="color" id="lpColor" value="#a6a7ac">
+          <label class="lp-color-use" title="不勾选 = 保留上传图片的原本颜色">
+            <input type="checkbox" id="lpColorPicked"> 使用此颜色
+          </label>
+        </div>
         </div>
         <div class="lp-btns">
           <button class="ghost-btn warn" id="lpClear" style="flex:1 1 100%">清除该型号LOGO</button>
@@ -746,12 +763,22 @@ window.__mrDraft=function(){return draft;};
 var lpList=[];
 var lpIdx=0;
 var lp={cxMm:0,cyMm:0,lenMm:DEFAULT_LOGO_LEN,rot:DEFAULT_LOGO_ROT,color:'#a6a7ac',
-        customUrl:'',customBlob:null,customName:''};
+        colorPicked:false, customUrl:'',customBlob:null,customName:''};
 var lpKey=null;      /* 面板正在编辑哪个型号；新建型号时为空串 */
 var lpMm=0;          /* 该型号的画布边长（mm），给「默认放正中心」用 */
+/* ⛔⛔ 2026-10-08（第八轮）新增 colorPicked —— **用户是否主动选过颜色**。
+   用户原话：「目前后端上传LOGO 后 自动改颜色，默认是可以用原本的LOGO颜色，
+              是改了颜色之后才会覆盖之前LOGO的颜色。」
+   旧行为：每项都有 color:'#a6a7ac'，前端 `custom && cfg.color` 一见有 color 就染色
+           → **上传自定义图后立刻被刷成灰色**，用户的原图颜色没了。
+   新口径：
+     · `colorPicked=false` → 不写 color（或写了也不染色）→ **保留上传图的原色**；
+     · 用户动过颜色控件 → `colorPicked=true` → 才写 color 并染色（覆盖原色）。
+   ⛔ 这个标记**只在面板内存里**用，不落配置 —— 配置里「有没有 color」本身就是权威判据，
+      见 lpSave 的写法（colorPicked 才带 color 字段）。 */
 function lpNewItem(){
   return {cxMm:0,cyMm:0,lenMm:DEFAULT_LOGO_LEN,rot:DEFAULT_LOGO_ROT,color:'#a6a7ac',
-          customUrl:'',customBlob:null,customName:''};
+          colorPicked:false, customUrl:'',customBlob:null,customName:''};
 }
 /* ⛔ 切换当前编辑的那一个 LOGO。**唯一入口** —— 别在别处直接 lp=...
    换完必须把右侧所有控件（长度/角度/颜色/图形行/列表高亮）整体重刷一遍，
@@ -1726,7 +1753,29 @@ function idbClearFiles(){
    做法与前端逐条对齐：解析期就异步预载成 objectURL 表，取图时同步查表，
    查不到就原样返回原路径 —— 线上/同源素材完全不受影响。 */
 var adminAssetMap={};
-var adminAssetsPromise=(function(){
+/* ⛔⛔ 2026-10-08（第七轮）：把「扫本机图片仓 → 生成 objectURL 表」抽成可重复调用的函数。
+   为什么必须能重扫：旧写法是**页面加载时扫一次就结账**（IIFE 一次性）。
+   于是发生（用户报的「上传自定义LOGO → 提示成功 → 但图没更新/消失」的最底层一环）：
+     ① 页面打开时扫 IDB —— 那时仓是空的 → adminAssetMap = {}；
+     ② 用户传图 → 图确实写进了 IDB（key 正确）→ 配置里的 src 也写对了；
+     ③ 关面板、重开 / 任何重新取图 → adminAssetUrl(路径) **查的是第①步那张空表** →
+        查不到 → 原样返回相对路径 → 浏览器去请求 /logo-custom/xx_logo.png →
+        **本地磁盘上根本没有这个文件**（它只在 IDB 里）→ 404 → 缩略图 0x0、画布上没图。
+   ⛔ 所以：任何「往本机图片仓写文件」之后都必须再扫一次。
+   ⛔ 不要每次 adminAssetUrl 都重扫（切色/拖动会被拖慢），只在写入后扫。 */
+/* 写入本机图片仓后调用：就地补齐／刷新 objectURL 表。
+   ⛔⛔ 2026-10-08（第七轮·第二处）：**必须允许覆盖同名 key**。
+      旧写法加了 `&&!adminAssetMap[c.key]` 想"避免重复建 URL"，结果正好反了 ——
+      自定义图路径按「型号+序号」命名，**替换图时路径不变**：
+        ① 传 A → map['logo-custom/21_logo.png'] = blob:A
+        ② 替换成 B → IDB 里的同名记录已变成 B，但重扫时因为 key 已存在 → **跳过**
+        ③ 重开面板 → 仍旧拿 blob:A → 用户看到的还是第一张图
+      这正是用户报的「替换后提示成功、但显示的还是第一次那张」。
+      → 正确做法：**重扫一律以 IDB 当前内容为准**，同名就覆盖，
+        并把旧的 objectURL 显式 revoke 掉（不 revoke 会泄漏内存）。
+      ⛔ 注意：覆盖是安全的，因为重扫**只在写入完成后**发生，
+        此时页面上的图都已渲染完；下一次渲染会拿到新 URL。 */
+function adminAssetsScan(){
   if(!IS_LOCAL||!window.indexedDB)return Promise.resolve(0);
   return idbOpen().then(function(db){
     return new Promise(function(res){
@@ -1736,13 +1785,22 @@ var adminAssetsPromise=(function(){
       cur.onsuccess=function(){
         var c=cur.result;
         if(!c){res(n);return;}
-        try{if(c.value instanceof Blob)adminAssetMap[c.key]=URL.createObjectURL(c.value);}catch(e){}
+        try{
+          if(c.value instanceof Blob){
+            var old=adminAssetMap[c.key];
+            var nu=URL.createObjectURL(c.value);
+            if(old&&old!==nu){try{URL.revokeObjectURL(old);}catch(e){}}
+            adminAssetMap[c.key]=nu;
+          }
+        }catch(e){}
         n++;c.continue();
       };
       cur.onerror=function(){res(n);};
     });
   }).catch(function(){return 0;});
-})();
+}
+function adminAssetsRescan(){return adminAssetsScan();}
+var adminAssetsPromise=adminAssetsScan();
 function adminAssetUrl(p){
   if(!p||!IS_LOCAL)return p;
   if(adminAssetMap[p])return adminAssetMap[p];
@@ -1809,6 +1867,12 @@ var localBusy=false;    /* ⛔ 不能用 state.busy：saveLocalDraft() 第一道
    返回 {ok:true,key,files} = 真的写进去了；{ok:false,reason} = 没写。 */
 function localCommitUpload(up){
   return idbPutFiles(up.files.map(function(f){return {path:f.path,blob:f.blob};})).then(function(n){
+    /* ⛔⛔ 2026-10-08（第七轮）：刚往本机图片仓写了文件 → objectURL 表立即重扫。
+       不重扫的话，同一次会话里任何「重新按路径取图」都会 404
+       （表是页面加载时扫的快照，那时仓里还没有这些新文件）。
+       产品图与自定义 LOGO 是同一个坑。 */
+    return adminAssetsRescan().then(function(){return n;});
+  }).then(function(n){
     /* 与线上 json 任务同一套合并：以新配置为基准，用旧配置补齐本次没动的字段，
        否则覆盖已有型号会把 brandLogo / logoMax / safeZones 整段抹掉（历史事故）。 */
     var old=state.models[up.key];
@@ -2584,14 +2648,19 @@ function deleteCurrentZone(){
 }
 $('znDel').addEventListener('click',function(){deleteCurrentZone();});
 /* ⛔ Delete / Backspace 也能删当前选中的安全区（2026-10-05 用户要求）。
-   ⛔ 输入框里按 Delete 是「删字符」，不能被面板抢走 —— 必须放过 input/textarea。
-      数字框里正是改宽高的地方，抢了就没法退格了。 */
+   ⛔ 输入框里按 Delete 是「删字符」，不能被面板抢走 —— 必须放过**文本类**输入。
+      数字框里正是改宽高的地方，抢了就没法退格了。
+   ⛔ 2026-10-08（第八轮）口径收紧：不能再按 `tagName==='input'` 一刀切放过 ——
+      checkbox / radio / color / range / file 这些 tagName 也是 INPUT，
+      但它们按退格没有"删字符"语义，放过会造成「点了勾选框后 Delete 失灵」。
+      与 LOGO 面板的处理器保持**同一口径**（见下方 lpDeleteItem 附近）。 */
 document.addEventListener('keydown',function(e){
   if(e.key!=='Delete'&&e.key!=='Backspace')return;
   if($('zonePanel').hidden)return;
   var t=e.target||{};
   var tn=(t.tagName||'').toLowerCase();
-  if(tn==='input'||tn==='textarea'||tn==='select'||t.isContentEditable)return;
+  var isTextInput=(tn==='input'&&!/^(checkbox|radio|color|range|file|button|submit|reset)$/i.test(t.type||'text'));
+  if(isTextInput||tn==='textarea'||tn==='select'||t.isContentEditable)return;
   if(deleteCurrentZone())e.preventDefault();
 });
 /* 保存：与「改色名 / 改型号名」同类，用户可能连着拖好几次，所以保留显式提交。
@@ -2641,8 +2710,20 @@ function currentLogoUrl(){
     return c?c.toDataURL('image/png'):u;
   }).catch(function(){return u;});     /* 取不到图就回原地址，让上层走它自己的失败路径 */
 }
-/* 把地址解成 <img> 元素（同一地址复用，避免每次切色都重新请求） */
+/* 把地址解成 <img> 元素（同一地址复用，避免每次切色都重新请求）
+   ⛔⛔ 2026-10-08（第七轮）：这个缓存**必须能失效** —— 它是「替换自定义LOGO 后不生效」的真凶。
+      为什么：自定义图的路径是按「型号+序号」命名的（customLogoPath → 如 test-assets/35_logo2.png），
+      **内容换了、路径不变**。于是发生：
+        ① 第一次传 A → lpImgCache['...35_logo2.png'] = A 的 <img>
+        ② 替换成 B → 保存成功、GitHub 上文件已变 B
+        ③ 但任何一次重新渲染（重开面板 / 切色 / 拖动）都会走回 loadImgEl → **命中 A** → 画布还是第一张图
+      表象正是用户报的「提示成功，但 LOGO 还是第一次上传的那张」。
+      → 修法：暴露 lpImgCacheDrop()，在任何「图变了」的时刻调用（替换图、保存成功、删项）。 */
 var lpImgCache={};
+function lpImgCacheDrop(url){
+  if(url){delete lpImgCache[url];return;}
+  lpImgCache={};                       /* 不传参数 = 全清（换图/保存后最稳的兜底） */
+}
 function loadImgEl(u){
   if(lpImgCache[u])return Promise.resolve(lpImgCache[u]);
   return new Promise(function(res,rej){
@@ -2650,6 +2731,14 @@ function loadImgEl(u){
     im.crossOrigin='anonymous';
     im.onload=function(){lpImgCache[u]=im;res(im);};
     im.onerror=function(){rej(new Error('LOGO 图加载失败：'+u));};
+    /* ⛔ 这里**不拼** `?t=Date.now()`：那会让同一张图每次渲染都是新 URL，
+       缓存彻底失效、切色时反复下载大图。
+       ⛔ 也不用担心浏览器 HTTP 缓存留旧图：raw/Pages 对 test-assets 的图是
+          max-age 级别缓存，但**替换图后我们是重新打开面板/重新渲染**，
+          此时 lpImgCache 已被 lpImgCacheDrop() 清掉，会真的发一次请求；
+          GitHub Pages 对同名文件更新的失效延迟通常在秒级，用户刷新页面即最新。
+          如果将来发现仍拿旧图，正确的做法是**给路径加内容版本号**（写进配置），
+          而不是在这里拼随机数 —— 随机数会让缓存永久失效。 */
     im.src=u;
   });
 }
@@ -2722,9 +2811,34 @@ function lpSetCustomFromFile(file){
   }
   var fr=new FileReader();
   fr.onload=function(){
+    /* ⛔⛔ 2026-10-08（第七轮）：换图**必须先清掉这个位置的旧图缓存**。
+       自定义图路径按「型号+序号」命名（内容换、路径不变），
+       不清的话任何一次重新渲染都会拿回上一张图 ——
+       用户看到的就是「替换了自定义LOGO，提示成功，但显示的还是第一次那张」。
+       ⛔ 清的是**将要写入的那个路径**：此刻 lp 还没绑定型号时 modelKey 可能为空，
+          那就全清（lpImgCacheDrop() 不传参），宁可多取一次也别显示旧图。 */
+    try{
+      var mk=lpKey||(function(){
+        var nm=normModel($('newModel').value||draft.model);
+        return nm?'MR_'+nm:'';
+      })();
+      lpImgCacheDrop(mk?customLogoPath(mk,lpIdx):'');
+    }catch(e){lpImgCacheDrop();}
     lp.customUrl=fr.result;
     lp.customBlob=file;
     lp.customName=file.name||'自定义图';
+    /* ⛔⛔ 2026-10-08（第九轮，第十轮复核仍保留）
+       **用户报「上传自定义LOGO，默认是原本的LOGO颜色，而不是上传直接改成灰色」**。
+       语义：**上传一张新图 = 用这张图原本的颜色**。
+       所以换图这一刻必须**显式重置** `colorPicked=false`，让"上一张图选过的色"作废。
+       ⛔ 与第十轮的 `h.colorPicked===true` **分工要分清**：
+          · 本处（换图）—— 用户做了**新决定**（换了一整张图）→ 重置；
+          · `openLogoPanel`（只打开面板、没换图）—— 按配置字段**原样还原**。
+       两者不冲突：一个是"新决定覆盖旧的"，一个是"没动就照旧"。
+       ⛔ 取消勾选框是为了即时反馈（列表/色盘立刻正确）；
+          紧接着的 `lpFabricRenderAll().then(renderLpState())` 还会再回填一次，一致。 */
+    lp.colorPicked=false;
+    var cpBox=$('lpColorPicked');if(cpBox)cpBox.checked=false;
     /* ⛔ 换图后**保留**原有位置/尺寸/角度（用户明确要求：改图不断定位）。
        只把图形换掉，其余参数一个字不动。 */
     renderLpSrc();
@@ -2798,6 +2912,24 @@ function openLogoPanel(key){
     it.lenMm=Number(h.lenMm)>0?Number(h.lenMm):DEFAULT_LOGO_LEN;
     it.rot=Number(h.rot)||0;
     it.color=h.color||'#a6a7ac';
+    /* ⛔⛔ 2026-10-08（第十轮）**唯一正确判据：读配置里的 `colorPicked` 字段本身。**
+       演进过程（写在这里免得再绕回去）：
+         · 第八～九轮写的是 `!!h.color`（有 color 就染色）——
+           但历史配置里**自定义图当年被自动刷灰时也写进了 `color:'#a6a7ac'`**，
+           按"有 color"读回去，用户一打开面板就是灰的，重新上传新图也还是灰。
+         · 第九轮改成 `!h.src`（有自定义图就当作没选过色）——
+           这修好了"上传即原色"，但**把用户真的给自定义图选过的色也一起丢了**：
+           保存后再打开 → 显示未勾选、画布回到原图色。用户 2026-10-08 报的正是这条。
+         · 第十轮（现在）：**把判断结果本身落进配置**（`colorPicked:true`，与 color 同进同退）。
+             `lpSave` 只在 `colorPicked=true` 时写这两个字段；
+             老配置里**根本没有这个字段** → `h.colorPicked===true` 为 false → 当作没选过色（原图色）✅
+             新存的带 `true` → 原样还原 ✅
+       ⛔ 判据必须写 `===true`（不是 `!!` 也不是 `!==false`）：
+          老配置读出来是 `undefined`，用 `!!` 也得到 false，行为一致，
+          但 `===true` 才是"只有明确写过 true 才算数"的准确表达，不给将来留误会。
+       ⛔ **不要再退回按 `h.color` 或按 `h.src` 推断** —— 那两个都无法区分
+          "用户手选的 #a6a7ac" 与 "当年自动刷的 #a6a7ac"，是同族错误的第三次。 */
+    it.colorPicked=(h.colorPicked===true);
     /* ⛔ 配置里带 src 就是这个型号的这一条用了自定义 LOGO。
        `customBlob` 必须清空 —— 它表示「本次待上传的新图」，
        只是把面板打开、什么也没传，不该触发上传。 */
@@ -2850,11 +2982,22 @@ function openLogoPanel(key){
    或者以为已经保存过了），必须由用户点「＋ 添加品牌LOGO」显式添加；
    没有 LOGO 时右侧控件一律禁用，避免参数改了却没有对象。 */
 function renderLpState(){
+  renderLpUi();
+  /* ⛔ 2026-10-08（第十轮）把「刷 UI」与「重同步画布」拆开：
+     `lpFabricReadBack`（moving/scaling/rotating 事件里）**绝不能**调到这里，
+     否则每帧都会拿 `lp.cxMm/cyMm` 的旧值去覆盖正在被拖的对象
+     → 用户看到「拖动卡顿、松手弹回原位、要拖第二次才生效」。
+     ⛔ 需要「只刷 UI 不动画布」的场景一律调 `renderLpUi()`。 */
+  applyLp();
+}
+/* ⛔ 只刷右侧 UI（输入框/勾选框/列表/图形行），**不碰 fabric**。
+   供「拖动过程中的切换选中」等**不能重同步画布**的路径使用。 */
+function renderLpUi(){
   var on=!!lpAdded, add=$('lpAdd'), none=$('lpNone'), fields=$('lpFields');
   if(add)add.hidden=on;
   if(none)none.hidden=on;
   if(fields)fields.classList.toggle('off',!on);
-  ['lpLen','lpRot','lpColor'].forEach(function(id){var el=$(id);if(el)el.disabled=!on;});
+  ['lpLen','lpRot','lpColor','lpColorPicked'].forEach(function(id){var el=$(id);if(el)el.disabled=!on;});
   /* ⛔ 2026-10-08：LOGO 图形来源行跟着「有没有 LOGO」一起启停，
      和上面三个参数控件保持同一口径 —— 没有 LOGO 时不许传图、也不许恢复默认。 */
   ['lpUpBtn','lpRstBtn'].forEach(function(id){var el=$(id);if(el)el.disabled=!on;});
@@ -2869,12 +3012,16 @@ function renderLpState(){
      输入框还显示上一个的值，用户一改就写错对象。 */
   if(on&&lp){
     $('lpLen').value=lp.lenMm;$('lpRot').value=lp.rot;$('lpColor').value=lp.color;
+    /* ⛔ 2026-10-08（第八轮）：没选过色时，颜色控件要显示出「当前用的是原图颜色」，
+       否则用户看到色盘是灰的会以为已经在染灰了（旧行为正是「看起来默认就染灰」）。 */
+    var cp=$('lpColorPicked');
+    if(cp)cp.checked=!!lp.colorPicked;
   }
   /* ⛔ LOGO 的显隐由 fabric 对象的 visible 管（旧实现是切 DOM <img> 的 display） */
   /* ⛔ 画布上不放虚线占位块和提示文字：用户明确要求去掉（视觉上像压了一层白膜）。
      未添加时只看右侧的「＋ 添加品牌LOGO」按钮即可。 */
   var emp=$('lpEmpty');if(emp)emp.hidden=true;
-  applyLp();
+  lpUpdatePos();
 }
 /* ⛔ 2026-10-08 「LOGO 图形」动态部分的**唯一渲染入口**：
    缩略图 + 名称 + 「恢复默认」按钮的显隐，全在这里算。
@@ -2979,6 +3126,49 @@ function lpDeleteItem(i){
   lpFabricRenderAll()
     .then(function(){renderLpState();toastMsg('已删除该 LOGO，点「保存定位」后生效');});
 }
+/* ⛔⛔ 2026-10-08（第八轮）用户要求：「支持单独点击LOGO然后可以选中LOGO，同时要支持 delete 键删除。」
+   前端 test.html 早就有这套（`removeLogo(active)` + keydown），**后端一直没有** ——
+   后端之前只有「安全区面板」的 Delete，LOGO 面板只能点列表行尾的 × 删。
+   这里补上，口径与前端、与安全区面板**逐条对齐**：
+
+     ① 只在 LOGO 面板打开时生效（`#logoPanel` 未隐藏）；
+     ② 只在画布上**真有被选中的 LOGO**时生效 —— 用户要先点一下那个 LOGO
+        （fabric 的 selection 才有 target），没选中就什么都不做（**不弹提示**：
+        用户可能只是顺手按了一下 Delete，弹提示反而烦）；
+     ③ 输入框里按 Delete/Backspace 是「删字符」，必须放过 input/textarea/select；
+     ④ 删掉的是**当前选中那一个**（`lpIdx`），不是列表第一项；
+     ⑤ 只改内存 + 重画，**不立刻写线上** —— 与列表 × 一致，真正落盘在「保存定位」。
+
+   ⛔ 为什么用「画布上有没有 activeObject」而不是「lpIdx 有没有值」：
+      `lpIdx` 永远有值（默认 0）——它表示"列表里高亮的是哪一行"，不等于"画布上选中了哪个"。
+      用 lpIdx 判会导致「一进面板按 Delete 就把第一个删了」，那是很糟糕的意外删除。
+      `lpCanvas.getActiveObject()` 才是用户"点了一下那个 LOGO"的真实证据。 */
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Delete'&&e.key!=='Backspace')return;
+  if($('logoPanel').hidden)return;
+  var t=e.target||{};
+  /* ⛔⛔ 2026-10-08（第八轮）守卫口径修正：
+     最初写成「tagName 是 INPUT 就放过」——太宽了。
+     `<input type="checkbox">`（本轮的「使用此颜色」）、`type="color"`（色盘）
+     **tagName 同样是 INPUT**，但它们在按退格时**没有任何"删字符"语义** ——
+     用户勾完颜色、焦点还停在勾选框上，这时按 Delete 会被误判成"在输入文字"而不删 LOGO。
+     → 只放过**真的会吃退格的文本类输入**：text / number / search / password / email / tel / url，
+       以及 textarea / select / contentEditable。
+     ⛔ 别为了省事改回 `tn==='input'`：那正是本轮踩的坑。 */
+  var tn=(t.tagName||'').toLowerCase();
+  var isTextInput=(tn==='input'&&!/^(checkbox|radio|color|range|file|button|submit|reset)$/i.test(t.type||'text'));
+  if(isTextInput||tn==='textarea'||tn==='select'||t.isContentEditable)return;
+  if(!lpAdded||!lpCanvas){return;}
+  var active=lpCanvas.getActiveObject();
+  if(!active)return;                       /* 没选中任何 LOGO → 不删（见 ②） */
+  /* 选中的必须是"LOGO 对象"本身（画布上还有包体底图；底图 selectable=false，
+     正常点不到，但保险起见仍校验一次：它必须是 lpLogoObjs 里的一员）。 */
+  var hit=-1;
+  for(var i=0;i<lpLogoObjs.length;i++){if(lpLogoObjs[i]===active){hit=i;break;}}
+  if(hit<0)return;
+  e.preventDefault();
+  lpDeleteItem(hit);
+});
 /* ⛔ 「＋ 再添加一个」：把一个新 LOGO 加到列表末尾并选中它。
    ⛔ 新版默认落画布正中心（与前端「LOGO 上传后固定落正中心」同一规则）；
       若要避开已有的那个，由用户自己拖开 —— 不加自动错开（用户明确否过）。
@@ -2991,6 +3181,11 @@ function lpAddAnother(){
   var it=lpNewItem();
   it.cxMm=lpMm/2;it.cyMm=lpMm/2;
   it.color=(lp&&lp.color)||'#a6a7ac';    /* 沿用当前那个的颜色，省一步操作 */
+  /* ⛔ 2026-10-08（第八轮）：**颜色沿用，但「用户选过色」这个标记也一并沿用**。
+     语义：上一个 LOGO 是他主动染的色 → 新加的这个也用同色，符合"省一步操作"的初衷；
+           上一个没染过（用原图色）→ 新加的也不写 color，保留它自己上传图的原色。
+     ⛔ 若这里硬写成 true，会给"只想加个原色 LOGO"的用户偷偷塞一个灰。 */
+  it.colorPicked=!!(lp&&lp.colorPicked);
   lpList.push(it);
   lpSelect(lpList.length-1);
   lpFabricRenderAll()
@@ -3082,9 +3277,100 @@ function lpFabricInit(){
     uniformScaling:true, uniScaleTransform:true,
     backgroundColor:'#f6f7f8'});
   lpCanvas.setDimensions({width:W,height:H});
+  /* ⛔⛔ 2026-10-08（第八轮）用户要求：「支持单独点击LOGO然后可以选中LOGO」。
+     在画布上点某个 LOGO → 把「当前编辑项」切过去（右侧参数区、列表高亮一起跟着走），
+     这样紧接着按 Delete 删的就是**用户刚点的那个**（配合下面的 Delete 键处理器）。
+     ⛔ 用 `selection:created` / `selection:updated` 而不是自己算鼠标坐标：
+        fabric 已经把「点到哪个对象」这件事做完了，我们只负责把结果同步回 lpIdx。
+     ⛔ 必须判 `e.target` 在不在 lpLogoObjs 里 —— 点空白处 fabric 也会触发
+        selection:cleared（不在这里处理），点包体底图不会触发（它 evented:false）。
+     ⛔ 事件只绑一次：lpCanvas 是新建的对象，dispose() 会连同监听一起丢掉，
+        所以在这个"初始化"函数里绑不会累积（别挪到外面按次绑，那才会叠加）。 */
+  lpCanvas.on('selection:created',lpFabricPick);
+  lpCanvas.on('selection:updated',lpFabricPick);
   /* 底图：整张铺满，与前端 bagImg 同一口径 */
   lpBagObj=null;lpLogoObjs=[];
   return lpCanvas;
+}
+/* 画布上点选 LOGO → 切换当前编辑项。
+   ⛔ 只做"切选中"，**不重画整个画布** —— 重画会把刚点中的对象扔掉、
+      用户会看到手柄闪一下再出现（还可能因为异步而丢选中）。
+      正确做法：改 lpIdx 后走 renderLpState()（它内部 applyLp() 会把
+      selectable/hasControls 逐项重算并重新 setActiveObject），
+      再 renderAll() 一次即可 —— 不重建对象，选中状态自然保留。
+
+   ⛔⛔⛔ 2026-10-09（第十一轮）**用户报「鼠标选中之后，调节大小的摇杆会消失」的真凶就在这里**。
+   旧写法只认 `e.target`：
+       var o=e&&e.target;
+       for(i...)if(lpLogoObjs[i]===o){hit=i;break;}
+       if(hit<0||hit===lpIdx)return;
+   实测插桩（在 canvas 的 selection:* 回调上包一层打印）：
+       点第 2 个 LOGO 时 → {"ev":"selection:updated","targetHit":-1,"imgsLen":2}
+   **`targetHit=-1` —— 事件里的 `e.target` 根本不在 `lpLogoObjs` 里！**
+   于是 `hit<0` → 直接 return → **`lpIdx` 不动** → 而 fabric 自己已经把
+   activeObject 换成了被点的那个 → 两边**分家**：
+     · 画布上激活的是第 1 个（用户点的那个）；
+     · `hasControls` 却按 `lpIdx`(=2) 算 → **第 1 个不给手柄** → 用户看到「摇杆消失」；
+     · 右侧列表高亮也还停在第 2 行（没联动）。
+   ⛔ 根因：`e.target` 在 `selection:created` / `selection:updated` 里的语义**不一样**，
+      多对象画布上 fabric 5 还可能给的是 ActiveSelection 而非单个图片对象。
+   ⛔⛔ **正确做法：不要信 `e.target`，一律以 `canvas.getActiveObject()` 为准反查下标**
+      （这正是唯一权威来源 —— fabric 已经把"点到哪个"算完了，我们只负责读结果）。
+      再兜一层 `e.selected`/`e.target`，保证任何事件形态都能落到对象上。 */
+function lpFabricPick(e){
+  if(!lpAdded||!lpCanvas)return;
+  /* ① 首选 getActiveObject()：fabric 的"当前选中"权威值，与 e.target 的语义差异无关。
+     ② 兜底 e.target / e.selected[0]：少数事件形态下 getActiveObject 可能还没落地。 */
+  var cands=[];
+  try{var a=lpCanvas.getActiveObject();if(a)cands.push(a);}catch(err){}
+  if(e&&e.target)cands.push(e.target);
+  if(e&&e.selected&&e.selected.length)cands.push(e.selected[0]);
+  /* ⛔ 多选时 getActiveObject 给的是 ActiveSelection 包装对象，取它里面的第一个成员 */
+  var extra=[];
+  for(var k=0;k<cands.length;k++){
+    var c=cands[k];
+    if(!c)continue;
+    if(c._objects&&c._objects.length)extra.push(c._objects[0]);
+  }
+  cands=cands.concat(extra);
+  var hit=-1,o=null;
+  for(var ci=0;ci<cands.length&&hit<0;ci++){
+    o=cands[ci];
+    for(var i=0;i<lpLogoObjs.length;i++){if(lpLogoObjs[i]&&lpLogoObjs[i]===o){hit=i;break;}}
+  }
+  if(hit<0)return;                       /* 真不是我们的对象（例如底图）→ 不处理 */
+  /* ⛔⛔ 关键补丁：即使 `hit===lpIdx`（下标没变），也必须走一次 renderLpUi()。
+     因为"画布激活对象"与"lpIdx"可能因为别的原因分家（例如用户先点了画布、
+     或上一次 render 被丢弃），此时**手柄归属已经错了**，必须重算一次。
+     ⛔ 这里只能调 `renderLpUi()`（只刷 UI / 手柄归属），
+        **绝不能调 `renderLpState()`** —— 它末尾 applyLp()→lpFabricSync() 会拿
+        `lp.cxMm/cyMm` 的旧值覆盖对象；虽然点选（非拖拽）时旧值≈当前值、看起来没事，
+        但一旦和 moving 事件撞上就会重现第十轮那个"拖动弹回"的老 bug。 */
+  if(hit!==lpIdx){lpSelect(hit);}
+  renderLpUi();
+  /* ⛔ 手柄归属是画布层的事，renderLpUi 不碰 fabric → 这里补一次"只同步控件归属"，
+     不重算几何（几何在 lpFabricSync 里，那会覆盖坐标）。
+     做法：手工把 hasControls/hasBorders 按新的 lpIdx 重设 + 重新 setActiveObject。 */
+  lpFabricApplyControls();
+  lpCanvas.renderAll();
+}
+/* ⛔ 只重设「控件归属」：谁带手柄、谁是激活对象。
+   ⛔ 绝不碰 left/top/scaleX/scaleY/angle —— 那是 lpFabricSync() 的职责，
+      在这里重算会覆盖掉用户刚拖到的位置（第十轮「拖动弹回」的成因）。 */
+function lpFabricApplyControls(){
+  if(!lpCanvas)return;
+  var target=(lpAdded&&lpLogoObjs[lpIdx])?lpLogoObjs[lpIdx]:null;
+  lpLogoObjs.forEach(function(o,i){
+    if(!o)return;
+    var isCur=(i===lpIdx)&&lpAdded&&o.visible!==false;
+    o.set({hasControls:isCur,hasBorders:isCur});
+    o.setCoords();
+  });
+  if(target){
+    if(lpCanvas.getActiveObject()!==target)lpCanvas.setActiveObject(target);
+  }else{
+    lpCanvas.discardActiveObject();
+  }
 }
 /* 重排画布尺寸（面板打开 / 窗口变化时调用）。
    ⛔ 与前端 applyView() 同款：改完尺寸要**重新算视口 + 重设控件尺寸**，
@@ -3140,8 +3426,19 @@ function lpFabricSync(){
       visible:!!lpAdded,
     });
     var isCur=(i===lpIdx)&&lpAdded;
-    o.set({selectable:isCur, evented:isCur, hasControls:isCur, hasBorders:isCur,
-           hoverCursor:isCur?'move':'default'});
+    /* ⛔⛔ 2026-10-08（第八轮）用户要求：「支持单独点击LOGO然后可以选中LOGO」。
+       旧口径：**只有当前那一项 selectable/evented**，其余项完全点不到 ——
+       想切到另一个 LOGO 只能去点右侧列表行。用户要的是**直接在画布上点**。
+       新口径（与前端 test.html 装 LOGO 时的 `hasControls:true` 一致）：
+         · **所有可见 LOGO 都可点**（selectable/evented=true）→ 点哪个就选中哪个；
+         · **只有当前选中那一个画手柄**（hasControls/hasBorders=isCur）——
+           否则 3 个 LOGO 都带角柄，画布上一片框，用户根本看不清在调哪个。
+         · hoverCursor 统一 'move'：让用户一眼看出"这个能点/能拖"。
+       ⛔ 别把 hasControls 也放开给全部 —— 多 LOGO 时手柄会互相叠；
+          手柄是"当前编辑对象"的标识，必须唯一。 */
+    o.set({selectable:!!lpAdded, evented:!!lpAdded,
+           hasControls:isCur, hasBorders:isCur,
+           hoverCursor:lpAdded?'move':'default'});
     /* ⛔ 控件尺寸必须除以 z：这是前后端「选框样式一致」的唯一关键一行。
        ⛔ 2026-10-05 用户报「画布里放大缩小的白色方块太大了，会遮挡住 LOGO」：
           纯 `Math.max(5,9/z)` 在**大件**上会失控 —— 后台画布固定 318px 宽，
@@ -3250,11 +3547,23 @@ function lpFabricRenderAll(){
    这是多 LOGO 的关键：不能再用 `currentLogoUrl()`（它只认 `lp`）。 */
 function logoUrlOfItem(it){
   if(!it)return Promise.resolve('');
+  /* ⛔ 2026-10-08（第八轮）：默认字标必须用颜色 —— 它就是靠 SVG 的 color 出字形。
+     所以这条分支不变（`it.color` 一定有值，见 lpNewItem）。 */
   if(!it.customUrl)return brandLogoUrl(it.color);
   var u=it.customUrl;
-  if(!it.color)return Promise.resolve(u);
+  /* ⛔⛔ 2026-10-08（第八轮）**这是「上传后自动改颜色」的第二个真凶（画布侧）**。
+     旧写法判 `if(!it.color)` —— 但 lpNewItem() 给每项都填了 color:'#a6a7ac'，
+     **它永远有值** → 自定义图上传后立刻被刷成灰。
+     （第一层在 lpSave 的写配置处，已改；但只改那里画布当时仍然染灰，
+       因为面板里的渲染走的是这里。）
+     → 正确判据是 **colorPicked**：用户主动选过色才染色，否则用原图。
+     ⛔ 别改回 `it.color`：那就是用户报的「自动改颜色」。
+     ⛔ 老配置回读时 colorPicked 由 lpSave 的口径反推（有 color 字段 = 选过），
+        所以历史数据仍按老表现渲染，不会被这次改动悄悄改观感。 */
+  if(!it.colorPicked)return Promise.resolve(u);
+  var tintColor=it.color||'#a6a7ac';
   return loadImgEl(u).then(function(el){
-    var c=tintImageEl(el,it.color);
+    var c=tintImageEl(el,tintColor);
     return c?c.toDataURL('image/png'):u;
   }).catch(function(){return u;});
 }
@@ -3262,17 +3571,37 @@ function logoUrlOfItem(it){
 function lpFabricSetLogo(url){
   return lpFabricRenderAll();
 }
-/* 用户拖完 → 把 fabric 的真实几何换算回 mm 写回**当前选中的那一项**（并实时回写右侧输入框）。
+/* 用户拖完 → 把 fabric 的真实几何换算回 mm 写回**被拖的那一项**（并实时回写右侧输入框）。
    ⛔ 画布里 1 单位 = 1mm（缩放走视口），所以读出来的值**本身就是 mm**，
    不要再除 lpK —— 除了会让拖 1mm 记成 0.5mm，位置越拖越飘。
-   ⛔ 多 LOGO 后必须从 `lpLogoObjs[lpIdx]` 取对象，不能再用「唯一的那个」：
-      否则拖第 2 个、值会写回第 1 个（两个 LOGO 参数互相串）。 */
+   ⛔⛔ 2026-10-08（第九轮）真根因：**旧实现写死 `lpLogoObjs[lpIdx]`，并用
+      `if(e.target!==o)return` 把"拖的不是当前项"直接丢掉**。
+      第八轮已把**所有 LOGO 都放开成可拖**（用户要求"点哪个选哪个"），
+      于是「拖一个没被选中的 LOGO」完全合法 —— 但它的移动事件全被那个 return 吃掉，
+      右侧读数一动不动。用户看到的就是「**改了位置，保存不更新位置**」。
+      （实测 MR_9031SJ：拖非当前项 → pos 恒为 292/430.5，零变化；
+        拖当前项 → 292 → 384.6 正常。）
+   → 新口径：**按 `e.target` 反查它在 `lpLogoObjs[]` 里的下标**，写回那一项，
+      并顺手把 `lpIdx/lp` 切过去（与画布点选同一语义：谁被动就编辑谁）。 */
 var lpReadPending=false;
 function lpFabricReadBack(e){
   if(!lpCanvas||!lpAdded)return;
+  if(!e||!e.target)return;
+  /* ⛔ 反查被操作的是哪一项 —— 这是本函数唯一正确的定位方式。
+     用下标而不是对象引用去比对，是因为 lpLogoObjs 可能正在被 lpFabricRenderAll 重建。 */
+  var hit=-1;
+  for(var i=0;i<lpLogoObjs.length;i++){if(lpLogoObjs[i]===e.target){hit=i;break;}}
+  if(hit<0)return;                 /* 不是我们管的 LOGO（例如底图）→ 不处理 */
+  /* ⛔ 被拖的不是当前编辑项 → 先把编辑目标切过去，再回写。
+     不切的话「右侧输入框显示 A、实际改了 B」，用户一调滑杆就改错对象。
+     ⛔⛔ 2026-10-08（第十轮）**这里必须是 `renderLpUi()`，绝不能是 `renderLpState()`**。
+         `renderLpState()` 末尾会 `applyLp()` → `lpFabricSync()` → **拿 `lp.cxMm/cyMm`
+         的旧值重新 set 到对象上**。而本函数是绑在 `moving/scaling/rotating` 上的，
+         等于在拖动过程中每帧把对象"拉回原位" ——
+         用户看到的就是「**挪动时卡顿、松手又弹回没挪动的位置、要拖第二次才行**」。
+         `renderLpUi()` 只刷右侧 UI（列表高亮/输入框/图形行），一个字节都不碰 fabric。 */
+  if(hit!==lpIdx){lpSelect(hit);renderLpUi();}
   var o=lpLogoObjs[lpIdx];
-  /* ⛔ 事件可能来自非当前项（理论上不该，但保险）：只处理当前项那一个对象 */
-  if(e&&e.target&&e.target!==o)return;
   if(!o||!lp)return;
   /* ⛔ 必须用 getCenterPoint：带 origin 的 left/top 在旋转后不是「几何中心」，
      直接用 o.left/o.top 会在旋转后把 LOGO 越拖越偏。 */
@@ -3292,9 +3621,28 @@ function lpUpdatePos(){
 }
 $('lpLen').addEventListener('input',function(){if(!lpAdded)return;lp.lenMm=parseFloat($('lpLen').value)||lp.lenMm;applyLpLive();});
 $('lpRot').addEventListener('input',function(){if(!lpAdded)return;lp.rot=parseFloat($('lpRot').value)||0;applyLpLive();});
+/* ⛔⛔ 2026-10-08（第八轮）「使用此颜色」勾选框 —— 用户要求的新默认行为的总开关。
+   不勾（默认）：**保留上传图片的原本颜色**，配置里不写 color；
+   勾上：用左边色盘的颜色刷整张图（覆盖原色），配置里写 color。
+   ⛔ 勾上时若用户还没动过色盘，就用当前 lp.color（可能是默认灰 #a6a7ac）——
+      这是用户"主动要去染成这个色"，语义正确。 */
+$('lpColorPicked').addEventListener('change',function(){
+  if(!lpAdded)return;
+  lp.colorPicked=!!$('lpColorPicked').checked;
+  /* 勾上时把当前色盘的色当成用户选的色（他既然勾了就是要这个色） */
+  if(lp.colorPicked)lp.color=($('lpColor')&&$('lpColor').value)||lp.color;
+  lpFabricRenderAll().then(function(){applyLp();});
+});
 $('lpColor').addEventListener('input',function(){
   if(!lpAdded)return;
   lp.color=$('lpColor').value;
+  /* ⛔⛔ 2026-10-08（第八轮）：用户**主动动过颜色控件** → 这一刻起才允许覆盖原图颜色。
+     用户原话：「默认是可以用原本的LOGO颜色，是改了颜色之后才会覆盖之前LOGO的颜色。」
+     ⛔ 必须在这里置位（而不是在 lpSetCustomFromFile 里）—— 只有用户真的拖了颜色盘、
+        或明确点了某个色值，才算「他要这个颜色」。 */
+  lp.colorPicked=true;
+  /* 用户动色盘 → 顺手把「使用此颜色」勾上（否则下次回填又显示未选，与他的操作矛盾） */
+  var cpOn=$('lpColorPicked');if(cpOn)cpOn.checked=true;
   /* ⛔ 2026-10-08 用户明确要求：「自定义 LOGO 上传之后也要能改颜色」。
      所以这里**不再对自定义图提前 return** —— 颜色一律生效，走 currentLogoUrl() 统一取图源：
        · 默认字标 → brandLogoUrl(color) 生成的着色 SVG；
@@ -3319,6 +3667,12 @@ $('lpRstBtn').addEventListener('click',function(){
   if(!lp.customUrl&&!lp.customBlob)return;
   if(!confirm('恢复成默认字标？\n\n这一条上传的自定义 LOGO 会被撤下（位置、尺寸、角度保留，其他 LOGO 不受影响），点「保存定位」后才生效。'))return;
   lp.customUrl='';lp.customBlob=null;lp.customName='';
+  /* ⛔⛔ 2026-10-08（第七轮）：撤下自定义图时也要清它那条路径的缓存。
+     否则「撤下 → 再传新图」会命中撤下前那张的缓存（路径按型号+序号，从不改变）。 */
+  try{
+    var mkR=lpKey||normModel($('newModel').value||draft.model);
+    lpImgCacheDrop(mkR?customLogoPath('MR_'+String(mkR).replace(/^MR_/,''),lpIdx):'');
+  }catch(e){lpImgCacheDrop();}
   lpFabricRenderAll()
     .then(function(){renderLpState();toastMsg('已恢复默认字标');});
 });
@@ -3336,6 +3690,8 @@ $('lpClear').addEventListener('click',function(){
      或新版（认 brandLogos）各留一半，前端显示什么完全取决于走哪条分支。 */
   delete state.models[key].brandLogo;
   delete state.models[key].brandLogos;
+  /* ⛔ 2026-10-08（第七轮）：整条清除也要丢图缓存（清完可能又重传同型号同序号的图）。 */
+  lpImgCacheDrop();
   state.dirty=true;renderList();refreshPending();
   $('logoPanel').hidden=true;
   autoCommit('清除 '+key+' 的品牌LOGO').then(function(r){
@@ -3363,7 +3719,22 @@ $('lpSave').addEventListener('click',function(){
   var missingName=0;
   var list=lpList.slice(0,MAX_LP_LOGOS).map(function(it,i){
     var pos={cxMm:Math.round(it.cxMm*10)/10,cyMm:Math.round(it.cyMm*10)/10,
-             lenMm:Math.round(it.lenMm*10)/10,rot:Math.round(it.rot),color:it.color};
+             lenMm:Math.round(it.lenMm*10)/10,rot:Math.round(it.rot)};
+    /* ⛔⛔ 2026-10-08（第十轮）：**只有用户主动选过颜色，才写 color + colorPicked**。
+       用户原话：「默认是可以用原本的LOGO颜色，是改了颜色之后才会覆盖之前LOGO的颜色。」
+       旧写法无条件 `color:it.color` → 每项都带 color:'#a6a7ac'
+       → 前端 `custom && cfg.color` 一见有 color 就染色 → **上传自定义图后立刻被刷成灰色**。
+       新口径：
+         · colorPicked=true  → 写 `color` **和** `colorPicked:true`（覆盖原图色）；
+         · colorPicked=false → **两个都不写** → 前端 cfg.color 为空 → 保留原图色。
+       ⛔⛔ 为什么必须**两个一起写**（第十轮新增 colorPicked）：
+           `color` 只表达"用什么色"，无法表达"用户到底选没选过" ——
+           老配置里那个 `#a6a7ac` 是当年自动刷进去的，与用户手选同色**完全无法区分**。
+           `colorPicked` 才是"用户做过这个决定"的记录。**只写 color 不写它 = 下次打开又丢**。
+       ⛔ 别改回无条件写：那就是用户报的「自动改颜色」。
+       ⛔ 也别写 `color:''` 之类的空串占位 —— 前端多处用 `cfg.color||'…'` 兜底，
+          空串会退回默认灰字标色，等于白改；**不写字段**才是唯一正确表达。 */
+    if(it.colorPicked){pos.color=it.color;pos.colorPicked=true;}
     /* ⛔ 自定义 LOGO 的落点 = 配置里多一个 src 字段。
        `srcNm` 只用于后台回显文件名，前端不读它。 */
     if(it.customUrl&&modelKey){
@@ -3406,13 +3777,23 @@ $('lpSave').addEventListener('click',function(){
     pending.forEach(function(it,i){
       if(it.customBlob&&modelKey)pairs.push({path:customLogoPath(modelKey,i),blob:it.customBlob});
     });
+    /* ⛔⛔ 2026-10-08（第七轮）：本机这条分支**同样要清图缓存**。
+       本机 idbPutFiles 写的路径也是 customLogoPath()（型号+序号，内容换、路径不变），
+       不清的话刷新前任何一次重新渲染还是会拿回上一张图。 */
     if(pairs.length){
       return idbPutFiles(pairs).then(function(){
         lpList.forEach(function(it){it.customBlob=null;});
+        /* ⛔ 刚往本机图片仓写了新文件 → objectURL 表必须重扫，
+           否则重开面板时 adminAssetUrl() 查不到这条路径 → 404 → 图「消失」。
+           顺序要紧：**先重扫再清缓存**，让下一次渲染能真的取到新图。 */
+        return adminAssetsRescan();
+      }).then(function(){
+        lpImgCacheDrop();
         return saveLocalDraft('品牌LOGO定位（'+lpKey+'）');
       }).catch(function(e){alert('自定义LOGO存本机失败：'+(e.message||e));});
     }
     lpList.forEach(function(it){it.customBlob=null;});
+    lpImgCacheDrop();
     return saveLocalDraft('品牌LOGO定位（'+lpKey+'）');
   }
   if(!token()){toastMsg('LOGO 定位已记录，连接 GitHub 后再点「确认提交上传」');return;}
@@ -3438,6 +3819,17 @@ $('lpSave').addEventListener('click',function(){
   runJobs(buildJobs(up),{title:title}).then(function(){
     state.busy=false;state.dirty=false;refreshPending();
     lpList.forEach(function(it){it.customBlob=null;});
+    /* ⛔⛔ 2026-10-08（第七轮）：**保存成功后必须清图缓存**。
+       这是「替换自定义LOGO 提示成功、但显示的还是第一次那张」的最后一环：
+       ① 第一次传 A → loadImgEl 把 A 的 <img> 记进 lpImgCache['test-assets/xx_logo2.png']；
+       ② 替换成 B → 本次上传把 GitHub 上的同名文件覆盖成 B（**写入链路本身是对的**），
+          但那个缓存键**没变**，所以还是指着 A；
+       ③ 关掉面板、重开、切色、拖动……任何一次重新渲染 → 命中缓存 → **画布又变回 A**。
+       → 全清（不传参）最稳：此时 up.files 里的每张图都已在各自路径上就位，
+         清掉后下一次渲染会真的按新路径重新拉一次，拿到的一定是新图。
+       ⛔ 别改成只清 files 里的路径 —— 有些项 customBlob 为空（没换图），
+          它们走的是同一份缓存，全清代价只是一次重新请求。 */
+    lpImgCacheDrop();
     alert(files.length?'自定义LOGO已保存到线上。':'品牌LOGO定位已保存到线上。');
     return afterWrite();
   }).catch(function(e){
