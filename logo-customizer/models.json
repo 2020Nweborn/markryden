@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T02:53:42.807Z",
+  "updatedAt": "2026-10-09T02:54:18.798Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -5274,6 +5274,14 @@
           "label": "精英灰",
           "image": "mr_532_elitegray_trim.png",
           "webp": "mr_532_elitegray_trim.webp"
+        }
+      ],
+      "safeZones": [
+        {
+          "xMm": 212.6,
+          "yMm": 272.4,
+          "wMm": 206.5,
+          "hMm": 109.2
         }
       ]
     },
