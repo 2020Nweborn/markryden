@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T09:27:25.584Z",
+  "updatedAt": "2026-10-09T09:27:33.878Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -137,6 +137,72 @@
       ],
       "order": 2
     },
+    "MR_9008SJ": {
+      "id": "MR_9008SJ",
+      "pxPerMm": 1,
+      "canvasMm": 510,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_9008sj_bizblack_trim.png",
+          "webp": "mr_9008sj_bizblack_trim.webp"
+        }
+      ],
+      "safeZones": [
+        {
+          "xMm": 149.6,
+          "yMm": 103.5,
+          "wMm": 223.3,
+          "hMm": 336.1
+        }
+      ],
+      "brandLogo": {
+        "cxMm": 351.1,
+        "cyMm": 181.5,
+        "lenMm": 102,
+        "rot": 90,
+        "color": "#0d0d0d"
+      },
+      "order": 3
+    },
+    "MR_2007": {
+      "id": "MR_2007",
+      "pxPerMm": 1,
+      "canvasMm": 516,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_2007_bizblack_trim.png",
+          "webp": "mr_2007_bizblack_trim.webp"
+        }
+      ],
+      "safeZones": [
+        {
+          "xMm": 157.5,
+          "yMm": 106.9,
+          "wMm": 211.4,
+          "hMm": 360.5
+        }
+      ],
+      "brandLogo": {
+        "cxMm": 260.6,
+        "cyMm": 376.8,
+        "lenMm": 61,
+        "rot": 90,
+        "color": "#a6a7ac"
+      },
+      "order": 4
+    },
     "MR_21": {
       "id": "MR_21",
       "pxPerMm": 5,
@@ -197,72 +263,6 @@
         "lenMm": 22,
         "rot": 90,
         "color": "#ffffff"
-      },
-      "order": 3
-    },
-    "MR_9008SJ": {
-      "id": "MR_9008SJ",
-      "pxPerMm": 1,
-      "canvasMm": 510,
-      "logoMax": {
-        "wMm": 60,
-        "hMm": 60
-      },
-      "colors": [
-        {
-          "key": "bizblack",
-          "label": "商务黑",
-          "image": "mr_9008sj_bizblack_trim.png",
-          "webp": "mr_9008sj_bizblack_trim.webp"
-        }
-      ],
-      "safeZones": [
-        {
-          "xMm": 149.6,
-          "yMm": 103.5,
-          "wMm": 223.3,
-          "hMm": 336.1
-        }
-      ],
-      "brandLogo": {
-        "cxMm": 351.1,
-        "cyMm": 181.5,
-        "lenMm": 102,
-        "rot": 90,
-        "color": "#0d0d0d"
-      },
-      "order": 4
-    },
-    "MR_2007": {
-      "id": "MR_2007",
-      "pxPerMm": 1,
-      "canvasMm": 516,
-      "logoMax": {
-        "wMm": 60,
-        "hMm": 60
-      },
-      "colors": [
-        {
-          "key": "bizblack",
-          "label": "商务黑",
-          "image": "mr_2007_bizblack_trim.png",
-          "webp": "mr_2007_bizblack_trim.webp"
-        }
-      ],
-      "safeZones": [
-        {
-          "xMm": 157.5,
-          "yMm": 106.9,
-          "wMm": 211.4,
-          "hMm": 360.5
-        }
-      ],
-      "brandLogo": {
-        "cxMm": 260.6,
-        "cyMm": 376.8,
-        "lenMm": 61,
-        "rot": 90,
-        "color": "#a6a7ac"
       },
       "order": 5
     },
