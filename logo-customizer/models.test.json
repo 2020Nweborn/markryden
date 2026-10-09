@@ -1,47 +1,11 @@
 {
-  "updatedAt": "2026-10-09T09:17:24.671Z",
-  "pinnedCount": 0,
+  "updatedAt": "2026-10-09T09:17:39.358Z",
+  "pinnedCount": 2,
   "models": {
-    "MR_35": {
-      "id": "MR_35",
-      "pxPerMm": 2,
-      "canvasMm": 307,
-      "logoMax": {
-        "wMm": 110,
-        "hMm": 60
-      },
-      "colors": [
-        {
-          "key": "bizblack",
-          "label": "商务黑",
-          "image": "mr_35_bizblack_trim.png",
-          "webp": "mr_35_bizblack_trim.webp"
-        }
-      ],
-      "brandLogos": [
-        {
-          "cxMm": 166.9,
-          "cyMm": 150.6,
-          "lenMm": 80,
-          "rot": 0,
-          "src": "test-assets/35_logo.png",
-          "srcNm": "电子签名.png"
-        }
-      ],
-      "brandLogo": {
-        "cxMm": 166.9,
-        "cyMm": 150.6,
-        "lenMm": 80,
-        "rot": 0,
-        "src": "test-assets/35_logo.png",
-        "srcNm": "电子签名.png"
-      },
-      "order": 0
-    },
-    "MR_9031SJ": {
-      "id": "MR_9031SJ",
+    "MR_999_ka_14.5in": {
+      "id": "MR_999_ka_14.5in",
       "pxPerMm": 1,
-      "canvasMm": 589,
+      "canvasMm": 528,
       "logoMax": {
         "wMm": 60,
         "hMm": 60
@@ -50,68 +14,11 @@
         {
           "key": "bizblack",
           "label": "商务黑",
-          "image": "mr_9031sj_bizblack_trim.png",
-          "webp": "mr_9031sj_bizblack_trim.webp"
-        },
-        {
-          "key": "citygreen",
-          "label": "城际绿",
-          "image": "mr_9031sj_citygreen_trim.png",
-          "webp": "mr_9031sj_citygreen_trim.webp"
-        },
-        {
-          "key": "elitegray",
-          "label": "精英灰",
-          "image": "mr_9031sj_elitegray_trim.png",
-          "webp": "mr_9031sj_elitegray_trim.webp"
-        },
-        {
-          "key": "metro",
-          "label": "都会蓝",
-          "image": "mr_9031sj_metro_trim.png",
-          "webp": "mr_9031sj_metro_trim.webp"
+          "image": "test-assets/mr_999_ka_14.5in_bizblack_trim.png",
+          "webp": "test-assets/mr_999_ka_14.5in_bizblack_trim.webp"
         }
       ],
-      "brandLogo": {
-        "cxMm": 292,
-        "cyMm": 430.5,
-        "lenMm": 80,
-        "rot": 90,
-        "color": "#a6a7ac"
-      },
-      "safeZones": [
-        {
-          "xMm": 205.2,
-          "yMm": 196,
-          "wMm": 170.3,
-          "hMm": 348.1
-        }
-      ],
-      "order": 1
-    },
-    "MR_79": {
-      "id": "MR_79",
-      "pxPerMm": 2,
-      "canvasMm": 201.5,
-      "logoMax": {
-        "wMm": 60,
-        "hMm": 60
-      },
-      "colors": [
-        {
-          "key": "gray",
-          "label": "灰",
-          "image": "test-assets/mr_79_gray_trim.png",
-          "webp": "test-assets/mr_79_gray_trim.webp"
-        },
-        {
-          "key": "elitegray",
-          "label": "精英灰",
-          "image": "test-assets/mr_79_elitegray_trim.png",
-          "webp": "test-assets/mr_79_elitegray_trim.webp"
-        }
-      ],
-      "order": 2
+      "order": 0
     },
     "MR_21": {
       "id": "MR_21",
@@ -189,12 +96,48 @@
         "lenMm": 43.2,
         "rot": 0
       },
-      "order": 3
+      "order": 1
     },
-    "MR_999_ka_14.5in": {
-      "id": "MR_999_ka_14.5in",
+    "MR_35": {
+      "id": "MR_35",
+      "pxPerMm": 2,
+      "canvasMm": 307,
+      "logoMax": {
+        "wMm": 110,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_35_bizblack_trim.png",
+          "webp": "mr_35_bizblack_trim.webp"
+        }
+      ],
+      "brandLogos": [
+        {
+          "cxMm": 166.9,
+          "cyMm": 150.6,
+          "lenMm": 80,
+          "rot": 0,
+          "src": "test-assets/35_logo.png",
+          "srcNm": "电子签名.png"
+        }
+      ],
+      "brandLogo": {
+        "cxMm": 166.9,
+        "cyMm": 150.6,
+        "lenMm": 80,
+        "rot": 0,
+        "src": "test-assets/35_logo.png",
+        "srcNm": "电子签名.png"
+      },
+      "order": 2
+    },
+    "MR_9031SJ": {
+      "id": "MR_9031SJ",
       "pxPerMm": 1,
-      "canvasMm": 528,
+      "canvasMm": 589,
       "logoMax": {
         "wMm": 60,
         "hMm": 60
@@ -203,8 +146,65 @@
         {
           "key": "bizblack",
           "label": "商务黑",
-          "image": "test-assets/mr_999_ka_14.5in_bizblack_trim.png",
-          "webp": "test-assets/mr_999_ka_14.5in_bizblack_trim.webp"
+          "image": "mr_9031sj_bizblack_trim.png",
+          "webp": "mr_9031sj_bizblack_trim.webp"
+        },
+        {
+          "key": "citygreen",
+          "label": "城际绿",
+          "image": "mr_9031sj_citygreen_trim.png",
+          "webp": "mr_9031sj_citygreen_trim.webp"
+        },
+        {
+          "key": "elitegray",
+          "label": "精英灰",
+          "image": "mr_9031sj_elitegray_trim.png",
+          "webp": "mr_9031sj_elitegray_trim.webp"
+        },
+        {
+          "key": "metro",
+          "label": "都会蓝",
+          "image": "mr_9031sj_metro_trim.png",
+          "webp": "mr_9031sj_metro_trim.webp"
+        }
+      ],
+      "brandLogo": {
+        "cxMm": 292,
+        "cyMm": 430.5,
+        "lenMm": 80,
+        "rot": 90,
+        "color": "#a6a7ac"
+      },
+      "safeZones": [
+        {
+          "xMm": 205.2,
+          "yMm": 196,
+          "wMm": 170.3,
+          "hMm": 348.1
+        }
+      ],
+      "order": 3
+    },
+    "MR_79": {
+      "id": "MR_79",
+      "pxPerMm": 2,
+      "canvasMm": 201.5,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "gray",
+          "label": "灰",
+          "image": "test-assets/mr_79_gray_trim.png",
+          "webp": "test-assets/mr_79_gray_trim.webp"
+        },
+        {
+          "key": "elitegray",
+          "label": "精英灰",
+          "image": "test-assets/mr_79_elitegray_trim.png",
+          "webp": "test-assets/mr_79_elitegray_trim.webp"
         }
       ],
       "order": 4
