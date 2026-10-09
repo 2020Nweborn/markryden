@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T02:13:36.786Z",
+  "updatedAt": "2026-10-09T02:14:18.466Z",
   "pinnedCount": 2,
   "models": {
     "MR_9031SJ": {
@@ -74,8 +74,6 @@
           "cyMm": 150.6,
           "lenMm": 80,
           "rot": 0,
-          "color": "#ffffff",
-          "colorPicked": true,
           "src": "test-assets/35_logo.png",
           "srcNm": "电子签名.png"
         }
@@ -85,8 +83,6 @@
         "cyMm": 150.6,
         "lenMm": 80,
         "rot": 0,
-        "color": "#ffffff",
-        "colorPicked": true,
         "src": "test-assets/35_logo.png",
         "srcNm": "电子签名.png"
       }
