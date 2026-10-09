@@ -3,6 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- ⛔⛔ 合并双轨开关（2026-10-09，V2.0）—— 本文件与 admin.html 是**同一份内容**，
+     唯一的人为差异就是这一行。改版只改这一份，另一个文件用 cp 覆盖后改这里的 true/false。
+     ⛔ 本行必须在任何脚本之前（title 与底栏都按它推导）。
+     ⛔⛔ 别用 document.write 往 <title> 里写后缀 —— <title> 是 RCDATA 元素，
+        解析器在里面**不认标签**，写进去的 <script> 会变成字面文本显示在标题栏（实测踩过）。
+        正确做法：在 </head> 前用一句脚本按开关设 document.title（见下方）。 -->
+<script>var IS_SANDBOX=false;/* 双轨开关：true=沙盒(测试版，配置写 models.test.json、素材写 test-assets/)，false=正式版(models.json / logo-custom/) */</script>
 <title>MARK RYDEN · 定制页后台</title>
 <style>
   :root{--bd:#e6e8eb;--tx:#141519;--tx2:#7a7f87;--gray:#f2f3f5;--ok:#1fa971;}
@@ -393,7 +400,11 @@
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
 </head>
+<script>/* ⛔ 合并双轨（2026-10-09）：后台没有 i18n，标题直接在这里按开关定。
+   ⛔ 放在 </head> 之后、<body> 之前 —— 此时 <title> 已解析完，赋值才不会被冲掉。 */
+if(IS_SANDBOX)document.title='MARK RYDEN · 定制页后台 · 测试版';</script>
 <body>
+<script>if(IS_SANDBOX)document.write('<style id="mr-test-bar-css">.mr-test-bar{position:fixed;left:0;right:0;bottom:0;z-index:2147483000;background:#303030;color:#fff;font-size:12.5px;line-height:1.5;padding:7px 16px;text-align:center;letter-spacing:.02em;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",Arial,sans-serif}.mr-test-bar b{font-weight:600;color:#ffd66b}</style><div class="mr-test-bar">测试版后台 &middot; 只写入 <b>models.test.json</b> 与 <b>test-assets/</b>，不会影响正式版的配置与素材</div>')</script>
 
 <!-- 登录 -->
 <div id="gate">
@@ -603,11 +614,20 @@
 
 /* ========== 常量（与 add_model.py 保持一致） ========== */
 var OWNER='2020Nweborn', REPO='markryden', DIR='logo-customizer', BRANCH='main';
-/* 正式版配置文件名。⛔ 这里是正式版后台，写回目标就是正式版的 models.json 与根目录素材。
-   这一行必须存在：全文的读取 / 写回 / 兜底提示都引用 CFG，
-   ⛔ 2026-10-06 回填时漏掉过它（旧版把它和另一个常量写在同一行、整行被还原掉），
-   症状 = 后台一开就 `ReferenceError: CFG is not defined`、整页不工作。 */
-var CFG='models.json';
+/* ===== 写入目标（由顶部 IS_SANDBOX 开关推导，2026-10-09 合并双轨） =====
+   ⛔ CFG = 配置文件路径（正式版 models.json / 测试版 models.test.json）。
+     全文的读取 / 写回 / 兜底提示都引用 CFG。
+     ⛔ 2026-10-06 回填时漏掉过它（旧版把它和另一个常量写在同一行、整行被还原掉），
+     症状 = 后台一开就 `ReferenceError: CFG is not defined`、整页不工作。
+   ⛔ SUB = 沙盒素材目录前缀（正式版为空串''、测试版 'test-assets/'）。
+     inSandbox() 用它判「这个路径归不归本页管」。
+   ⛔ 正式版（IS_SANDBOX=false）下 inSandbox() 恒为 true：
+     本页写的本来就是正式的 models.json 与根目录素材，一律放行，
+     白名单机制等同不存在 —— 这正是合并前 admin.html 的行为（那里连 inSandbox 都没有）。 */
+var CFG=IS_SANDBOX?'models.test.json':'models.json';
+var SUB=IS_SANDBOX?'test-assets/':'';
+function inSandbox(p){return !IS_SANDBOX||p===CFG||String(p).indexOf(SUB)===0;}
+
 var RAW='https://raw.githubusercontent.com/'+OWNER+'/'+REPO+'/'+BRANCH+'/'+DIR+'/'+CFG;
 /* 任意素材的 raw 前缀：本地同源取不到时回源它。
    为什么用 raw 而不是 contents API：本机到 github 的 API 响应对大图会中途掐断
@@ -652,7 +672,7 @@ function lwDrop(){try{localStorage.removeItem(LW);}catch(e){}}
        否则用户会以为线上已经更新了。
     ⛔ 草稿只在本地兜底，不改上面那条「api → 同源 → raw」的线上读取顺序；
        草稿存在时直接用它，不再发那三个请求（本地看的就是本机这一版）。
-    ⛔ 图片本地同样写不了，草稿只管配置本身；
+    ⛔ 图片（test-assets/）本地同样写不了，草稿只管配置本身；
        草稿里引用的图仍是线上/本地文件里已有的那些。 */
 var BUILD='2026-09-18a';
 /* ⛔ 判定规则（2026-09-17 第二次修正，别改回「hostname 是不是 localhost」）：
@@ -851,12 +871,19 @@ function ghFile(path){
   return gh(path).then(function(j){return {sha:j.sha,content:j.content||''};});
 }
 /* ⛔⛔ 2026-10-08：写入**不许静默跳过**（用户报「自定义LOGO 上传后消失」的真凶之一）。
-   静默跳过会让调用方以为「上传成功」，于是配置里写下一个指向不存在文件的路径 ——
-   前端取图 404、LOGO 消失，而且中间没有任何一处报错，极难排查。
-   正式版里本页写的就是正式的 models.json 与根目录素材，一律放行。
-   ⛔ 这个函数必须保留本体：ghPut / ghDel 里各调一次，删了就是 ReferenceError。 */
+   旧写法 `if(!inSandbox(path))return Promise.resolve({skipped:true,path:path});` 会让
+   调用方以为「上传成功」，于是配置里写下一个指向不存在文件的路径 —— 前端 404、LOGO 消失，
+   而且中间没有任何一处报错，极难排查。
+   现在统一走 assertWritable()：沙盒外**直接 reject**，让调用方能看见、能补救。
+   ⛔ 别改回 `{skipped:true}`：静默失败是这个 bug 能从 2026-10-08 潜到线上的唯一原因。
+   ⛔ 合并双轨（2026-10-09）：正式版下 inSandbox() 恒为 true，本函数直接放行 ——
+     等价于合并前 admin.html 里那个 `function assertWritable(path){return;}`，
+     两边从此共用同一份代码，不再各写一版。 */
 function assertWritable(path){
-  return;
+  if(inSandbox(path))return;
+  var e=new Error('受保护路径，测试版不写：'+path);
+  e.mrProtected=true;e.mrPath=path;
+  throw e;
 }
 function ghPut(path,b64,msg,sha){
   assertWritable(path);
@@ -905,7 +932,7 @@ function loadModels(){
     lastRead='本机草稿 '+draftStamp();
     state.models=dk.cfg.models;
     state.pinnedCount=dk.cfg.pinnedCount;
-    state.dirty=false;state.puts=[];state.dels=[];state.pendingCopy=[];
+    state.dirty=false;state.puts=[];state.dels=[];state.pendingCopy=[];state.blocked=[];
     draft={model:'',items:[],editKey:'',geo:null,brandLogo:null,brandLogos:null};
     $('newModel').value='';
     $('upTitle').textContent='新增型号与图片';
@@ -947,7 +974,7 @@ function loadModels(){
     lastRead=src+' '+(j&&j.updatedAt?String(j.updatedAt).slice(5,16).replace('T',' '):'');
     state.models=(j&&j.models)||{};
     state.pinnedCount=(j&&j.pinnedCount);
-    state.dirty=false;state.puts=[];state.dels=[];state.pendingCopy=[];
+    state.dirty=false;state.puts=[];state.dels=[];state.pendingCopy=[];state.blocked=[];
     draft={model:'',items:[],editKey:'',geo:null,brandLogo:null,brandLogos:null};
     $('newModel').value='';
     $('upTitle').textContent='新增型号与图片';
@@ -1256,7 +1283,7 @@ $('list').addEventListener('click',function(e){
     if(nk===k)return;
     if(state.models[nk]){alert('已存在同名型号');return;}
     (m.colors||[]).forEach(function(c){
-      var np='mr_'+normModel(nv).toLowerCase()+'_'+fileSlug(c.label||c.key)+'_trim.png';
+      var np=SUB+'mr_'+normModel(nv).toLowerCase()+'_'+fileSlug(c.label||c.key)+'_trim.png';
       stageCopy(c.image,np);stageCopy(c.webp,np.replace(/\.png$/,'.webp'));
       stageDel(c.image);stageDel(c.webp);
       c.image=np;c.webp=np.replace(/\.png$/,'.webp');
@@ -1266,7 +1293,9 @@ $('list').addEventListener('click',function(e){
     state.dirty=true;renderList();refreshPending();
   }else if(act==='mdel'){
     var cols2=m.colors||[];
-    if(!confirm('删除型号 '+k+'（连同它的 '+cols2.length+' 张图片文件）？\n\n确认后会立即同步到线上。'))return;
+    var prot=cols2.filter(function(c){return !inSandbox(c.image);}).length;
+    var tip=prot?('\n\n其中 '+prot+' 个配色用的是正式版素材，测试版受保护，那几张图不会被删。'):'';
+    if(!confirm('删除型号 '+k+'（连同它的 '+cols2.length+' 张图片文件）？'+tip+'\n\n确认后会立即同步到线上。'))return;
     cols2.forEach(function(c){stageDel(c.image);stageDel(c.webp);});
     delete state.models[k];
     state.dirty=true;renderList();refreshPending();
@@ -1277,7 +1306,7 @@ $('list').addEventListener('click',function(e){
     if(!nn)return;
     var ns=fileSlug(nn);
     if(!ns){alert('颜色名「'+nn+'」没有对应的英文名，请告诉我，我加进映射表后再改名。');return;}
-    var np2='mr_'+k.replace(/^MR_/,'').toLowerCase()+'_'+ns+'_trim.png';
+    var np2=SUB+'mr_'+k.replace(/^MR_/,'').toLowerCase()+'_'+ns+'_trim.png';
     stageCopy(c0.image,np2);stageCopy(c0.webp,np2.replace(/\.png$/,'.webp'));
     stageDel(c0.image);stageDel(c0.webp);
     c0.label=nn.trim();c0.key=ns;c0.image=np2;c0.webp=np2.replace(/\.png$/,'.webp');
@@ -1293,14 +1322,26 @@ $('list').addEventListener('click',function(e){
 });
 
 function stageCopy(from,to){if(from!==to)state.pendingCopy.push({from:from,to:to});}
-/* ⛔ 正式版：要删的就是正式素材，一律入删除队列（没有『受保护路径』这回事）。 */
-function stageDel(path){if(path&&state.dels.indexOf(path)<0)state.dels.push(path);}
-function stageNoticeTail(){
-  /* 提交完成后追加给用户的提示尾巴。正式版只有一条：
-     本机还留着一份比刚推的版本旧的草稿 —— 不说的话用户会以为这次推送没生效。 */
-  return (IS_LOCAL&&dkGet())
+/* 白名单外的素材删不掉 —— 这不是 bug，是**测试版沙盒**的保护（防止测试配色覆盖正式素材）。
+   ⛔ 正式版（IS_SANDBOX=false）下 inSandbox() 恒为 true，本函数永远走最后一行、
+     state.blocked 永远是空的 —— 与合并前 admin.html 的
+     `function stageDel(path){if(path&&state.dels.indexOf(path)<0)state.dels.push(path);}` 逐字等价。
+   ⛔ 但必须保留记 blocked 并明确告诉用户的逻辑：静默跳过会让用户以为「整个删除都没生效」。 */
+function stageDel(path){
+  if(!path)return;
+  if(!inSandbox(path)){if(state.blocked.indexOf(path)<0)state.blocked.push(path);return;}
+  if(state.dels.indexOf(path)<0)state.dels.push(path);
+}
+function blockedTip(){
+  /* 本地还留着一份「未上传」的本机草稿时，刚推上线这版比草稿新 —— 必须说出来。
+     否则用户回到本地前端会看到旧草稿（左下角橙色角标），以为这次推送没生效。 */
+  var draftTip=(IS_LOCAL&&dkGet())
     ? '\n\n另外：本机还留着一份未上传的本机草稿（'+draftStamp()+'），它比刚推的这版旧。\n回到本地前端会看到那份草稿（左下角有橙色角标），点角标清除即可看到这次推的版本。'
     : '';
+  if(!state.blocked.length)return draftTip;
+  return '\n\n注意：其中 '+state.blocked.length+' 个文件属于正式版素材，测试版受保护、不会删除：\n'+
+    state.blocked.slice(0,6).map(function(p){return '  · '+p;}).join('\n')+
+    (state.blocked.length>6?('\n  … 共 '+state.blocked.length+' 个'):'')+draftTip;
 }
 
 /* ========== 上传与裁切 ========== */
@@ -1629,7 +1670,7 @@ function packUpload(items,model,keepColors,opt){
   if(Array.isArray(opt.customLogoBlobs)&&opt.customLogoBlobs.length)out.customLogoBlobs=opt.customLogoBlobs;
   return Promise.all(items.map(function(it){
     var cv=cropTo(it.canvas,g.cx,g.cy,g.side);
-    var base='mr_'+lower+'_'+fileSlug(it.label)+'_trim';
+    var base=SUB+'mr_'+lower+'_'+fileSlug(it.label)+'_trim';
     return Promise.all([toBlob(cv,'image/png'),toBlob(cv,'image/webp',WEBP_Q)]).then(function(bs){
       out.files.push({path:base+'.png',blob:bs[0]},{path:base+'.webp',blob:bs[1]});
       out.model.colors.push({key:fileSlug(it.label),label:it.label.trim(),image:base+'.png',webp:base+'.webp'});
@@ -1670,10 +1711,10 @@ function buildUpload(){
       publish() 一路落到最后那句 toast，用户点「确认提交上传」只看到一行小灰字，像没反应。
    ⛔ 而「图片写不进浏览器」这个前提是错的：IndexedDB 存 Blob 是浏览器原生能力。
    做法：本地沿用**同一套裁切管线** packUpload（与线上逐字节同源），产出线上同名的
-      *.png|*.webp，写进本机图片仓（key = 线上同名路径）；配置照旧写本机草稿。
+      SUB*.png|.webp，写进本机图片仓（key = 线上同名路径）；配置照旧写本机草稿。
       前端在开发环境启动时把图片仓预载成 objectURL，modelSrc() 优先命中
       → 「本地新增型号 → 前端跟着出现产品图」这条绑定在本地就能完整验证。
-   ⛔ 全部关在 IS_LOCAL 分支内：线上走的 ghPut / models.json 一个字节都不经过这里。 */
+   ⛔ 全部关在 IS_LOCAL 分支内：线上走的 ghPut / CFG 一个字节都不经过这里。 */
 var ASSET_DB='mr_local_assets';
 function idbOpen(){
   return new Promise(function(res,rej){
@@ -1923,7 +1964,7 @@ function prog(p,ui){
   fill.style.width=Math.round(p*100)+'%';
 }
 /* 进度条和上传明细都关在「提交中」弹窗里：提交期间出现，提交结束整块消失，
-   不再把「上传 xx.png / 更新 models.json」这些行堆在页面底部。 */
+   不再把「上传 xx.png / 更新 CFG」这些行堆在页面底部。 */
 function openJobPanel(title){
   var p=$('jobPanel');if(!p)return;
   var t=$('jobTitle');if(t&&title)t.textContent=title;
@@ -2002,7 +2043,7 @@ function runJobs(jobs,ui){
             if(ci>=0)state.pendingCopy.splice(ci,1);
           });
       }else{
-        label='更新 models.json';
+        label='更新 '+CFG;
         var merged=state.models;
         /* j.model 为空表示「只写配置」：删型号 / 删颜色 / 改颜色名这些操作
            已经在 state.models 上改完了，直接把当前配置落盘即可。 */
@@ -2028,11 +2069,11 @@ function runJobs(jobs,ui){
         task=(function(){
           var b64=btoa(unescape(encodeURIComponent(body)));
           var snap=JSON.parse(body);
-          return ghFile('models.json').catch(function(){return null;}).then(function(cur){
-            return ghPut('models.json',b64,'后台：更新型号配置',cur&&cur.sha);
+          return ghFile(CFG).catch(function(){return null;}).then(function(cur){
+            return ghPut(CFG,b64,'后台：更新型号配置',cur&&cur.sha);
           }).then(function(r){
             /* 记下「这一版是本机写上去的」，供 loadModels() 识别线上读回来的是不是缓存旧版。
-               写入被拦下（skipped）时不能记，否则会拿本机的假想状态去压真实线上配置。 */
+               沙盒拦截（skipped）时不能记，否则会拿本机的假想状态去压真实线上配置。 */
             if(!(r&&r.skipped))lwSave(snap);
             return r;
           });
@@ -2075,7 +2116,7 @@ function buildJobs(up,opt){
 }
 /* 只改配置、不新增图片时的任务清单（删型号 / 删颜色 / 改颜色名 / 改型号名）。
    这些改动都直接落在 state.models 上，所以只需要把图片增删跑完，
-   再把当前配置整体写回 models.json。 */
+   再把当前配置整体写回 CFG。 */
 function buildConfigJobs(){
   var jobs=[];
   state.pendingCopy.forEach(function(cp){jobs.push({kind:'copy',from:cp.from,to:cp.to});});
@@ -2120,7 +2161,7 @@ function publish(){
   if(!token()){openTokenPanel();alert('还没有连接 GitHub，请先连接');return;}
   /* ⛔ 右侧栏没有待传图片时必须走「纯配置提交」。
      以前这里无条件 buildUpload()，会以「请先放几张颜色图」软失败 ——
-     于是「删掉的型号 / 删掉的颜色」永远写不进 models.json，刷新一下全长回来。
+     于是「删掉的型号 / 删掉的颜色」永远写不进 CFG，刷新一下全长回来。
      删型号、删颜色、改颜色名、改型号名都只改配置，本来就不需要图片。 */
   if(!draft.items.length){
     /* 有待发布的配置改动（删型号/删颜色/改名）→ 纯配置提交，不需要型号名、也不需要图。
@@ -2139,7 +2180,7 @@ function publish(){
       state.busy=false;$('btnPublish').disabled=false;
       state.puts=[];state.dels=[];state.pendingCopy=[];state.dirty=false;
       renderPreviews();
-      alert('发布完成！\n前端页面约 30–60 秒后会自动显示新内容。'+stageNoticeTail());
+      alert('发布完成！\n前端页面约 30–60 秒后会自动显示新内容。'+blockedTip());
       return afterWrite();
     });
   }).catch(function(e){
@@ -2154,7 +2195,7 @@ function publish(){
     else if(m)toastMsg(m);
   });
 }
-/* 只改配置的提交（右侧栏没有图片）：把图片增删跑完 + 当前配置写回 models.json。
+/* 只改配置的提交（右侧栏没有图片）：把图片增删跑完 + 当前配置写回 CFG。
    不需要型号名称，也不该被型号名称的必填校验拦住。 */
 /* 写回成功之后：内存里的 state.models 就是刚写进线上那一版，直接复用即可。
    ⛔ 不要回头再 loadModels()：远端 / CDN 可能还没更新，重读会把刚删掉的型号重新装回内存，
@@ -2172,7 +2213,7 @@ function publishConfig(){
     state.dels=[];state.pendingCopy=[];state.dirty=false;
     renderPreviews();
     lastWrite='已推送 GitHub '+draftStamp();
-    alert('发布完成！\n前端页面约 30–60 秒后会自动显示新内容。'+stageNoticeTail());
+    alert('发布完成！\n前端页面约 30–60 秒后会自动显示新内容。'+blockedTip());
     return afterWrite();
   }).catch(function(e){
     state.busy=false;$('btnPublish').disabled=false;
@@ -2694,7 +2735,7 @@ function currentLogoUrl(){
 }
 /* 把地址解成 <img> 元素（同一地址复用，避免每次切色都重新请求）
    ⛔⛔ 2026-10-08（第七轮）：这个缓存**必须能失效** —— 它是「替换自定义LOGO 后不生效」的真凶。
-      为什么：自定义图的路径是按「型号+序号」命名的（customLogoPath → 如 logo-custom/35_logo2.png），
+      为什么：自定义图的路径是按「型号+序号」命名的（customLogoPath → 如 <SUB>35_logo2.png），
       **内容换了、路径不变**。于是发生：
         ① 第一次传 A → lpImgCache['...35_logo2.png'] = A 的 <img>
         ② 替换成 B → 保存成功、GitHub 上文件已变 B
@@ -2715,7 +2756,7 @@ function loadImgEl(u){
     im.onerror=function(){rej(new Error('LOGO 图加载失败：'+u));};
     /* ⛔ 这里**不拼** `?t=Date.now()`：那会让同一张图每次渲染都是新 URL，
        缓存彻底失效、切色时反复下载大图。
-       ⛔ 也不用担心浏览器 HTTP 缓存留旧图：raw/Pages 对同名路径的图是
+       ⛔ 也不用担心浏览器 HTTP 缓存留旧图：raw/Pages 对 test-assets 的图是
           max-age 级别缓存，但**替换图后我们是重新打开面板/重新渲染**，
           此时 lpImgCache 已被 lpImgCacheDrop() 清掉，会真的发一次请求；
           GitHub Pages 对同名文件更新的失效延迟通常在秒级，用户刷新页面即最新。
@@ -2758,13 +2799,31 @@ function hexToRgb(s){
       第 2/3 个加序号后缀（xxx_logo2.png / xxx_logo3.png）。
    ⛔ 别给全部统一加序号 —— 那会把线上已有的 xxx_logo.png 变成孤儿文件，
       而正式素材是只读区、不允许我们删。 */
-/* ⛔ 正式版：自定义 LOGO 图存在 logo-custom/（正式素材区），与产品图分开，避免混在一起。
-   配置里只记 src 路径，图必须跟着一起上传 —— 只写配置不传图就是死链，前端取到 404 → LOGO 消失。
-   ⛔ 本地（开发）与线上口径一致，都写 logo-custom/，IS_LOCAL 分支可以合并。 */
+/* ⛔⛔ 2026-10-08 用户报「线上的测试版本 上传了 自定义LOGO 会消失 不显示，前端页面也不显示」。
+   根因（设计级缺陷，不是小 bug）：**测试版沙盒写入白名单不含 logo-custom/**
+     var SUB='test-assets/', CFG='models.test.json';
+     function inSandbox(p){return p===CFG||String(p).indexOf(SUB)===0;}
+   → `ghPut('logo-custom/xxx_logo.png')` 命中 `!inSandbox()` 后**静默返回 {skipped:true}**，
+     图压根没上传、且不报错；而 lpSave 照样把 `pos.src='logo-custom/xxx_logo.png'`
+     写进 models.test.json → 配置指向一个不存在的文件 → 前端取图 404 → **LOGO 消失**。
+   修法（用户 2026-10-08 拍板「存 test-assets/ 下」）：**测试版的自定义图改写到沙盒内的
+   `test-assets/` 下**，配置里的 src 也跟着指这里 —— 前端 brandLogoSrcUrl() 线上直接原样返回 src，
+   所以**前端一行都不用改**就能取到；正式版素材区 logo-custom/ 一个字节都不碰。
+   ⛔ 本地（开发）仍走 logo-custom/：本机图片仓（IndexedDB）的既有口径不动，避免连累本地草稿链路。
+   ⛔⛔⛔ 合并双轨（2026-10-09）——这里是**最要命的一行**，改动前务必读完：
+     「素材目录」与「沙盒与否」是**两个独立的轴**，不能压进一个表达式：
+       · IS_SANDBOX=false（正式版）：线上要写 logo-custom/（正式素材区），本地也写 logo-custom/ → 与开关无关
+       · IS_SANDBOX=true （测试版）：线上要写 test-assets/（沙盒内），本地仍写 logo-custom/ → 才需要看 IS_LOCAL
+     ⛔ 所以**不能**写成 `var dir=IS_LOCAL?'logo-custom/':'test-assets/';` ——
+        那样正式版线上会落到 test-assets/，正是 V1.1 回填时靠外科手术修掉的致命缺陷
+        （症状＝正式版后台传了 LOGO、前端取不到、上传了不显示）。
+     ⛔ 下面这行在 IS_SANDBOX=false 时**逐字等价**于旧正式版的 `var dir='logo-custom/';`，
+        在 IS_SANDBOX=true 时**逐字等价**于旧测试版的 `var dir=IS_LOCAL?'logo-custom/':'test-assets/';`。
+   ⚠️ 副作用（必须知道）：测**试版**配的自定义图存 test-assets/，**发布正式版时路径会失效** ——
+      那种型号必须在正式版后台**重新上传一次**自定义 LOGO（见 skill §5a-2 的注意事项）。
+      这是「测试版不许写正式素材」这条红线的必然代价，不是缺陷。 */
 function customLogoPath(key,idx){
-  /* ⛔ 正式版：线上目录就是 logo-custom/（正式素材区），与产品图分开、避免混在一起。
-     本地（开发）与线上口径一致，都写 logo-custom/，IS_LOCAL 分支可以合并成常量。 */
-  var dir='logo-custom/';
+  var dir=(!IS_SANDBOX)?'logo-custom/':(IS_LOCAL?'logo-custom/':'test-assets/');
   var base=dir+key.replace(/^MR_/,'').toLowerCase()+'_logo';
   var i=Number(idx)||0;
   return base+(i>0?String(i+1):'')+'.png';
@@ -3730,7 +3789,7 @@ $('lpSave').addEventListener('click',function(){
     toastMsg('LOGO 定位已暂存，点「确认提交上传」后生效');
     return;
   }
-  /* 已有型号：只改 LOGO 落点。这里必须单独把 models.json 写回去 ——
+  /* 已有型号：只改 LOGO 落点。这里必须单独把 CFG 写回去 ——
      否则「改了定位但不重传图片」时找不到提交入口，等于白改。 */
   m.brandLogos=list;
   m.brandLogo=list[0];                 /* ⛔ 双写：老代码只认这个（见上方注释） */
@@ -3780,10 +3839,10 @@ $('lpSave').addEventListener('click',function(){
   var title=files.length?'正在上传自定义LOGO并写回配置':'正在保存 LOGO 定位到 GitHub';
   /* ⛔⛔ 2026-10-08（第二轮）：这里以前是 `runJobs([{kind:'json',model:up}],…)` —— **手搓了一个
      只有 json 的任务清单**，`up.files`（刚上传的自定义LOGO）被整包丢掉：
-       · 配置照写，src 指向 `logo-custom/xxx_logo.png`；
+       · 配置照写，src 指向 `SUB xxx_logo.png`；
        · 但那个文件**从来没上传过** → GitHub 上不存在 → 前端取图 404 → **LOGO 消失**。
      这正是用户报的「上传了自定义LOGO 会消失，前端页面也不显示」的**第二个真凶**
-     （第一个是写入被静默跳过、图压根没上传，已在本文件上方 ghPut 处修掉）。
+     （第一个是沙盒静默跳过 logo-custom/，已在本文件上方 ghPut 处修掉）。
      修法：改用 `buildJobs(up)` —— 与「新增型号」「修改图片」**同一条装配线**。
      它会把 up.files 展开成 {kind:'put'} 任务，且**排在 json 之前**，
      所以「上传失败 → 配置不写」，不会再出现「配置指向不存在的文件」。
@@ -3793,7 +3852,7 @@ $('lpSave').addEventListener('click',function(){
     lpList.forEach(function(it){it.customBlob=null;});
     /* ⛔⛔ 2026-10-08（第七轮）：**保存成功后必须清图缓存**。
        这是「替换自定义LOGO 提示成功、但显示的还是第一次那张」的最后一环：
-       ① 第一次传 A → loadImgEl 把 A 的 <img> 记进 lpImgCache['logo-custom/xx_logo2.png']；
+       ① 第一次传 A → loadImgEl 把 A 的 <img> 记进 lpImgCache['<SUB>xx_logo2.png']；
        ② 替换成 B → 本次上传把 GitHub 上的同名文件覆盖成 B（**写入链路本身是对的**），
           但那个缓存键**没变**，所以还是指着 A；
        ③ 关掉面板、重开、切色、拖动……任何一次重新渲染 → 命中缓存 → **画布又变回 A**。
