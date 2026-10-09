@@ -2159,6 +2159,12 @@ function runJobs(jobs,ui){
             if(!exist)merged[j.model.key].colors.push(c);
           });
         }
+        /* ⛔ 2026-10-09 根治补全：写回前统一按当前 key 顺序把每个型号重编连续 order。
+           原因：线上「新增/覆盖型号」走 publish→buildJobs→runJobs，是**绕开 autoCommit 的第二条写回出口**，
+           不经 autoCommit 里的 syncOrder()，于是落盘配置里新增型号缺 order → 下次读只能按 key 补号、
+           用户刚排好的置顶/顺序当场丢失。写入方向用 numberOrder(=syncOrder)，与读取方向 normalizeOrder
+           方向相反，⛔ 绝不可在此改用 normalizeOrder（它会按 order 重排 key，当场撤销刚排好的顺序）。 */
+        syncOrder();
         var body=JSON.stringify({updatedAt:new Date().toISOString(),pinnedCount:pinnedCount(),models:merged},null,2);
         task=(function(){
           var b64=btoa(unescape(encodeURIComponent(body)));
@@ -2354,6 +2360,7 @@ function saveLocalDraft(what){
      刷新自然回退，而且页面上一个字都不提示原因。这类静默分支一律不许留。 */
   if(state.busy){toastMsg('上一次提交还在进行中，这次改动没有保存 —— 请稍候再操作一次');return Promise.resolve('busy');}
   if(!pendingCount()){toastMsg('还没有任何改动');return Promise.resolve('nochange');}
+  syncOrder();   /* ⛔ 2026-10-09 根治补全：本地草稿同样锚定 order（本地上传型号走这里），与 runJobs 写回同口径 */
   var wrote=dkSave({updatedAt:new Date().toISOString(),pinnedCount:pinnedCount(),models:state.models});
   if(!wrote){
     /* 写不进 localStorage（隐私模式 / 配额满）时必须大声说，否则又变成「刷新就回退」且查无原因 */
