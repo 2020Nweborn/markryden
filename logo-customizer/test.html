@@ -1698,11 +1698,14 @@ let bagToken=0,bagLoadedOnce=false;
    ② 慢网时给个明确反馈，而不是盯着空画布。
    ⛔ 首屏立刻显示；切型号/切配色的图多半已预热命中（preloadImages），用 160ms 延迟显示，避免闪一下。 */
 let stageLoadingTimer=null,stageLoadingHoldTimer=null,stageLoadingShownAt=0;
-/* ⛔ 本地调试用（2026-09-30 用户要求「切换型号时设置 5 秒加载」，正式上线去掉）：
-   靠现成的环境判定 IS_LOCAL 门控 —— 本地（127.0.0.1 / 开发预览域）让加载态至少停留 5 秒，
-   便于肉眼看动画；线上 IS_LOCAL=false → 值为 0 → 行为与以前完全一致。
-   ⛔ 这正是项目红线要的形态：线上自动失效，不需要上线前记得回来删代码，也不另建本地专用页。 */
-const STAGE_LOAD_MIN_MS=IS_LOCAL?5000:0;
+/* ⛔⛔ 2026-10-08（第八轮）用户要求：「这个加载动画是假的吧？之前用来测试，现在不需要测试看效果。」
+   —— 是的，之前 `STAGE_LOAD_MIN_MS=IS_LOCAL?5000:0`：**本地故意让加载态至少停 5 秒**方便肉眼看动画，
+   线上为 0（行为本来就一致）。现在用户不要这个「为了看效果而拖时间」的行为，**本地也归零**。
+   ⛔ 保留的是**真加载态**：图没到位时遮罩挡住画布，避免先把 LOGO 露出来；慢网时给反馈。
+      去掉的只是「人为补足到 5 秒」这段。所以 `STAGE_LOAD_MIN_MS` 恒为 0，
+      下面 hideStageLoading 里那段「补足停留」自然永不生效（保留代码是为了最小改动、
+      且将来若要再加最短停留只需改这一个常量）。 */
+const STAGE_LOAD_MIN_MS=0;
 function showStageLoading(immediate){
   const el=document.getElementById('stageLoading');
   if(!el)return;
