@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T09:18:22.360Z",
+  "updatedAt": "2026-10-09T09:19:29.527Z",
   "pinnedCount": 2,
   "models": {
     "MR_999_ka_14.5in": {
@@ -225,7 +225,21 @@
           "webp": "test-assets/mr_116_bizblack_trim.webp"
         }
       ],
-      "order": 5
+      "order": 5,
+      "brandLogos": [
+        {
+          "cxMm": 456.6,
+          "cyMm": 584.4,
+          "lenMm": 232.5,
+          "rot": 0
+        }
+      ],
+      "brandLogo": {
+        "cxMm": 456.6,
+        "cyMm": 584.4,
+        "lenMm": 232.5,
+        "rot": 0
+      }
     },
     "MR_23": {
       "id": "MR_23",
