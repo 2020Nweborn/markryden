@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T02:11:55.606Z",
+  "updatedAt": "2026-10-09T02:13:36.786Z",
   "pinnedCount": 2,
   "models": {
     "MR_9031SJ": {
@@ -70,35 +70,25 @@
       ],
       "brandLogos": [
         {
-          "cxMm": 206.4,
-          "cyMm": 142.5,
-          "lenMm": 73.9,
+          "cxMm": 166.9,
+          "cyMm": 150.6,
+          "lenMm": 80,
           "rot": 0,
+          "color": "#ffffff",
+          "colorPicked": true,
           "src": "test-assets/35_logo.png",
-          "srcNm": "963.png"
-        },
-        {
-          "cxMm": 95.5,
-          "cyMm": 147.7,
-          "lenMm": 80,
-          "rot": 0,
-          "src": "test-assets/35_logo2.png",
           "srcNm": "电子签名.png"
-        },
-        {
-          "cxMm": 103.3,
-          "cyMm": 186.3,
-          "lenMm": 80,
-          "rot": 0
         }
       ],
       "brandLogo": {
-        "cxMm": 206.4,
-        "cyMm": 142.5,
-        "lenMm": 73.9,
+        "cxMm": 166.9,
+        "cyMm": 150.6,
+        "lenMm": 80,
         "rot": 0,
+        "color": "#ffffff",
+        "colorPicked": true,
         "src": "test-assets/35_logo.png",
-        "srcNm": "963.png"
+        "srcNm": "电子签名.png"
       }
     },
     "MR_21": {
@@ -146,7 +136,37 @@
           "image": "mr_21_black_trim.png",
           "webp": "mr_21_black_trim.webp"
         }
-      ]
+      ],
+      "brandLogos": [
+        {
+          "cxMm": 54.8,
+          "cyMm": 54.1,
+          "lenMm": 43.2,
+          "rot": 0
+        },
+        {
+          "cxMm": 35.5,
+          "cyMm": 73.7,
+          "lenMm": 9.6,
+          "rot": 0,
+          "src": "test-assets/21_logo2.png",
+          "srcNm": "963.png"
+        },
+        {
+          "cxMm": 66.7,
+          "cyMm": 71.1,
+          "lenMm": 29.7,
+          "rot": 0,
+          "src": "test-assets/21_logo3.png",
+          "srcNm": "电子签名.png"
+        }
+      ],
+      "brandLogo": {
+        "cxMm": 54.8,
+        "cyMm": 54.1,
+        "lenMm": 43.2,
+        "rot": 0
+      }
     },
     "MR_999_ka_14.5in": {
       "id": "MR_999_ka_14.5in",
