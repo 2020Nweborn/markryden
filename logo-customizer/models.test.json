@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T09:17:13.957Z",
+  "updatedAt": "2026-10-09T09:17:24.671Z",
   "pinnedCount": 0,
   "models": {
     "MR_35": {
@@ -208,24 +208,6 @@
         }
       ],
       "order": 4
-    },
-    "MR_9116": {
-      "id": "MR_9116",
-      "pxPerMm": 0.575,
-      "canvasMm": 902.6,
-      "logoMax": {
-        "wMm": 60,
-        "hMm": 60
-      },
-      "colors": [
-        {
-          "key": "bizblack",
-          "label": "商务黑",
-          "image": "test-assets/mr_9116_bizblack_trim.png",
-          "webp": "test-assets/mr_9116_bizblack_trim.webp"
-        }
-      ],
-      "order": 5
     }
   }
 }
