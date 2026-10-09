@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T02:13:12.749Z",
+  "updatedAt": "2026-10-09T02:13:36.786Z",
   "pinnedCount": 2,
   "models": {
     "MR_9031SJ": {
@@ -70,35 +70,25 @@
       ],
       "brandLogos": [
         {
-          "cxMm": 206.4,
-          "cyMm": 142.5,
-          "lenMm": 73.9,
+          "cxMm": 166.9,
+          "cyMm": 150.6,
+          "lenMm": 80,
           "rot": 0,
+          "color": "#ffffff",
+          "colorPicked": true,
           "src": "test-assets/35_logo.png",
-          "srcNm": "963.png"
-        },
-        {
-          "cxMm": 95.5,
-          "cyMm": 147.7,
-          "lenMm": 80,
-          "rot": 0,
-          "src": "test-assets/35_logo2.png",
           "srcNm": "电子签名.png"
-        },
-        {
-          "cxMm": 103.3,
-          "cyMm": 186.3,
-          "lenMm": 80,
-          "rot": 0
         }
       ],
       "brandLogo": {
-        "cxMm": 206.4,
-        "cyMm": 142.5,
-        "lenMm": 73.9,
+        "cxMm": 166.9,
+        "cyMm": 150.6,
+        "lenMm": 80,
         "rot": 0,
+        "color": "#ffffff",
+        "colorPicked": true,
         "src": "test-assets/35_logo.png",
-        "srcNm": "963.png"
+        "srcNm": "电子签名.png"
       }
     },
     "MR_21": {
