@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T05:18:03.320Z",
+  "updatedAt": "2026-10-09T05:19:23.377Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -5906,6 +5906,35 @@
           "label": "商务黑",
           "image": "mr_271_bizblack_trim.png",
           "webp": "mr_271_bizblack_trim.webp"
+        }
+      ]
+    },
+    "MR_616_15.6in": {
+      "id": "MR_616_15.6in",
+      "pxPerMm": 3,
+      "canvasMm": 563,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_616_15.6in_bizblack_trim.png",
+          "webp": "mr_616_15.6in_bizblack_trim.webp"
+        },
+        {
+          "key": "石墨灰",
+          "label": "石墨灰",
+          "image": "mr_616_15.6in_石墨灰_trim.png",
+          "webp": "mr_616_15.6in_石墨灰_trim.webp"
+        },
+        {
+          "key": "雅致杏",
+          "label": "雅致杏",
+          "image": "mr_616_15.6in_雅致杏_trim.png",
+          "webp": "mr_616_15.6in_雅致杏_trim.webp"
         }
       ]
     }
