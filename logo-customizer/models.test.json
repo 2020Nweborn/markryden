@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T02:11:55.606Z",
+  "updatedAt": "2026-10-09T02:13:12.749Z",
   "pinnedCount": 2,
   "models": {
     "MR_9031SJ": {
@@ -146,7 +146,37 @@
           "image": "mr_21_black_trim.png",
           "webp": "mr_21_black_trim.webp"
         }
-      ]
+      ],
+      "brandLogos": [
+        {
+          "cxMm": 54.8,
+          "cyMm": 54.1,
+          "lenMm": 43.2,
+          "rot": 0
+        },
+        {
+          "cxMm": 35.5,
+          "cyMm": 73.7,
+          "lenMm": 9.6,
+          "rot": 0,
+          "src": "test-assets/21_logo2.png",
+          "srcNm": "963.png"
+        },
+        {
+          "cxMm": 66.7,
+          "cyMm": 71.1,
+          "lenMm": 29.7,
+          "rot": 0,
+          "src": "test-assets/21_logo3.png",
+          "srcNm": "电子签名.png"
+        }
+      ],
+      "brandLogo": {
+        "cxMm": 54.8,
+        "cyMm": 54.1,
+        "lenMm": 43.2,
+        "rot": 0
+      }
     },
     "MR_999_ka_14.5in": {
       "id": "MR_999_ka_14.5in",
