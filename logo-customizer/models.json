@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T15:32:44.929Z",
+  "updatedAt": "2026-10-10T15:35:17.343Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -6535,7 +6535,15 @@
           "webp": "mr_9907_kr_elitegray_trim.webp"
         }
       ],
-      "order": 171
+      "order": 171,
+      "safeZones": [
+        {
+          "xMm": 166.5,
+          "yMm": 111.1,
+          "wMm": 185,
+          "hMm": 348.4
+        }
+      ]
     },
     "MR_9405": {
       "id": "MR_9405",
