@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T16:06:45.560Z",
+  "updatedAt": "2026-10-10T16:08:25.183Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -6337,7 +6337,27 @@
           "webp": "mr_7808_elitegray_trim.webp"
         }
       ],
-      "order": 160
+      "order": 160,
+      "safeZones": [
+        {
+          "xMm": 186.2,
+          "yMm": 123.6,
+          "wMm": 88.9,
+          "hMm": 65.9
+        },
+        {
+          "xMm": 183.3,
+          "yMm": 219.6,
+          "wMm": 65.9,
+          "hMm": 158.6
+        },
+        {
+          "xMm": 281.8,
+          "yMm": 231.5,
+          "wMm": 6.2,
+          "hMm": 141.4
+        }
+      ]
     },
     "MR_425_14in": {
       "id": "MR_425_14in",
