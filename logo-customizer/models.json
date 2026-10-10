@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T15:18:44.119Z",
+  "updatedAt": "2026-10-10T15:25:43.610Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -5857,7 +5857,15 @@
           "webp": "mr_7918_bizblack_trim.webp"
         }
       ],
-      "order": 145
+      "order": 145,
+      "safeZones": [
+        {
+          "xMm": 175.5,
+          "yMm": 221.7,
+          "wMm": 111.1,
+          "hMm": 246.6
+        }
+      ]
     },
     "MR_6886": {
       "id": "MR_6886",
