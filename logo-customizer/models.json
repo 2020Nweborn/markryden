@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T15:31:41.409Z",
+  "updatedAt": "2026-10-10T15:32:44.929Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -6597,7 +6597,15 @@
           "webp": "mr_7612_银_trim.webp"
         }
       ],
-      "order": 173
+      "order": 173,
+      "safeZones": [
+        {
+          "xMm": 145.7,
+          "yMm": 66.9,
+          "wMm": 188.5,
+          "hMm": 358.2
+        }
+      ]
     },
     "MR_7003": {
       "id": "MR_7003",
