@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T15:51:27.834Z",
+  "updatedAt": "2026-10-10T15:53:10.791Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -6419,7 +6419,25 @@
           "wMm": 197.9,
           "hMm": 161.2
         }
-      ]
+      ],
+      "brandLogos": [
+        {
+          "cxMm": 305.7,
+          "cyMm": 268.3,
+          "lenMm": 30,
+          "rot": 357,
+          "color": "#ffffff",
+          "colorPicked": true
+        }
+      ],
+      "brandLogo": {
+        "cxMm": 305.7,
+        "cyMm": 268.3,
+        "lenMm": 30,
+        "rot": 357,
+        "color": "#ffffff",
+        "colorPicked": true
+      }
     },
     "MR_2339": {
       "id": "MR_2339",
