@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T16:05:54.902Z",
+  "updatedAt": "2026-10-10T16:06:45.560Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -6361,7 +6361,15 @@
           "webp": "mr_425_14in_elitegray_trim.webp"
         }
       ],
-      "order": 161
+      "order": 161,
+      "safeZones": [
+        {
+          "xMm": 135.9,
+          "yMm": 258.9,
+          "wMm": 320.4,
+          "hMm": 188.1
+        }
+      ]
     },
     "MR_425_15.6in": {
       "id": "MR_425_15.6in",
