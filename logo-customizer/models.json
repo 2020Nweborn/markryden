@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-12T01:58:31.771Z",
+  "updatedAt": "2026-10-12T02:03:39.254Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -7105,6 +7105,24 @@
         }
       ],
       "order": 181
+    },
+    "MR_2891": {
+      "id": "MR_2891",
+      "pxPerMm": 1,
+      "canvasMm": 580,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_2891_bizblack_trim.png",
+          "webp": "mr_2891_bizblack_trim.webp"
+        }
+      ],
+      "order": 182
     }
   }
 }
