@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T16:35:23.981Z",
+  "updatedAt": "2026-10-12T01:11:51.891Z",
   "pinnedCount": 1,
   "models": {
     "MR_9031SJ": {
@@ -7018,6 +7018,24 @@
         }
       ],
       "order": 175
+    },
+    "MR_19_13.3in": {
+      "id": "MR_19_13.3in",
+      "pxPerMm": 1,
+      "canvasMm": 371,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "elitegray",
+          "label": "精英灰",
+          "image": "mr_19_13.3in_elitegray_trim.png",
+          "webp": "mr_19_13.3in_elitegray_trim.webp"
+        }
+      ],
+      "order": 176
     }
   }
 }
