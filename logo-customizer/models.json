@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-12T08:33:09.418Z",
+  "updatedAt": "2026-10-12T08:34:25.713Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -6460,7 +6460,21 @@
           "wMm": 162.3,
           "hMm": 58.8
         }
-      ]
+      ],
+      "brandLogos": [
+        {
+          "cxMm": 172.8,
+          "cyMm": 182,
+          "lenMm": 50,
+          "rot": 0
+        }
+      ],
+      "brandLogo": {
+        "cxMm": 172.8,
+        "cyMm": 182,
+        "lenMm": 50,
+        "rot": 0
+      }
     },
     "MR_7808": {
       "id": "MR_7808",
