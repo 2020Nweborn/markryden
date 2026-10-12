@@ -1281,6 +1281,10 @@ function unpinModelOrder(k){
    `syncOrder()` 会把当前 key 顺序折算成连续 order 写进每个型号，
    于是「顺序」从此刻起**跟着型号本体走**，外部覆盖 models.json 也能自愈。 */
 function commitModelOrder(what){
+  /* ⛔ 2026-10-12：这是**唯一**「用户主动改顺序」的入口 → 打上标记。
+     runJobs 写回时见 !state.orderDirty 才敢用线上 order 覆盖本地（防旧页面把顺序盖回默认）；
+     置顶/取消置顶/拖拽三条路都经过这里，所以一个标记覆盖全部。写完由 afterWrite() 复位。 */
+  state.orderDirty=true;
   syncOrder();                     /* ⛔ 必须在 renderList 之前：列表要按最终顺序渲染 */
   state.dirty=true;
   renderList();refreshPending();
@@ -2159,23 +2163,50 @@ function runJobs(jobs,ui){
             if(!exist)merged[j.model.key].colors.push(c);
           });
         }
-        /* ⛔ 2026-10-09 根治补全：写回前统一按当前 key 顺序把每个型号重编连续 order。
-           原因：线上「新增/覆盖型号」走 publish→buildJobs→runJobs，是**绕开 autoCommit 的第二条写回出口**，
-           不经 autoCommit 里的 syncOrder()，于是落盘配置里新增型号缺 order → 下次读只能按 key 补号、
-           用户刚排好的置顶/顺序当场丢失。写入方向用 numberOrder(=syncOrder)，与读取方向 normalizeOrder
-           方向相反，⛔ 绝不可在此改用 normalizeOrder（它会按 order 重排 key，当场撤销刚排好的顺序）。 */
-        syncOrder();
-        var body=JSON.stringify({updatedAt:new Date().toISOString(),pinnedCount:pinnedCount(),models:merged},null,2);
+        /* ⛔⛔ 2026-10-12 根治（治「一更新就变回默认顺序」）：
+           顺序与置顶数的**真相只在线上**。本页这次若**没有主动排序**（!state.orderDirty），写回时一律
+           套用线上 models.json 的 order 与 pinnedCount —— 否则一个「内存里顺序是旧的」页面（旧标签页 /
+           缓存页 / 上次没刷新的页）只要一加型号、一改图，就会把用户刚排好的顺序整段盖回默认。
+           用户反复报的「一更新置顶就没了」根因就在这里：不是写回没带 order，而是**带了旧的顺序**。
+           之后统一按**当前 key 顺序**重编连续 order（写入方向 numberOrder(=syncOrder)；
+           ⛔ 不许用 normalizeOrder —— 那是读方向，会按 order 重排 key，当场撤销刚排好的顺序）。 */
         task=(function(){
-          var b64=btoa(unescape(encodeURIComponent(body)));
-          var snap=JSON.parse(body);
           return ghFile(CFG).catch(function(){return null;}).then(function(cur){
-            return ghPut(CFG,b64,'后台：更新型号配置',cur&&cur.sha);
-          }).then(function(r){
-            /* 记下「这一版是本机写上去的」，供 loadModels() 识别线上读回来的是不是缓存旧版。
-               沙盒拦截（skipped）时不能记，否则会拿本机的假想状态去压真实线上配置。 */
-            if(!(r&&r.skipped))lwSave(snap);
-            return r;
+            if(!state.orderDirty&&cur&&cur.content){
+              try{
+                var onl=JSON.parse(b64ToText(cur.content));
+                if(onl&&onl.models){
+                  var onlHas=false;
+                  Object.keys(merged).forEach(function(k){
+                    var o=onl.models[k]&&onl.models[k].order;
+                    if(typeof o==='number'&&isFinite(o)){merged[k].order=o;onlHas=true;}
+                  });
+                  if(onlHas){
+                    /* 按线上 order 重排 key（线上没有的新型号维持末尾）→ 再重编连续号 */
+                    var ks=Object.keys(merged);
+                    ks.sort(function(a,b){
+                      var oa=(merged[a]&&typeof merged[a].order==='number')?merged[a].order:1e9;
+                      var ob=(merged[b]&&typeof merged[b].order==='number')?merged[b].order:1e9;
+                      return oa-ob;
+                    });
+                    var keep={};ks.forEach(function(k){keep[k]=merged[k];});
+                    Object.keys(merged).forEach(function(k){delete merged[k];});
+                    ks.forEach(function(k){merged[k]=keep[k];});
+                    if(typeof onl.pinnedCount==='number')state.pinnedCount=onl.pinnedCount;
+                  }
+                }
+              }catch(_){ }
+            }
+            syncOrder();
+            var body=JSON.stringify({updatedAt:new Date().toISOString(),pinnedCount:pinnedCount(),models:merged},null,2);
+            var b64=btoa(unescape(encodeURIComponent(body)));
+            var snap=JSON.parse(body);
+            return ghPut(CFG,b64,'后台：更新型号配置',cur&&cur.sha).then(function(r){
+              /* 记下「这一版是本机写上去的」，供 loadModels() 识别线上读回来的是不是缓存旧版。
+                 沙盒拦截（skipped）时不能记，否则会拿本机的假想状态去压真实线上配置。 */
+              if(!(r&&r.skipped))lwSave(snap);
+              return r;
+            });
           });
         })();
       }
@@ -2301,7 +2332,7 @@ function publish(){
    ⛔ 不要回头再 loadModels()：远端 / CDN 可能还没更新，重读会把刚删掉的型号重新装回内存，
    紧接着的下一次写回就把它整段覆盖回线上 —— 这就是「删了刷新又回来」的真因。
    渲染与待发布计数照旧刷新，页面表现不变。 */
-function afterWrite(){state.puts=[];renderList();renderPreviews();refreshPending();return 'ok';}
+function afterWrite(){state.orderDirty=false;state.puts=[];renderList();renderPreviews();refreshPending();return 'ok';}
 function publishConfig(){
   /* ⛔ 开发环境无条件走草稿：不许因为「碰巧存过 token」就把本地删改直接推到线上。
      写线上是第②级的动作，要么用线上测试版后台、要么走发布脚本，不从开发环境偷偷做。 */
