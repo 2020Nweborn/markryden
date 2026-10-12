@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-12T08:24:57.443Z",
+  "updatedAt": "2026-10-12T08:13:14.692Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -7202,15 +7202,7 @@
           "webp": "mr_3601_科技灰_trim.webp"
         }
       ],
-      "order": 181,
-      "safeZones": [
-        {
-          "xMm": 103,
-          "yMm": 167.7,
-          "wMm": 233.4,
-          "hMm": 134.1
-        }
-      ]
+      "order": 181
     },
     "MR_2891": {
       "id": "MR_2891",
@@ -7236,25 +7228,7 @@
           "wMm": 305.9,
           "hMm": 157.2
         }
-      ],
-      "brandLogos": [
-        {
-          "cxMm": 288.2,
-          "cyMm": 355.5,
-          "lenMm": 80,
-          "rot": 0,
-          "src": "logo-custom/2891_logo.png",
-          "srcNm": "2891 拷贝 1.png"
-        }
-      ],
-      "brandLogo": {
-        "cxMm": 288.2,
-        "cyMm": 355.5,
-        "lenMm": 80,
-        "rot": 0,
-        "src": "logo-custom/2891_logo.png",
-        "srcNm": "2891 拷贝 1.png"
-      }
+      ]
     },
     "MR_512": {
       "id": "MR_512",
