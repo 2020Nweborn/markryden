@@ -10,7 +10,7 @@
         解析器在里面**不认标签**，写进去的 <script> 会变成字面文本显示在标题栏（实测踩过）。
         正确做法：由 setLanguage() 在设 title 之后追加后缀（见下方 setLanguage）。
      ⛔ 不许给正式版引外部 js —— 保持单文件、可离线打开、可直接双击。 -->
-<script>var IS_SANDBOX=true;/* 测试版＝沙盒：配置读 models.test.json、素材写 test-assets/ */</script>
+<script>var IS_SANDBOX=true;/* 双轨开关：true=沙盒(测试版，配置读 models.test.json、素材写 test-assets/)，false=正式版(models.json / logo-custom/) */</script>
 <title>MARK RYDEN · LOGO 定制预览</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
 <style>
@@ -774,6 +774,8 @@ const MODELS = {
      下面是配置文件名常量（合并双轨 2026-10-09 新增）：
      ⛔ 原本这里写死 models.test.json、正式版写死 models.json，两地各一份、回填靠手工甄别。 */
 const CFG=IS_SANDBOX?'models.test.json':'models.json';
+/* ⛔ 2026-10-12：型号顺序的权威源拆到独立文件（旧页面只写 models.json、动不了它 → 旧标签页冲不掉顺序） */
+const ORDER_CFG=IS_SANDBOX?'order.test.json':'order.json';
 /* ⛔ 「型号表为空」是合法状态，不是坏配置。
    2026-09-17 用户报「本地后台删了型号，前端不跟着变」——根因就在这里：
    旧代码 `if(!keys.length)return false;` 把空对象当读取失败，调用方于是转头去读
@@ -789,10 +791,18 @@ const CFG=IS_SANDBOX?'models.test.json':'models.json';
 const LAST_MODEL_KEY='markryden-logo-model';
 function lastModelKey(){try{return localStorage.getItem(LAST_MODEL_KEY)||'';}catch(e){return '';}}
 function setLastModelKey(k){try{if(k)localStorage.setItem(LAST_MODEL_KEY,String(k));}catch(e){}}
-function applyRemoteModels(j){
+function applyRemoteModels(j,orderList){
   const nm=j&&j.models;
   if(!nm||typeof nm!=='object')return false;
-  const keys=Object.keys(nm);
+  let keys=Object.keys(nm);
+  /* ⛔ 2026-10-12：按 order.json 的权威顺序重排（旧页面只写 models.json，动不了 order.json）。
+     order.json 缺失/失效时原样用 models.json 的 key 顺序，行为与改前一致。 */
+  if(Array.isArray(orderList)&&orderList.length){
+    const seen={},out=[];
+    orderList.forEach(k=>{ if(nm[k]&&!seen[k]){out.push(k);seen[k]=1;} });
+    keys.forEach(k=>{ if(!seen[k])out.push(k); });
+    keys=out;
+  }
   Object.keys(MODELS).forEach(k=>{delete MODELS[k];});
   keys.forEach(k=>{MODELS[k]=nm[k];});
   if(!keys.length)return showNoModels();
@@ -929,7 +939,12 @@ window.__mrLocalDraft={isLocal:()=>IS_LOCAL,get:localDraft,drop:dropLocalDraft,k
     syncDraftBadge(null);
     fetch(CFG+'?t='+Date.now(),{cache:'no-store'})
       .then(function(r){return r.ok?r.json():null;})
-      .then(function(j){if(applyRemoteModels(j))console.log('已加载后台型号配置');})
+      .then(function(j){
+        return fetch(ORDER_CFG+'?t='+Date.now(),{cache:'no-store'})
+          .then(function(r2){return r2.ok?r2.json():null;})
+          .catch(function(){return null;})
+          .then(function(ord){if(applyRemoteModels(j,ord&&ord.order))console.log('已加载后台型号配置');});
+      })
       .catch(function(){});
     });
   };
