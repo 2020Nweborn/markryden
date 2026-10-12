@@ -625,8 +625,12 @@ var OWNER='2020Nweborn', REPO='markryden', DIR='logo-customizer', BRANCH='main';
      本页写的本来就是正式的 models.json 与根目录素材，一律放行，
      白名单机制等同不存在 —— 这正是合并前 admin.html 的行为（那里连 inSandbox 都没有）。 */
 var CFG=IS_SANDBOX?'models.test.json':'models.json';
+/* ⛔⛔ 2026-10-12：型号顺序的权威源拆到独立文件 order.json（测试版 order.test.json）。
+   旧页面只认识 models.json、根本不写 order.json → 旧标签页怎么保存都动不了顺序。
+   顺序=order.json 里那份；models.json 里的 order 字段/key 顺序只作回退。 */
+var ORDER_CFG=IS_SANDBOX?'order.test.json':'order.json';
 var SUB=IS_SANDBOX?'test-assets/':'';
-function inSandbox(p){return !IS_SANDBOX||p===CFG||String(p).indexOf(SUB)===0;}
+function inSandbox(p){return !IS_SANDBOX||p===CFG||p===ORDER_CFG||String(p).indexOf(SUB)===0;}
 
 var RAW='https://raw.githubusercontent.com/'+OWNER+'/'+REPO+'/'+BRANCH+'/'+DIR+'/'+CFG;
 /* 任意素材的 raw 前缀：本地同源取不到时回源它。
@@ -920,6 +924,27 @@ function b64ToText(b64){
    raw 排最后：它是最可能仍在发旧内容的一环，只当兜底。
    ⛔ 光靠顺序不够用：实测出现过「刚写回、api 仍返回上一版」，所以再加一道 updatedAt 防线 ——
    读回来的版本比本机刚写回的还旧，就判定读到的是缓存副本，直接采用本机快照。 */
+/* ⛔⛔ 2026-10-12：用 order.json 把 state.models 重排一遍（权威顺序源）。
+   旧页面只写 models.json、碰不到 order.json，所以它的旧顺序盖过来也无关紧要——
+   这里永远以 order.json 为准。⛔ 任何失败（order.json 还没创建/被拦截/解析失败）
+   都静默回退，顺序沿用 models.json 的 key/order，页面照常能用。 */
+function applyOrderFile(){
+  return ghFile(ORDER_CFG).then(function(f){
+    var ord=null;
+    try{ ord=JSON.parse(b64ToText(f&&f.content||'')); }catch(e){}
+    if(ord&&Array.isArray(ord.order)&&ord.order.length){
+      var ks=modelKeys();
+      var seen={},out=[];
+      ord.order.forEach(function(k){ if(state.models[k]&&!seen[k]){out.push(k);seen[k]=1;} });
+      ks.forEach(function(k){ if(!seen[k])out.push(k); });   /* 后加的型号排末尾 */
+      var keep={};out.forEach(function(k){keep[k]=state.models[k];});
+      Object.keys(state.models).forEach(function(k){delete state.models[k];});
+      out.forEach(function(k){state.models[k]=keep[k];});
+      if(typeof ord.pinnedCount==='number')state.pinnedCount=ord.pinnedCount;
+    }
+    return state.models;
+  }).catch(function(){ return state.models; });
+}
 function loadModels(){
   /* ⛔ 本地有草稿就直接用它，不发那三个请求 —— 本地要看的就是「本机刚存的那一版」，
      这正是三级门禁第①级要验的东西。
@@ -988,14 +1013,16 @@ function loadModels(){
     draft={model:'',items:[],editKey:'',geo:null,brandLogo:null,brandLogos:null};
     $('newModel').value='';
     $('upTitle').textContent='新增型号与图片';
-    renderList();renderPreviews();refreshPending();syncDraftChip();
-    /* ⛔ 降级读取必须说出来。以前这里是静默 fallback：api 一旦读不到就悄悄换 CDN 缓存副本，
-       用户看到的是「刚删掉的型号刷新又回来了」，却完全无从归因。 */
-    if(src==='本机刚写回的版本')
-      toastMsg('⚠ GitHub 缓存还没更新，本页采用本机最后写回的那一版（内容已提交，前端约 30–60 秒后同步）。');
-    else if(src!=='api')
-      toastMsg('⚠ 读到的是'+src+'，可能不是最新。稍等片刻再刷新；若持续如此，多半是 PAT 失效或网络受限。');
-    return state.models;
+    return applyOrderFile().then(function(){
+      renderList();renderPreviews();refreshPending();syncDraftChip();
+      /* ⛔ 降级读取必须说出来。以前这里是静默 fallback：api 一旦读不到就悄悄换 CDN 缓存副本，
+         用户看到的是「刚删掉的型号刷新又回来了」，却完全无从归因。 */
+      if(src==='本机刚写回的版本')
+        toastMsg('⚠ GitHub 缓存还没更新，本页采用本机最后写回的那一版（内容已提交，前端约 30–60 秒后同步）。');
+      else if(src!=='api')
+        toastMsg('⚠ 读到的是'+src+'，可能不是最新。稍等片刻再刷新；若持续如此，多半是 PAT 失效或网络受限。');
+      return state.models;
+    });
   });
 }
 
@@ -2164,48 +2191,70 @@ function runJobs(jobs,ui){
           });
         }
         /* ⛔⛔ 2026-10-12 根治（治「一更新就变回默认顺序」）：
-           顺序与置顶数的**真相只在线上**。本页这次若**没有主动排序**（!state.orderDirty），写回时一律
-           套用线上 models.json 的 order 与 pinnedCount —— 否则一个「内存里顺序是旧的」页面（旧标签页 /
-           缓存页 / 上次没刷新的页）只要一加型号、一改图，就会把用户刚排好的顺序整段盖回默认。
-           用户反复报的「一更新置顶就没了」根因就在这里：不是写回没带 order，而是**带了旧的顺序**。
+           顺序与置顶数的**真相只在线上的 order.json**（旧页面不认识它、也写不到它）。
+           本页这次若**没有主动排序**（!state.orderDirty），写回时一律套用线上 order.json 的顺序与
+           pinnedCount —— 否则一个「内存里顺序是旧的」页面（旧标签页 / 缓存页）只要一加型号、一改图，
+           就会把顺序盖回默认。order.json 不存在时回退到 models.json 的 order 字段。
+           写回时**两份都写**：models.json（型号数据）+ order.json（权威顺序），保证它们一致。
            之后统一按**当前 key 顺序**重编连续 order（写入方向 numberOrder(=syncOrder)；
            ⛔ 不许用 normalizeOrder —— 那是读方向，会按 order 重排 key，当场撤销刚排好的顺序）。 */
         task=(function(){
-          return ghFile(CFG).catch(function(){return null;}).then(function(cur){
-            if(!state.orderDirty&&cur&&cur.content){
-              try{
-                var onl=JSON.parse(b64ToText(cur.content));
-                if(onl&&onl.models){
-                  var onlHas=false;
-                  Object.keys(merged).forEach(function(k){
-                    var o=onl.models[k]&&onl.models[k].order;
-                    if(typeof o==='number'&&isFinite(o)){merged[k].order=o;onlHas=true;}
-                  });
-                  if(onlHas){
-                    /* 按线上 order 重排 key（线上没有的新型号维持末尾）→ 再重编连续号 */
-                    var ks=Object.keys(merged);
-                    ks.sort(function(a,b){
-                      var oa=(merged[a]&&typeof merged[a].order==='number')?merged[a].order:1e9;
-                      var ob=(merged[b]&&typeof merged[b].order==='number')?merged[b].order:1e9;
-                      return oa-ob;
-                    });
-                    var keep={};ks.forEach(function(k){keep[k]=merged[k];});
-                    Object.keys(merged).forEach(function(k){delete merged[k];});
-                    ks.forEach(function(k){merged[k]=keep[k];});
-                    if(typeof onl.pinnedCount==='number')state.pinnedCount=onl.pinnedCount;
-                  }
+          return ghFile(ORDER_CFG).catch(function(){return null;}).then(function(orderCur){
+            return ghFile(CFG).catch(function(){return null;}).then(function(cur){
+              if(!state.orderDirty){
+                var orderList=null, orderPin=null;
+                try{
+                  var oj=JSON.parse(b64ToText(orderCur&&orderCur.content||''));
+                  if(oj&&Array.isArray(oj.order)&&oj.order.length){orderList=oj.order;orderPin=oj.pinnedCount;}
+                }catch(_){ }
+                if(orderList){
+                  /* 用 order.json 的权威顺序重排 merged（后加的型号排末尾） */
+                  var seen={},ol=[];
+                  orderList.forEach(function(k){ if(merged[k]&&!seen[k]){ol.push(k);seen[k]=1;} });
+                  Object.keys(merged).forEach(function(k){ if(!seen[k])ol.push(k); });
+                  var keep={};ol.forEach(function(k){keep[k]=merged[k];});
+                  Object.keys(merged).forEach(function(k){delete merged[k];});
+                  ol.forEach(function(k){merged[k]=keep[k];});
+                  if(typeof orderPin==='number')state.pinnedCount=orderPin;
+                } else if(cur&&cur.content){
+                  /* 回退：order.json 还没有，套用 models.json 里的 order 字段 */
+                  try{
+                    var onl=JSON.parse(b64ToText(cur.content));
+                    if(onl&&onl.models){
+                      var onlHas=false;
+                      Object.keys(merged).forEach(function(k){
+                        var o=onl.models[k]&&onl.models[k].order;
+                        if(typeof o==='number'&&isFinite(o)){merged[k].order=o;onlHas=true;}
+                      });
+                      if(onlHas){
+                        var ks=Object.keys(merged);
+                        ks.sort(function(a,b){
+                          var oa=(merged[a]&&typeof merged[a].order==='number')?merged[a].order:1e9;
+                          var ob=(merged[b]&&typeof merged[b].order==='number')?merged[b].order:1e9;
+                          return oa-ob;
+                        });
+                        var keep2={};ks.forEach(function(k){keep2[k]=merged[k];});
+                        Object.keys(merged).forEach(function(k){delete merged[k];});
+                        ks.forEach(function(k){merged[k]=keep2[k];});
+                        if(typeof onl.pinnedCount==='number')state.pinnedCount=onl.pinnedCount;
+                      }
+                    }
+                  }catch(_){ }
                 }
-              }catch(_){ }
-            }
-            syncOrder();
-            var body=JSON.stringify({updatedAt:new Date().toISOString(),pinnedCount:pinnedCount(),models:merged},null,2);
-            var b64=btoa(unescape(encodeURIComponent(body)));
-            var snap=JSON.parse(body);
-            return ghPut(CFG,b64,'后台：更新型号配置',cur&&cur.sha).then(function(r){
-              /* 记下「这一版是本机写上去的」，供 loadModels() 识别线上读回来的是不是缓存旧版。
-                 沙盒拦截（skipped）时不能记，否则会拿本机的假想状态去压真实线上配置。 */
-              if(!(r&&r.skipped))lwSave(snap);
-              return r;
+              }
+              syncOrder();
+              var body=JSON.stringify({updatedAt:new Date().toISOString(),pinnedCount:pinnedCount(),models:merged},null,2);
+              var b64=btoa(unescape(encodeURIComponent(body)));
+              var snap=JSON.parse(body);
+              /* order.json = 权威顺序（与 models.json 的 key 顺序一致） */
+              var orderBody=JSON.stringify({updatedAt:new Date().toISOString(),pinnedCount:pinnedCount(),order:Object.keys(merged)});
+              var orderB64=btoa(unescape(encodeURIComponent(orderBody)));
+              return ghPut(CFG,b64,'后台：更新型号配置',cur&&cur.sha).then(function(r){
+                /* 记下「这一版是本机写上去的」，供 loadModels() 识别线上读回来的是不是缓存旧版。
+                   沙盒拦截（skipped）时不能记，否则会拿本机的假想状态去压真实线上配置。 */
+                if(!(r&&r.skipped))lwSave(snap);
+                return ghPut(ORDER_CFG,orderB64,'后台：更新型号顺序',orderCur&&orderCur.sha).then(function(){ return r; });
+              });
             });
           });
         })();
