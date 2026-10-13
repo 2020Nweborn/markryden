@@ -92,10 +92,15 @@
      ⛔ 元素一律带 [hidden]{display:none} 兜底：只写 display:flex 会盖掉 UA 的 [hidden] 规则。 */
   .tint-bar{position:absolute;z-index:9;left:0;top:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:12px;width:min(94%,540px)}
   .tint-bar[hidden]{display:none}
-  .tint-hue{position:relative;width:100%;height:38px;border-radius:999px;cursor:pointer;touch-action:none;background:linear-gradient(to right,#f00 0%,#ff0 16.7%,#0f0 33.3%,#0ff 50%,#00f 66.7%,#f0f 83.3%,#f00 100%);box-shadow:0 2px 10px rgba(0,0,0,.10)}
-  .tint-hue[hidden]{display:none}
-  .tint-hue:focus-visible{outline:2px solid #111;outline-offset:5px}
-  .tint-hue-thumb{position:absolute;top:-13px;left:0;width:20px;height:calc(100% + 26px);border:3px solid #111;border-radius:4px;box-sizing:border-box;background:transparent;pointer-events:none}
+  /* 完整取色器（2026-10-13 用户要求：与后台一致的**系统原生取色器**）——
+     点开弹出系统面板（饱和/明度二维面 + 色相条 + 吸管），可选任意颜色，范围比原色相条更广。
+     色块本身宽度撑满浮层、显示当前颜色，点击即唤出系统面板。 */
+  .tint-color{display:block;width:100%;height:48px;padding:0;border:0;border-radius:14px;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.10);cursor:pointer;appearance:none;-webkit-appearance:none}
+  .tint-color[hidden]{display:none}
+  .tint-color:focus-visible{outline:2px solid #111;outline-offset:5px}
+  .tint-color::-webkit-color-swatch-wrapper{padding:0}
+  .tint-color::-webkit-color-swatch{border:0;border-radius:14px}
+  .tint-color::-moz-color-swatch{border:0;border-radius:14px}
   .tint-actions{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
   .tint-pill{height:46px;padding:0 26px;border:0;border-radius:999px;background:#fff;color:#222;font-size:15px;font-family:inherit;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.10);white-space:nowrap}
   .tint-pill[hidden]{display:none}
@@ -121,8 +126,9 @@
   .tint-value.is-bad{box-shadow:0 0 0 2px #d94a3d}
   .tint-value:disabled{color:#b4b4b4;cursor:default}
   @media (max-width:700px){
-    .tint-hue{height:32px}
-    .tint-hue-thumb{width:16px;top:-11px;height:calc(100% + 22px);border-width:2.5px}
+    .tint-color{height:40px;border-radius:12px}
+    .tint-color::-webkit-color-swatch{border-radius:12px}
+    .tint-color::-moz-color-swatch{border-radius:12px}
     .tint-actions{gap:9px}
     .tint-pill{height:40px;padding:0 18px;font-size:13px}
     .tint-pill-dark{padding:0 20px}
@@ -427,9 +433,7 @@
       <div class="stage-notice" id="stageNotice" hidden><span></span></div>
       <div class="no-models" id="mrNoModels" hidden>当前没有型号<span>后台已把型号全部删除，请先在后台新增型号</span></div>
       <div class="tint-bar" id="tintBar" hidden>
-        <div class="tint-hue" id="tintHue" role="slider" tabindex="0" aria-label="色相" aria-valuemin="0" aria-valuemax="360" aria-valuenow="0" hidden>
-          <div class="tint-hue-thumb" id="tintThumb"></div>
-        </div>
+        <input class="tint-color" id="tintColor" type="color" value="#ff0000" aria-label="选择颜色" hidden>
         <div class="tint-actions">
           <button class="tint-pill" id="tintToggle" type="button" aria-expanded="false">修改颜色</button>
           <div class="tint-entry" id="tintEntry" hidden>
@@ -576,9 +580,9 @@
 
 <script>
 const I18N = {
-  zh:{name:'中文',htmlLang:'zh-CN',title:'MARK RYDEN · LOGO 定制预览',stageAria:'背包 LOGO 预览画布',settingsAria:'LOGO 定制设置',warningAria:'查看 LOGO 尺寸提醒',warningTitle:'LOGO 超出安全区',warningBody:'请将 LOGO 完整移入红色虚线框内，否则可能无法正常定制。',warningSizeTitle:'LOGO 尺寸超出限制',warningSizeBody:'LOGO 的宽度或高度不能超过 12 × 12cm，否则可能无法正常定制。',warningConfirm:'确认',warning:'LOGO长宽不要超过12×12cm，超过后可能会导致无法定制！',stageTip:'拉动 LOGO 画布四角可缩放大小',model:'产品型号',color:'颜色选择',modelSearch:'输入型号搜索',modelNoMatch:'没有匹配的型号',black:'商务黑',upload:'上传LOGO',uploadHint:'上传透明 PNG 最佳，直接可用；<br>带有背景颜色的 JPG 将自动去除背景',addMore:'继续添加 LOGO',slotsFull:'已达 3 个上限，再添加会替换最早的 LOGO',process:'LOGO处理',removeBg:'去除背景',invert:'颜色反向',tolerance:'LOGO边缘擦除',toleranceHint:'拖动滑块，边缘清除越彻底',opacity:'透明度调节',innerColor:'去除LOGO内部颜色',rotation:'360°旋转调节',reset:'初始化（清除已上传LOGO）',export:'导出JPG图片',exportOk:'图片已导出，请查看下载文件',exportFail:'导出失败，请重试',exportDone:{title:'导出成功',lead:'提交以下文件给销售客服完成定制服务',l1:'① 成功导出的JPG效果图;',l2:'② <em>PDF</em> 或者 <em>AI</em> 格式的LOGO文件。',ok:'确定'},imageFail:'产品图加载失败，请检查网络后刷新重试',imgLoading:'产品图片加载中…',note:'注：遇到问题请联系与您对接的销售或者客服人员',sizeTitle:'LOGO 参考尺寸',brandLogo:'显示品牌LOGO',brandLogoHide:'隐藏品牌LOGO',fit:'适合大小',guide:'查看教程',zoneWarn:'请将 LOGO 完整移入红色虚线框内，否则可能无法正常定制。',tintChange:'修改颜色',tintInput:'输入色值',tintHue:'色相',tintApply:'确定',tintCmyk:'CMYK（近似）',tintPantone:'PANTONE（近似）',tintReset:'恢复初始颜色',tintBad:'色值无效或色号未收录，请检查后重试（支持 HEX / RGB / CMYK / PANTONE）',guideUI:{step:'步骤',back:'上一步',next:'下一步',done:'我知道了',skip:'跳过'}},
-  en:{name:'English',htmlLang:'en',title:'MARK RYDEN · Custom Logo Preview',stageAria:'Backpack logo preview canvas',settingsAria:'Logo customization settings',warningAria:'View logo size notice',warningTitle:'Logo exceeds the safe area',warningBody:'Move the logo fully inside the red dashed frame or it may not be customizable.',warningSizeTitle:'Logo size exceeds the limit',warningSizeBody:'The logo width or height must not exceed 12 × 12 cm or it may not be customizable.',warningConfirm:'OK',warning:'The logo must not exceed 12 × 12 cm in width or height. Larger logos may not be customizable.',stageTip:'Drag the corner handles to resize the logo',model:'Product Model',color:'Color',modelSearch:'Search model',modelNoMatch:'No matching model',black:'Business Black',upload:'Upload Logo',uploadHint:'Transparent PNG is recommended and ready to use;<br>backgrounds in JPG files will be removed automatically',addMore:'Add another logo',slotsFull:'Limit of 3 reached — adding more replaces the earliest logo',process:'Logo Processing',removeBg:'Remove BG',invert:'Invert Color',tolerance:'Logo Edge Cleanup',toleranceHint:'Drag the slider to remove more of the background edge',opacity:'Opacity',innerColor:'Remove colour inside logo',rotation:'360° Rotation',reset:'Reset (remove uploaded logo)',export:'Export JPG',exportOk:'Image exported, please check your downloads',exportFail:'Export failed, please try again',exportDone:{title:'Export Successful',lead:'Submit the files below to your sales representative to complete the customization',l1:'① The exported JPG preview;',l2:'② The LOGO file in <em>PDF</em> or <em>AI</em> format.',ok:'OK'},imgLoading:'Loading product image…',imageFail:'The product image failed to load. Please check your connection and refresh.',note:'Note: If you encounter any issues, please contact your sales representative or customer service.',sizeTitle:'Reference logo size',brandLogo:'Show brand logo',brandLogoHide:'Hide brand logo',fit:'Fit to Size',guide:'View Guide',zoneWarn:'Move the logo fully inside the red dashed frame or it may not be customizable.',tintChange:'Change colour',tintInput:'Enter colour',tintHue:'Hue',tintApply:'OK',tintCmyk:'CMYK (approx.)',tintPantone:'PANTONE (approx.)',tintReset:'Reset colour',tintBad:'Invalid value or colour not found — please check (HEX / RGB / CMYK / PANTONE)',guideUI:{step:'Step',back:'Back',next:'Next',done:'Got it',skip:'Skip'}},
-  ru:{name:'Русский',htmlLang:'ru',title:'MARK RYDEN · Предпросмотр логотипа',stageAria:'Область предпросмотра логотипа на рюкзаке',settingsAria:'Настройки логотипа',warningAria:'Показать ограничение размера логотипа',warningTitle:'Логотип выходит за безопасную зону',warningBody:'Полностью переместите логотип внутрь красной пунктирной рамки, иначе нанесение может быть невозможно.',warningSizeTitle:'Размер логотипа превышает ограничение',warningSizeBody:'Ширина или высота логотипа не должна превышать 12 × 12 см, иначе нанесение может быть невозможно.',warningConfirm:'ОК',warning:'Ширина и высота логотипа не должны превышать 12 × 12 см. Превышение размера может сделать нанесение невозможным.',stageTip:'Потяните за углы рамки, чтобы изменить размер логотипа',model:'Модель товара',color:'Цвет',modelSearch:'Поиск модели',modelNoMatch:'Модель не найдена',black:'Деловой чёрный',upload:'Загрузить логотип',uploadHint:'Рекомендуется прозрачный PNG;<br>фон изображения JPG удаляется автоматически',addMore:'Добавить ещё логотип',slotsFull:'Достигнут лимит 3 — новое заменит самое раннее',process:'Обработка логотипа',removeBg:'Удалить фон',invert:'Инверсия',tolerance:'Очистка краёв логотипа',toleranceHint:'Перемещайте ползунок для более тщательной очистки краёв',opacity:'Прозрачность',innerColor:'Удалить цвет внутри логотипа',rotation:'Поворот 360°',reset:'Сбросить (удалить логотип)',export:'Экспорт JPG',exportOk:'Изображение экспортировано, проверьте загрузки',exportFail:'Не удалось экспортировать, попробуйте ещё раз',exportDone:{title:'Экспорт выполнен',lead:'Отправьте указанные ниже файлы вашему менеджеру для завершения нанесения',l1:'① Экспортированное изображение JPG;',l2:'② Файл логотипа в формате <em>PDF</em> или <em>AI</em>.',ok:'ОК'},imgLoading:'Загрузка изображения товара…',imageFail:'Не удалось загрузить изображение товара. Проверьте соединение и обновите страницу.',note:'Примечание: при возникновении вопросов обратитесь к вашему менеджеру или в службу поддержки.',sizeTitle:'Ориентировочный размер логотипа',brandLogo:'Показать логотип',brandLogoHide:'Скрыть логотип',fit:'По размеру',guide:'Инструкция',zoneWarn:'Полностью переместите логотип внутрь красной пунктирной рамки, иначе нанесение может быть невозможно.',tintChange:'Изменить цвет',tintInput:'Ввести цвет',tintHue:'Оттенок',tintApply:'ОК',tintCmyk:'CMYK (прибл.)',tintPantone:'PANTONE (прибл.)',tintReset:'Сбросить цвет',tintBad:'Неверное значение или цвет не найден — проверьте (HEX / RGB / CMYK / PANTONE)',guideUI:{step:'Шаг',back:'Назад',next:'Далее',done:'Понятно',skip:'Пропустить'}}
+  zh:{name:'中文',htmlLang:'zh-CN',title:'MARK RYDEN · LOGO 定制预览',stageAria:'背包 LOGO 预览画布',settingsAria:'LOGO 定制设置',warningAria:'查看 LOGO 尺寸提醒',warningTitle:'LOGO 超出安全区',warningBody:'请将 LOGO 完整移入红色虚线框内，否则可能无法正常定制。',warningSizeTitle:'LOGO 尺寸超出限制',warningSizeBody:'LOGO 的宽度或高度不能超过 12 × 12cm，否则可能无法正常定制。',warningConfirm:'确认',warning:'LOGO长宽不要超过12×12cm，超过后可能会导致无法定制！',stageTip:'拉动 LOGO 画布四角可缩放大小',model:'产品型号',color:'颜色选择',modelSearch:'输入型号搜索',modelNoMatch:'没有匹配的型号',black:'商务黑',upload:'上传LOGO',uploadHint:'上传透明 PNG 最佳，直接可用；<br>带有背景颜色的 JPG 将自动去除背景',addMore:'继续添加 LOGO',slotsFull:'已达 3 个上限，再添加会替换最早的 LOGO',process:'LOGO处理',removeBg:'去除背景',invert:'颜色反向',tolerance:'LOGO边缘擦除',toleranceHint:'拖动滑块，边缘清除越彻底',opacity:'透明度调节',innerColor:'去除LOGO内部颜色',rotation:'360°旋转调节',reset:'初始化（清除已上传LOGO）',export:'导出JPG图片',exportOk:'图片已导出，请查看下载文件',exportFail:'导出失败，请重试',exportDone:{title:'导出成功',lead:'提交以下文件给销售客服完成定制服务',l1:'① 成功导出的JPG效果图;',l2:'② <em>PDF</em> 或者 <em>AI</em> 格式的LOGO文件。',ok:'确定'},imageFail:'产品图加载失败，请检查网络后刷新重试',imgLoading:'产品图片加载中…',note:'注：遇到问题请联系与您对接的销售或者客服人员',sizeTitle:'LOGO 参考尺寸',brandLogo:'显示品牌LOGO',brandLogoHide:'隐藏品牌LOGO',fit:'适合大小',guide:'查看教程',zoneWarn:'请将 LOGO 完整移入红色虚线框内，否则可能无法正常定制。',tintChange:'修改颜色',tintInput:'输入色值',tintHue:'色相',tintPick:'选择颜色',tintApply:'确定',tintCmyk:'CMYK（近似）',tintPantone:'PANTONE（近似）',tintReset:'恢复初始颜色',tintBad:'色值无效或色号未收录，请检查后重试（支持 HEX / RGB / CMYK / PANTONE）',guideUI:{step:'步骤',back:'上一步',next:'下一步',done:'我知道了',skip:'跳过'}},
+  en:{name:'English',htmlLang:'en',title:'MARK RYDEN · Custom Logo Preview',stageAria:'Backpack logo preview canvas',settingsAria:'Logo customization settings',warningAria:'View logo size notice',warningTitle:'Logo exceeds the safe area',warningBody:'Move the logo fully inside the red dashed frame or it may not be customizable.',warningSizeTitle:'Logo size exceeds the limit',warningSizeBody:'The logo width or height must not exceed 12 × 12 cm or it may not be customizable.',warningConfirm:'OK',warning:'The logo must not exceed 12 × 12 cm in width or height. Larger logos may not be customizable.',stageTip:'Drag the corner handles to resize the logo',model:'Product Model',color:'Color',modelSearch:'Search model',modelNoMatch:'No matching model',black:'Business Black',upload:'Upload Logo',uploadHint:'Transparent PNG is recommended and ready to use;<br>backgrounds in JPG files will be removed automatically',addMore:'Add another logo',slotsFull:'Limit of 3 reached — adding more replaces the earliest logo',process:'Logo Processing',removeBg:'Remove BG',invert:'Invert Color',tolerance:'Logo Edge Cleanup',toleranceHint:'Drag the slider to remove more of the background edge',opacity:'Opacity',innerColor:'Remove colour inside logo',rotation:'360° Rotation',reset:'Reset (remove uploaded logo)',export:'Export JPG',exportOk:'Image exported, please check your downloads',exportFail:'Export failed, please try again',exportDone:{title:'Export Successful',lead:'Submit the files below to your sales representative to complete the customization',l1:'① The exported JPG preview;',l2:'② The LOGO file in <em>PDF</em> or <em>AI</em> format.',ok:'OK'},imgLoading:'Loading product image…',imageFail:'The product image failed to load. Please check your connection and refresh.',note:'Note: If you encounter any issues, please contact your sales representative or customer service.',sizeTitle:'Reference logo size',brandLogo:'Show brand logo',brandLogoHide:'Hide brand logo',fit:'Fit to Size',guide:'View Guide',zoneWarn:'Move the logo fully inside the red dashed frame or it may not be customizable.',tintChange:'Change colour',tintInput:'Enter colour',tintHue:'Hue',tintPick:'Pick a colour',tintApply:'OK',tintCmyk:'CMYK (approx.)',tintPantone:'PANTONE (approx.)',tintReset:'Reset colour',tintBad:'Invalid value or colour not found — please check (HEX / RGB / CMYK / PANTONE)',guideUI:{step:'Step',back:'Back',next:'Next',done:'Got it',skip:'Skip'}},
+  ru:{name:'Русский',htmlLang:'ru',title:'MARK RYDEN · Предпросмотр логотипа',stageAria:'Область предпросмотра логотипа на рюкзаке',settingsAria:'Настройки логотипа',warningAria:'Показать ограничение размера логотипа',warningTitle:'Логотип выходит за безопасную зону',warningBody:'Полностью переместите логотип внутрь красной пунктирной рамки, иначе нанесение может быть невозможно.',warningSizeTitle:'Размер логотипа превышает ограничение',warningSizeBody:'Ширина или высота логотипа не должна превышать 12 × 12 см, иначе нанесение может быть невозможно.',warningConfirm:'ОК',warning:'Ширина и высота логотипа не должны превышать 12 × 12 см. Превышение размера может сделать нанесение невозможным.',stageTip:'Потяните за углы рамки, чтобы изменить размер логотипа',model:'Модель товара',color:'Цвет',modelSearch:'Поиск модели',modelNoMatch:'Модель не найдена',black:'Деловой чёрный',upload:'Загрузить логотип',uploadHint:'Рекомендуется прозрачный PNG;<br>фон изображения JPG удаляется автоматически',addMore:'Добавить ещё логотип',slotsFull:'Достигнут лимит 3 — новое заменит самое раннее',process:'Обработка логотипа',removeBg:'Удалить фон',invert:'Инверсия',tolerance:'Очистка краёв логотипа',toleranceHint:'Перемещайте ползунок для более тщательной очистки краёв',opacity:'Прозрачность',innerColor:'Удалить цвет внутри логотипа',rotation:'Поворот 360°',reset:'Сбросить (удалить логотип)',export:'Экспорт JPG',exportOk:'Изображение экспортировано, проверьте загрузки',exportFail:'Не удалось экспортировать, попробуйте ещё раз',exportDone:{title:'Экспорт выполнен',lead:'Отправьте указанные ниже файлы вашему менеджеру для завершения нанесения',l1:'① Экспортированное изображение JPG;',l2:'② Файл логотипа в формате <em>PDF</em> или <em>AI</em>.',ok:'ОК'},imgLoading:'Загрузка изображения товара…',imageFail:'Не удалось загрузить изображение товара. Проверьте соединение и обновите страницу.',note:'Примечание: при возникновении вопросов обратитесь к вашему менеджеру или в службу поддержки.',sizeTitle:'Ориентировочный размер логотипа',brandLogo:'Показать логотип',brandLogoHide:'Скрыть логотип',fit:'По размеру',guide:'Инструкция',zoneWarn:'Полностью переместите логотип внутрь красной пунктирной рамки, иначе нанесение может быть невозможно.',tintChange:'Изменить цвет',tintInput:'Ввести цвет',tintHue:'Оттенок',tintPick:'Выбрать цвет',tintApply:'ОК',tintCmyk:'CMYK (прибл.)',tintPantone:'PANTONE (прибл.)',tintReset:'Сбросить цвет',tintBad:'Неверное значение или цвет не найден — проверьте (HEX / RGB / CMYK / PANTONE)',guideUI:{step:'Шаг',back:'Назад',next:'Далее',done:'Понятно',skip:'Пропустить'}}
 };
 let currentLang='zh';
 /* 语言自动判定：只有中国大陆显示中文，其他地区一律英文 */
@@ -2386,8 +2390,7 @@ setRangeFill(zoomSlider);
    每张 LOGO 各记一份（__meta.tint = [r,g,b] 或 null），切选自动跟随，与其它滑杆一致。 */
 let tintOpen=false, tintEntryOn=false, tintRaf=0, tintDragging=false;
 const tintBar=document.getElementById('tintBar');
-const tintHue=document.getElementById('tintHue');
-const tintThumb=document.getElementById('tintThumb');
+const tintColor=document.getElementById('tintColor');
 const tintToggle=document.getElementById('tintToggle');
 const tintEntry=document.getElementById('tintEntry');
 const tintFormat=document.getElementById('tintFormat');
@@ -3296,11 +3299,9 @@ function scheduleTint(){
 }
 function paintTintUI(m){
   const rgb=(m&&m.tint)||null;
-  const h=rgb?(rgbHue(rgb[0],rgb[1],rgb[2])||0):0;
-  const w=tintHue.clientWidth,tw=tintThumb.offsetWidth||20;
-  if(w>tw)tintThumb.style.left=Math.round(h/360*(w-tw))+'px';
-  tintHue.setAttribute('aria-valuenow',String(h));
-  tintHue.setAttribute('aria-valuetext',rgb?rgbHex(rgb[0],rgb[1],rgb[2]):'');
+  /* 色块显示当前颜色；没染色时显示默认红（与「一打开就是红」的既有行为一致） */
+  const hex=(rgb?rgbHex(rgb[0],rgb[1],rgb[2]):'#FF0000');
+  if(tintColor){tintColor.value=hex.toLowerCase();tintColor.title=hex;}
   syncTintReset(m);
 }
 /* ⛔ 「恢复初始颜色」的显隐必须挂在 paintTintUI 上 —— 它同时被 setTint（拖色相条）
@@ -3318,7 +3319,7 @@ function syncTintUI(o){
   const has=!!(a&&a.__meta&&a.__meta.original);
   tintBar.hidden=!has;
   if(!has){tintOpen=false;tintEntryOn=false;}
-  tintHue.hidden=!tintOpen;
+  tintColor.hidden=!tintOpen;
   tintEntry.hidden=!tintEntryOn;
   tintToggle.hidden=tintEntryOn;
   tintToggle.setAttribute('aria-expanded',String(tintOpen));
@@ -3336,7 +3337,7 @@ function syncTintText(){
   if(tintReset)tintReset.textContent=t.tintReset||'';
   if(tintHint&&!tintHint.hidden)tintHint.textContent=t.tintBad||'';
   if(tintApply)tintApply.textContent=t.tintApply||'OK';
-  if(tintHue)tintHue.setAttribute('aria-label',t.tintHue||'');
+  if(tintColor)tintColor.setAttribute('aria-label',t.tintPick||t.tintHue||'');
   if(tintFormat)tintFormat.setAttribute('aria-label',t.tintHue||'');
   if(tintValue)tintValue.setAttribute('aria-label',t.tintInput||'');
 }
@@ -3370,36 +3371,12 @@ function syncTintBarPosition(){
   tintBar.style.left=Math.round(left)+'px';
   tintBar.style.top=Math.round(top)+'px';
 }
-/* ---- 色相条拖动（pointer 事件：鼠标/触摸/手写笔一套） ---- */
-function tintHueFromEvent(e){
-  const r=tintHue.getBoundingClientRect();
-  const tw=tintThumb.offsetWidth||20;
-  const inner=Math.max(1,r.width-tw);
-  let pct=(e.clientX-r.left-tw/2)/inner;
-  pct=Math.max(0,Math.min(1,pct));
-  return Math.round(pct*360);
-}
-tintHue.addEventListener('pointerdown',e=>{
-  if(!tintOpen)return;
-  tintDragging=true;
-  try{tintHue.setPointerCapture(e.pointerId);}catch(err){}
-  setTint(hueRgb(tintHueFromEvent(e)));
-  e.preventDefault();
-});
-tintHue.addEventListener('pointermove',e=>{if(tintDragging)setTint(hueRgb(tintHueFromEvent(e)));});
-const tintHueEnd=e=>{tintDragging=false;try{tintHue.releasePointerCapture(e.pointerId);}catch(err){}};
-tintHue.addEventListener('pointerup',tintHueEnd);
-tintHue.addEventListener('pointercancel',tintHueEnd);
-tintHue.addEventListener('keydown',e=>{
-  const m=tintMeta();if(!m)return;
-  const cur=m.tint?(rgbHue(m.tint[0],m.tint[1],m.tint[2])||0):0;
-  let d=0;
-  if(e.key==='ArrowLeft'||e.key==='ArrowDown')d=-2;
-  else if(e.key==='ArrowRight'||e.key==='ArrowUp')d=2;
-  else if(e.key==='Home'){e.preventDefault();setTint(hueRgb(0));return;}
-  else if(e.key==='End'){e.preventDefault();setTint(hueRgb(359));return;}
-  if(!d)return;
-  e.preventDefault();setTint(hueRgb(cur+d));
+/* ---- 系统原生取色器：选色即时染色 ----
+   `<input type=color>` 在系统面板里拖动时会持续派发 input 事件，
+   所以选中 LOGO 后拖动面板即可实时预览，与后台一致。 */
+tintColor.addEventListener('input',()=>{
+  const r=hexRgb(tintColor.value);
+  if(r)setTint(r);
 });
 /* ---- 「修改颜色 / 输入色值」按钮 ---- */
 tintToggle.addEventListener('click',()=>{
@@ -3519,10 +3496,8 @@ tintValue.addEventListener('keydown',e=>{
 });
 tintApply.addEventListener('click',applyTintEntry);
 if(tintReset)tintReset.addEventListener('click',resetTint);
-/* 色相条渐变与 hueRgb() 同源生成，保证条上的颜色和 LOGO 上的颜色一致 */
-if(tintHue){
-  tintHue.style.background='linear-gradient(to right,#f00 0%,#ff0 16.7%,#0f0 33.3%,#0ff 50%,#00f 66.7%,#f0f 83.3%,#f00 100%)';
-  /* 设计稿里条与浮层同宽；stageView 尺寸要等布局，下一帧再量一次指针位置 */
+/* 布局尺寸要等一帧；下一帧再同步一次取色器状态 */
+if(tintColor){
   requestAnimationFrame(()=>{try{syncTintUI(canvas.getActiveObject());}catch(e){}});
 }
 
