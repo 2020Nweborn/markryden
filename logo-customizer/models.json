@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-13T02:31:46.313Z",
+  "updatedAt": "2026-10-13T02:34:07.088Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -7228,7 +7228,25 @@
           "wMm": 188.5,
           "hMm": 358.2
         }
-      ]
+      ],
+      "brandLogos": [
+        {
+          "cxMm": 246.5,
+          "cyMm": 155,
+          "lenMm": 27,
+          "rot": 0,
+          "src": "logo-custom/7612_logo.png",
+          "srcNm": "1 拷贝 1.png"
+        }
+      ],
+      "brandLogo": {
+        "cxMm": 246.5,
+        "cyMm": 155,
+        "lenMm": 27,
+        "rot": 0,
+        "src": "logo-custom/7612_logo.png",
+        "srcNm": "1 拷贝 1.png"
+      }
     },
     "MR_7003": {
       "id": "MR_7003",
