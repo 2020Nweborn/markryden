@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-13T01:39:54.196Z",
+  "updatedAt": "2026-10-13T01:40:48.434Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -7256,7 +7256,21 @@
           "webp": "mr_19_13.3in_elitegray_trim.webp"
         }
       ],
-      "order": 175
+      "order": 175,
+      "safeZones": [
+        {
+          "xMm": 60.7,
+          "yMm": 118.5,
+          "wMm": 244.1,
+          "hMm": 180.7
+        },
+        {
+          "xMm": 60.7,
+          "yMm": 81.2,
+          "wMm": 245.9,
+          "hMm": 19.4
+        }
+      ]
     },
     "MR_19_15in": {
       "id": "MR_19_15in",
