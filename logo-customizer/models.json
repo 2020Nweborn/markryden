@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-13T01:12:05.826Z",
+  "updatedAt": "2026-10-13T01:14:25.194Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -7751,6 +7751,24 @@
         }
       ],
       "order": 187
+    },
+    "MR_303": {
+      "id": "MR_303",
+      "pxPerMm": 2,
+      "canvasMm": 451,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_303_bizblack_trim.png",
+          "webp": "mr_303_bizblack_trim.webp"
+        }
+      ],
+      "order": 188
     }
   }
 }
