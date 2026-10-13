@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-13T02:50:52.844Z",
+  "updatedAt": "2026-10-13T05:30:54.167Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -990,12 +990,18 @@
     "MR_1611": {
       "id": "MR_1611",
       "pxPerMm": 1,
-      "canvasMm": 452,
+      "canvasMm": 471,
       "logoMax": {
         "wMm": 60,
         "hMm": 60
       },
       "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_1611_bizblack_trim.png",
+          "webp": "mr_1611_bizblack_trim.webp"
+        },
         {
           "key": "citygreen",
           "label": "城际绿",
@@ -1009,6 +1015,14 @@
           "webp": "mr_1611_elitegray_trim.webp"
         }
       ],
+      "order": 25,
+      "brandLogo": {
+        "cxMm": 230.9,
+        "cyMm": 152,
+        "lenMm": 78,
+        "rot": 0,
+        "color": "#1c1c1c"
+      },
       "safeZones": [
         {
           "xMm": 99.7,
@@ -1028,15 +1042,7 @@
           "wMm": 100.2,
           "hMm": 159.3
         }
-      ],
-      "brandLogo": {
-        "cxMm": 230.9,
-        "cyMm": 152,
-        "lenMm": 78,
-        "rot": 0,
-        "color": "#1c1c1c"
-      },
-      "order": 25
+      ]
     },
     "MR_6602": {
       "id": "MR_6602",
