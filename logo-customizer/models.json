@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-13T01:14:25.194Z",
+  "updatedAt": "2026-10-13T01:15:53.344Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -7769,6 +7769,30 @@
         }
       ],
       "order": 188
+    },
+    "MR_2819": {
+      "id": "MR_2819",
+      "pxPerMm": 2,
+      "canvasMm": 472,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "天空蓝",
+          "label": "天空蓝",
+          "image": "mr_2819_天空蓝_trim.png",
+          "webp": "mr_2819_天空蓝_trim.webp"
+        },
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_2819_bizblack_trim.png",
+          "webp": "mr_2819_bizblack_trim.webp"
+        }
+      ],
+      "order": 189
     }
   }
 }
