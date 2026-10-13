@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-13T07:30:39.664Z",
+  "updatedAt": "2026-10-13T09:23:41.697Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -8205,62 +8205,6 @@
         "rot": 0,
         "src": "logo-custom/422_logo.png",
         "srcNm": "422logo 1.png"
-      }
-    },
-    "MR_72": {
-      "id": "MR_72",
-      "pxPerMm": 3,
-      "canvasMm": 147.3,
-      "logoMax": {
-        "wMm": 60,
-        "hMm": 60
-      },
-      "colors": [
-        {
-          "key": "gray",
-          "label": "灰",
-          "image": "mr_72_gray_trim.png",
-          "webp": "mr_72_gray_trim.webp"
-        },
-        {
-          "key": "green",
-          "label": "绿",
-          "image": "mr_72_green_trim.png",
-          "webp": "mr_72_green_trim.webp"
-        },
-        {
-          "key": "black",
-          "label": "黑",
-          "image": "mr_72_black_trim.png",
-          "webp": "mr_72_black_trim.webp"
-        }
-      ],
-      "order": 191,
-      "safeZones": [
-        {
-          "xMm": 16.3,
-          "yMm": 11.5,
-          "wMm": 107.6,
-          "hMm": 121.3
-        }
-      ],
-      "brandLogos": [
-        {
-          "cxMm": 69.5,
-          "cyMm": 119.5,
-          "lenMm": 42,
-          "rot": 0,
-          "color": "#636363",
-          "colorPicked": true
-        }
-      ],
-      "brandLogo": {
-        "cxMm": 69.5,
-        "cyMm": 119.5,
-        "lenMm": 42,
-        "rot": 0,
-        "color": "#636363",
-        "colorPicked": true
       }
     }
   }
