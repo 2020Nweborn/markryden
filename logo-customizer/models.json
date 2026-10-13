@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-13T01:50:40.821Z",
+  "updatedAt": "2026-10-13T01:58:52.068Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -7917,6 +7917,24 @@
         }
       ],
       "order": 189
+    },
+    "MR_422": {
+      "id": "MR_422",
+      "pxPerMm": 2,
+      "canvasMm": 505,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_422_bizblack_trim.png",
+          "webp": "mr_422_bizblack_trim.webp"
+        }
+      ],
+      "order": 190
     }
   }
 }
