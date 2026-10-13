@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-13T09:23:41.697Z",
+  "updatedAt": "2026-10-13T09:58:26.102Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -8206,6 +8206,24 @@
         "src": "logo-custom/422_logo.png",
         "srcNm": "422logo 1.png"
       }
+    },
+    "MR_QMDSP": {
+      "id": "MR_QMDSP",
+      "pxPerMm": 1,
+      "canvasMm": 490,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_qmdsp_bizblack_trim.png",
+          "webp": "mr_qmdsp_bizblack_trim.webp"
+        }
+      ],
+      "order": 191
     }
   }
 }
