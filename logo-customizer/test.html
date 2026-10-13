@@ -90,17 +90,22 @@
      态B：点开 → 露出色相条（指针默认最左＝红色，拖动实时变色），按钮变「输入色值」
      态C：点「输入色值」→ 换成 [格式下拉][色值][确定]
      ⛔ 元素一律带 [hidden]{display:none} 兜底：只写 display:flex 会盖掉 UA 的 [hidden] 规则。 */
-  .tint-bar{position:absolute;z-index:9;left:0;top:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:12px;width:min(94%,540px)}
+  /* ⛔ 2026-10-13 用户定：整条浮层宽度**由按钮行决定**（max-content）——
+     这样取色面板与下方「输入色值 / 恢复初始颜色」两侧**严格对齐**，面板不会拉成一条长带。
+     仍用 max-width 兜住 态C（输入行）在窄屏溢出的情况。 */
+  .tint-bar{position:absolute;z-index:9;left:0;top:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:12px;width:max-content;max-width:min(94%,540px)}
   .tint-bar[hidden]{display:none}
-  /* 完整取色器（2026-10-13 用户要求：与后台一致的**系统原生取色器**）——
-     点开弹出系统面板（饱和/明度二维面 + 色相条 + 吸管），可选任意颜色，范围比原色相条更广。
-     色块本身宽度撑满浮层、显示当前颜色，点击即唤出系统面板。 */
-  .tint-color{display:block;width:100%;height:48px;padding:0;border:0;border-radius:14px;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.10);cursor:pointer;appearance:none;-webkit-appearance:none}
-  .tint-color[hidden]{display:none}
-  .tint-color:focus-visible{outline:2px solid #111;outline-offset:5px}
-  .tint-color::-webkit-color-swatch-wrapper{padding:0}
-  .tint-color::-webkit-color-swatch{border:0;border-radius:14px}
-  .tint-color::-moz-color-swatch{border:0;border-radius:14px}
+  /* ⛔ 2026-10-13 用户定版：**内嵌取色面板**（不是系统弹窗）——
+     上＝2D 饱和/明度面，下＝色相条，再下＝「输入色值 / 恢复初始颜色」两颗按钮。 */
+  .tint-picker{width:100%;box-sizing:border-box;display:flex;flex-direction:column;gap:14px;padding:14px;border:1px solid #e3e3e3;border-radius:14px;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.10)}
+  .tint-picker[hidden]{display:none}
+  /* 2D 面：宽＝面板内容宽（＝按钮行宽），高按 ≈1.9:1 压扁，与设计稿一致 */
+  .tint-sv{position:relative;width:100%;height:126px;border-radius:3px;cursor:crosshair;touch-action:none;background:linear-gradient(to top,#000,rgba(0,0,0,0)),linear-gradient(to right,#fff,#f00)}
+  .tint-sv:focus-visible{outline:2px solid #111;outline-offset:3px}
+  .tint-sv-dot{position:absolute;left:100%;top:0;width:15px;height:15px;border:2px solid #fff;border-radius:50%;box-shadow:0 0 0 1px rgba(0,0,0,.35);transform:translate(-50%,-50%);pointer-events:none}
+  .tint-hue{position:relative;width:100%;height:20px;border-radius:999px;cursor:pointer;touch-action:none;background:linear-gradient(to right,#f00 0%,#ff0 16.7%,#0f0 33.3%,#0ff 50%,#00f 66.7%,#f0f 83.3%,#f00 100%)}
+  .tint-hue:focus-visible{outline:2px solid #111;outline-offset:3px}
+  .tint-hue-thumb{position:absolute;top:50%;left:0;width:24px;height:24px;border:2px solid #fff;border-radius:50%;box-shadow:0 0 0 1px rgba(0,0,0,.35);transform:translate(-50%,-50%);pointer-events:none}
   .tint-actions{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
   .tint-pill{height:46px;padding:0 26px;border:0;border-radius:999px;background:#fff;color:#222;font-size:15px;font-family:inherit;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.10);white-space:nowrap}
   .tint-pill[hidden]{display:none}
@@ -126,9 +131,9 @@
   .tint-value.is-bad{box-shadow:0 0 0 2px #d94a3d}
   .tint-value:disabled{color:#b4b4b4;cursor:default}
   @media (max-width:700px){
-    .tint-color{height:40px;border-radius:12px}
-    .tint-color::-webkit-color-swatch{border-radius:12px}
-    .tint-color::-moz-color-swatch{border-radius:12px}
+    .tint-sv{height:112px}
+    .tint-hue{height:16px}
+    .tint-hue-thumb{width:20px;height:20px}
     .tint-actions{gap:9px}
     .tint-pill{height:40px;padding:0 18px;font-size:13px}
     .tint-pill-dark{padding:0 20px}
@@ -433,7 +438,10 @@
       <div class="stage-notice" id="stageNotice" hidden><span></span></div>
       <div class="no-models" id="mrNoModels" hidden>当前没有型号<span>后台已把型号全部删除，请先在后台新增型号</span></div>
       <div class="tint-bar" id="tintBar" hidden>
-        <input class="tint-color" id="tintColor" type="color" value="#ff0000" aria-label="选择颜色" hidden>
+        <div class="tint-picker" id="tintPicker" hidden>
+          <div class="tint-sv" id="tintSV" role="slider" tabindex="0" aria-label="饱和度和明度"><i class="tint-sv-dot" id="tintSVDot"></i></div>
+          <div class="tint-hue" id="tintHue" role="slider" tabindex="0" aria-label="色相"><i class="tint-hue-thumb" id="tintThumb"></i></div>
+        </div>
         <div class="tint-actions">
           <button class="tint-pill" id="tintToggle" type="button" aria-expanded="false">修改颜色</button>
           <div class="tint-entry" id="tintEntry" hidden>
@@ -2390,7 +2398,11 @@ setRangeFill(zoomSlider);
    每张 LOGO 各记一份（__meta.tint = [r,g,b] 或 null），切选自动跟随，与其它滑杆一致。 */
 let tintOpen=false, tintEntryOn=false, tintRaf=0, tintDragging=false;
 const tintBar=document.getElementById('tintBar');
-const tintColor=document.getElementById('tintColor');
+const tintPicker=document.getElementById('tintPicker');
+const tintSV=document.getElementById('tintSV');
+const tintSVDot=document.getElementById('tintSVDot');
+const tintHue=document.getElementById('tintHue');
+const tintThumb=document.getElementById('tintThumb');
 const tintToggle=document.getElementById('tintToggle');
 const tintEntry=document.getElementById('tintEntry');
 const tintFormat=document.getElementById('tintFormat');
@@ -2437,6 +2449,29 @@ function hexRgb(hex){
   let h=m[1];
   if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
   return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];
+}
+/* ⛔ 2026-10-13：内嵌取色面板用 HSV —— 2D 面 = 饱和度(S)/明度(V)，色相条 = H。
+   tintHsv 是面板自己的状态：黑/灰/白这类「没有色相」的颜色不会把色相条跳回 0（保留上一次的 H）。 */
+let tintHsv={h:0,s:1,v:1};
+function rgb2hsv(r,g,b){
+  r/=255;g/=255;b/=255;
+  const mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;
+  let h=0;
+  if(d>1e-6){
+    if(mx===r)h=((g-b)/d)%6;
+    else if(mx===g)h=(b-r)/d+2;
+    else h=(r-g)/d+4;
+    h*=60;if(h<0)h+=360;
+  }
+  return {h:h,s:mx<1e-6?0:d/mx,v:mx};
+}
+function hsv2rgb(h,s,v){
+  const c=v*s, x=c*(1-Math.abs(((h/60)%2)-1)), m=v-c;
+  let r=0,g=0,b=0;
+  if(h<60){r=c;g=x;} else if(h<120){r=x;g=c;}
+  else if(h<180){g=c;b=x;} else if(h<240){g=x;b=c;}
+  else if(h<300){r=x;b=c;} else {r=c;b=x;}
+  return [Math.round((r+m)*255),Math.round((g+m)*255),Math.round((b+m)*255)];
 }
 /* ⚠️ CMYK 与 PANTONE 都是**近似**：浏览器是 sRGB 屏幕色，CMYK→RGB 没有唯一解
    （取决于 ICC 配置 / 纸张 / 油墨），PANTONE 是商业授权色库、没有免费官方对照表。
@@ -3299,10 +3334,33 @@ function scheduleTint(){
 }
 function paintTintUI(m){
   const rgb=(m&&m.tint)||null;
-  /* 色块显示当前颜色；没染色时显示默认红（与「一打开就是红」的既有行为一致） */
-  const hex=(rgb?rgbHex(rgb[0],rgb[1],rgb[2]):'#FF0000');
-  if(tintColor){tintColor.value=hex.toLowerCase();tintColor.title=hex;}
+  if(rgb){
+    const hsv=rgb2hsv(rgb[0],rgb[1],rgb[2]);
+    /* 灰度/黑白没有色相 → 沿用上一次的 H，面板不会跳回红 */
+    tintHsv={h:hsv.s>0.001?hsv.h:tintHsv.h,s:hsv.s,v:hsv.v};
+  }else{
+    tintHsv={h:0,s:1,v:1};
+  }
+  paintTintPanel();
   syncTintReset(m);
+}
+/* 把 tintHsv 画到面板上：2D 面底色随色相变、圆点＝饱和/明度、色相条指针＝H */
+function paintTintPanel(){
+  if(tintSV){
+    const c=hueRgb(tintHsv.h);
+    tintSV.style.background='linear-gradient(to top,#000,rgba(0,0,0,0)),linear-gradient(to right,#fff,'+rgbHex(c[0],c[1],c[2])+')';
+  }
+  if(tintSVDot){tintSVDot.style.left=(tintHsv.s*100)+'%';tintSVDot.style.top=((1-tintHsv.v)*100)+'%';}
+  if(tintHue&&tintThumb){
+    const w=tintHue.clientWidth||0, tw=tintThumb.offsetWidth||24;
+    if(w>0)tintThumb.style.left=Math.round(tw/2+tintHsv.h/360*(w-tw))+'px';
+  }
+}
+/* 面板选色的统一入口：H/S/V → RGB → 染色（setTint 会回调 paintTintUI 同步面板） */
+function setTintHsv(h,s,v){
+  tintHsv={h:((h%360)+360)%360,s:Math.max(0,Math.min(1,s)),v:Math.max(0,Math.min(1,v))};
+  paintTintPanel();
+  setTint(hsv2rgb(tintHsv.h,tintHsv.s,tintHsv.v));
 }
 /* ⛔ 「恢复初始颜色」的显隐必须挂在 paintTintUI 上 —— 它同时被 setTint（拖色相条）
    和 syncTintUI 调用。只写在 syncTintUI 里的话，用色相条改完颜色按钮不回来（专项 C18 抓到的）。 */
@@ -3319,7 +3377,7 @@ function syncTintUI(o){
   const has=!!(a&&a.__meta&&a.__meta.original);
   tintBar.hidden=!has;
   if(!has){tintOpen=false;tintEntryOn=false;}
-  tintColor.hidden=!tintOpen;
+  tintPicker.hidden=!tintOpen;
   tintEntry.hidden=!tintEntryOn;
   tintToggle.hidden=tintEntryOn;
   tintToggle.setAttribute('aria-expanded',String(tintOpen));
@@ -3337,7 +3395,8 @@ function syncTintText(){
   if(tintReset)tintReset.textContent=t.tintReset||'';
   if(tintHint&&!tintHint.hidden)tintHint.textContent=t.tintBad||'';
   if(tintApply)tintApply.textContent=t.tintApply||'OK';
-  if(tintColor)tintColor.setAttribute('aria-label',t.tintPick||t.tintHue||'');
+  if(tintSV)tintSV.setAttribute('aria-label',t.tintPick||'');
+  if(tintHue)tintHue.setAttribute('aria-label',t.tintHue||'');
   if(tintFormat)tintFormat.setAttribute('aria-label',t.tintHue||'');
   if(tintValue)tintValue.setAttribute('aria-label',t.tintInput||'');
 }
@@ -3347,37 +3406,89 @@ function stageGeom(){
   const z=disp/MODEL.canvasMm*viewZoom;
   return {z:z,t:disp/2-z*MODEL.canvasMm/2};
 }
+/* ⛔ 2026-10-13 修正：直接量「选框在视口里的位置」，再换算成 #stageView 的局部坐标。
+   —— 原来用 stageGeom() 做 mm→px 换算，与实际渲染差了约 100px（canvas vpt 带 97.2 平移），
+   于是「上方放不放得下」判错、翻上去仍旧压住 LOGO。返回坐标与浮层 style.left/top 同一坐标系。 */
 function tintBarPlace(){
   const o=tintActive();
-  if(!o||!o.__meta||!tintBar||tintBar.hidden)return null;
-  const g=stageGeom();
-  const w=o.width*o.scaleX,h=o.height*o.scaleY;
-  const rad=(o.angle||0)*Math.PI/180;
-  const bw=Math.abs(w*Math.cos(rad))+Math.abs(h*Math.sin(rad));
-  const bh=Math.abs(w*Math.sin(rad))+Math.abs(h*Math.cos(rad));
-  const sx=v=>g.z*v+g.t;
-  return {cx:sx(o.left),bottom:sx(o.top+bh/2)};
+  const view=document.getElementById('stageView');
+  const el=(canvas&&canvas.getElement)?canvas.getElement():null;
+  if(!o||!o.__meta||!tintBar||tintBar.hidden||!view||!el)return null;
+  /* ⛔⛔ 两个坐标系必须都摆平（2026-10-13 血的教训，浮层曾整体偏掉 134px）：
+     ① fabric 的 getBoundingRect() 给的是**画布元素局部坐标** —— 不含元素在页面中的偏移；
+     ② 浮层 style.left/top 的坐标系是它 offsetParent 的 padding 盒。
+     所以要补上「画布元素相对 offsetParent 的位移」(dx,dy)，否则水平直接偏掉一个左内边距。
+     ⛔ 断言时也别只比 style 值——两边都用了同一个错值就会「自己跟自己对」全绿。 */
+  const par=tintBar.offsetParent||document.body;
+  const pr=par.getBoundingClientRect(), er=el.getBoundingClientRect();
+  const pL=pr.left+par.clientLeft, pT=pr.top+par.clientTop;
+  const dx=er.left-pL, dy=er.top-pT;
+  const vr=view.getBoundingClientRect(), r=o.getBoundingRect();
+  return {
+    cx:dx+r.left+r.width/2, top:dy+r.top, bottom:dy+r.top+r.height,
+    viewL:vr.left-pL, viewT:vr.top-pT, viewW:view.clientWidth, viewH:view.clientHeight
+  };
 }
+/* ⛔ 2026-10-13 用户要求：浮层**自动选上/下** ——
+   默认跟在 LOGO 下方；**下方放不下（会出界、进而把 LOGO 盖住）就翻到 LOGO 上方**。
+   LOGO 被拖到画布下半部时，面板不再挡住它。`data-side` 记下当前落在哪一侧（供套件断言）。 */
 function syncTintBarPosition(){
   const view=document.getElementById('stageView');
   if(!view||!tintBar||tintBar.hidden)return;
   const p=tintBarPlace();
   if(!p)return;
-  const vw=view.clientWidth,vh=view.clientHeight;
+  const vw=p.viewW,vh=p.viewH;
   const bw=tintBar.offsetWidth||220,bh=tintBar.offsetHeight||46;
-  const left=Math.max(bw/2+8,Math.min(vw-bw/2-8,p.cx));
-  let top=p.bottom+16;
-  if(top+bh>vh-8)top=Math.max(8,vh-bh-8);
+  const GAP=16,PAD=8;
+  /* 可见区（#stageView）在 offsetParent 坐标系里的范围 —— 夹住时用它，不是用 0 */
+  const L=p.viewL+PAD, R=p.viewL+vw-PAD, T=p.viewT+PAD, B=p.viewT+vh-PAD;
+  const left=Math.max(L+bw/2,Math.min(R-bw/2,p.cx));
+  /* ⛔ 2026-10-13 用户定的规则：**只看 LOGO 在上半部还是下半部**（与面板高矮无关 → 稳定、不会来回跳）。
+       LOGO 中心在上半部 → 浮层放**下方**；LOGO 中心在下半部 → 浮层放**上方**，这样永远不挡 LOGO。 */
+  const mid=(p.top+p.bottom)/2;
+  let side=mid<p.viewT+vh/2?'down':'up';
+  let top=side==='down'?p.bottom+GAP:p.top-GAP-bh;
+  /* 极窄屏时选中的那侧确实塞不下，才退到另一侧兜底 */
+  if(side==='down'&&top+bh>B&&p.top-GAP-bh>=T){top=p.top-GAP-bh;side='up';}
+  if(side==='up'&&top<T&&p.bottom+GAP+bh<=B){top=p.bottom+GAP;side='down';}
+  /* 两边都塞不下（面板比可视区还高）才夹进画布，至少不整体跑到外面 */
+  if(top<T)top=T;
+  if(top+bh>B)top=Math.max(T,B-bh);
   tintBar.style.left=Math.round(left)+'px';
   tintBar.style.top=Math.round(top)+'px';
+  tintBar.setAttribute('data-side',side);
 }
-/* ---- 系统原生取色器：选色即时染色 ----
-   `<input type=color>` 在系统面板里拖动时会持续派发 input 事件，
-   所以选中 LOGO 后拖动面板即可实时预览，与后台一致。 */
-tintColor.addEventListener('input',()=>{
-  const r=hexRgb(tintColor.value);
-  if(r)setTint(r);
+/* ---- 内嵌取色面板的拖动（pointer 事件：鼠标/触摸/手写笔一套） ---- */
+function svFromEvent(e){
+  const r=tintSV.getBoundingClientRect();
+  const s=(e.clientX-r.left)/Math.max(1,r.width);
+  const v=1-(e.clientY-r.top)/Math.max(1,r.height);
+  return {s:s,v:v};
+}
+function hueFromEvent(e){
+  const r=tintHue.getBoundingClientRect();
+  const tw=tintThumb.offsetWidth||24;
+  const inner=Math.max(1,r.width-tw);
+  const pct=(e.clientX-r.left-tw/2)/inner;
+  return Math.round(Math.max(0,Math.min(1,pct))*360);
+}
+let svDragging=false, hueDragging=false;
+tintSV.addEventListener('pointerdown',e=>{
+  if(!tintOpen)return;
+  svDragging=true;try{tintSV.setPointerCapture(e.pointerId);}catch(_){}
+  const p=svFromEvent(e);setTintHsv(tintHsv.h,p.s,p.v);e.preventDefault();
 });
+tintSV.addEventListener('pointermove',e=>{if(svDragging){const p=svFromEvent(e);setTintHsv(tintHsv.h,p.s,p.v);}});
+const svEnd=e=>{svDragging=false;try{tintSV.releasePointerCapture(e.pointerId);}catch(_){}};
+tintSV.addEventListener('pointerup',svEnd);tintSV.addEventListener('pointercancel',svEnd);
+tintHue.addEventListener('pointerdown',e=>{
+  if(!tintOpen)return;
+  hueDragging=true;try{tintHue.setPointerCapture(e.pointerId);}catch(_){}
+  setTintHsv(hueFromEvent(e),tintHsv.s,tintHsv.v);e.preventDefault();
+});
+tintHue.addEventListener('pointermove',e=>{if(hueDragging)setTintHsv(hueFromEvent(e),tintHsv.s,tintHsv.v);});
+const hueEnd=e=>{hueDragging=false;try{tintHue.releasePointerCapture(e.pointerId);}catch(_){}};
+tintHue.addEventListener('pointerup',hueEnd);tintHue.addEventListener('pointercancel',hueEnd);
 /* ---- 「修改颜色 / 输入色值」按钮 ---- */
 tintToggle.addEventListener('click',()=>{
   const m=tintMeta();if(!m)return;
@@ -3387,6 +3498,7 @@ tintToggle.addEventListener('click',()=>{
     if(m.tint==null)m.tint=hueRgb(0);
     syncTintUI(curLogo());
     reprocess();
+    /* ⛔ 2026-10-13 用户定版：点「修改颜色」直接展开**内嵌取色面板**（不再弹系统取色框）。 */
     return;
   }
   tintEntryOn=true;
@@ -3497,7 +3609,7 @@ tintValue.addEventListener('keydown',e=>{
 tintApply.addEventListener('click',applyTintEntry);
 if(tintReset)tintReset.addEventListener('click',resetTint);
 /* 布局尺寸要等一帧；下一帧再同步一次取色器状态 */
-if(tintColor){
+if(tintPicker){
   requestAnimationFrame(()=>{try{syncTintUI(canvas.getActiveObject());}catch(e){}});
 }
 
