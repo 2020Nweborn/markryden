@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-12T10:13:18.390Z",
+  "updatedAt": "2026-10-13T01:12:05.826Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -7733,6 +7733,24 @@
         "color": "#d6d6d6",
         "colorPicked": true
       }
+    },
+    "MR_7507": {
+      "id": "MR_7507",
+      "pxPerMm": 2,
+      "canvasMm": 395.5,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_7507_bizblack_trim.png",
+          "webp": "mr_7507_bizblack_trim.webp"
+        }
+      ],
+      "order": 187
     }
   }
 }
