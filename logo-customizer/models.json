@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-13T02:20:46.469Z",
+  "updatedAt": "2026-10-13T02:21:14.972Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -7970,7 +7970,15 @@
           "webp": "mr_2819_bizblack_trim.webp"
         }
       ],
-      "order": 189
+      "order": 189,
+      "safeZones": [
+        {
+          "xMm": 126.8,
+          "yMm": 150.5,
+          "wMm": 239.2,
+          "hMm": 166.5
+        }
+      ]
     },
     "MR_422": {
       "id": "MR_422",
