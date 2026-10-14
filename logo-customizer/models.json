@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-13T09:58:50.738Z",
+  "updatedAt": "2026-10-14T01:30:15.892Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -8223,7 +8223,15 @@
           "webp": "mr_qmdsp_bizblack_trim.webp"
         }
       ],
-      "order": 191
+      "order": 191,
+      "safeZones": [
+        {
+          "xMm": 146.9,
+          "yMm": 65.7,
+          "wMm": 201.1,
+          "hMm": 396.8
+        }
+      ]
     },
     "MR_QMDPT": {
       "id": "MR_QMDPT",
