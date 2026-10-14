@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T01:36:26.158Z",
+  "updatedAt": "2026-10-14T01:57:58.908Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -7706,18 +7706,18 @@
       ],
       "brandLogos": [
         {
-          "cxMm": 102.1,
-          "cyMm": 90.7,
-          "lenMm": 46,
+          "cxMm": 104.8,
+          "cyMm": 90,
+          "lenMm": 42,
           "rot": 0,
           "color": "#dedede",
           "colorPicked": true
         }
       ],
       "brandLogo": {
-        "cxMm": 102.1,
-        "cyMm": 90.7,
-        "lenMm": 46,
+        "cxMm": 104.8,
+        "cyMm": 90,
+        "lenMm": 42,
         "rot": 0,
         "color": "#dedede",
         "colorPicked": true
