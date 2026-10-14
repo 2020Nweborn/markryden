@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T05:25:21.050Z",
+  "updatedAt": "2026-10-14T05:29:55.373Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -8326,6 +8326,36 @@
         "src": "logo-custom/qmdpt_logo.png",
         "srcNm": "QMDsd-logo 1.png"
       }
+    },
+    "MR_72": {
+      "id": "MR_72",
+      "pxPerMm": 4,
+      "canvasMm": 145,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "黑色",
+          "label": "黑色",
+          "image": "mr_72_黑色_trim.png",
+          "webp": "mr_72_黑色_trim.webp"
+        },
+        {
+          "key": "灰色",
+          "label": "灰色",
+          "image": "mr_72_灰色_trim.png",
+          "webp": "mr_72_灰色_trim.webp"
+        },
+        {
+          "key": "绿色",
+          "label": "绿色",
+          "image": "mr_72_绿色_trim.png",
+          "webp": "mr_72_绿色_trim.webp"
+        }
+      ],
+      "order": 193
     }
   }
 }
