@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T01:33:39.672Z",
+  "updatedAt": "2026-10-14T01:57:58.908Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -7706,18 +7706,18 @@
       ],
       "brandLogos": [
         {
-          "cxMm": 102.1,
-          "cyMm": 90.7,
-          "lenMm": 46,
+          "cxMm": 104.8,
+          "cyMm": 90,
+          "lenMm": 42,
           "rot": 0,
           "color": "#dedede",
           "colorPicked": true
         }
       ],
       "brandLogo": {
-        "cxMm": 102.1,
-        "cyMm": 90.7,
-        "lenMm": 46,
+        "cxMm": 104.8,
+        "cyMm": 90,
+        "lenMm": 42,
         "rot": 0,
         "color": "#dedede",
         "colorPicked": true
@@ -8231,7 +8231,25 @@
           "wMm": 201.1,
           "hMm": 396.8
         }
-      ]
+      ],
+      "brandLogos": [
+        {
+          "cxMm": 177.3,
+          "cyMm": 395.8,
+          "lenMm": 86,
+          "rot": 0,
+          "src": "logo-custom/qmdsp_logo.png",
+          "srcNm": "QMD-ddlogo 1.png"
+        }
+      ],
+      "brandLogo": {
+        "cxMm": 177.3,
+        "cyMm": 395.8,
+        "lenMm": 86,
+        "rot": 0,
+        "src": "logo-custom/qmdsp_logo.png",
+        "srcNm": "QMD-ddlogo 1.png"
+      }
     },
     "MR_QMDPT": {
       "id": "MR_QMDPT",
