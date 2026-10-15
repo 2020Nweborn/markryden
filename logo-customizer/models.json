@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T10:49:34.717Z",
+  "updatedAt": "2026-10-15T10:55:35.040Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -8266,6 +8266,60 @@
         "lenMm": 37,
         "rot": 0,
         "color": "#ffffff",
+        "colorPicked": true
+      }
+    },
+    "MR_271": {
+      "id": "MR_271",
+      "pxPerMm": 3,
+      "canvasMm": 416,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "米黄色",
+          "label": "米黄色",
+          "image": "mr_271_米黄色_trim.png",
+          "webp": "mr_271_米黄色_trim.webp"
+        },
+        {
+          "key": "绿色",
+          "label": "绿色",
+          "image": "mr_271_绿色_trim.png",
+          "webp": "mr_271_绿色_trim.webp"
+        },
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_271_bizblack_trim.png",
+          "webp": "mr_271_bizblack_trim.webp"
+        },
+        {
+          "key": "天空蓝",
+          "label": "天空蓝",
+          "image": "mr_271_天空蓝_trim.png",
+          "webp": "mr_271_天空蓝_trim.webp"
+        }
+      ],
+      "order": 192,
+      "brandLogos": [
+        {
+          "cxMm": 278.6,
+          "cyMm": 276,
+          "lenMm": 32,
+          "rot": 0,
+          "color": "#fafafa",
+          "colorPicked": true
+        }
+      ],
+      "brandLogo": {
+        "cxMm": 278.6,
+        "cyMm": 276,
+        "lenMm": 32,
+        "rot": 0,
+        "color": "#fafafa",
         "colorPicked": true
       }
     }
