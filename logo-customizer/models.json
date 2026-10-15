@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T09:49:53.726Z",
+  "updatedAt": "2026-10-15T10:15:53.113Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -4196,6 +4196,14 @@
           "webp": "mr_8703_玫瑰_trim.webp"
         }
       ],
+      "order": 101,
+      "brandLogo": {
+        "cxMm": 300.6,
+        "cyMm": 421.5,
+        "lenMm": 72,
+        "rot": 0,
+        "color": "#2e2e2e"
+      },
       "safeZones": [
         {
           "xMm": 145.7,
@@ -4215,15 +4223,7 @@
           "wMm": 88.3,
           "hMm": 56.7
         }
-      ],
-      "brandLogo": {
-        "cxMm": 300.6,
-        "cyMm": 421.5,
-        "lenMm": 72,
-        "rot": 0,
-        "color": "#2e2e2e"
-      },
-      "order": 101
+      ]
     },
     "MR_2206": {
       "id": "MR_2206",
@@ -6522,19 +6522,19 @@
       ],
       "brandLogos": [
         {
-          "cxMm": 368.3,
-          "cyMm": 267.3,
-          "lenMm": 77,
-          "rot": 0,
+          "cxMm": 286.9,
+          "cyMm": 375.3,
+          "lenMm": 80,
+          "rot": 90,
           "color": "#cfcfcf",
           "colorPicked": true
         }
       ],
       "brandLogo": {
-        "cxMm": 368.3,
-        "cyMm": 267.3,
-        "lenMm": 77,
-        "rot": 0,
+        "cxMm": 286.9,
+        "cyMm": 375.3,
+        "lenMm": 80,
+        "rot": 90,
         "color": "#cfcfcf",
         "colorPicked": true
       }
