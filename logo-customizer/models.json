@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T11:27:07.216Z",
+  "updatedAt": "2026-10-15T11:28:07.230Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -8101,6 +8101,30 @@
         }
       ],
       "order": 190
+    },
+    "MR_425_14in": {
+      "id": "MR_425_14in",
+      "pxPerMm": 1,
+      "canvasMm": 580,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "elitegray",
+          "label": "精英灰",
+          "image": "mr_425_14in_elitegray_trim.png",
+          "webp": "mr_425_14in_elitegray_trim.webp"
+        },
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_425_14in_bizblack_trim.png",
+          "webp": "mr_425_14in_bizblack_trim.webp"
+        }
+      ],
+      "order": 191
     }
   }
 }
