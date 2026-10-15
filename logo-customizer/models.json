@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T09:28:43.186Z",
+  "updatedAt": "2026-10-15T09:39:52.222Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -2404,7 +2404,7 @@
     "MR_98_13.3in": {
       "id": "MR_98_13.3in",
       "pxPerMm": 1,
-      "canvasMm": 411,
+      "canvasMm": 404,
       "logoMax": {
         "wMm": 60,
         "hMm": 60
@@ -2441,6 +2441,14 @@
           "webp": "mr_98_13.3in_darkgray_trim.webp"
         }
       ],
+      "order": 59,
+      "brandLogo": {
+        "cxMm": 197.8,
+        "cyMm": 157.9,
+        "lenMm": 26,
+        "rot": 0,
+        "color": "#ffffff"
+      },
       "safeZones": [
         {
           "xMm": 42.3,
@@ -2454,15 +2462,7 @@
           "wMm": 322.3,
           "hMm": 21.4
         }
-      ],
-      "brandLogo": {
-        "cxMm": 197.8,
-        "cyMm": 157.9,
-        "lenMm": 26,
-        "rot": 0,
-        "color": "#ffffff"
-      },
-      "order": 59
+      ]
     },
     "MR_105": {
       "id": "MR_105",
