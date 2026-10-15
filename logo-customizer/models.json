@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T11:41:50.548Z",
+  "updatedAt": "2026-10-15T11:42:35.950Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -1700,25 +1700,33 @@
     "MR_569": {
       "id": "MR_569",
       "pxPerMm": 2,
-      "canvasMm": 579,
+      "canvasMm": 584,
       "logoMax": {
         "wMm": 60,
         "hMm": 60
       },
       "colors": [
         {
-          "key": "citygreen",
-          "label": "城际绿",
-          "image": "mr_569_citygreen_trim.png",
-          "webp": "mr_569_citygreen_trim.webp"
-        },
-        {
           "key": "bizblack",
           "label": "商务黑",
           "image": "mr_569_bizblack_trim.png",
           "webp": "mr_569_bizblack_trim.webp"
+        },
+        {
+          "key": "citygreen",
+          "label": "城际绿",
+          "image": "mr_569_citygreen_trim.png",
+          "webp": "mr_569_citygreen_trim.webp"
         }
       ],
+      "order": 43,
+      "brandLogo": {
+        "cxMm": 292.8,
+        "cyMm": 318.1,
+        "lenMm": 68,
+        "rot": 0,
+        "color": "#dedede"
+      },
       "safeZones": [
         {
           "xMm": 211,
@@ -1744,15 +1752,7 @@
           "wMm": 32.1,
           "hMm": 199.7
         }
-      ],
-      "brandLogo": {
-        "cxMm": 292.8,
-        "cyMm": 318.1,
-        "lenMm": 68,
-        "rot": 0,
-        "color": "#dedede"
-      },
-      "order": 43
+      ]
     },
     "MR_615": {
       "id": "MR_615",
