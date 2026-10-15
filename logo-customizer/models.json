@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T11:16:51.378Z",
+  "updatedAt": "2026-10-15T11:17:07.548Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -8198,6 +8198,30 @@
         }
       ],
       "order": 191
+    },
+    "MR_3606": {
+      "id": "MR_3606",
+      "pxPerMm": 1,
+      "canvasMm": 565,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "white",
+          "label": "白",
+          "image": "mr_3606_white_trim.png",
+          "webp": "mr_3606_white_trim.webp"
+        },
+        {
+          "key": "gray",
+          "label": "灰",
+          "image": "mr_3606_gray_trim.png",
+          "webp": "mr_3606_gray_trim.webp"
+        }
+      ],
+      "order": 192
     }
   }
 }
