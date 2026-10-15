@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T11:25:04.257Z",
+  "updatedAt": "2026-10-15T11:25:38.889Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -8171,6 +8171,36 @@
         }
       ],
       "order": 191
+    },
+    "MR_468": {
+      "id": "MR_468",
+      "pxPerMm": 2,
+      "canvasMm": 357,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_468_bizblack_trim.png",
+          "webp": "mr_468_bizblack_trim.webp"
+        },
+        {
+          "key": "蓝黑色",
+          "label": "蓝黑色",
+          "image": "mr_468_蓝黑色_trim.png",
+          "webp": "mr_468_蓝黑色_trim.webp"
+        },
+        {
+          "key": "耀石黑",
+          "label": "耀石黑",
+          "image": "mr_468_耀石黑_trim.png",
+          "webp": "mr_468_耀石黑_trim.webp"
+        }
+      ],
+      "order": 192
     }
   }
 }
