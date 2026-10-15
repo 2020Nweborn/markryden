@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T14:00:20.594Z",
+  "updatedAt": "2026-10-15T14:02:00.818Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -8052,7 +8052,15 @@
           "webp": "mr_425_14in_bizblack_trim.webp"
         }
       ],
-      "order": 189
+      "order": 189,
+      "safeZones": [
+        {
+          "xMm": 121.3,
+          "yMm": 200.8,
+          "wMm": 335.5,
+          "hMm": 249.2
+        }
+      ]
     },
     "MR_425_15.6in": {
       "id": "MR_425_15.6in",
