@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T10:55:35.040Z",
+  "updatedAt": "2026-10-15T10:55:58.492Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -8321,7 +8321,15 @@
         "rot": 0,
         "color": "#fafafa",
         "colorPicked": true
-      }
+      },
+      "safeZones": [
+        {
+          "xMm": 109.7,
+          "yMm": 127.4,
+          "wMm": 200.8,
+          "hMm": 160
+        }
+      ]
     }
   }
 }
