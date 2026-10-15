@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T14:16:41.470Z",
+  "updatedAt": "2026-10-15T14:17:31.648Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -8176,6 +8176,30 @@
         "lenMm": 30,
         "rot": 0
       }
+    },
+    "MR_8703": {
+      "id": "MR_8703",
+      "pxPerMm": 1,
+      "canvasMm": 487,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "elitegray",
+          "label": "精英灰",
+          "image": "mr_8703_elitegray_trim.png",
+          "webp": "mr_8703_elitegray_trim.webp"
+        },
+        {
+          "key": "玫瑰",
+          "label": "玫瑰",
+          "image": "mr_8703_玫瑰_trim.png",
+          "webp": "mr_8703_玫瑰_trim.webp"
+        }
+      ],
+      "order": 193
     }
   }
 }
