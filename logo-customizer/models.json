@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T09:39:52.222Z",
+  "updatedAt": "2026-10-15T09:44:15.477Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -3201,12 +3201,6 @@
           "label": "白",
           "image": "mr_7917_white_trim.png",
           "webp": "mr_7917_white_trim.webp"
-        },
-        {
-          "key": "bizblack",
-          "label": "商务黑",
-          "image": "mr_7917_bizblack_trim.png",
-          "webp": "mr_7917_bizblack_trim.webp"
         }
       ],
       "brandLogo": {
