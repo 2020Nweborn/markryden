@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T09:45:08.418Z",
+  "updatedAt": "2026-10-15T09:49:53.726Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -3521,7 +3521,7 @@
     "MR_63": {
       "id": "MR_63",
       "pxPerMm": 2,
-      "canvasMm": 266.5,
+      "canvasMm": 262.5,
       "logoMax": {
         "wMm": 60,
         "hMm": 60
@@ -3540,14 +3540,7 @@
           "webp": "mr_63_elitegray_trim.webp"
         }
       ],
-      "safeZones": [
-        {
-          "xMm": 51.6,
-          "yMm": 90.5,
-          "wMm": 170.6,
-          "hMm": 99.8
-        }
-      ],
+      "order": 85,
       "brandLogo": {
         "cxMm": 133.3,
         "cyMm": 88.9,
@@ -3555,7 +3548,14 @@
         "rot": 0,
         "color": "#ffffff"
       },
-      "order": 85
+      "safeZones": [
+        {
+          "xMm": 51.6,
+          "yMm": 90.5,
+          "wMm": 170.6,
+          "hMm": 99.8
+        }
+      ]
     },
     "MR_124": {
       "id": "MR_124",
