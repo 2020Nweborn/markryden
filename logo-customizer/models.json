@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T11:00:43.935Z",
+  "updatedAt": "2026-10-15T11:04:37.308Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -8234,6 +8234,36 @@
         }
       ],
       "order": 191
+    },
+    "MR_165": {
+      "id": "MR_165",
+      "pxPerMm": 2,
+      "canvasMm": 356,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "幽兰黑",
+          "label": "幽兰黑",
+          "image": "mr_165_幽兰黑_trim.png",
+          "webp": "mr_165_幽兰黑_trim.webp"
+        },
+        {
+          "key": "citygreen",
+          "label": "城际绿",
+          "image": "mr_165_citygreen_trim.png",
+          "webp": "mr_165_citygreen_trim.webp"
+        },
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_165_bizblack_trim.png",
+          "webp": "mr_165_bizblack_trim.webp"
+        }
+      ],
+      "order": 192
     }
   }
 }
