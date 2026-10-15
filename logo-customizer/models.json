@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T10:50:20.728Z",
+  "updatedAt": "2026-10-15T10:55:35.040Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -8303,7 +8303,25 @@
           "webp": "mr_271_天空蓝_trim.webp"
         }
       ],
-      "order": 192
+      "order": 192,
+      "brandLogos": [
+        {
+          "cxMm": 278.6,
+          "cyMm": 276,
+          "lenMm": 32,
+          "rot": 0,
+          "color": "#fafafa",
+          "colorPicked": true
+        }
+      ],
+      "brandLogo": {
+        "cxMm": 278.6,
+        "cyMm": 276,
+        "lenMm": 32,
+        "rot": 0,
+        "color": "#fafafa",
+        "colorPicked": true
+      }
     }
   }
 }
