@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T10:20:49.017Z",
+  "updatedAt": "2026-10-15T10:21:57.096Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -8331,6 +8331,50 @@
         "color": "#303030",
         "colorPicked": true
       }
+    },
+    "MR_8703": {
+      "id": "MR_8703",
+      "pxPerMm": 1,
+      "canvasMm": 488,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "elitegray",
+          "label": "精英灰",
+          "image": "mr_8703_elitegray_trim.png",
+          "webp": "mr_8703_elitegray_trim.webp"
+        },
+        {
+          "key": "玫瑰",
+          "label": "玫瑰",
+          "image": "mr_8703_玫瑰_trim.png",
+          "webp": "mr_8703_玫瑰_trim.webp"
+        }
+      ],
+      "order": 193,
+      "safeZones": [
+        {
+          "xMm": 195.9,
+          "yMm": 120.7,
+          "wMm": 86.9,
+          "hMm": 60.8
+        },
+        {
+          "xMm": 148.4,
+          "yMm": 188.3,
+          "wMm": 192.8,
+          "hMm": 54.7
+        },
+        {
+          "xMm": 143.8,
+          "yMm": 290.6,
+          "wMm": 189.7,
+          "hMm": 174.4
+        }
+      ]
     }
   }
 }
