@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T13:52:25.043Z",
+  "updatedAt": "2026-10-15T13:53:50.750Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -8053,6 +8053,36 @@
         }
       ],
       "order": 191
+    },
+    "MR_411": {
+      "id": "MR_411",
+      "pxPerMm": 2,
+      "canvasMm": 371,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "green",
+          "label": "绿",
+          "image": "mr_411_green_trim.png",
+          "webp": "mr_411_green_trim.webp"
+        },
+        {
+          "key": "purple",
+          "label": "紫",
+          "image": "mr_411_purple_trim.png",
+          "webp": "mr_411_purple_trim.webp"
+        },
+        {
+          "key": "gray",
+          "label": "灰",
+          "image": "mr_411_gray_trim.png",
+          "webp": "mr_411_gray_trim.webp"
+        }
+      ],
+      "order": 192
     }
   }
 }
