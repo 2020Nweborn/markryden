@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T14:34:46.647Z",
+  "updatedAt": "2026-10-15T14:36:22.118Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -8010,7 +8010,15 @@
           "webp": "mr_468_耀石黑_trim.webp"
         }
       ],
-      "order": 186
+      "order": 186,
+      "safeZones": [
+        {
+          "xMm": 82.5,
+          "yMm": 106.9,
+          "wMm": 195.5,
+          "hMm": 142.2
+        }
+      ]
     },
     "MR_425_14in": {
       "id": "MR_425_14in",
