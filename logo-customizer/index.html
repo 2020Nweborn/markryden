@@ -1125,11 +1125,20 @@ function syncBrandLogo(){
        ③ 判定「画过了」必须**等这一批全部落定**（成功或失败都算），
           期间不允许再记成「完成」。 */
   const sig=(brandLogoOn)?JSON.stringify(list.map(brandLogoSigOf)):'';
-  /* ⛔ 短路的前提：签名一致 **且** 该有的对象都真的还在画布上。
-     `brandLogoObjs.length` 单独用是不安全的（删过型号/换过画布后可能是僵尸引用），
-     所以再核对一次 `canvas.contains()`。 */
-  const objsAlive=brandLogoObjs.length>0&&brandLogoObjs.every(o=>o&&canvas.contains(o));
-  if(sig===brandLogoSig&&(objsAlive||!brandLogoOn)){
+  /* ⛔ 短路的前提：签名一致 **且** 画布上的实际状态与「期望状态」一致。
+     · 期望显示：至少有一个对象，且它们都真的还在画布上
+       （`brandLogoObjs.length` 单独用不安全：删过型号/换过画布后可能是僵尸引用，故再核对 canvas.contains）。
+     · 期望隐藏：`brandLogoObjs` 必须**一个都不剩**。
+     ⛔⛔ 2026-10-16（用户报「切到没有品牌LOGO的型号后，上一个型号的 LOGO 还留在包上」）：
+        旧写法第二个条件写成 `(objsAlive||!brandLogoOn)`，而 `!brandLogoOn` 恒为真 ——
+        等于「本型号没有 LOGO 配置」时**无条件短路**。偏偏切型号入口（#model 的 change）
+        会先把 brandLogoSig 清成 ''，而隐藏态算出来的 sig 也正是 ''，两者相等 → 这里直接 return，
+        下面那两行 `brandLogoObjs.forEach(...canvas.remove...)` 永远执行不到 → 旧对象残留。
+        （点开关隐藏时 brandLogoSig 还是上一轮写过的非空签名，所以那条路径看不出问题。） */
+  const objsOk=brandLogoOn
+    ? (brandLogoObjs.length>0&&brandLogoObjs.every(o=>o&&canvas.contains(o)))
+    : brandLogoObjs.length===0;
+  if(sig===brandLogoSig&&objsOk){
     if(brandLogoObjs.length)canvas.renderAll();
     return;
   }
