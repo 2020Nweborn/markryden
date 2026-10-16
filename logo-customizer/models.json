@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T14:37:27.574Z",
+  "updatedAt": "2026-10-16T02:09:43.445Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -7731,7 +7731,7 @@
       "order": 181,
       "brandLogos": [
         {
-          "cxMm": 278.6,
+          "cxMm": 274.7,
           "cyMm": 276,
           "lenMm": 32,
           "rot": 0,
@@ -7740,7 +7740,7 @@
         }
       ],
       "brandLogo": {
-        "cxMm": 278.6,
+        "cxMm": 274.7,
         "cyMm": 276,
         "lenMm": 32,
         "rot": 0,
