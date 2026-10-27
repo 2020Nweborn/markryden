@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-27T07:46:11.723Z",
+  "updatedAt": "2026-10-27T07:47:36.904Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -8326,6 +8326,36 @@
         "color": "#bababa",
         "colorPicked": true
       }
+    },
+    "MR_9822": {
+      "id": "MR_9822",
+      "pxPerMm": 2,
+      "canvasMm": 531,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "citygreen",
+          "label": "城际绿",
+          "image": "mr_9822_citygreen_trim.png",
+          "webp": "mr_9822_citygreen_trim.webp"
+        },
+        {
+          "key": "elitegray",
+          "label": "精英灰",
+          "image": "mr_9822_elitegray_trim.png",
+          "webp": "mr_9822_elitegray_trim.webp"
+        },
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_9822_bizblack_trim.png",
+          "webp": "mr_9822_bizblack_trim.webp"
+        }
+      ],
+      "order": 193
     }
   }
 }
