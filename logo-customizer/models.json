@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-27T09:32:27.032Z",
+  "updatedAt": "2026-10-27T09:39:46.414Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -8422,6 +8422,30 @@
         "lenMm": 38,
         "rot": 0
       }
+    },
+    "MR_50": {
+      "id": "MR_50",
+      "pxPerMm": 4,
+      "canvasMm": 305.8,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "绿色",
+          "label": "绿色",
+          "image": "mr_50_绿色_trim.png",
+          "webp": "mr_50_绿色_trim.webp"
+        },
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_50_bizblack_trim.png",
+          "webp": "mr_50_bizblack_trim.webp"
+        }
+      ],
+      "order": 195
     }
   }
 }
