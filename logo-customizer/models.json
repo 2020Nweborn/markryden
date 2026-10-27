@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-27T07:52:37.645Z",
+  "updatedAt": "2026-10-27T09:22:52.084Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -8382,6 +8382,24 @@
         "color": "#e3e3e3",
         "colorPicked": true
       }
+    },
+    "MR_145": {
+      "id": "MR_145",
+      "pxPerMm": 4,
+      "canvasMm": 278.3,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_145_bizblack_trim.png",
+          "webp": "mr_145_bizblack_trim.webp"
+        }
+      ],
+      "order": 194
     }
   }
 }
