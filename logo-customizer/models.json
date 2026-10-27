@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-27T07:34:54.585Z",
+  "updatedAt": "2026-10-27T07:46:11.723Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -6429,68 +6429,6 @@
         "colorPicked": true
       }
     },
-    "MR_9822": {
-      "id": "MR_9822",
-      "pxPerMm": 1,
-      "canvasMm": 532,
-      "logoMax": {
-        "wMm": 60,
-        "hMm": 60
-      },
-      "colors": [
-        {
-          "key": "citygreen",
-          "label": "城际绿",
-          "image": "mr_9822_citygreen_trim.png",
-          "webp": "mr_9822_citygreen_trim.webp"
-        },
-        {
-          "key": "elitegray",
-          "label": "精英灰",
-          "image": "mr_9822_elitegray_trim.png",
-          "webp": "mr_9822_elitegray_trim.webp"
-        },
-        {
-          "key": "bizblack",
-          "label": "商务黑",
-          "image": "mr_9822_bizblack_trim.png",
-          "webp": "mr_9822_bizblack_trim.webp"
-        }
-      ],
-      "order": 154,
-      "safeZones": [
-        {
-          "xMm": 120,
-          "yMm": 85.6,
-          "wMm": 267.7,
-          "hMm": 247.5
-        },
-        {
-          "xMm": 127.1,
-          "yMm": 368,
-          "wMm": 257.1,
-          "hMm": 117
-        }
-      ],
-      "brandLogos": [
-        {
-          "cxMm": 332.9,
-          "cyMm": 374.7,
-          "lenMm": 66,
-          "rot": 0,
-          "color": "#d6d6d6",
-          "colorPicked": true
-        }
-      ],
-      "brandLogo": {
-        "cxMm": 332.9,
-        "cyMm": 374.7,
-        "lenMm": 66,
-        "rot": 0,
-        "color": "#d6d6d6",
-        "colorPicked": true
-      }
-    },
     "MR_7056": {
       "id": "MR_7056",
       "pxPerMm": 2,
@@ -6507,7 +6445,7 @@
           "webp": "mr_7056_bizblack_trim.webp"
         }
       ],
-      "order": 155,
+      "order": 154,
       "safeZones": [
         {
           "xMm": 171.6,
@@ -6553,7 +6491,7 @@
           "webp": "mr_9907_kr_elitegray_trim.webp"
         }
       ],
-      "order": 156,
+      "order": 155,
       "safeZones": [
         {
           "xMm": 166.5,
@@ -6587,7 +6525,7 @@
           "hMm": 373
         }
       ],
-      "order": 157,
+      "order": 156,
       "brandLogos": [
         {
           "cxMm": 267.2,
@@ -6641,7 +6579,7 @@
           "webp": "mr_7612_银_trim.webp"
         }
       ],
-      "order": 158,
+      "order": 157,
       "safeZones": [
         {
           "xMm": 145.7,
@@ -6691,7 +6629,7 @@
           "webp": "mr_7003_bizblack_trim.webp"
         }
       ],
-      "order": 159,
+      "order": 158,
       "safeZones": [
         {
           "xMm": 163.3,
@@ -6749,7 +6687,7 @@
           "hMm": 25.5
         }
       ],
-      "order": 160,
+      "order": 159,
       "brandLogos": [
         {
           "cxMm": 336.4,
@@ -6793,7 +6731,7 @@
           "webp": "mr_19_13.3in_elitegray_trim.webp"
         }
       ],
-      "order": 161,
+      "order": 160,
       "safeZones": [
         {
           "xMm": 60.7,
@@ -6843,7 +6781,7 @@
           "webp": "mr_19_15in_elitegray_trim.webp"
         }
       ],
-      "order": 162,
+      "order": 161,
       "safeZones": [
         {
           "xMm": 63.9,
@@ -6893,7 +6831,7 @@
           "webp": "mr_19_15.6in_elitegray_trim.webp"
         }
       ],
-      "order": 163,
+      "order": 162,
       "safeZones": [
         {
           "xMm": 73.5,
@@ -6943,7 +6881,7 @@
           "webp": "mr_8066_bizblack_trim.webp"
         }
       ],
-      "order": 164,
+      "order": 163,
       "safeZones": [
         {
           "xMm": 214.5,
@@ -6987,7 +6925,7 @@
           "webp": "mr_09_bizblack_trim.webp"
         }
       ],
-      "order": 165,
+      "order": 164,
       "safeZones": [
         {
           "xMm": 27.8,
@@ -7031,7 +6969,7 @@
           "webp": "mr_236_elitegray_trim.webp"
         }
       ],
-      "order": 166,
+      "order": 165,
       "safeZones": [
         {
           "xMm": 146.2,
@@ -7069,7 +7007,7 @@
           "webp": "mr_3601_科技灰_trim.webp"
         }
       ],
-      "order": 167,
+      "order": 166,
       "safeZones": [
         {
           "xMm": 103,
@@ -7113,7 +7051,7 @@
           "webp": "mr_2891_bizblack_trim.webp"
         }
       ],
-      "order": 168,
+      "order": 167,
       "safeZones": [
         {
           "xMm": 125.2,
@@ -7157,7 +7095,7 @@
           "webp": "mr_512_bizblack_trim.webp"
         }
       ],
-      "order": 169,
+      "order": 168,
       "safeZones": [
         {
           "xMm": 146.9,
@@ -7201,7 +7139,7 @@
           "webp": "mr_4313_bizblack_trim.webp"
         }
       ],
-      "order": 170,
+      "order": 169,
       "safeZones": [
         {
           "xMm": 173,
@@ -7251,7 +7189,7 @@
           "webp": "mr_2975_bizblack_trim.webp"
         }
       ],
-      "order": 171,
+      "order": 170,
       "safeZones": [
         {
           "xMm": 195.9,
@@ -7307,7 +7245,7 @@
           "webp": "mr_7730_bizblack_trim.webp"
         }
       ],
-      "order": 172,
+      "order": 171,
       "safeZones": [
         {
           "xMm": 169.6,
@@ -7351,7 +7289,7 @@
           "webp": "mr_7507_bizblack_trim.webp"
         }
       ],
-      "order": 173,
+      "order": 172,
       "safeZones": [
         {
           "xMm": 136.7,
@@ -7377,7 +7315,7 @@
           "webp": "mr_303_bizblack_trim.webp"
         }
       ],
-      "order": 174,
+      "order": 173,
       "safeZones": [
         {
           "xMm": 141.7,
@@ -7427,7 +7365,7 @@
           "webp": "mr_2819_bizblack_trim.webp"
         }
       ],
-      "order": 175,
+      "order": 174,
       "safeZones": [
         {
           "xMm": 126.8,
@@ -7471,7 +7409,7 @@
           "webp": "mr_422_bizblack_trim.webp"
         }
       ],
-      "order": 176,
+      "order": 175,
       "safeZones": [
         {
           "xMm": 147,
@@ -7515,7 +7453,7 @@
           "webp": "mr_qmdsp_bizblack_trim.webp"
         }
       ],
-      "order": 177,
+      "order": 176,
       "safeZones": [
         {
           "xMm": 146.9,
@@ -7559,7 +7497,7 @@
           "webp": "mr_qmdpt_bizblack_trim.webp"
         }
       ],
-      "order": 178,
+      "order": 177,
       "safeZones": [
         {
           "xMm": 140.7,
@@ -7615,7 +7553,7 @@
           "webp": "mr_72_绿色_trim.webp"
         }
       ],
-      "order": 179,
+      "order": 178,
       "safeZones": [
         {
           "xMm": 21,
@@ -7665,7 +7603,7 @@
           "webp": "mr_4666_bizblack_trim.webp"
         }
       ],
-      "order": 180,
+      "order": 179,
       "safeZones": [
         {
           "xMm": 166.9,
@@ -7727,7 +7665,7 @@
           "webp": "mr_271_天空蓝_trim.webp"
         }
       ],
-      "order": 181,
+      "order": 180,
       "brandLogos": [
         {
           "cxMm": 274.7,
@@ -7777,7 +7715,7 @@
           "webp": "mr_9004_gray_trim.webp"
         }
       ],
-      "order": 182,
+      "order": 181,
       "safeZones": [
         {
           "xMm": 133,
@@ -7851,7 +7789,7 @@
           "webp": "mr_165_bizblack_trim.webp"
         }
       ],
-      "order": 183,
+      "order": 182,
       "safeZones": [
         {
           "xMm": 90.7,
@@ -7897,7 +7835,7 @@
           "webp": "mr_63_elitegray_trim.webp"
         }
       ],
-      "order": 184,
+      "order": 183,
       "safeZones": [
         {
           "xMm": 58.6,
@@ -7947,7 +7885,7 @@
           "webp": "mr_3606_gray_trim.webp"
         }
       ],
-      "order": 185,
+      "order": 184,
       "safeZones": [
         {
           "xMm": 162.9,
@@ -8009,7 +7947,7 @@
           "webp": "mr_468_耀石黑_trim.webp"
         }
       ],
-      "order": 186,
+      "order": 185,
       "safeZones": [
         {
           "xMm": 82.5,
@@ -8055,7 +7993,7 @@
           "webp": "mr_425_14in_bizblack_trim.webp"
         }
       ],
-      "order": 187,
+      "order": 186,
       "safeZones": [
         {
           "xMm": 121.3,
@@ -8101,7 +8039,7 @@
           "webp": "mr_425_15.6in_156in_trim.webp"
         }
       ],
-      "order": 188,
+      "order": 187,
       "safeZones": [
         {
           "xMm": 136.5,
@@ -8147,7 +8085,7 @@
           "webp": "mr_1106_yellow_trim.webp"
         }
       ],
-      "order": 189,
+      "order": 188,
       "safeZones": [
         {
           "xMm": 127.1,
@@ -8199,7 +8137,7 @@
           "webp": "mr_411_gray_trim.webp"
         }
       ],
-      "order": 190,
+      "order": 189,
       "safeZones": [
         {
           "xMm": 93.8,
@@ -8255,7 +8193,7 @@
           "webp": "mr_228_brown_trim.webp"
         }
       ],
-      "order": 191,
+      "order": 190,
       "safeZones": [
         {
           "xMm": 70.4,
@@ -8305,7 +8243,7 @@
           "webp": "mr_8703_玫瑰_trim.webp"
         }
       ],
-      "order": 192,
+      "order": 191,
       "safeZones": [
         {
           "xMm": 145,
@@ -8361,7 +8299,7 @@
           "webp": "mr_532_elitegray_trim.webp"
         }
       ],
-      "order": 193,
+      "order": 192,
       "safeZones": [
         {
           "xMm": 211.5,
