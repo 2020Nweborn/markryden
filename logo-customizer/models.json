@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-27T09:43:42.347Z",
+  "updatedAt": "2026-10-28T01:29:31.808Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -724,10 +724,10 @@
       },
       "colors": [
         {
-          "key": "bizblack",
-          "label": "商务黑",
-          "image": "mr_2900_bizblack_trim.png",
-          "webp": "mr_2900_bizblack_trim.webp"
+          "key": "精英黑",
+          "label": "精英黑",
+          "image": "mr_2900_精英黑_trim.png",
+          "webp": "mr_2900_精英黑_trim.webp"
         }
       ],
       "safeZones": [
@@ -8472,6 +8472,24 @@
         "src": "logo-custom/50_logo.png",
         "srcNm": "50logo 1.png"
       }
+    },
+    "MR_2900_nameplate_logo": {
+      "id": "MR_2900_nameplate_logo",
+      "pxPerMm": 1,
+      "canvasMm": 453,
+      "logoMax": {
+        "wMm": 60,
+        "hMm": 60
+      },
+      "colors": [
+        {
+          "key": "bizblack",
+          "label": "商务黑",
+          "image": "mr_2900_nameplate_logo_bizblack_trim.png",
+          "webp": "mr_2900_nameplate_logo_bizblack_trim.webp"
+        }
+      ],
+      "order": 196
     }
   }
 }
