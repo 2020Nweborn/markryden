@@ -1813,8 +1813,27 @@ function loadBag(attempt){
     preloadImages();
   });
 }
-/* 预热：同型号其余配色优先，其次其它型号的首个配色 */
+/* 预热：同型号其余配色优先，其次「当前型号之后 N 个」的首个配色
+   ⛔⛔ 2026-10-28 首屏减重（长沙电信实测：219 个请求 / 10.92 MB / 214 张图，单张 LOGO 3.35 MB）。
+      旧行为 = 把**全部型号**的首图 + **每个型号的自定义 LOGO** 一次性全量预热。
+      型号已到 160 个，预热成本随型号数**线性增长** —— 这才是「打开慢」的主因，不是托管服务器。
+      新行为 = 只预热「当前型号之后的 PRELOAD_AHEAD 个」：相邻切换依旧瞬时，首屏降到几百 KB。
+   ⛔ 别改回全量：那不是优化，是把「打开首页」变成「下载全站」。
+   ⛔ 当前型号自己的产品图与 LOGO **不靠这里** —— loadBag() / syncBrandLogo() 各自会加载，
+      所以限流不会造成「缺图」；万一真缺，查 loadBag 而不是放宽预热。 */
+const PRELOAD_AHEAD=3;
 let preloadedModels=false,preloadTimer=null;
+function currentModelKey(){
+  const ks=Object.keys(MODELS);
+  for(let i=0;i<ks.length;i++)if(MODELS[ks[i]]===MODEL)return ks[i];
+  return ks[0]||'';
+}
+/* 预热窗口：当前型号 + 其后 N 个（型号下拉是有序的，所以「其后」= 用户顺手会切到的） */
+function preloadWindow(){
+  const ks=Object.keys(MODELS);
+  const at=Math.max(0,ks.indexOf(currentModelKey()));
+  return ks.slice(at,at+1+PRELOAD_AHEAD);
+}
 function preloadImages(){
   if(preloadTimer)clearTimeout(preloadTimer);
   preloadTimer=setTimeout(()=>{
@@ -1823,13 +1842,14 @@ function preloadImages(){
     list.forEach(c=>{if(c!==cur){try{const i=new Image();i.src=modelSrc(c);}catch(e){}}});
     if(!preloadedModels){
       preloadedModels=true;
-      Object.keys(MODELS).forEach(k=>{
+      preloadWindow().forEach(k=>{
         const m=MODELS[k];
         if(m===MODEL)return;
         const c=(m.colors||[])[0];
         if(c){try{const i=new Image();i.src=modelSrc(c);}catch(e){}}
       });
-      /* ⛔⛔ 2026-10-08（第三轮）：自定义 LOGO 的图也要预热（见 preloadBrandLogoAssets）。 */
+      /* ⛔⛔ 2026-10-08（第三轮）：自定义 LOGO 的图也要预热（见 preloadBrandLogoAssets）。
+         2026-10-28：预热范围收敛到同一窗口，不再全量。 */
       preloadBrandLogoAssets();
     }
   },2500);
@@ -1844,7 +1864,9 @@ function preloadImages(){
       切过去还得再做一次逐像素染色，仍然会卡那一下。
    ⛔ 逐项 try/catch：一张图 404 / 跨域失败不该拖垮整批。 */
 function preloadBrandLogoAssets(){
-  Object.keys(MODELS).forEach(k=>{
+  /* ⛔ 2026-10-28：原来这里遍历**全部型号**的品牌LOGO 预热 —— 10 个 LOGO 合计 5.87 MB
+     （单张 2891_logo.png 就 3.35 MB），一次首屏全拉下来。现在只预热当前窗口（见 preloadWindow）。 */
+  preloadWindow().forEach(k=>{
     const bl=brandLogosOf(MODELS[k]);
     bl.forEach(cfg=>{
       if(!cfg||!cfg.src)return;
