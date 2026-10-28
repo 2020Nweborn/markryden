@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-28T01:38:15.664Z",
+  "updatedAt": "2026-10-28T05:41:07.376Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -722,14 +722,15 @@
         "wMm": 60,
         "hMm": 60
       },
-      "colors": [
-        {
-          "key": "精英黑",
-          "label": "精英黑",
-          "image": "mr_2900_精英黑_trim.png",
-          "webp": "mr_2900_精英黑_trim.webp"
-        }
-      ],
+      "colors": [],
+      "order": 18,
+      "brandLogo": {
+        "cxMm": 275.9,
+        "cyMm": 139.5,
+        "lenMm": 74,
+        "rot": 0,
+        "color": "#dbdbdb"
+      },
       "safeZones": [
         {
           "xMm": 133.7,
@@ -743,15 +744,7 @@
           "wMm": 177.5,
           "hMm": 69.9
         }
-      ],
-      "brandLogo": {
-        "cxMm": 275.9,
-        "cyMm": 139.5,
-        "lenMm": 74,
-        "rot": 0,
-        "color": "#dbdbdb"
-      },
-      "order": 18
+      ]
     },
     "MR_9000": {
       "id": "MR_9000",
