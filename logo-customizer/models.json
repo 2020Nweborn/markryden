@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-28T01:29:31.808Z",
+  "updatedAt": "2026-10-28T01:35:07.122Z",
   "pinnedCount": 3,
   "models": {
     "MR_9299": {
@@ -8489,7 +8489,15 @@
           "webp": "mr_2900_nameplate_logo_bizblack_trim.webp"
         }
       ],
-      "order": 196
+      "order": 196,
+      "safeZones": [
+        {
+          "xMm": 124,
+          "yMm": 63.2,
+          "wMm": 205,
+          "hMm": 364.2
+        }
+      ]
     }
   }
 }
