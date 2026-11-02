@@ -1818,7 +1818,9 @@ function ensureStageFigure(){
   const box=document.getElementById('stageLoading');
   if(!host||!box||stageFig||stageFigPending)return;
   stageFigPending=true;
-  import('./vendor/hairline/slow.min.js').then(mod=>{
+  /* ⛔ 2026-11-02 缓存分层：静态资源走长缓存，所以引用必须带版本号 —— 改了这个 vendor 文件就把 v 换掉，
+     否则老访客会一直吃一年前的旧缓存（与 .htaccess 的分层规则配套，见 ARCHITECTURE.md §四）。 */
+  import('./vendor/hairline/slow.min.js?v=20261102').then(mod=>{
     stageFigPending=false;
     if(!mod||typeof mod.slow!=='function')return;
     if(box.hidden)return;                 /* import 期间加载态已收起：不白建 */
@@ -4319,6 +4321,24 @@ if(!seenTour){
     },120);
   }
 }
+</script>
+<script>
+/* ⛔ 2026-11-02 版本哨兵：SiteGround 的 nginx 直服静态文件，.htaccess 的 Cache-Control 对 html 不生效，
+   老访客可能半年都在吃缓存里的旧页面。这里在页面加载后问一次 version.txt（带时间戳绕缓存），
+   版本不一致就跳到带 ?v= 的地址强制取新版 —— 新 URL 是新的缓存键，命中源站最新文件。
+   ⛔ 每次发版必须同时改两处：version.txt 与这里的 MR_BUILD，不一致会一直跳转。
+   ⛔ 地址里已有 ?v= 就不再跳，避免死循环。 */
+(function(){
+  var MR_BUILD='20261102b';
+  try{
+    if(/[?&]v=/.test(location.search))return;
+    fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(v){
+      v=(v||'').trim();
+      if(!v||v===MR_BUILD)return;
+      location.replace(location.pathname+'?v='+encodeURIComponent(v)+location.hash);
+    }).catch(function(){});
+  }catch(e){}
+})();
 </script>
 </body>
 </html>
