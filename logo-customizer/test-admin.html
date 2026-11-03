@@ -61,6 +61,12 @@
   .topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px}
   .gh-btn{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--bd);border-radius:999px;padding:9px 18px;font:inherit;font-size:13px;cursor:pointer;color:var(--tx)}
   .gh-btn:hover{border-color:#b9bec6}
+  /* ⛔ 2026-11-03 用户：「正式版直接隐藏或者删除吧，没有意义」。
+     setGhChip() 在正式版（USE_LOCAL_BACKEND=true）已经写了 .hidden=true，但上面那条
+     `display:inline-flex` 会盖掉 UA 的 [hidden]{display:none} —— 于是按钮照样显示，
+     点开还是 GitHub 密钥面板（正式版根本不读 PAT）。同「登录卡 .field 吞掉 hidden」同一个坑，第三次。
+     ⛔ 不许删这条：测试版 USE_LOCAL_BACKEND=false 时不设 hidden，按钮照常显示「连接 GitHub」。 */
+  .gh-btn[hidden]{display:none!important}
   .logout-btn{background:#fff;border:1px solid var(--bd);border-radius:999px;padding:9px 18px;
     font:inherit;font-size:13px;cursor:pointer;color:var(--tx);white-space:nowrap}
   .logout-btn:hover{border-color:#141519;color:#141519}
